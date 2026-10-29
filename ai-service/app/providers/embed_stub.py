@@ -30,6 +30,10 @@ class StubEmbeddingProvider(EmbeddingProvider):
     def dimension(self) -> int:
         return STUB_DIMENSION
 
+    @property
+    def logit_scale(self) -> float:
+        return STUB_LOGIT_SCALE
+
     def encode_image(self, image_bytes: bytes) -> list[float]:
         return self._vector(b"image:" + image_bytes)
 

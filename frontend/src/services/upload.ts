@@ -56,7 +56,7 @@ function uploadOneBatchWithProgress(
         try {
           const json = JSON.parse(xhr.responseText);
           resolve(json.data ?? json);
-        } catch (err) {
+        } catch {
           reject(new Error("Không thể đọc phản hồi từ server"));
         }
       } else {

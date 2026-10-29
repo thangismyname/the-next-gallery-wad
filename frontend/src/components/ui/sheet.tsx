@@ -18,7 +18,7 @@ function Sheet({ modal = true, ...props }: React.ComponentProps<typeof SheetPrim
   }, [modal, open])
 
   React.useEffect(() => {
-    if (open) document.activeElement?.blur()
+    if (open) (document.activeElement as HTMLElement | null)?.blur()
   }, [open])
 
   return <SheetPrimitive.Root data-slot="sheet" modal={modal} {...props} />

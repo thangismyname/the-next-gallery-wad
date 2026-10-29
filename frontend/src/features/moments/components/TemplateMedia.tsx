@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Moment } from "@/types";
 import { cn } from "@/lib/utils";
-import { getInitials } from "../participants";
+import { getInitials } from "@/utils/string";
 
 type TemplateMediaProps = {
   moment: Moment;
@@ -11,12 +11,11 @@ type TemplateMediaProps = {
 };
 
 /**
- * Khối ảnh theo template (dùng chung cho feed card + viewer):
+ * Khối ảnh theo template của card moment:
  * - single: 1 ảnh full-bleed.
  * - duo_square: 2 ảnh chồng DỌC (mỗi ô ½ chiều cao), mỗi frame bo rounded-2xl.
  * - trio_wide: 3 ảnh chồng DỌC (mỗi ô ⅓ chiều cao), mỗi frame bo rounded-2xl.
- * Mỗi frame là 1 nút riêng để bấm vào slot cụ thể (feed = mở viewer,
- * viewer = phóng to ảnh của slot đó).
+ * Mỗi frame là 1 nút riêng để bấm vào slot cụ thể.
  */
 export function TemplateMedia({ moment, t, onImageClick }: TemplateMediaProps) {
   const isMulti = moment.template !== "single";

@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
   Loader2,
@@ -28,53 +27,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  acceptFriendRequest,
-  addFriend,
-  declineFriendRequest,
-  deleteFriend,
-  fetchFriendRequests,
-  fetchFriends,
-  FriendSearchResult,
-  searchFriend,
-} from "@/services/friends";
-import { Friend, FriendRequest, FriendRequestResult } from "@/types";
+import { useFriends } from "./useFriends";
 import { FriendInviteCard } from "./components/FriendInviteCard";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { useShareContext } from "@/features/share/ShareProvider";
 import { cn } from "@/lib/utils";
-
-const friendsQueryKey = ["friends", "list"] as const;
-const requestsQueryKey = ["friends", "requests"] as const;
-
-function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
-}
-
-function notifyLabels(t: ReturnType<typeof useTranslation>["t"]) {
-  return (result: FriendRequestResult, name: string) => {
-    switch (result) {
-      case "already_friends":
-        return t("friends.alreadyFriends", { name });
-      case "pending_inbound":
-        return t("friends.pendingInbound", { name });
-      case "pending_outbound":
-        return t("friends.pendingOutbound", { name });
-      case "sent":
-      default:
-        return t("friends.sent", { name });
-    }
-  };
-}
+import { getInitials } from "@/utils/string";
 
 export const FriendsView: React.FC = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const openShare = useGalleryActionsStore((s) => s.openShare);
   const { isFriendOnline } = useShareContext();
 
@@ -82,136 +43,32 @@ export const FriendsView: React.FC = () => {
     openShare([], { friendId });
   };
 
-  const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: friendsQueryKey });
-    queryClient.invalidateQueries({ queryKey: requestsQueryKey });
-  };
-
-  const { data, isPending, isError, refetch } = useQuery({
-    queryKey: friendsQueryKey,
-    queryFn: fetchFriends,
-    staleTime: 30_000,
-  });
-
+  // Bạn bè + lời mời + tìm / thêm / xoá (useFriends.ts).
   const {
-    data: requestsData,
-    isPending: requestsPending,
-    isError: requestsError,
-  } = useQuery({
-    queryKey: requestsQueryKey,
-    queryFn: fetchFriendRequests,
-    staleTime: 15_000,
-  });
-
-  const friends: Friend[] = useMemo(() => data ?? [], [data]);
-  const requests: FriendRequest[] = useMemo(
-    () => requestsData ?? [],
-    [requestsData],
-  );
-
-  const [query, setQuery] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [searchResult, setSearchResult] = useState<FriendSearchResult | null>(
-    null,
-  );
-  const [adding, setAdding] = useState(false);
-  const [addMessage, setAddMessage] = useState<string | null>(null);
-  const [addError, setAddError] = useState<string | null>(null);
-  const [toDelete, setToDelete] = useState<Friend | null>(null);
-  const [deleting, setDeleting] = useState(false);
-
-  const submitting = (value: string, id: string) => {
-    setBusy((prev) => ({ ...prev, [id]: value }));
-  };
-  const [busy, setBusy] = useState<Record<string, string>>({});
-
-  const handleSearch = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) return;
-
-    setSearching(true);
-    setAddError(null);
-    setAddMessage(null);
-    setSearchResult(null);
-    try {
-      const result = await searchFriend(trimmed);
-      setSearchResult(result);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const key = message.toLowerCase();
-      if (key.includes("không tìm thấy") || key.includes("no user found")) {
-        setAddError(t("friends.notFound"));
-      } else {
-        setAddError(message);
-      }
-    } finally {
-      setSearching(false);
-    }
-  };
-
-  const confirmSend = async () => {
-    if (!searchResult) return;
-    setAdding(true);
-    setAddError(null);
-    setAddMessage(null);
-    try {
-      const { friend, result } = await addFriend(query.trim());
-      setAddMessage(notifyLabels(t)(result, friend.name));
-      setQuery("");
-      setSearchResult(null);
-      invalidateAll();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const key = message.toLowerCase();
-      if (key.includes("không tìm thấy") || key.includes("no user found")) {
-        setAddError(t("friends.notFound"));
-      } else if (key.includes("chính mình") || key.includes("add yourself")) {
-        setAddError(t("friends.self"));
-      } else {
-        setAddError(message);
-      }
-    } finally {
-      setAdding(false);
-    }
-  };
-
-  const handleRespond = async (
-    request: FriendRequest,
-    action: "accept" | "decline",
-  ) => {
-    submitting(action, request.id);
-    try {
-      if (action === "accept") {
-        await acceptFriendRequest(request.id);
-      } else {
-        await declineFriendRequest(request.id);
-      }
-      invalidateAll();
-    } catch (error) {
-      console.error("Failed to respond to request:", error);
-    } finally {
-      setBusy((prev) => {
-        const next = { ...prev };
-        delete next[request.id];
-        return next;
-      });
-    }
-  };
-
-  const confirmDelete = async () => {
-    if (!toDelete) return;
-    setDeleting(true);
-    try {
-      await deleteFriend(toDelete.id);
-      invalidateAll();
-      setToDelete(null);
-    } catch (error) {
-      console.error("Failed to delete friend:", error);
-    } finally {
-      setDeleting(false);
-    }
-  };
+    friends,
+    requests,
+    isPending,
+    isError,
+    refetch,
+    requestsPending,
+    requestsError,
+    refetchRequests,
+    query,
+    setQuery,
+    searching,
+    searchResult,
+    adding,
+    addMessage,
+    addError,
+    handleSearch,
+    confirmSend,
+    busy,
+    handleRespond,
+    toDelete,
+    setToDelete,
+    deleting,
+    confirmDelete,
+  } = useFriends();
 
   return (
     <>
@@ -405,7 +262,7 @@ export const FriendsView: React.FC = () => {
             </div>
           ) : friends.length === 0 ? (
             <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
-              <Users className="size-10 text-muted-foreground/40" />
+              <Users className="size-10 animate-float text-muted-foreground/40" />
               <p className="text-sm">{t("friends.empty")}</p>
               <p className="text-xs text-muted-foreground/60">
                 {t("friends.emptyHint")}
@@ -475,16 +332,14 @@ export const FriendsView: React.FC = () => {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  queryClient.invalidateQueries({ queryKey: requestsQueryKey })
-                }
+                onClick={() => void refetchRequests()}
               >
                 {t("friends.retry")}
               </Button>
             </div>
           ) : requests.length === 0 ? (
             <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
-              <UserCheck className="size-10 text-muted-foreground/40" />
+              <UserCheck className="size-10 animate-float text-muted-foreground/40" />
               <p className="text-sm">{t("friends.requestsEmpty")}</p>
             </div>
           ) : (

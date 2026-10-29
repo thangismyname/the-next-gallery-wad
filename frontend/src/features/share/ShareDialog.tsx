@@ -19,43 +19,17 @@ import {
 } from "@/components/ui/tabs";
 import { useShareContext } from "./ShareProvider";
 import { TransferSource } from "@/hooks/useFileTransfer";
-import { fetchMedia, MediaListItem } from "@/services/media";
-import { API_URL } from "@/lib/config";
+import { fetchMediaByIds } from "@/services/media";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { QRTab } from "./components/QRTab";
 import { FriendsTab } from "./components/FriendsTab";
 import { LanTab } from "./components/LanTab";
+import { buildMediaSource } from "./mediaSource";
 
 interface ShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   mediaIds: string[];
-}
-
-const MIME_MAP: Record<string, string> = {
-  photo: "image/jpeg",
-  video: "video/mp4",
-};
-
-function buildSource(item: MediaListItem): TransferSource {
-  const ext = item.mediaType === "video" ? "mp4" : "jpg";
-  const name = item.title ? `${item.title}.${ext}` : `${item.id}.${ext}`;
-  return {
-    id: item.id,
-    name,
-    type: MIME_MAP[item.mediaType] ?? "application/octet-stream",
-    size: item.sizeBytes ?? 0,
-    stream: async () => {
-      const response = await fetch(
-        `${API_URL}/gallery/media/${item.id}/file`,
-        { credentials: "include" },
-      );
-      if (!response.ok || !response.body) {
-        throw new Error(`Không thể đọc file ${item.id}`);
-      }
-      return response.body;
-    },
-  };
 }
 
 export const ShareDialog: React.FC<ShareDialogProps> = ({
@@ -81,11 +55,14 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       share.leaveRoom();
       share.createSession(mediaIds);
       if (mediaIds.length > 0) {
-        void (async () => {
-          const page = await fetchMedia(0, Math.max(mediaIds.length, 1));
-          const items = page.items.filter((m) => mediaIds.includes(m.id));
-          sources.current = items.map(buildSource);
-        })();
+        // Lấy đúng các media đã chọn theo id (kể cả ảnh cũ ngoài trang đầu).
+        fetchMediaByIds(mediaIds)
+          .then((items) => {
+            sources.current = items.map(buildMediaSource);
+          })
+          .catch(() => {
+            sources.current = [];
+          });
       }
     }
     prevOpen.current = open;

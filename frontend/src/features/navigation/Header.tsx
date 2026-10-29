@@ -40,10 +40,11 @@ export const Header: React.FC = () => {
             <LanguageToggle />
           </div>
 
-          {/* Center: Logo */}
+          {/* Center: Logo — thu nhỏ trên điện thoại để không đè nút search /
+              avatar; max-w chừa đủ chỗ 2 bên (≈ 2 × 5.75rem) phòng màn rất hẹp. */}
           <Link
             to="/"
-            className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-sm uppercase tracking-[0.2em] text-foreground hover:opacity-80 transition-opacity sm:text-base"
+            className="absolute left-1/2 max-w-[calc(100%-11.5rem)] -translate-x-1/2 truncate whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.15em] text-foreground transition-opacity hover:opacity-80 min-[400px]:text-xs min-[400px]:tracking-[0.2em] sm:max-w-none sm:text-base"
           >
             {t("app.name")}
           </Link>

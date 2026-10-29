@@ -9,7 +9,7 @@
 import "../config/env.js";
 
 import { dbPool } from "../config/db.js";
-import { backfillDetections } from "../services/detection.service.js";
+import { backfillDetections } from "../modules/ai/detection.service.js";
 
 const BATCH_SIZE = 25;
 const argUserId = process.argv[2]?.trim();

@@ -3,6 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { NavMenuItem } from "@/types";
+import { isNavActive } from "@/hooks/useNavItems";
 
 interface SidebarNavItemProps {
   item: NavMenuItem;
@@ -15,7 +16,8 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
 }) => {
   const Icon = item.icon;
   const location = useLocation();
-  const isActive = location.pathname === item.to;
+  // Khớp cả trang con: /albums/abc vẫn sáng mục "Album".
+  const isActive = isNavActive(item.to, location.pathname);
   const badge = item.badge && item.badge > 0 ? item.badge : null;
 
   return (
@@ -29,7 +31,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
       >
         <NavLink
           to={item.to}
-          onClick={() => document.activeElement?.blur()}
+          onClick={() => (document.activeElement as HTMLElement | null)?.blur()}
         >
           <Icon />
           <span className="flex flex-1 items-center justify-between gap-2">

@@ -640,7 +640,7 @@ During P2P transfer the server holds no file — bytes go direct sender→receiv
 
 - [x] 1.8.1: `POST /api/share/to-friends` — send invites in realtime over WS
 
-  File: `backend/src/routes/share.routes.js`
+  File: `backend/src/modules/share/share.routes.js`
   - Import `createRoom`, `getPeer`, `getRoom`, `sendToUser` from `ws/services/signaling.service.js`.
   - Use the sender's **currently open** signaling room (while in ShareDialog) for `roomCode`/`expiresAt`;
     if there is no room yet, `createRoom(userId, mediaIds)` so the receiver can join.
@@ -661,7 +661,7 @@ During P2P transfer the server holds no file — bytes go direct sender→receiv
 
 - [x] 1.8.3: Real file size on the sender side (DB images) — fixes progress "jumping straight to 100%"
 
-  - `backend/src/services/media.service.js` `listMedia`: SELECT also `file_size_kb` →
+  - `backend/src/modules/media/media.list.service.js` `listMedia`: SELECT also `file_size_kb` →
     return `sizeBytes = file_size_kb * 1024`.
   - `frontend/src/services/media.ts` `MediaListItem`: add `sizeBytes?: number`.
   - `ShareDialog.buildSource`: `size: item.sizeBytes ?? 0` (previously = 0 → `fraction` defaulted to 1).

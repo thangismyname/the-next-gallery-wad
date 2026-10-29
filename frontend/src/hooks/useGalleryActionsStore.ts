@@ -1,5 +1,5 @@
 // hooks/useGalleryActionsStore.ts
-// State dùng chung cho các dialog hành động gallery (Share, Delete) —
+// State dùng chung cho các dialog hành động gallery (Share, Delete, Thêm vào album) —
 // vì useGalleryActions() được gọi ở nhiều nơi (GalleryView, MainLayout),
 // state phải nằm trong store để mọi instance tham chiếu cùng 1 nguồn.
 import { create } from "zustand";
@@ -11,6 +11,8 @@ interface GalleryActionsState {
   deleteDialogOpen: boolean;
   pendingDeleteIds: string[];
   deleteBusy: boolean;
+  /** Ảnh đang chờ chọn album ("Thêm vào album"); null = hộp thoại đóng. */
+  addToAlbumIds: string[] | null;
 
   openShare: (ids: string[], opts?: { friendId?: string | null }) => void;
   setShareDialogOpen: (open: boolean) => void;
@@ -19,6 +21,9 @@ interface GalleryActionsState {
   closeDeleteDialog: () => void;
   setDeleteBusy: (busy: boolean) => void;
   setDeleteDialogOpen: (open: boolean) => void;
+
+  openAddToAlbum: (ids: string[]) => void;
+  closeAddToAlbum: () => void;
 }
 
 export const useGalleryActionsStore = create<GalleryActionsState>((set) => ({
@@ -28,6 +33,7 @@ export const useGalleryActionsStore = create<GalleryActionsState>((set) => ({
   deleteDialogOpen: false,
   pendingDeleteIds: [],
   deleteBusy: false,
+  addToAlbumIds: null,
 
   openShare: (ids, opts) =>
     set({
@@ -44,6 +50,11 @@ export const useGalleryActionsStore = create<GalleryActionsState>((set) => ({
   setDeleteDialogOpen: (open) =>
     set({ deleteDialogOpen: open, pendingDeleteIds: [] }),
   closeDeleteDialog: () =>
-    set((s) => (s.deleteBusy ? s : { deleteDialogOpen: false, pendingDeleteIds: [] })),
+    set((s) =>
+      s.deleteBusy ? s : { deleteDialogOpen: false, pendingDeleteIds: [] },
+    ),
   setDeleteBusy: (busy) => set({ deleteBusy: busy }),
+
+  openAddToAlbum: (ids) => set({ addToAlbumIds: ids }),
+  closeAddToAlbum: () => set({ addToAlbumIds: null }),
 }));

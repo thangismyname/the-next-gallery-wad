@@ -1,4 +1,43 @@
 {
+  "profile": {
+    "title": "Hồ sơ",
+    "subtitle": "Thông tin tài khoản của bạn",
+    "admin": "Quản trị viên",
+    "verified": "Đã xác minh email",
+    "unverified": "Chưa xác minh email",
+    "joined": "Tham gia {{date}}",
+    "stats": {
+      "photos": "Ảnh",
+      "videos": "Video",
+      "favorites": "Yêu thích",
+      "friends": "Bạn bè",
+      "moments": "Moments",
+      "storage": "Dung lượng"
+    },
+    "infoTitle": "Thông tin cá nhân",
+    "infoDesc": "Tên hiển thị và ảnh đại diện mà bạn bè sẽ thấy.",
+    "name": "Tên hiển thị",
+    "email": "Email",
+    "emailHint": "Email dùng để đăng nhập, hiện chưa thể thay đổi.",
+    "avatarChoose": "Chọn từ thư viện",
+    "avatarRemove": "Xóa ảnh",
+    "avatarPickTitle": "Chọn ảnh đại diện",
+    "avatarPickDesc": "Chọn 1 ảnh có sẵn trong thư viện của bạn.",
+    "avatarUse": "Dùng ảnh này",
+    "save": "Lưu thay đổi",
+    "reset": "Hoàn tác",
+    "cancel": "Hủy",
+    "saved": "Đã lưu thông tin.",
+    "saveFailed": "Không lưu được thông tin, thử lại sau.",
+    "passwordTitle": "Đổi mật khẩu",
+    "passwordDesc": "Mật khẩu mới tối thiểu 8 ký tự.",
+    "currentPassword": "Mật khẩu hiện tại",
+    "revokeOthers": "Đăng xuất khỏi các thiết bị khác",
+    "changePassword": "Đổi mật khẩu",
+    "passwordChanged": "Đã đổi mật khẩu.",
+    "passwordFailed": "Không đổi được mật khẩu — kiểm tra lại mật khẩu hiện tại.",
+    "noPassword": "Tài khoản này đăng nhập bằng Google/GitHub nên không có mật khẩu riêng để đổi."
+  },
   "header": {
     "toggleTheme": "Chuyển giao diện",
     "userAvatarAlt": "Ảnh đại diện người dùng",
@@ -7,10 +46,14 @@
     "settings": "Cài đặt",
     "logout": "Đăng xuất",
     "openSidebar": "Mở menu",
-    "account": "Tài khoản"
+    "account": "Tài khoản",
+    "admin": "Trang quản trị",
+    "toggleLanguage": "Đổi ngôn ngữ",
+    "toggleSidebar": "Ẩn/hiện thanh bên"
   },
   "app": {
-    "name": "The next gallery"
+    "name": "The next gallery",
+    "tagline": "Thư viện ảnh AI"
   },
   "notFound": {
     "title": "404 - Không tìm thấy trang",
@@ -18,7 +61,7 @@
     "backHome": "Quay về trang chủ"
   },
   "navigation": {
-    "capture": "Chụp ảnh",
+    "capture": "Camera",
     "aiEdit": "AI Studio",
     "bottomBar": {
       "ariaLabel": "Thanh điều hướng chế độ"
@@ -60,11 +103,11 @@
     "saved": "Đã lưu"
   },
   "hero": {
-    "eyebrow": "AI-powered photo gallery",
-    "titleLine1": "Phát triển",
-    "titleLine2": "từng bức ảnh",
-    "subcopy": "Nhận diện vật thể, tìm kiếm ngữ nghĩa và gom nhóm ảnh tương tự — tất cả chạy ngầm, để bạn chỉ cần tìm đúng khoảnh khắc.",
-    "stack": "YOLOv26 · CLIP ViT-B/32 · DINOv2",
+    "eyebrow": "Thư viện ảnh với AI",
+    "titleLine1": "Tìm lại",
+    "titleLine2": "mọi khoảnh khắc",
+    "subcopy": "Tải ảnh lên một lần — AI nhận diện vật thể, gắn tag nội dung và hiểu câu tìm kiếm tiếng Việt, Anh, Nhật. Bạn chỉ cần mô tả khoảnh khắc mình muốn tìm.",
+    "stack": "YOLO26 · CLIP ViT-B/32 · DINOv3",
     "cta": "Xem thư viện"
   },
   "auth": {
@@ -90,25 +133,28 @@
     "welcomeBack": "Chào mừng trở lại",
     "createAccount": "Tạo tài khoản mới",
     "loginDescription": "Đăng nhập để tiếp tục vào The Next Gallery",
-    "registerDescription": "Tạo tài khoản để bắt đầu sử dụng"
+    "registerDescription": "Tạo tài khoản để bắt đầu sử dụng",
+    "forgotPasswordError": "Không thể gửi liên kết đặt lại mật khẩu",
+    "resetPasswordError": "Không thể đặt lại mật khẩu"
   },
   "admin": {
     "title": "Bảng điều khiển quản trị",
     "badge": "Admin",
     "loading": "Đang tải...",
     "header": {
-      "backToGallery": "Quay lại thư viện"
-    },
-    "stats": {
-      "totalUsers": "Tổng số user",
-      "totalPhotos": "Tổng số ảnh"
+      "backToGallery": "Quay lại thư viện",
+      "openSidebar": "Mở menu",
+      "closeSidebar": "Đóng menu"
     },
     "table": {
-      "name": "Tên",
-      "email": "Email",
-      "role": "Role",
+      "role": "Vai trò",
       "status": "Trạng thái",
-      "actions": "Hành động"
+      "actions": "Thao tác",
+      "user": "Người dùng",
+      "media": "Media",
+      "storage": "Dung lượng",
+      "joined": "Tham gia",
+      "lastActive": "Hoạt động"
     },
     "role": {
       "user": "user",
@@ -119,11 +165,18 @@
       "active": "Hoạt động"
     },
     "action": {
-      "ban": "Khoá",
-      "unban": "Bỏ khoá",
-      "delete": "Xoá",
+      "ban": "Khoá tài khoản",
+      "unban": "Mở khoá",
+      "delete": "Xoá tài khoản",
       "deleteTitle": "Xoá tài khoản",
-      "deleteConfirm": "Bạn có chắc muốn xoá tài khoản {name}? Thao tác này không thể hoàn tác."
+      "deleteConfirm": "Xoá vĩnh viễn {{name}} cùng {{n}} ảnh/video và mọi album, moment của họ. Không thể hoàn tác.",
+      "makeAdmin": "Cấp quyền admin",
+      "makeUser": "Hạ xuống user",
+      "revokeSessions": "Đăng xuất mọi thiết bị",
+      "banTitle": "Khoá tài khoản",
+      "banConfirm": "{{name}} sẽ bị đăng xuất và không đăng nhập lại được cho tới khi mở khoá.",
+      "banReason": "Lý do (không bắt buộc)",
+      "banReasonPlaceholder": "vd: Vi phạm điều khoản"
     },
     "error": {
       "loadFailed": "Không thể tải dữ liệu admin."
@@ -131,12 +184,12 @@
     "nav": {
       "dashboard": "Tổng quan",
       "users": "Người dùng",
-      "photos": "Ảnh",
-      "settings": "Cài đặt"
+      "developer": "Yêu cầu Developer"
     },
     "chart": {
-      "userGrowth": "Tăng trưởng người dùng",
-      "roleDistribution": "Phân bổ vai trò"
+      "activity": "Hoạt động 30 ngày",
+      "uploads": "Lượt upload",
+      "signups": "Người dùng mới"
     },
     "developer": {
       "title": "Yêu cầu Developer Mode",
@@ -147,7 +200,59 @@
         "pending": "Chờ duyệt",
         "approved": "Đã duyệt",
         "rejected": "Từ chối"
-      }
+      },
+      "desc": "Người dùng xin bật Developer Mode (xem khung YOLO, điểm số AI)",
+      "all": "Tất cả",
+      "message": "Lời nhắn",
+      "sentAt": "Gửi lúc"
+    },
+    "overviewDesc": "Tình hình hệ thống, hoạt động 30 ngày và AI",
+    "kpi": {
+      "users": "Người dùng",
+      "newUsers": "Mới (7 ngày)",
+      "photos": "Ảnh",
+      "videos": "Video",
+      "storage": "Dung lượng",
+      "pendingRequests": "Chờ duyệt"
+    },
+    "system": {
+      "title": "Hệ thống AI",
+      "online": "Online",
+      "offline": "Offline",
+      "offlineHint": "Không kết nối được ai-service — upload vẫn chạy nhưng ảnh mới chưa được xử lý AI.",
+      "coverage": "Tiến độ xử lý trên {{n}} ảnh"
+    },
+    "recentUsers": "Người dùng mới nhất",
+    "viewAll": "Xem tất cả",
+    "you": "Bạn",
+    "users": {
+      "count": "{{n}} người dùng",
+      "search": "Tìm theo tên hoặc email…",
+      "allRoles": "Mọi vai trò",
+      "allStatus": "Mọi trạng thái",
+      "empty": "Không có người dùng nào khớp bộ lọc.",
+      "range": "{{from}}–{{to}} / {{total}}",
+      "prev": "Trang trước",
+      "next": "Trang sau"
+    },
+    "detail": {
+      "title": "Chi tiết người dùng",
+      "albums": "Album",
+      "moments": "Moment",
+      "trashed": "Thùng rác",
+      "banReason": "Lý do khoá: {{reason}}",
+      "joined": "Tham gia {{date}}",
+      "lastActive": "Hoạt động {{time}}",
+      "ai": "Xử lý AI",
+      "sessions": "Phiên đăng nhập",
+      "noSessions": "Không có phiên nào đang hoạt động.",
+      "revoke": "Đăng xuất phiên này"
+    },
+    "search": {
+      "placeholder": "Tìm người dùng, yêu cầu, trang…",
+      "empty": "Không tìm thấy kết quả.",
+      "pages": "Trang",
+      "allUsers": "Xem tất cả {{n}} người dùng khớp “{{q}}”"
     }
   },
   "developer": {
@@ -191,7 +296,8 @@
     },
     "selection": {
       "select": "Chọn",
-      "cancel": "Hủy chọn"
+      "cancel": "Hủy chọn",
+      "selectGroup": "Chọn tất cả ảnh {{group}}"
     },
     "sort": {
       "newest": "Mới nhất",
@@ -206,19 +312,24 @@
       "thisWeek": "Tuần này",
       "thisMonth": "Tháng này",
       "undated": "Không xác định"
-    }
+    },
+    "imageLoadError": "Lỗi tải ảnh",
+    "noImage": "Không có ảnh",
+    "photo": "Ảnh",
+    "emptyHint": "Tải ảnh hoặc video lên để AI bắt đầu phân loại và gắn tag."
   },
   "sidebar": {
-    "shortcuts": "Truy cập nhanh",
-    "library": "Thư viện",
-    "personal": "Cá nhân",
     "albums": "Album",
     "friends": "Bạn bè",
     "moments": "Moment",
     "favorites": "Yêu thích",
-    "gallery": "Thư viện ảnh",
+    "gallery": "Thư viện",
     "share": "Gửi nhanh",
-    "trash": "Thùng rác"
+    "trash": "Thùng rác",
+    "home": "Trang chủ",
+    "photos": "Ảnh của tôi",
+    "ai": "AI",
+    "social": "Chia sẻ"
   },
   "share": {
     "title": "Chia sẻ ảnh",
@@ -251,11 +362,7 @@
     "friendSendTitle": "Chọn ảnh và gửi cho bạn bè",
     "pickMedia": "Chọn ảnh / video",
     "pickFriends": "Chọn người nhận",
-    "pickedCount": "Đã chọn {{count}} ảnh",
-    "noMedia": "Chưa có ảnh nào để gửi",
     "sendFailed": "Gửi thất bại, thử lại sau",
-    "categorySearch": "Tìm danh mục...",
-    "categoryEmpty": "Không có danh mục nào",
     "searchFriends": "Tìm tên hoặc email...",
     "noFriendResults": "Không tìm thấy bạn bè nào",
     "hotspotGuide": {
@@ -267,7 +374,7 @@
     "senderNotification": "{{name}} muốn gửi {{count}} ảnh cho bạn",
     "inviteBody": "Muốn gửi {{count}} ảnh cho bạn",
     "inviteView": "Nhận",
-    "totalSize": "{{size}} MB",
+    "totalSize": "{{size}}",
     "connectionState": {
       "idle": "Chưa kết nối",
       "connecting": "Đang kết nối...",
@@ -323,14 +430,58 @@
     "detailDuration": "Thời lượng",
     "detailDate": "Ngày thêm",
     "detailObjects": "Đối tượng nhận diện",
+    "similar": "Ảnh tương tự",
+    "similarLoading": "Đang tìm ảnh tương tự…",
+    "similarEmpty": "Chưa có ảnh tương tự",
     "detailFavorite": "Yêu thích",
     "detailFavoriteYes": "Đã yêu thích",
-    "detailFavoriteNo": "Chưa yêu thích"
+    "detailFavoriteNo": "Chưa yêu thích",
+    "viewOriginal": "Bản gốc",
+    "loadingOriginal": "Đang tải bản gốc…",
+    "detailTaken": "Ngày chụp",
+    "detailTags": "Tag nội dung",
+    "lowConfidence": "Độ tin cậy {{pct}}% — thấp, tìm kiếm sẽ không dùng",
+    "lowConfidenceNote": "Chip mờ = YOLO chưa chắc chắn (< {{pct}}%), nên tìm kiếm không dựa vào chúng.",
+    "download": "Tải bản gốc"
   },
   "favorites": {
     "title": "Yêu thích",
-    "subtitle": "{{count}} ảnh được yêu thích",
-    "empty": "Chưa có ảnh yêu thích nào\nNhấn vào nút ngôi sao trên ảnh để thêm vào đây."
+    "subtitle": "{{count}} ảnh đã lưu",
+    "empty": "Chưa có ảnh nào ở đây\nThả tim hoặc gắn nhãn cho ảnh (Lightbox → Chi tiết, hoặc chọn nhiều ảnh) để lưu vào đây.",
+    "emptyHearts": "Chưa có ảnh nào được thả tim.",
+    "emptyLabel": "Chưa có ảnh nào gắn nhãn “{{name}}”.\nGắn nhãn trong Lightbox → Chi tiết, hoặc chọn nhiều ảnh ở Thư viện.",
+    "filters": {
+      "all": "Tất cả",
+      "favorites": "Đã thả tim"
+    },
+    "labels": {
+      "title": "Nhãn",
+      "add": "Gắn nhãn",
+      "manage": "Quản lý nhãn",
+      "manageDesc": "Đặt nhãn để nhớ việc cần làm với ảnh. Ảnh có nhãn luôn hiện trong Yêu thích, kể cả khi chưa thả tim.",
+      "namePlaceholder": "Tên nhãn…",
+      "create": "Thêm",
+      "delete": "Xoá nhãn",
+      "deleteConfirm": "Xoá?",
+      "empty": "Chưa có nhãn nào — tạo nhãn đầu tiên bên dưới.",
+      "color": "Màu",
+      "exists": "Đã có nhãn trùng tên.",
+      "limit": "Đã đạt số nhãn tối đa (30).",
+      "failed": "Không lưu được, thử lại sau.",
+      "colors": {
+        "slate": "Xám",
+        "rose": "Hồng",
+        "amber": "Vàng",
+        "emerald": "Xanh lá",
+        "sky": "Xanh dương",
+        "violet": "Tím"
+      },
+      "suggested": {
+        "edit": "Cần chỉnh sửa",
+        "print": "In ảnh",
+        "family": "Gửi gia đình"
+      }
+    }
   },
   "trash": {
     "title": "Thùng rác",
@@ -350,13 +501,30 @@
   },
   "send": {
     "title": "Chia sẻ trực tiếp",
-    "subtitle": "Chọn ảnh/video từ máy và gửi ngay — không cần tải lên Gallery",
+    "subtitle": "Chọn ảnh/video từ máy hoặc từ thư viện của bạn rồi gửi trực tiếp",
     "pickFiles": "Chọn tập tin",
     "filesEmpty": "Chưa chọn tập tin nào",
     "remove": "Gỡ",
     "readyToSend": "{{count}} tập tin sẵn sàng gửi",
     "readyToSend_other": "{{count}} tập tin sẵn sàng gửi",
-    "totalSize": "Tổng {{size}} MB"
+    "totalSize": "Tổng {{size}}",
+    "pickFromLibrary": "Chọn từ thư viện",
+    "fromLibrary": "Thư viện",
+    "libraryTitle": "Chọn từ thư viện",
+    "libraryDescription": "Ảnh và video đã có trên tài khoản của bạn",
+    "libraryConfirm": "Xong ({{count}})"
+  },
+  "mediaPicker": {
+    "filterAll": "Tất cả",
+    "filterFavorites": "Yêu thích",
+    "filterPhotos": "Ảnh",
+    "filterVideos": "Video",
+    "filterSearch": "Tìm bộ lọc...",
+    "filterEmpty": "Không có bộ lọc nào",
+    "empty": "Không có ảnh nào",
+    "loadMore": "Tải thêm",
+    "video": "Video",
+    "selectedCount": "Đã chọn {{count}}"
   },
   "friends": {
     "title": "Bạn bè",
@@ -424,10 +592,24 @@
     "objectResults": "Đối tượng",
     "sendToFriend": "Gửi ảnh",
     "photos": "ảnh",
-    "hint": "Gõ để tìm ảnh, bạn bè hoặc album — VD: \"hoàng hôn\"",
+    "hint": "Gõ để tìm ảnh, bạn bè hoặc album — VD: \"hoàng hôn\". Gõ \"yêu thích\", tên nhãn hoặc album (hay \"favorite.chó\") để tìm trong đó.",
     "resizeHandle": "Kéo để đổi kích thước · Nháy đúp để khôi phục mặc định",
     "resetHint": "Nháy đúp để đặt lại",
-    "dragHint": "Kéo để di chuyển"
+    "dragHint": "Kéo để di chuyển",
+    "scope": {
+      "edited": "Ảnh đã chỉnh sửa",
+      "remove": "Bỏ phạm vi",
+      "placeholder": "Tìm trong phạm vi này… (để trống = xem tất cả)",
+      "searchIn": "Tìm trong",
+      "soon": "Sắp có",
+      "results": "Ảnh trong {{name}}",
+      "kind": {
+        "favorites": "Yêu thích",
+        "label": "Nhãn",
+        "album": "Album",
+        "edited": "AI Studio"
+      }
+    }
   },
   "moments": {
     "title": "Moment",
@@ -456,8 +638,6 @@
     "open": "Xem moment của {{name}}",
     "video": "video",
     "close": "Đóng",
-    "prev": "Trước đó",
-    "next": "Tiếp theo",
     "timeJustNow": "vừa xong",
     "timeMin": "{{n}} phút trước",
     "timeHour": "{{n}} giờ trước",
@@ -491,16 +671,6 @@
     "fillSlotTitle": "Điền {{n}} ảnh vào moment",
     "fillSlotDesc": "Chọn {{n}} ảnh của bạn để ghép vào moment cùng {{user}}",
     "confirmFill": "Gửi ảnh",
-    "viewAll": "Xem tất cả ảnh",
-    "photoOf": "Ảnh {{current}}/{{total}}",
-    "photoBy": "Ảnh của {{name}}",
-    "filterAll": "Tất cả",
-    "filterFavorites": "Yêu thích",
-    "filterPhotos": "Ảnh",
-    "filterVideos": "Video",
-    "filterSearch": "Tìm bộ lọc...",
-    "filterEmpty": "Không có ảnh nào",
-    "loadMore": "Xem thêm",
     "photoCount": "{{n}} ảnh",
     "editDraft": "Chỉnh sửa",
     "saveChanges": "Lưu thay đổi",
@@ -515,15 +685,11 @@
     "memeSearchEmpty": "Không tìm thấy template nào",
     "memePick": "Thả meme",
     "memePickDesc": "Chọn khuôn mẫu và nhập dòng chữ — ảnh sẽ được tạo tự động",
-    "memeTemplateLoading": "Đang tải template…",
     "memeTemplateFailed": "Không tải được template meme",
-    "memeText": "Dòng {{n}}",
     "memeTextPlaceholder": "Nhập dòng {{n}}",
     "memeCaptionPlaceholder": "Ghi chú (tùy chọn)",
     "memeCreate": "Tạo meme",
     "memeTextOptional": "Chữ tùy chọn — để trống sẽ dùng meme gốc",
-    "memeCreated": "Đã thả meme",
-    "memeCreateFailed": "Không tạo được meme. Vui lòng thử lại.",
     "memeDelete": "Xóa meme",
     "memeDeleteConfirm": "Xóa meme này?",
     "memeDeleteFailed": "Không xóa được meme",
@@ -534,5 +700,391 @@
   "common": {
     "cancel": "Hủy",
     "deleting": "Đang xoá..."
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "subtitle": "Giao diện, thiết bị, xử lý AI và dung lượng",
+    "appearance": {
+      "title": "Giao diện",
+      "desc": "Lưu trên trình duyệt này",
+      "theme": "Chủ đề",
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Theo hệ thống",
+      "language": "Ngôn ngữ",
+      "density": "Mật độ lưới ảnh",
+      "compact": "Nhỏ",
+      "comfortable": "Vừa",
+      "large": "Lớn"
+    },
+    "sessions": {
+      "title": "Thiết bị đăng nhập",
+      "desc": "Các phiên đang đăng nhập vào tài khoản của bạn",
+      "current": "Thiết bị này",
+      "unknownDevice": "Thiết bị không xác định",
+      "revoke": "Đăng xuất thiết bị này",
+      "revokeOthers": "Đăng xuất tất cả thiết bị khác",
+      "loadFailed": "Không tải được danh sách thiết bị"
+    },
+    "ai": {
+      "title": "Xử lý AI",
+      "desc": "Ảnh mới được xử lý tự động khi tải lên. Ảnh cũ còn thiếu có thể xử lý tại đây.",
+      "tags": {
+        "name": "Phân loại nội dung",
+        "desc": "Gắn 17 tag kèm độ tin cậy (AI Studio)"
+      },
+      "clip": {
+        "name": "Tìm kiếm ngữ nghĩa (CLIP)",
+        "desc": "Tìm ảnh bằng câu mô tả"
+      },
+      "yolo": {
+        "name": "Nhận diện vật thể (YOLO26)",
+        "desc": "Gắn nhãn vật thể trong ảnh"
+      },
+      "dino": {
+        "name": "Ảnh tương tự (DINOv3)",
+        "desc": "Gợi ý ảnh giống nhau trong Lightbox"
+      },
+      "progress": "Đã xử lý {{done}}/{{total}} ảnh",
+      "process": "Xử lý {{n}} ảnh",
+      "stop": "Dừng",
+      "complete": "Hoàn tất",
+      "stalled": "Không xử lý được ảnh nào — kiểm tra ai-service hoặc model đang bật.",
+      "failed": "Xử lý thất bại, thử lại sau.",
+      "manage": "Quản lý"
+    },
+    "storage": {
+      "title": "Dung lượng",
+      "desc": "Dung lượng file gốc đã tải lên",
+      "used": "Đã sử dụng",
+      "photos": "Ảnh",
+      "videos": "Video",
+      "trash": "Thùng rác",
+      "trashCount": "{{n}} mục trong thùng rác",
+      "viewTrash": "Xem",
+      "emptyTrash": "Dọn thùng rác",
+      "emptyTitle": "Dọn sạch thùng rác?",
+      "emptyDesc": "{{n}} mục ({{size}}) sẽ bị xoá vĩnh viễn và không thể khôi phục.",
+      "emptyConfirm": "Xoá vĩnh viễn",
+      "emptyFailed": "Không dọn được thùng rác, thử lại sau."
+    }
+  },
+  "studio": {
+    "title": "AI Studio",
+    "subtitle": "Phân loại và chỉnh sửa ảnh bằng AI",
+    "tabClassify": "Phân loại",
+    "tabEdit": "Chỉnh sửa",
+    "comingSoon": "Sắp có",
+    "groups": {
+      "object": {
+        "title": "Đối tượng",
+        "desc": "Model linear probe trên CLIP, train trên COCO"
+      },
+      "scene": {
+        "title": "Khung cảnh",
+        "desc": "Model linear probe trên CLIP, train trên Places365"
+      },
+      "attribute": {
+        "title": "Thuộc tính",
+        "desc": "CLIP zero-shot — chưa có dữ liệu train"
+      }
+    },
+    "photoCount": "{{n}} ảnh",
+    "pendingTitle": "{{n}} ảnh chưa được phân loại",
+    "classifyNow": "Phân loại ngay",
+    "loadFailed": "Không tải được danh mục",
+    "emptyTag": "Không có ảnh nào đạt ngưỡng tin cậy này",
+    "back": "Quay lại danh mục",
+    "threshold": "Ngưỡng tin cậy",
+    "thresholdAuto": "Tự động",
+    "thresholdAutoHint": "Ngưỡng riêng của tag, chọn để F1 cao nhất khi train",
+    "tags": {
+      "portrait": "Chân dung",
+      "group": "Nhóm người",
+      "pets": "Thú cưng",
+      "animals": "Động vật",
+      "food": "Đồ ăn",
+      "vehicles": "Phương tiện",
+      "sports": "Thể thao",
+      "beach": "Biển",
+      "mountain": "Núi",
+      "nature": "Thiên nhiên",
+      "street": "Đường phố",
+      "architecture": "Kiến trúc",
+      "indoor": "Trong nhà",
+      "night": "Ban đêm",
+      "sunset": "Hoàng hôn",
+      "event": "Sự kiện",
+      "document": "Tài liệu / màn hình"
+    },
+    "createAlbum": "Tạo album thông minh"
+  },
+  "albums": {
+    "title": "Album",
+    "subtitle": "Album của bạn, album thông minh và album được chia sẻ",
+    "newAlbum": "Album mới",
+    "create": "Tạo album",
+    "save": "Lưu",
+    "saveFailed": "Không lưu được album, thử lại sau.",
+    "createTitle": "Tạo album",
+    "editTitle": "Sửa album",
+    "createDesc": "Album thường: bạn tự chọn ảnh cho album.",
+    "kind": "Loại album",
+    "kindManual": "Album thường",
+    "kindSmart": "Album thông minh",
+    "name": "Tên album",
+    "namePlaceholder": "Ví dụ: Đà Lạt 2026",
+    "description": "Mô tả (không bắt buộc)",
+    "photoCount": "{{n}} ảnh",
+    "memberCount": "{{n}} thành viên",
+    "smartBadge": "AI",
+    "smartSection": "Album thông minh",
+    "mine": "Album của tôi",
+    "sharedWithMe": "Được chia sẻ với tôi",
+    "invitations": "Lời mời",
+    "sharedBy": "{{name}} chia sẻ · {{role}}",
+    "empty": "Bạn chưa có album nào. Tạo album để sắp xếp ảnh, hoặc để AI gom ảnh giúp bạn.",
+    "emptyAlbum": "Album chưa có ảnh nào.",
+    "loadFailed": "Không tải được danh sách album",
+    "notFound": "Album không tồn tại hoặc bạn không có quyền xem.",
+    "accept": "Tham gia",
+    "decline": "Từ chối",
+    "addTo": "Thêm vào album",
+    "addToDesc": "Chọn album cho {{n}} ảnh",
+    "addPhotos": "Thêm ảnh",
+    "addPhotosDesc": "Chọn ảnh trong thư viện của bạn",
+    "addCount": "Thêm {{n}} ảnh",
+    "share": "Chia sẻ",
+    "shareTitle": "Chia sẻ album",
+    "shareDesc": "Mời bạn bè cùng xem / thêm ảnh, hoặc tạo link cho người không có tài khoản.",
+    "members": "Thành viên",
+    "more": "Thêm thao tác",
+    "edit": "Sửa album",
+    "convert": "Chuyển thành album thường",
+    "leave": "Rời album",
+    "delete": "Xoá album",
+    "setCover": "Đặt làm bìa",
+    "removeFromAlbum": "Gỡ khỏi album",
+    "removeOnlyOwn": "Bạn chỉ gỡ được ảnh do chính mình thêm",
+    "saveSearch": "Lưu thành album",
+    "role": "Quyền",
+    "roles": {
+      "owner": "Chủ album",
+      "editor": "Được thêm ảnh",
+      "viewer": "Chỉ xem"
+    },
+    "roleHint": {
+      "editor": "Thêm được ảnh của họ vào album và gỡ ảnh họ đã thêm.",
+      "viewer": "Chỉ xem ảnh trong album."
+    },
+    "inviteFriends": "Mời bạn bè",
+    "noFriendsToInvite": "Không còn bạn bè nào để mời.",
+    "invite": "Mời {{n}} người",
+    "removeMember": "Gỡ khỏi album",
+    "pendingInvite": "Chờ nhận lời",
+    "inviteToastTitle": "Lời mời vào album",
+    "inviteToastBody": "{{name}} mời bạn vào album \"{{album}}\"",
+    "viewInvitation": "Xem lời mời",
+    "smart": {
+      "desc": "Album thông minh tự cập nhật: ảnh mới khớp truy vấn sẽ tự xuất hiện.",
+      "ruleType": "Gom ảnh theo",
+      "byTags": "Tag nội dung",
+      "byQuery": "Câu tìm kiếm",
+      "tagsHint": "Ảnh phải có đủ các tag đã chọn (tối đa {{max}}).",
+      "query": "Câu tìm kiếm",
+      "queryPlaceholder": "Ví dụ: 2 con chó trên bãi biển",
+      "queryHint": "Dùng search kết hợp như ô tìm kiếm: hiểu tên tag, vật thể và số lượng.",
+      "rule": "Truy vấn",
+      "empty": "Chưa có ảnh nào khớp truy vấn của album."
+    },
+    "links": {
+      "title": "Link công khai",
+      "permission": "Quyền của link",
+      "view": "Chỉ xem",
+      "download": "Xem và tải về",
+      "expiry": "Hết hạn sau",
+      "never": "Không hết hạn",
+      "days": "{{n}} ngày",
+      "maxViews": "Giới hạn lượt xem",
+      "unlimited": "Không giới hạn",
+      "create": "Tạo link và sao chép",
+      "active": "Link đang có",
+      "none": "Chưa có link nào.",
+      "copy": "Sao chép link",
+      "revoke": "Thu hồi link",
+      "until": "đến {{date}}",
+      "views": "{{n}}/{{max}} lượt xem",
+      "expired": "đã hết hiệu lực"
+    },
+    "confirm": {
+      "delete": {
+        "title": "Xoá album?",
+        "desc": "Album \"{{name}}\" sẽ bị xoá. Ảnh trong album vẫn còn trong thư viện.",
+        "action": "Xoá album"
+      },
+      "leave": {
+        "title": "Rời album?",
+        "desc": "Bạn sẽ không xem được album \"{{name}}\" nữa. Ảnh bạn đã thêm vẫn ở lại album.",
+        "action": "Rời album"
+      },
+      "convert": {
+        "title": "Chuyển thành album thường?",
+        "desc": "Danh sách ảnh hiện tại được giữ cố định; ảnh mới sẽ không tự vào album nữa.",
+        "action": "Chuyển"
+      },
+      "remove": {
+        "title": "Gỡ ảnh khỏi album?",
+        "desc": "{{n}} ảnh sẽ được gỡ khỏi album (vẫn còn trong thư viện).",
+        "action": "Gỡ"
+      }
+    },
+    "public": {
+      "sharedBy": "{{name}} chia sẻ",
+      "download": "Tải ảnh này",
+      "notFound": "Link không tồn tại hoặc đã bị thu hồi.",
+      "expired": "Link đã hết hạn.",
+      "exhausted": "Link đã hết lượt xem."
+    },
+    "inAlbums": "Có trong album",
+    "reorder": {
+      "button": "Sắp xếp",
+      "hint": "Kéo thả để đổi thứ tự (bàn phím: Space để nhấc, mũi tên để di chuyển).",
+      "save": "Lưu thứ tự",
+      "item": "Ảnh {{n}}: {{title}}"
+    },
+    "auto": {
+      "groups": {
+        "type": "Loại media",
+        "content": "Theo nội dung",
+        "time": "Theo thời gian",
+        "objects": "Theo vật thể"
+      },
+      "groupHints": {
+        "type": "Mọi ảnh và video đều có mặt ở đây",
+        "content": "Gom theo tag AI (phân loại 17 tag) — ảnh chưa có tag vào \"Khác\"",
+        "time": "Theo tháng, và sự kiện = chuỗi ảnh chụp liền nhau (theo ngày chụp EXIF)",
+        "objects": "Gom theo vật thể YOLO nhận diện được"
+      },
+      "type": {
+        "photos": "Ảnh",
+        "videos": "Video",
+        "screenshots": "Ảnh chụp màn hình",
+        "favorites": "Yêu thích"
+      },
+      "otherTag": "Khác",
+      "event": "Sự kiện {{date}}",
+      "objects": {
+        "person": "Người",
+        "vehicle": "Xe cộ",
+        "outdoor": "Ngoài đường",
+        "animal": "Động vật",
+        "accessory": "Phụ kiện",
+        "sports": "Thể thao",
+        "kitchen": "Đồ bếp",
+        "food": "Đồ ăn",
+        "furniture": "Nội thất",
+        "electronic": "Đồ điện tử",
+        "appliance": "Đồ gia dụng",
+        "indoor": "Đồ vật trong nhà"
+      },
+      "readOnly": "Album tự động · tự cập nhật",
+      "save": "Lưu thành album",
+      "showAll": "Xem tất cả ({{n}})",
+      "showLess": "Thu gọn"
+    }
+  },
+  "nav": {
+    "gallery": "Thư viện",
+    "albums": "Album",
+    "studio": "AI Studio",
+    "login": "Đăng nhập",
+    "openGallery": "Mở thư viện",
+    "download": "Tải app",
+    "menu": "Menu"
+  },
+  "capabilities": {
+    "pipelineTitle": "Pipeline xử lý",
+    "pipelineBody": "Kết quả được lưu lại, nên tìm kiếm, phân loại và gom album diễn ra tức thì — không phải xử lý lại ảnh mỗi lần bạn tìm.",
+    "semanticSearch": "Tìm kiếm ngữ nghĩa",
+    "objectDetection": "Nhận diện vật thể",
+    "visualSimilarity": "Ảnh tương tự",
+    "autoClassification": "Phân loại tự động",
+    "smartAlbums": "Album thông minh",
+    "sharing": "Chia sẻ P2P & album chung",
+    "pipelineHeadline": "Ba mô hình thị giác, chạy một lần lúc tải lên.",
+    "stats": {
+      "models": "Mô hình AI",
+      "tags": "Tag nội dung",
+      "objects": "Loại vật thể",
+      "languages": "Ngôn ngữ tìm kiếm"
+    },
+    "desc": {
+      "semanticSearch": "Gõ câu như \"2 con chó trên bãi biển\": hệ thống tách câu thành vật thể, số lượng và ngữ cảnh rồi chấm điểm kết hợp CLIP + tag + YOLO.",
+      "objectDetection": "Nhận diện 80 loại vật thể trong từng ảnh kèm khung và độ tin cậy — đếm được có bao nhiêu người, bao nhiêu chiếc xe.",
+      "visualSimilarity": "Mở một ảnh là thấy ngay những ảnh giống nó: cùng góc chụp, cùng bối cảnh, cùng chủ thể.",
+      "autoClassification": "17 tag như Chân dung, Đồ ăn, Biển, Ban đêm… mỗi tag có độ tin cậy và ngưỡng riêng, xem trong AI Studio.",
+      "smartAlbums": "Lưu một câu tìm kiếm hoặc một nhóm tag thành album — ảnh mới khớp sẽ tự xuất hiện.",
+      "sharing": "Gửi ảnh trực tiếp giữa hai thiết bị, mời bạn bè vào album chung hoặc tạo link có hạn dùng."
+    }
+  },
+  "closing": {
+    "statement": "Đừng cuộn hàng nghìn tấm ảnh nữa. Hãy mô tả khoảnh khắc — thư viện sẽ tìm giúp bạn.",
+    "eyebrow": "Bắt đầu",
+    "cta": "Tạo tài khoản miễn phí",
+    "note": "Không cần cài đặt · Chạy ngay trên trình duyệt"
+  },
+  "footer": {
+    "tagline": "Thư viện ảnh hiểu nội dung từng bức ảnh — tìm kiếm, phân loại và chia sẻ khoảnh khắc của bạn.",
+    "sections": {
+      "explore": "Khám phá",
+      "account": "Tài khoản",
+      "tech": "Công nghệ"
+    },
+    "rights": "Bảo lưu mọi quyền",
+    "madeWith": "Đồ án tốt nghiệp"
+  },
+  "preview": {
+    "query": "2 người trên phố"
+  },
+  "workflow": {
+    "eyebrow": "Quy trình",
+    "title": "Từ lúc tải lên đến lúc tìm thấy.",
+    "subtitle": "Mọi phân tích nặng diễn ra một lần ở nền. Khi tìm kiếm, hệ thống chỉ cần hiểu câu của bạn.",
+    "steps": {
+      "upload": {
+        "label": "Tải lên",
+        "title": "Kéo ảnh vào thư viện",
+        "desc": "Ảnh, video và cả HEIC từ iPhone. Bản xem nhanh được tạo sẵn để thư viện mượt dù ảnh gốc hàng trăm MB."
+      },
+      "analyze": {
+        "label": "Phân tích",
+        "title": "AI xem từng bức ảnh",
+        "desc": "CLIP hiểu ngữ nghĩa, YOLO26 tìm vật thể, DINOv3 ghi nhớ đặc trưng hình ảnh — tất cả chạy nền, không làm bạn phải chờ."
+      },
+      "find": {
+        "label": "Tìm & sắp xếp",
+        "title": "Tìm bằng lời mô tả",
+        "desc": "Gõ điều bạn nhớ, lọc theo tag, mở ảnh tương tự hoặc để album thông minh tự gom ảnh giúp bạn."
+      }
+    }
+  },
+  "download": {
+    "eyebrow": "Ứng dụng di động · Sắp ra mắt",
+    "title": "Cả thư viện, ngay trong túi bạn.",
+    "subtitle": "Bản iOS và Android đang được hoàn thiện — cùng tài khoản, cùng AI, đồng bộ với bản web.",
+    "features": {
+      "backup": "Tự sao lưu ảnh từ điện thoại lên thư viện",
+      "search": "Tìm ảnh bằng lời — tiếng Việt, Anh, Nhật",
+      "moments": "Moment chia sẻ khoảnh khắc với bạn bè",
+      "send": "Gửi ảnh trực tiếp giữa các máy, không qua server"
+    },
+    "comingOn": "Sắp có trên",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "soon": "Sắp ra mắt",
+    "web": "Hoặc dùng ngay trên web",
+    "qr": "Quét để mở trên điện thoại",
+    "mockTitle": "Thư viện",
+    "mockToday": "Hôm nay"
   }
 }

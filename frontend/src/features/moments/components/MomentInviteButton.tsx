@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BellRing,
-  Check,
   ImagePlus,
   Loader2,
   Pencil,
@@ -28,11 +27,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { fetchMedia } from "@/services/media";
+import { MediaPicker } from "@/features/gallery/components/MediaPicker";
 import {
   deleteMoment,
   fetchMomentInvitations,
   fillMomentSlots,
+  momentInvitationsQueryKey,
 } from "@/services/moments";
 import { SIGNAL } from "@/services/signaling";
 import { useSignaling } from "@/hooks/useSignaling";
@@ -67,16 +67,9 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged }) => {
     isPending,
     refetch,
   } = useQuery({
-    queryKey: ["moments", "invitations"],
+    queryKey: momentInvitationsQueryKey,
     queryFn: fetchMomentInvitations,
     staleTime: 15_000,
-  });
-
-  const { data: mediaItems } = useQuery({
-    queryKey: ["moments", "picker"],
-    queryFn: () => fetchMedia(),
-    enabled: Boolean(fillTarget),
-    staleTime: 60_000,
   });
 
   const items = invitations ?? [];
@@ -168,7 +161,7 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged }) => {
           if (open) {
             unreadRef.current = 0;
             void queryClient.invalidateQueries({
-              queryKey: ["moments", "invitations"],
+              queryKey: momentInvitationsQueryKey,
             });
           }
         }}
@@ -213,7 +206,9 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged }) => {
             items.map((moment) => {
               const myPendingCount = moment.myPendingSlots?.length ?? 0;
               const fillable = myPendingCount > 0;
-              const filledCount = moment.slots.filter((s) => s.filled).length;
+              const filled = moment.slots.filter((s) => s.filled);
+              const filledCount = filled.length;
+              const cover = filled[0]?.thumbnailUrl;
               const ownDraft = moment.isOwn && !fillable;
               return (
                 <DropdownMenuItem
@@ -226,12 +221,9 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged }) => {
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-lg bg-muted text-[9px] text-muted-foreground">
-                      {moment.slots.filter((s) => s.filled)[0]?.thumbnailUrl ? (
+                      {cover ? (
                         <img
-                          src={
-                            moment.slots.filter((s) => s.filled)[0]
-                              .thumbnailUrl!
-                          }
+                          src={cover}
                           alt=""
                           className="size-full object-cover"
                         />
@@ -345,43 +337,10 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged }) => {
               </span>
             </div>
 
-            <div className="grid max-h-60 grid-cols-4 gap-2 overflow-y-auto pr-1">
-              {(mediaItems?.items ?? []).length === 0
-                ? Array.from({ length: 8 }).map((_, i) => (
-                    <Skeleton
-                      key={i}
-                      className="aspect-square rounded-lg bg-muted/40"
-                    />
-                  ))
-                : (mediaItems?.items ?? []).map((item) => {
-                    const selected = pickedIds.includes(item.id);
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => togglePick(item.id)}
-                        className={cn(
-                          "relative aspect-square overflow-hidden rounded-lg transition",
-                          selected && "ring-2 ring-primary",
-                          !selected && "hover:opacity-80",
-                        )}
-                        title={item.title ?? ""}
-                      >
-                        <img
-                          src={item.thumbnailUrl}
-                          alt={item.title ?? ""}
-                          loading="lazy"
-                          className="size-full object-cover"
-                        />
-                        {selected && (
-                          <span className="absolute top-1 right-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground">
-                            <Check className="size-3" />
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-            </div>
+            <MediaPicker
+              selectedIds={new Set(pickedIds)}
+              onToggle={(item) => togglePick(item.id)}
+            />
           </div>
 
           <div className="flex justify-end gap-2">

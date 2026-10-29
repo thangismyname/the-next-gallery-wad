@@ -8,10 +8,12 @@ venv/
 .mypy_cache/
 .ruff_cache/
 
-# ── Model weights (download qua scripts/download_model.py) ──
-models/*.task
-models/*.onnx
+# ── Model weights ────────────
 models/*.pt
+models/*.onnx
+models/dinov3-*/
+models/dinov3-pth/
+models/dinov2-*/
 !models/.gitkeep
 
 # ── Env ─────────────────
@@ -21,3 +23,6 @@ models/*.pt
 .DS_Store
 .idea/
 .vscode/
+# ── Benchmark ─────────────
+bench/runs/
+bench/results/*_smoke.csv

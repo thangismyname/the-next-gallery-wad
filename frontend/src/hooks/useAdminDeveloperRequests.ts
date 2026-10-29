@@ -1,43 +1,32 @@
-import { useCallback, useEffect, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  type AdminDeveloperRequest,
   fetchAdminDeveloperRequests,
   reviewDeveloperRequest,
 } from "@/services/developer";
+import { adminQueryKeys } from "@/services/admin";
 
+/** Mọi yêu cầu Developer Mode (lọc ở client) — dùng chung cho trang duyệt + badge sidebar. */
 export function useAdminDeveloperRequests() {
-  const [requests, setRequests] = useState<AdminDeveloperRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryKey: adminQueryKeys.developerRequests,
+    queryFn: () => fetchAdminDeveloperRequests(),
+    refetchInterval: 60_000,
+  });
+  const review = useMutation({
+    mutationFn: ({ id, approve }: { id: string; approve: boolean }) =>
+      reviewDeveloperRequest(id, approve),
+    // Badge sidebar + ô "Yêu cầu chờ duyệt" ở Tổng quan cùng cập nhật.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: adminQueryKeys.all }),
+  });
 
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await fetchAdminDeveloperRequests();
-      setRequests(data);
-    } catch {
-      setError("loadFailed");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  const review = async (id: string, approve: boolean) => {
-    await reviewDeveloperRequest(id, approve);
-    await load();
-  };
-
+  const requests = query.data ?? [];
   return {
     requests,
     pending: requests.filter((r) => r.status === "pending"),
-    loading,
-    error,
-    review,
-    reload: load,
+    loading: query.isPending,
+    error: query.isError,
+    review: (id: string, approve: boolean) => review.mutateAsync({ id, approve }),
+    reviewingId: review.isPending ? review.variables?.id : undefined,
   };
 }

@@ -42,7 +42,7 @@ Key variables (all defined in the root `.env`):
 | Email | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` |
 | CORS | `CORS_ORIGINS`, `TRUSTED_ORIGINS` |
 | AI (backend) | `AI_SERVICE_URL`, `AI_CLIP_MIN_SIM`, `AI_YOLO_MIN_CONF` |
-| AI (service) | `AI_EMBED_PROVIDER`, `AI_OBJECT_PROVIDER`, `AI_GESTURE_PROVIDER`, `AI_FACE_PROVIDER`, `AI_CLIP_*`, `AI_YOLO_*` |
+| AI (service) | `AI_EMBED_PROVIDER`, `AI_OBJECT_PROVIDER`, `AI_CLIP_*`, `AI_YOLO_*` |
 | Frontend | `VITE_API_URL` (or `VITE_API_BASE_URL`) |
 | Production | `PUBLIC_API_BASE_URL`, `PUBLIC_API_BASE_URL_ROOT` |
 
@@ -93,20 +93,18 @@ Not needed to run the gallery — with `AI_EMBED_PROVIDER=stub` and
 docker compose -f docker-compose.dev.yml --env-file .env up -d --build ai-service
 ```
 
-**Native (Python 3.11–3.12):**
+**Native (Python 3.12, managed by [uv](https://docs.astral.sh/uv/)):**
 
 ```bash
 cd ai-service
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python scripts/download_clip_weight.py     # OpenCLIP weights
-python scripts/download_yolo_weight.py     # YOLO26 weights
-uvicorn app.main:app --reload --port 8000
+uv sync                                           # .venv + exact versions from uv.lock
+uv run python scripts/download_clip_weight.py     # OpenCLIP weights
+uv run python scripts/download_yolo_weight.py     # YOLO26 weights → models/
+uv run uvicorn app.main:app --reload --port 8000
 cd ..
 ```
 
-See [`ai-service/README.md`](../ai-service/README.md) for provider details and
-the MediaPipe / Python-version caveat.
+See [`ai-service/README.md`](../ai-service/README.md) for provider details.
 
 ## 5. Run backend + frontend
 
@@ -225,9 +223,6 @@ docker compose -f docker-compose.prod.yml --env-file .env up --build -d
   regenerate with `openssl rand -base64 32`.
 - **Schema changes not applied** — `schema.sql` only runs on a fresh volume:
   `docker compose -f docker-compose.dev.yml down -v` then start again.
-- **ai-service exits on start (macOS arm64)** — MediaPipe must be `0.10.x` with
-  Python ≤3.12; otherwise keep `AI_GESTURE_PROVIDER`/`AI_FACE_PROVIDER=stub` or
-  run ai-service in Docker.
 - **UI uses the system font instead of Product Sans** — the Product Sans `.otf`
   files are proprietary and intentionally **not committed**
   (`frontend/src/assets/fonts/` is git-ignored). The app falls back to

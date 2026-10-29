@@ -9,10 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide";
-import { MorphIcon } from "morphicons/react";
+import { PasswordInput } from "./components/PasswordInput";
 import { authClient } from "@/services/authClient";
 
 export const ResetPasswordView: React.FC = () => {
@@ -23,8 +21,6 @@ export const ResetPasswordView: React.FC = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -63,7 +59,7 @@ export const ResetPasswordView: React.FC = () => {
         return;
       }
       navigate("/auth", { replace: true });
-    } catch (err) {
+    } catch {
       setError(t("auth.resetPasswordError"));
     } finally {
       setIsSubmitting(false);
@@ -86,25 +82,14 @@ export const ResetPasswordView: React.FC = () => {
             {/* New Password Field */}
             <div className="space-y-2">
               <Label htmlFor="newPassword">{t("auth.newPassword")}</Label>
-              <div className="relative">
-                <Input
-                  id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  autoFocus
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <MorphIcon icon={showNewPassword ? EyeOff : Eye} size={16} />
-                </button>
-              </div>
+              <PasswordInput
+                id="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                minLength={8}
+                autoFocus
+              />
             </div>
 
             {/* Confirm Password Field */}
@@ -112,24 +97,13 @@ export const ResetPasswordView: React.FC = () => {
               <Label htmlFor="confirmPassword">
                 {t("auth.confirmPassword")}
               </Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  <MorphIcon icon={showConfirmPassword ? EyeOff : Eye} size={16} />
-                </button>
-              </div>
+              <PasswordInput
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
+              />
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}

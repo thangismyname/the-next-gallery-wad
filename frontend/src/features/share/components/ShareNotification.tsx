@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { FileMetadata } from "@/types";
+import { formatBytes } from "@/utils/format";
 
 export type SaveMode = "gallery" | "download";
 
@@ -23,10 +24,6 @@ interface ShareNotificationProps {
   onReject: () => void;
 }
 
-function formatSize(bytes: number): string {
-  const mb = bytes / (1024 * 1024);
-  return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
-}
 
 export const ShareNotification: React.FC<ShareNotificationProps> = ({
   senderName,
@@ -62,7 +59,7 @@ export const ShareNotification: React.FC<ShareNotificationProps> = ({
               })}
             </span>
             <span className="ml-1 text-xs">
-              · {t("share.totalSize", { size: formatSize(totalSize) })}
+              · {t("share.totalSize", { size: formatBytes(totalSize) })}
             </span>
           </AlertDescription>
         </div>

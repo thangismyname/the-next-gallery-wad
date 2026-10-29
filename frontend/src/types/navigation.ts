@@ -4,8 +4,10 @@ export interface NavMenuItem {
   label: string;
   icon: LucideIcon;
   to: string;
-  isPrimaryMode?: boolean; // Dùng cho BottomBar
-  section?: "primary" | "library" | "personal"; // Phân nhóm lớn cho Sidebar
+  /** Vị trí trên bottom bar mobile (0–4, 2 = nút Camera nổi ở giữa); không có = không hiện. */
+  bottomBar?: number;
+  /** Nhóm trên sidebar; "system" (Thùng rác) ghim dưới cùng. */
+  section?: "photos" | "ai" | "social" | "system";
   badge?: number; // Số hiển thị trên item (vd lời mời moment)
 }
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, Request, UploadFile
+from fastapi.concurrency import run_in_threadpool
 
-from app.api.embed import read_image_or_400
+from app.api.deps import read_image_or_400
 from app.schemas.object_detect import ObjectDetection, ObjectDetectResponse
 
 router = APIRouter()
@@ -18,8 +19,14 @@ async def detect_objects(request: Request, file: UploadFile = File(...)):
 
     provider = request.app.state.object_provider
     lock = request.app.state.object_lock
-    with lock:
-        detections = provider.detect(image_bytes)
+
+    def _detect() -> list[dict]:
+        # YOLO predict tuần tự qua lock (tránh tranh chấp model trên CPU);
+        # chạy trong threadpool để không chặn event loop.
+        with lock:
+            return provider.detect(image_bytes)
+
+    detections = await run_in_threadpool(_detect)
 
     return ObjectDetectResponse(
         provider=provider.name,

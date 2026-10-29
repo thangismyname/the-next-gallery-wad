@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { formatCountdown } from "@/utils/format";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { Check, Copy } from "lucide";
@@ -7,23 +8,6 @@ import { MorphIcon } from "morphicons/react";
 
 import { Button } from "@/components/ui/button";
 import { fetchInviteToken, InviteTokenData } from "@/services/friends";
-
-function formatRemaining(totalSeconds: number): string {
-  if (totalSeconds <= 0) return "00:00:00";
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  if (days > 0) {
-    return `${days}d ${String(hours).padStart(2, "0")}:${String(
-      minutes,
-    ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  }
-  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
-    2,
-    "0",
-  )}:${String(seconds).padStart(2, "0")}`;
-}
 
 export const FriendInviteCard: React.FC = () => {
   const { t } = useTranslation();
@@ -88,7 +72,7 @@ export const FriendInviteCard: React.FC = () => {
           {!loading && invite && !expired && (
             <span className="text-xs tabular-nums text-muted-foreground">
               {t("friends.inviteExpiresIn", {
-                time: formatRemaining(Math.round(remainingMs / 1000)),
+                time: formatCountdown(Math.round(remainingMs / 1000)),
               })}
             </span>
           )}

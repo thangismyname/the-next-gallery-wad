@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { uploadMedia } from "@/services/media";
-import { createMoment } from "@/services/moments";
+import { createMoment, momentsFeedQueryKey } from "@/services/moments";
 import { galleryQueryPrefix } from "@/hooks/useGalleryMedia";
 import {
   MAX_DURATION,
@@ -471,7 +471,7 @@ export function useCamera(opts?: UseCameraOptions) {
 
       queryClient.invalidateQueries({ queryKey: galleryQueryPrefix });
       queryClient.invalidateQueries({ queryKey: ["home"] });
-      queryClient.invalidateQueries({ queryKey: ["moments", "feed"] });
+      queryClient.invalidateQueries({ queryKey: momentsFeedQueryKey });
       setSaved(true);
       savedTimerRef.current = window.setTimeout(() => {
         resetCapture();

@@ -1,18 +1,18 @@
 // src/features/admin/components/AdminSidebar.tsx
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LayoutDashboard, Users, Images, Settings, X } from "lucide-react";
+import { Code2, LayoutDashboard, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/features/toggles/ThemeToggle";
 import { LanguageToggle } from "@/features/toggles/LanguageToggle";
+import { useAdminDeveloperRequests } from "@/hooks/useAdminDeveloperRequests";
 import type { AdminNavItem } from "@/types";
 
 const navItems: AdminNavItem[] = [
   { key: "dashboard", to: "/admin", icon: LayoutDashboard, end: true },
   { key: "users", to: "/admin/users", icon: Users },
-  { key: "photos", to: "/admin/photos", icon: Images },
-  { key: "settings", to: "/admin/settings", icon: Settings },
+  { key: "developer", to: "/admin/developer", icon: Code2 },
 ] as const;
 
 interface AdminSidebarProps {
@@ -22,6 +22,8 @@ interface AdminSidebarProps {
 
 function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
+  // Số yêu cầu Developer đang chờ → badge cạnh mục "Yêu cầu Developer".
+  const { pending } = useAdminDeveloperRequests();
 
   return (
     <nav className="flex flex-1 flex-col gap-1 p-3">
@@ -40,7 +42,12 @@ function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
           }
         >
           <Icon className="h-4 w-4" />
-          {t(`admin.nav.${key}`)}
+          <span className="flex-1">{t(`admin.nav.${key}`)}</span>
+          {key === "developer" && pending.length > 0 && (
+            <span className="rounded-full bg-primary px-1.5 py-0.5 text-[10px] leading-none font-medium text-primary-foreground tabular-nums">
+              {pending.length}
+            </span>
+          )}
         </NavLink>
       ))}
     </nav>
@@ -57,13 +64,13 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         <AdminNav />
       </aside>
 
-      {/* Mobile: backdrop */}
+      {/* Mobile: backdrop. Khi mở KHÔNG ép pointer-events-auto: menu Radix
+          (chọn ngôn ngữ) đặt body pointer-events:none, backdrop phải kế thừa
+          theo — nếu không, cú chạm mở menu "rơi" xuống backdrop và đóng drawer. */}
       <div
         className={cn(
           "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-opacity md:hidden",
-          isOpen
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0",
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         onClick={onClose}
         aria-hidden="true"
@@ -88,9 +95,11 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
         <AdminNav onNavigate={onClose} />
 
-        <div className="flex items-center gap-2 border-t border-border/50 p-3">
-          <ThemeToggle />
-          <LanguageToggle />
+        {/* Toggle mặc định ẩn dưới sm (header cũng ẩn chúng trên mobile) →
+            ép hiện trong drawer; từ sm trở lên header đã có nên ẩn ở đây. */}
+        <div className="flex items-center justify-center gap-2 border-t border-border/50 p-3 sm:hidden">
+          <ThemeToggle className="inline-flex" />
+          <LanguageToggle className="inline-flex" />
         </div>
       </aside>
     </>

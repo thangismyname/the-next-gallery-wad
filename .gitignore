@@ -31,6 +31,8 @@ __pycache__/
 # ── Fonts (kept local only — proprietary/3rd-party binaries) ──
 frontend/src/assets/fonts/*
 !frontend/src/assets/fonts/README.md
+# DFVN Basteleur (heading) — SIL OFL, được phép phân phối lại → commit để deploy có font
+!frontend/src/assets/fonts/DFVN-Basteleur-*.otf
 
 # ── OS / IDE ──────────────────
 .DS_Store

@@ -4,6 +4,7 @@ __pycache__
 venv
 .git
 .env
-models/*.task
+models/
 .pytest_cache
-static/
+tests/
+static/bench/runs/

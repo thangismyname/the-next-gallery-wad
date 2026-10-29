@@ -137,10 +137,6 @@ services:
     environment:
       AI_HOST: 0.0.0.0
       AI_PORT: 8000
-      # Hand/face feature đã gỡ — dùng stub để ai-service khởi động (không cần model .task).
-      AI_GESTURE_PROVIDER: ${AI_GESTURE_PROVIDER:-stub}
-      AI_FACE_PROVIDER: ${AI_FACE_PROVIDER:-stub}
-      AI_MODEL_DIR: models
       AI_EMBED_PROVIDER: open_clip
       AI_CLIP_MODEL: ${AI_CLIP_MODEL:-ViT-B-32}
       AI_CLIP_PRETRAINED: ${AI_CLIP_PRETRAINED:-laion2b_s34b_b79k}

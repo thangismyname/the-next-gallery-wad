@@ -4,15 +4,54 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/playfair-display"; /* dùng cho heading */
 
-/* @custom-variant dark (&:is(.dark *));
-  Removed/disabled because some tools report "Unknown at rule @custom-variant".
-  If you rely on a Tailwind plugin that supports @custom-variant, re-enable it
-  or configure the tooling to recognize the directive. */
+/* `dark:` theo class .dark do next-themes gắn (nút đổi theme của app), KHÔNG
+   theo chế độ sáng/tối của hệ điều hành. Thiếu dòng này Tailwind v4 dùng
+   prefers-color-scheme → máy để Dark Mode thì `dark:` vẫn chạy dù app đang Sáng.
+   (Cảnh báo "Unknown at rule" của VS Code: đã tắt trong .vscode/settings.json.) */
+@custom-variant dark (&:is(.dark *));
+
+/* Bấm link neo (#download…) → cuộn mượt; tắt khi người dùng bật "Giảm chuyển động". */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Băng chữ chạy ngang (landing — components/effects.tsx::Marquee). */
+@utility animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+/* Icon trang trống trôi nhẹ lên xuống (app — đỡ "chết" khi chưa có gì). */
+@utility animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-float {
+    animation: none;
+  }
+}
+
+/* Bề mặt kính mờ (thanh nổi, Spotlight) — cùng kiểu ô tìm kiếm mẫu ở landing. */
+@utility glass {
+  @apply border border-border/60 bg-background/90 shadow-2xl shadow-black/15 backdrop-blur-xl;
+}
 
 /* ============================================
-   LIGHT MODE — nền trắng ngà nhẹ, chữ đen
+   LIGHT MODE — nền trắng ngà nhẹ, chữ đen. Dải xám TRUNG TÍNH (chroma ≈ 0,
+   cùng hue 85 với nền ngà) — đơn sắc như landing; màu nhấn chỉ ở chip AI
+   (lib/aiColors.ts). Không dùng taupe/nâu.
    ============================================ */
 :root {
   color-scheme: light dark;
@@ -20,46 +59,46 @@
 
   /* Surface */
   --background: oklch(0.99 0.006 85); /* trắng hơi vàng, vẫn thiên trắng */
-  --foreground: oklch(0.145 0.004 49.3); /* gần đen */
+  --foreground: oklch(0.145 0 0); /* gần đen */
   --card: oklch(0.99 0.006 85);
-  --card-foreground: oklch(0.145 0.004 49.3);
+  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(0.99 0.006 85);
-  --popover-foreground: oklch(0.145 0.004 49.3);
+  --popover-foreground: oklch(0.145 0 0);
 
   /* Primary / Secondary */
-  --primary: oklch(0.214 0.009 43.1);
-  --primary-foreground: oklch(0.986 0.002 67.8);
-  --secondary: oklch(0.96 0.002 17.2);
-  --secondary-foreground: oklch(0.214 0.009 43.1);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0.003 85);
+  --secondary: oklch(0.955 0.003 85);
+  --secondary-foreground: oklch(0.205 0 0);
 
   /* Muted / Accent */
-  --muted: oklch(0.96 0.002 17.2);
-  --muted-foreground: oklch(0.547 0.021 43.1);
-  --accent: oklch(0.96 0.002 17.2);
-  --accent-foreground: oklch(0.214 0.009 43.1);
+  --muted: oklch(0.955 0.003 85);
+  --muted-foreground: oklch(0.55 0.004 85);
+  --accent: oklch(0.955 0.003 85);
+  --accent-foreground: oklch(0.205 0 0);
 
   /* Utility */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0.005 34.3);
-  --input: oklch(0.922 0.005 34.3);
-  --ring: oklch(0.714 0.014 41.2);
+  --border: oklch(0.92 0.003 85);
+  --input: oklch(0.92 0.003 85);
+  --ring: oklch(0.71 0.004 85);
 
   /* Charts */
-  --chart-1: oklch(0.868 0.007 39.5);
-  --chart-2: oklch(0.547 0.021 43.1);
-  --chart-3: oklch(0.438 0.017 39.3);
-  --chart-4: oklch(0.367 0.016 35.7);
-  --chart-5: oklch(0.268 0.011 36.5);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
 
   /* Sidebar */
-  --sidebar: oklch(0.986 0.002 67.8);
-  --sidebar-foreground: oklch(0.147 0.004 49.3);
-  --sidebar-primary: oklch(0.214 0.009 43.1);
-  --sidebar-primary-foreground: oklch(0.986 0.002 67.8);
-  --sidebar-accent: oklch(0.96 0.002 17.2);
-  --sidebar-accent-foreground: oklch(0.214 0.009 43.1);
-  --sidebar-border: oklch(0.922 0.005 34.3);
-  --sidebar-ring: oklch(0.714 0.014 41.2);
+  --sidebar: oklch(0.985 0.003 85);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0.003 85);
+  --sidebar-accent: oklch(0.955 0.003 85);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.92 0.003 85);
+  --sidebar-ring: oklch(0.71 0.004 85);
 }
 
 /* ============================================
@@ -73,35 +112,55 @@
   --popover: oklch(0.13 0 0);
   --popover-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.922 0.005 34.3);
-  --primary-foreground: oklch(0.214 0.009 43.1);
-  --secondary: oklch(0.268 0.011 36.5);
-  --secondary-foreground: oklch(0.986 0.002 67.8);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.26 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
 
-  --muted: oklch(0.268 0.011 36.5);
-  --muted-foreground: oklch(0.714 0.014 41.2);
-  --accent: oklch(0.268 0.011 36.5);
-  --accent-foreground: oklch(0.986 0.002 67.8);
+  --muted: oklch(0.26 0 0);
+  --muted-foreground: oklch(0.71 0 0);
+  --accent: oklch(0.26 0 0);
+  --accent-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.547 0.021 43.1);
+  --ring: oklch(0.556 0 0);
 
-  --chart-1: oklch(0.868 0.007 39.5);
-  --chart-2: oklch(0.547 0.021 43.1);
-  --chart-3: oklch(0.438 0.017 39.3);
-  --chart-4: oklch(0.367 0.016 35.7);
-  --chart-5: oklch(0.268 0.011 36.5);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
 
   --sidebar: oklch(0.11 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.986 0.002 67.8);
-  --sidebar-accent: oklch(0.268 0.011 36.5);
+  --sidebar-primary: oklch(0.922 0 0);
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-accent: oklch(0.26 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.547 0.021 43.1);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* ============================================
+   FONT: DFVN BASTELEUR — heading (bản Việt hoá của Basteleur, SIL OFL)
+   Moonlight = nét mảnh (≤ 400), Bold = đậm (≥ 500): `font-heading` thường →
+   Moonlight, `font-heading font-semibold` → Bold.
+   ============================================ */
+@font-face {
+  font-family: "DFVN Basteleur";
+  src: url("./assets/fonts/DFVN-Basteleur-Moonlight.otf") format("opentype");
+  font-weight: 100 499;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DFVN Basteleur";
+  src: url("./assets/fonts/DFVN-Basteleur-Bold.otf") format("opentype");
+  font-weight: 500 900;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* ============================================
@@ -141,9 +200,8 @@
    ============================================ */
 @theme inline {
   --font-sans: "Product Sans", system-ui, sans-serif;
-  --font-heading: "Playfair Display Variable", serif;
-  /* Map font-serif về cùng Playfair để mọi "serif" thống nhất với font-heading */
-  --font-serif: "Playfair Display Variable", serif;
+  --font-heading: "DFVN Basteleur", Georgia, serif;
+  --font-serif: "DFVN Basteleur", Georgia, serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

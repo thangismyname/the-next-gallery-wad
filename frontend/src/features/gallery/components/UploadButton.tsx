@@ -57,11 +57,12 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onUploaded }) => {
     : 0;
 
   return (
-    <div className="flex flex-col items-end gap-1.5">
+    // Tiến độ / lỗi nổi dưới nút (absolute) → thanh công cụ không cao lên khi upload.
+    <div className="relative shrink-0">
       <input
         ref={inputRef}
         type="file"
-        accept="image/*,video/*"
+        accept="image/*,video/*,.heic,.heif"
         multiple
         className="hidden"
         onChange={handleFilesSelected}
@@ -80,23 +81,27 @@ export const UploadButton: React.FC<UploadButtonProps> = ({ onUploaded }) => {
       </Button>
 
       {uploading && progress && (
-        <div className="w-48">
-          <div className="flex justify-between text-xs text-gray-500 mb-1">
+        <div className="glass absolute top-full right-0 z-20 mt-2 w-48 rounded-lg p-2">
+          <div className="mb-1 flex justify-between text-xs text-muted-foreground tabular-nums">
             <span>
               {progress.uploadedCount}/{progress.totalCount}
             </span>
             <span>{overallPercent}%</span>
           </div>
-          <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full bg-blue-500 transition-[width] duration-150 ease-out"
+              className="h-full bg-primary transition-[width] duration-150 ease-out"
               style={{ width: `${overallPercent}%` }}
             />
           </div>
         </div>
       )}
 
-      {error && <span className="text-xs text-red-400">{error}</span>}
+      {error && (
+        <span className="absolute top-full right-0 z-20 mt-2 w-max max-w-60 rounded-lg bg-destructive/10 px-2 py-1 text-xs text-destructive">
+          {error}
+        </span>
+      )}
     </div>
   );
 };

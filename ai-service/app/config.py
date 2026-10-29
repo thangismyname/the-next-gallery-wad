@@ -14,17 +14,6 @@ class Settings(BaseSettings):
     port: int = 8000
     log_level: str = "info"
 
-    # Provider gesture tay: "stub" | "mediapipe"
-    # "stub"  = không cần model, trả về empty — dùng để chạy skeleton.
-    # "mediapipe" = MediaPipe GestureRecognizer (chạy download_model.py --task hand trước).
-    gesture_provider: str = "stub"
-
-    # Provider biểu cảm khuôn mặt: "stub" | "mediapipe"
-    # "stub"  = không cần model, trả về empty.
-    # "mediapipe" = MediaPipe FaceLandmarker + blendshape → expression
-    #               (chạy download_model.py --task face trước).
-    face_provider: str = "stub"
-
     # Provider embedding cho semantic search: "stub" | "open_clip"
     # "stub"      = vector giả lập deterministic (không cần torch) — chạy skeleton.
     # "open_clip" = OpenCLIP image/text encoder, cần `open_clip_torch` + torch
@@ -40,19 +29,32 @@ class Settings(BaseSettings):
     # "yolo" = Ultralytics YOLO26 (COCO 80 class); weights tự tải lần đầu
     #          hoặc bake sẵn qua scripts/download_yolo_weight.py.
     object_provider: str = "stub"
-    # Đường dẫn/ tên weights YOLO. Nếu là tên (vd 'yolo26n.pt') thì Ultralytics
-    # tự tải về cwd; nếu là path tuyệt đối (vd /opt/yolo-cache/yolo26n.pt) thì
-    # dùng file đã bake.
-    yolo_weights: str = "yolo26n.pt"
+    # Đường dẫn weights YOLO. Path tương đối tính từ thư mục ai-service/
+    # (local: tải trước bằng scripts/download_yolo_weight.py → models/);
+    # Docker dùng path tuyệt đối đã bake (vd /opt/yolo-cache/yolo26n.pt).
+    yolo_weights: str = "models/yolo26n.pt"
     yolo_device: str = "auto"
     yolo_conf: float = 0.25
     yolo_imgsz: int = 640
 
-    # Đường dẫn model file (tương đối với thư mục ai-service/).
-    model_dir: str = "models"
-    face_model_dir: str = "models"
+    # Provider image similarity (DINOv3 — ảnh tương tự): "stub" | "dinov3"
+    # "stub"   = vector giả lập 384 chiều (không cần weights).
+    # "dinov3" = DINOv3 qua transformers; checkpoint GATED trên HF → tải trước
+    #            bằng scripts/download_dino_weight.py (cần `hf auth login`).
+    similarity_provider: str = "stub"
+    # Path local (tương đối ai-service/) hoặc HF repo id. Backend lưu vector(384)
+    # → giữ model 384 chiều (ViT-S/16 hoặc ViT-S+/16).
+    dino_model: str = "models/dinov3-vits16-pretrain-lvd1689m"
+    dino_device: str = "auto"
 
-    # CORS — FE web gọi trực tiếp /api/v1/detect (dev).
+    # Gắn tag nội dung (classification) từ vector CLIP: đọc model .npz do
+    # bench/cls_eval.py train. Path tương đối tính từ ai-service/. Config chỉ
+    # nhận model dùng feature CLIP ("lp_clip" | "zs_clip"); thiếu file →
+    # zero-shot cho nhóm tag đó.
+    tag_models_dir: str = "bench/runs/cls"
+    tag_config: str = "lp_clip"
+
+    # CORS — FE web gọi trực tiếp API (dev).
     cors_origins: list[str] = ["http://localhost:5173"]
 
     model_config = SettingsConfigDict(

@@ -1,3 +1,4 @@
+import type { TFunction } from "i18next";
 import { Moment } from "@/types";
 
 export interface MomentParticipant {
@@ -6,13 +7,16 @@ export interface MomentParticipant {
   userAvatarUrl: string | null;
 }
 
-export function getInitials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
+/** "vừa xong" / "5 phút" / "3 giờ" / "2 ngày" — dùng cho card moment + meme. */
+export function timeAgo(iso: string, t: TFunction): string {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return t("moments.timeJustNow");
+  if (mins < 60) return t("moments.timeMin", { n: mins });
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return t("moments.timeHour", { n: hours });
+  const days = Math.floor(hours / 24);
+  return t("moments.timeDay", { n: days });
 }
 
 /**

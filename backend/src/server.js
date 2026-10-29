@@ -6,19 +6,29 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { ensureBucketExists } from "./config/minio.js";
-import { dbPool } from "./config/db.js";
-import routes from "./routes/index.js";
+import { ensureSchema } from "./db/migrate.js";
+import routes from "./modules/index.js";
 import { setupWebSocket } from "./ws/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 
 const app = express();
+const isProduction = process.env.NODE_ENV === "production";
+
+// Sau Caddy: tin 1 proxy → req.ip / req.protocol đúng (log, rate limit auth).
+if (isProduction) app.set("trust proxy", 1);
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+app.use(morgan(isProduction ? "combined" : "dev"));
 
+// CORS có cookie: production BẮT BUỘC liệt kê origin — `origin: true` (phản
+// chiếu mọi origin) sẽ cho trang bất kỳ đọc API bằng phiên của người dùng.
 const allowedOrigins = (process.env.CORS_ORIGINS || "")
   .split(",")
+  .map((o) => o.trim())
   .filter(Boolean);
+if (isProduction && allowedOrigins.length === 0) {
+  throw new Error("CORS_ORIGINS is required in production (comma-separated web origins)");
+}
 app.use(
   cors({
     origin: allowedOrigins.length > 0 ? allowedOrigins : true,
@@ -35,48 +45,13 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-async function ensureSchema() {
-  const statements = [
-    `ALTER TABLE media ADD COLUMN IF NOT EXISTS thumbnail_small_object TEXT`,
-    `ALTER TABLE media ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ`,
-    `ALTER TABLE media ADD COLUMN IF NOT EXISTS is_favorite BOOLEAN NOT NULL DEFAULT false`,
-    `CREATE INDEX IF NOT EXISTS idx_media_deleted_at
-       ON media (deleted_at)
-       WHERE deleted_at IS NOT NULL`,
-    `CREATE INDEX IF NOT EXISTS idx_media_is_favorite
-       ON media (user_id, is_favorite)
-       WHERE is_favorite = true`,
-    // ── AI phase: embeddings cho semantic search (OpenCLIP + pgvector) ──
-    `CREATE EXTENSION IF NOT EXISTS vector`,
-    `CREATE TABLE IF NOT EXISTS media_embeddings (
-       media_id UUID PRIMARY KEY REFERENCES media (id) ON DELETE CASCADE,
-       user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
-       model VARCHAR(100) NOT NULL,
-       embedding vector(512) NOT NULL,
-       created_at TIMESTAMPTZ DEFAULT now(),
-       updated_at TIMESTAMPTZ DEFAULT now()
-     )`,
-    `CREATE INDEX IF NOT EXISTS idx_media_embeddings_user
-       ON media_embeddings (user_id)`,
-    `CREATE INDEX IF NOT EXISTS idx_media_embeddings_hnsw
-       ON media_embeddings USING hnsw (embedding vector_cosine_ops)`,
-  ];
-  for (const statement of statements) {
-    try {
-      await dbPool.query(statement);
-    } catch (err) {
-      console.error("❌ Không thể ALTER bảng media:", err.message);
-    }
-  }
-}
-
 async function startServer() {
   await ensureBucketExists();
   await ensureSchema();
 
   // Create http.Server and attach WebSocket server
   const server = http.createServer(app);
-  const wss = setupWebSocket(server, { path: "/ws" });
+  setupWebSocket(server, { path: "/ws", allowedOrigins });
 
   server.listen(PORT, () => {
     console.log(
@@ -85,4 +60,7 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch((err) => {
+  console.error("❌ Không khởi động được server:", err);
+  process.exit(1);
+});

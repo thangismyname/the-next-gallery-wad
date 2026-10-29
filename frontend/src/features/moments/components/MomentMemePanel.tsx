@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { ChevronLeft, Heart, Plus, Sticker, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,12 +12,15 @@ import {
   deleteMomentMeme,
   fetchMomentMemes,
   momentMemesQueryKey,
+  MomentMemePage,
   toggleMemeReaction,
 } from "@/services/moments";
 import { Moment, MomentMeme } from "@/types";
 import { cn } from "@/lib/utils";
-import { getInitials } from "../participants";
+import { getInitials } from "@/utils/string";
+import { timeAgo } from "../participants";
 import { MemePickerDialog } from "./MemePickerDialog";
+import { bumpFeedMemeCount } from "../momentsCache";
 
 type Props = {
   moment: Moment;
@@ -21,46 +28,7 @@ type Props = {
   onBack: () => void;
 };
 
-/** Query key của list meme 1 moment — dùng chung để cập nhật cache. */
-
 const PAGE_SIZE = 20;
-
-function timeAgo(
-  iso: string,
-  t: ReturnType<typeof useTranslation>["t"],
-): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return t("moments.timeJustNow");
-  if (mins < 60) return t("moments.timeMin", { n: mins });
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return t("moments.timeHour", { n: hours });
-  const days = Math.floor(hours / 24);
-  return t("moments.timeDay", { n: days });
-}
-
-// Tăng/giảm memeCount trong cache feed (["moments","feed"]) để nút lật cập nhật
-// ngay mà không cần refetch. Thất bại im lặng — lần fetch sau sẽ sửa lại đúng.
-function bumpFeedMemeCount(
-  queryClient: ReturnType<typeof useQueryClient>,
-  momentId: string,
-  delta: number,
-) {
-  queryClient.setQueriesData(
-    { queryKey: ["moments", "feed"] },
-    (old: { items: Moment[] } | undefined) => {
-      if (!old) return old;
-      return {
-        ...old,
-        items: old.items.map((m) =>
-          m.id === momentId
-            ? { ...m, memeCount: Math.max(0, (m.memeCount ?? 0) + delta) }
-            : m,
-        ),
-      };
-    },
-  );
-}
 
 /**
  * MẶT SAU thẻ moment (khi lật) — danh sách meme về bức ảnh, scroll liên tục
@@ -110,22 +78,25 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
     return () => io.disconnect();
   }, [hasNextPage, fetchNextPage]);
 
+  // Sửa list meme trong cache theo từng trang (thêm/xóa/patch 1 meme).
+  const updateMemePages = (
+    fn: (items: MomentMeme[], pageIndex: number) => MomentMeme[],
+  ) => {
+    queryClient.setQueryData<InfiniteData<MomentMemePage>>(
+      momentMemesQueryKey(moment.id),
+      (old) =>
+        old && {
+          ...old,
+          pages: old.pages.map((page, i) => ({
+            ...page,
+            items: fn(page.items, i),
+          })),
+        },
+    );
+  };
+
   const handleCreated = (meme: MomentMeme) => {
-    queryClient.setQueryData(momentMemesQueryKey(moment.id), (old) => {
-      if (!old) return old;
-      const first = old.pages[0];
-      if (!first) return old;
-      return {
-        ...old,
-        pages: [
-          {
-            ...first,
-            items: [meme, ...first.items],
-          },
-          ...old.pages.slice(1),
-        ],
-      };
-    });
+    updateMemePages((items, i) => (i === 0 ? [meme, ...items] : items));
     bumpFeedMemeCount(queryClient, moment.id, 1);
     setPickerOpen(false);
   };
@@ -134,16 +105,7 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
     if (!window.confirm(t("moments.memeDeleteConfirm"))) return;
     try {
       await deleteMomentMeme(moment.id, meme.id);
-      queryClient.setQueryData(momentMemesQueryKey(moment.id), (old) => {
-        if (!old) return old;
-        return {
-          ...old,
-          pages: old.pages.map((page) => ({
-            ...page,
-            items: page.items.filter((x) => x.id !== meme.id),
-          })),
-        };
-      });
+      updateMemePages((items) => items.filter((x) => x.id !== meme.id));
       bumpFeedMemeCount(queryClient, moment.id, -1);
     } catch {
       window.alert(t("moments.memeDeleteFailed"));
@@ -155,18 +117,9 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
     memeId: string,
     patch: { myReact: boolean; reactCount: number },
   ) => {
-    queryClient.setQueryData(momentMemesQueryKey(moment.id), (old) => {
-      if (!old) return old;
-      return {
-        ...old,
-        pages: old.pages.map((page) => ({
-          ...page,
-          items: page.items.map((m) =>
-            m.id === memeId ? { ...m, ...patch } : m,
-          ),
-        })),
-      };
-    });
+    updateMemePages((items) =>
+      items.map((m) => (m.id === memeId ? { ...m, ...patch } : m)),
+    );
   };
 
   // Tim (❤️) meme — optimistic: đổi UI ngay, sau đó khớp đúng từ API.

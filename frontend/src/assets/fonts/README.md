@@ -1,11 +1,13 @@
 # Fonts (local only)
 
-The font binaries in this folder are **not committed** to the repository (see
-`.gitignore`). They are third-party/proprietary files that must not be
-redistributed.
+Fonts referenced by the app via `@font-face` in `frontend/src/index.css`:
 
-Only **Product Sans** is referenced by the app, via `@font-face` in
-`frontend/src/index.css`:
+| File | Used for | In git? |
+|------|----------|---------|
+| `DFVN-Basteleur-Moonlight.otf` | `--font-heading`, weight ≤ 400 | ✅ SIL OFL (Vietnamese build of Basteleur) |
+| `DFVN-Basteleur-Bold.otf` | `--font-heading`, weight ≥ 500 (`font-semibold`) | ✅ SIL OFL |
+
+Product Sans is proprietary and **not committed** (see `.gitignore`):
 
 | File | Used for |
 |------|----------|
@@ -14,8 +16,7 @@ Only **Product Sans** is referenced by the app, via `@font-face` in
 | `Product Sans Bold.otf` | body/UI bold |
 | `Product Sans Bold Italic.otf` | body/UI bold italic |
 
-Headings use **Playfair Display**, which is installed from npm
-(`@fontsource-variable/playfair-display`) and therefore needs no local file.
+Uppercase labels use `font-mono` = the OS monospace font (no file needed).
 
 ## What happens without these files
 

@@ -32,7 +32,7 @@ export const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         return;
       }
       setSent(true);
-    } catch (err) {
+    } catch {
       setError(t("auth.forgotPasswordError"));
     } finally {
       setIsSubmitting(false);

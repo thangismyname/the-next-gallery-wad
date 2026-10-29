@@ -6,18 +6,25 @@ import {
   Loader2,
   Heart,
   Info,
+  Download,
   ZoomIn,
   ZoomOut,
   RotateCcw,
   Trash2,
+  Maximize2,
+  FolderPlus,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Media } from "../../../types";
+import { MediaListItem, toMedia, downloadUrl } from "@/services/media";
 import { cn } from "@/lib/utils";
+import { formatBytes } from "@/utils/format";
 import { MediaDetailsPanel } from "./MediaDetailsPanel";
 import LightboxFilmstrip from "./LightboxFilmstrip";
 import { DetectionOverlay } from "./DetectionOverlay";
 import { useLightboxZoom } from "@/hooks/useLightboxZoom";
+import { useLightboxTransition } from "@/hooks/useLightboxTransition";
+import { useProgressiveImage } from "@/hooks/useProgressiveImage";
 import { useDeveloperMode } from "@/hooks/useDeveloperMode";
 import { useMediaDetections } from "@/hooks/useMediaDetections";
 
@@ -30,10 +37,14 @@ interface LightboxProps {
   onSelect?: (index: number) => void;
   onToggleFavorite?: () => void;
   onDelete?: () => void;
+  /** Mở hộp thoại "Thêm vào album" cho ảnh đang xem. */
+  onAddToAlbum?: () => void;
+  /** Nút "Tải bản gốc" (ẩn ở Thùng rác / link công khai — có nút riêng). */
+  canDownload?: boolean;
 }
 
 export const Lightbox: React.FC<LightboxProps> = ({
-  media,
+  media: mediaProp,
   mediaList,
   onClose,
   onPrev,
@@ -41,11 +52,18 @@ export const Lightbox: React.FC<LightboxProps> = ({
   onSelect,
   onToggleFavorite,
   onDelete,
+  onAddToAlbum,
+  canDownload = true,
 }) => {
   const { t } = useTranslation();
-  const [fullLoaded, setFullLoaded] = useState(false);
+  // Ảnh mở từ mục "Ảnh tương tự" mà không nằm trong mediaList → xem tạm tại
+  // chỗ (peek). Favorite/Delete ẩn khi peek vì callback của parent gắn với
+  // ảnh gốc; Esc / prev / next quay về luồng bình thường.
+  const [peek, setPeek] = useState<Media | null>(null);
+  const media = peek ?? mediaProp;
   const [detailsOpen, setDetailsOpen] = useState(false);
   const isVideo = media.mediaType === "video";
+
 
   // Developer Mode: vẽ bounding box YOLO lên ảnh
   const { devModeEnabled } = useDeveloperMode();
@@ -72,25 +90,86 @@ export const Lightbox: React.FC<LightboxProps> = ({
     onImgPointerUp,
   } = useLightboxZoom({ isVideo, resetKey: media.id });
 
+  // Phóng ra từ ô ảnh trong lưới khi mở, thu về khi đóng (hooks/useLightboxTransition).
+  const { scope, requestClose } = useLightboxTransition({
+    areaRef: imgAreaRef,
+    openId: mediaProp.id,
+    currentId: media.id,
+    onClose,
+  });
+
+  // 3 tầng ảnh med → display → gốc (hooks/useProgressiveImage).
+  const {
+    imageSrc,
+    displaySrc,
+    originalSrc,
+    displayLoaded,
+    fullLoaded,
+    hasDisplay,
+    needOriginal,
+    requestOriginal,
+    onDisplayLoad,
+    onDisplayError,
+    onFullLoad,
+  } = useProgressiveImage(media, { zoomed: view.zoom > 1 });
+
   const toggleDetails = () => setDetailsOpen((prev) => !prev);
 
-  const currentIndex = mediaList.findIndex((m) => m.id === media.id);
+  const currentIndex = mediaList.findIndex((m) => m.id === mediaProp.id);
+
+  useEffect(() => {
+    setPeek(null);
+  }, [mediaProp.id]);
+
+  const goPrev = onPrev
+    ? () => {
+        setPeek(null);
+        onPrev();
+      }
+    : undefined;
+  const goNext = onNext
+    ? () => {
+        setPeek(null);
+        onNext();
+      }
+    : undefined;
+  const handleSelect = onSelect
+    ? (index: number) => {
+        setPeek(null);
+        onSelect(index);
+      }
+    : undefined;
+
+  const openSimilar = (item: MediaListItem) => {
+    const index = mediaList.findIndex((m) => m.id === item.id);
+    if (index !== -1 && onSelect) {
+      setPeek(null);
+      onSelect(index);
+    } else {
+      setPeek(toMedia(item));
+    }
+  };
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft" && onPrev) onPrev();
-      if (e.key === "ArrowRight" && onNext) onNext();
+      if (e.key === "Escape") {
+        if (peek) setPeek(null);
+        else void requestClose();
+      }
+      if (e.key === "ArrowLeft" && onPrev) {
+        setPeek(null);
+        onPrev();
+      }
+      if (e.key === "ArrowRight" && onNext) {
+        setPeek(null);
+        onNext();
+      }
       if (e.key === "+" || e.key === "=") zoomStep(1.25);
       if (e.key === "-") zoomStep(1 / 1.25);
       if (e.key === "0") resetZoom();
     },
-    [onClose, onPrev, onNext, zoomStep, resetZoom],
+    [peek, requestClose, onPrev, onNext, zoomStep, resetZoom],
   );
-
-  useEffect(() => {
-    setFullLoaded(false);
-  }, [media.id]);
 
   // Đo vùng ảnh đang hiển thị để đặt overlay bbox đúng vị trí (object-contain).
   useEffect(() => {
@@ -115,9 +194,10 @@ export const Lightbox: React.FC<LightboxProps> = ({
       observer.disconnect();
       window.removeEventListener("resize", update);
     };
-  }, [showOverlay, media.id, fullLoaded, view.zoom]);
+  }, [showOverlay, media.id, displayLoaded, fullLoaded, view.zoom]);
 
-  // Preload ảnh kề (trái/phải) để chuyển ảnh không bị delay
+  // Preload BẢN DISPLAY của ảnh kề (trái/phải) để chuyển ảnh không bị delay —
+  // không bao giờ preload file gốc.
   useEffect(() => {
     if (mediaList.length === 0) return;
     const idx = mediaList.findIndex((m) => m.id === media.id);
@@ -127,9 +207,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
       mediaList[(idx - 1 + mediaList.length) % mediaList.length],
     ];
     adjacent.forEach((m) => {
-      if (m.mediaType === "video" || !m.url) return;
+      if (m.mediaType === "video" || !m.displayUrl) return;
       const img = new Image();
-      img.src = m.url;
+      img.src = m.displayUrl;
     });
   }, [media.id, mediaList]);
 
@@ -167,8 +247,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
 
   return (
     <div
+      ref={scope}
       className="fixed inset-0 z-50 bg-black/95 flex flex-col select-none backdrop-blur-xs"
-      onClick={onClose}
+      onClick={() => void requestClose()}
       onPointerMove={showFilmstrip}
       onPointerDown={showFilmstrip}
     >
@@ -237,6 +318,24 @@ export const Lightbox: React.FC<LightboxProps> = ({
                 )}
               </div>
             )}
+            {hasDisplay && !needOriginal && !fullLoaded && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  requestOriginal();
+                }}
+                className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-white/70 transition hover:bg-white/10 hover:text-white"
+                title={t("lightbox.viewOriginal")}
+              >
+                <Maximize2 size={14} />
+                {t("lightbox.viewOriginal")}
+                {media.sizeBytes ? (
+                  <span className="text-white/50">
+                    {formatBytes(media.sizeBytes)}
+                  </span>
+                ) : null}
+              </button>
+            )}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -251,7 +350,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
             >
               <Info size={24} />
             </button>
-            {onToggleFavorite && (
+            {onToggleFavorite && !peek && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -269,7 +368,31 @@ export const Lightbox: React.FC<LightboxProps> = ({
                 />
               </button>
             )}
-            {onDelete && (
+            {onAddToAlbum && !peek && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddToAlbum();
+                }}
+                className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition"
+                aria-label={t("albums.addTo")}
+                title={t("albums.addTo")}
+              >
+                <FolderPlus size={24} />
+              </button>
+            )}
+            {canDownload && media.url && (
+              <a
+                href={downloadUrl(media.url)}
+                onClick={(e) => e.stopPropagation()}
+                className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition"
+                aria-label={t("lightbox.download")}
+                title={t("lightbox.download")}
+              >
+                <Download size={24} />
+              </a>
+            )}
+            {onDelete && !peek && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -283,7 +406,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
               </button>
             )}
             <button
-              onClick={onClose}
+              onClick={() => void requestClose()}
               className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition"
               aria-label={t("lightbox.close")}
             >
@@ -292,9 +415,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
           </div>
 
           {/* Prev */}
-          {onPrev && currentIndex > 0 && (
+          {goPrev && currentIndex > 0 && (
             <button
-              onClick={onPrev}
+              onClick={goPrev}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-3 rounded-full hover:bg-white/10 transition z-10"
               aria-label={t("lightbox.prev")}
             >
@@ -302,35 +425,57 @@ export const Lightbox: React.FC<LightboxProps> = ({
             </button>
           )}
 
-          {/* Loading spinner */}
-          {!fullLoaded && !isVideo && (
+          {/* Loading spinner — chờ bản display */}
+          {!displayLoaded && !isVideo && (
             <div className="absolute inset-0 flex items-center justify-center z-10">
               <Loader2 className="w-8 h-8 animate-spin text-white/50" />
+            </div>
+          )}
+
+          {/* Đang tải file gốc (đã có bản display hiển thị bên dưới) */}
+          {displayLoaded && needOriginal && !fullLoaded && (
+            <div className="pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/70 px-3 py-1.5 text-xs text-white/80">
+              <Loader2 className="size-3.5 animate-spin" />
+              {t("lightbox.loadingOriginal")}
             </div>
           )}
 
           {isVideo ? (
             <video
               src={media.url}
+              // Poster hiện ngay; trình duyệt chỉ tải đoạn đầu (Range) để phát.
+              poster={media.displayUrl ?? undefined}
+              preload="metadata"
               controls
               autoPlay
               className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
             />
           ) : (
             <>
-              {/* Loader ẩn cho ảnh full — báo hiệu khi tải xong */}
-              {!fullLoaded && (
+              {/* Loader ẩn — báo hiệu khi từng tầng tải xong rồi mới đổi src */}
+              {!displayLoaded && (
                 <img
-                  src={media.url}
+                  src={displaySrc}
                   alt=""
                   aria-hidden
                   draggable={false}
-                  onLoad={() => setFullLoaded(true)}
+                  onLoad={onDisplayLoad}
+                  onError={onDisplayError}
+                  className="hidden"
+                />
+              )}
+              {needOriginal && !fullLoaded && (
+                <img
+                  src={originalSrc}
+                  alt=""
+                  aria-hidden
+                  draggable={false}
+                  onLoad={onFullLoad}
                   className="hidden"
                 />
               )}
 
-              {/* Chỉ hiện ĐÚNG 1 ảnh: thumbnail trong lúc chờ, full sau khi load xong */}
+              {/* Chỉ hiện ĐÚNG 1 ảnh: tầng tốt nhất đã tải xong */}
               <div
                 onPointerDown={onImgPointerDown}
                 onPointerMove={onImgPointerMove}
@@ -345,11 +490,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
               >
                 <img
                   ref={imgRef}
-                  src={
-                    fullLoaded
-                      ? media.url
-                      : media.thumbnailUrlLarge || media.url
-                  }
+                  src={imageSrc}
                   alt={media.title || "Gallery photo"}
                   draggable={false}
                   className="max-h-full max-w-full object-contain rounded-lg shadow-2xl opacity-100 select-none transition-transform duration-150 ease-out"
@@ -376,9 +517,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
           )}
 
           {/* Next */}
-          {onNext && currentIndex < mediaList.length - 1 && (
+          {goNext && currentIndex < mediaList.length - 1 && (
             <button
-              onClick={onNext}
+              onClick={goNext}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white p-3 rounded-full hover:bg-white/10 transition z-10"
               aria-label={t("lightbox.next")}
             >
@@ -396,7 +537,11 @@ export const Lightbox: React.FC<LightboxProps> = ({
               : "w-0 h-0 md:w-0 md:h-full md:shrink-0",
           )}
         >
-          <MediaDetailsPanel media={media} active={detailsOpen} />
+          <MediaDetailsPanel
+            media={media}
+            active={detailsOpen}
+            onSelectSimilar={openSimilar}
+          />
         </div>
       </div>
 
@@ -407,7 +552,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
           activeIndex={activeIndex}
           currentIndex={currentIndex}
           visible={filmstripVisible}
-          onSelect={onSelect}
+          onSelect={handleSelect}
         />
       )}
     </div>

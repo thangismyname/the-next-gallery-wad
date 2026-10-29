@@ -83,6 +83,9 @@ Table media {
   fps real
   video_codec varchar(50)
   thumbnail_object text
+  thumbnail_small_object text
+  display_object text [note: 'Bản xem ≤2048px giữ tỉ lệ cho lightbox + AI; video = poster']
+  full_object text [note: 'WebP độ phân giải gốc — chỉ HEIC']
   minio_object text [not null]
   minio_bucket varchar(100) [default: 'gallery']
   file_ext varchar(20)

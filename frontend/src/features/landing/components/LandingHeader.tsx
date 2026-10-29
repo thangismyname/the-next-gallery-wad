@@ -1,72 +1,136 @@
 // src/features/landing/components/LandingHeader.tsx
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "next-themes";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Globe } from "lucide-react";
+import { LanguageToggle } from "@/features/toggles/LanguageToggle";
+import { ThemeToggle } from "@/features/toggles/ThemeToggle";
+import { cn } from "@/lib/utils";
+import { useScrolled } from "@/hooks/useScrolled";
+import { menuItem, menuPanel } from "../landing.motion";
+import { LandingAuthActions } from "./LandingAuthActions";
 
-const NAV_LINKS = [
+// Chỉ trỏ tới trang có thật (chưa đăng nhập → ProtectedRoute đưa về /auth).
+// `href` = neo trong landing (cuộn mượt — xem index.css).
+const NAV_LINKS: { key: string; to?: string; href?: string }[] = [
   { key: "nav.gallery", to: "/gallery" },
-  { key: "nav.about", to: "/about" },
-  { key: "nav.contact", to: "/contact" },
+  { key: "nav.albums", to: "/albums" },
+  { key: "nav.studio", to: "/studio" },
+  { key: "nav.download", href: "#download" },
 ];
 
-export function LandingHeader() {
-  const { t, i18n } = useTranslation();
-  const { theme, setTheme } = useTheme();
+// Gạch chân chạy ra từ trái khi rê chuột lên link.
+const LINK =
+  "relative transition-colors hover:text-foreground after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-foreground after:transition-transform after:duration-300 hover:after:scale-x-100";
 
-  const toggleLang = () =>
-    i18n.changeLanguage(i18n.language === "vi" ? "en" : "vi");
+/**
+ * Header landing. Desktop (md+): logo · link · toggle + CTA.
+ * Mobile: logo nhỏ · CTA gọn · nút ☰ mở panel (link + toggle) trượt xuống.
+ */
+export function LandingHeader() {
+  const { t } = useTranslation();
+  const reduce = useReducedMotion();
+  const { pathname, hash } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Cuộn khỏi đầu trang → header thu gọn + đổ bóng nhẹ.
+  const scrolled = useScrolled(24);
+
+  // Đổi trang / bấm neo → đóng menu; Esc cũng đóng.
+  useEffect(() => setMenuOpen(false), [pathname, hash]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const renderLink = (link: (typeof NAV_LINKS)[number], className: string) =>
+    link.href ? (
+      <a key={link.key} href={link.href} className={className} onClick={() => setMenuOpen(false)}>
+        {t(link.key)}
+      </a>
+    ) : (
+      <Link key={link.key} to={link.to!} className={className}>
+        {t(link.key)}
+      </Link>
+    );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <Link to="/" className="font-mono text-sm uppercase tracking-[0.2em]">
-          {t("brand.name")}
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b bg-background/90 backdrop-blur transition-[box-shadow,border-color] duration-300",
+        scrolled || menuOpen ? "border-border/80 shadow-sm shadow-black/5" : "border-border/60",
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-[padding] duration-300 sm:px-6",
+          scrolled ? "py-3" : "py-3 md:py-5",
+        )}
+      >
+        <Link
+          to="/"
+          className="truncate font-mono text-xs uppercase tracking-[0.15em] sm:text-sm sm:tracking-[0.2em]"
+        >
+          {t("app.name")}
         </Link>
 
         <nav className="hidden gap-8 font-mono text-xs uppercase tracking-widest text-muted-foreground md:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.key}
-              to={link.to}
-              className="transition-colors hover:text-foreground"
-            >
-              {t(link.key)}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) => renderLink(link, LINK))}
         </nav>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
+          {/* Toggle dùng chung của app — mobile chuyển vào panel menu */}
+          <LanguageToggle className="hidden md:inline-flex" />
+          <ThemeToggle className="hidden md:inline-flex" />
+          <LandingAuthActions className="h-8 px-3 text-[10px] md:h-9 md:px-4 md:text-xs" />
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleLang}
-            aria-label={t("nav.toggleLanguage")}
+            className="md:hidden"
+            aria-label={t("nav.menu")}
+            aria-expanded={menuOpen}
+            aria-controls="landing-menu"
+            onClick={() => setMenuOpen((v) => !v)}
           >
-            <Globe className="h-4 w-4" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label={t("nav.toggleTheme")}
-          >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          </Button>
-
-          <Button
-            asChild
-            size="sm"
-            className="rounded-none font-mono text-xs uppercase tracking-widest"
-          >
-            <Link to="/auth">{t("nav.login")}</Link>
+            {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </Button>
         </div>
       </div>
+
+      {/* Panel menu mobile — trượt xuống dưới header */}
+      <AnimatePresence initial={false}>
+        {menuOpen && (
+          <motion.div
+            id="landing-menu"
+            key="menu"
+            {...menuPanel(reduce)}
+            className="overflow-hidden border-t border-border/60 md:hidden"
+          >
+            <nav className="flex flex-col px-4 py-2">
+              {NAV_LINKS.map((link, i) => (
+                <motion.div
+                  key={link.key}
+                  {...menuItem(i, reduce)}
+                  className="border-b border-border/60 last:border-b-0"
+                >
+                  {renderLink(
+                    link,
+                    "block py-3.5 font-mono text-sm uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground",
+                  )}
+                </motion.div>
+              ))}
+            </nav>
+            <div className="flex items-center justify-center gap-2 border-t border-border/60 px-4 py-3">
+              <LanguageToggle className="inline-flex" />
+              <ThemeToggle className="inline-flex" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

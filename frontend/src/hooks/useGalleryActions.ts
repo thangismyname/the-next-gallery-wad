@@ -1,24 +1,26 @@
 // hooks/useGalleryActions.ts
 import { useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { moveToTrash, setFavorite } from "@/services/media";
+import { InfiniteData, useQueryClient } from "@tanstack/react-query";
+import { downloadMedia, moveToTrash, setFavorite } from "@/services/media";
 import { useSelectionStore } from "./useSelectionStore";
 import {
   galleryQueryKey,
   galleryQueryPrefix,
 } from "./useGalleryMedia";
 import { useGalleryActionsStore } from "./useGalleryActionsStore";
-import type { MediaListItem } from "@/services/media";
+import type { MediaListItem, MediaPage } from "@/services/media";
 
 // Cập nhật cache của MỌI kiểu sort trong gallery (newest, oldest, name_asc...).
 function updateAllGalleryVariants(
   queryClient: ReturnType<typeof useQueryClient>,
-  updater: (old: unknown) => unknown,
+  updater: (
+    old: InfiniteData<MediaPage> | undefined,
+  ) => InfiniteData<MediaPage> | undefined,
 ) {
   const cache = queryClient.getQueryCache();
   const queries = cache.findAll({ queryKey: galleryQueryPrefix });
   queries.forEach((query) => {
-    queryClient.setQueryData(query.queryKey, updater);
+    queryClient.setQueryData<InfiniteData<MediaPage>>(query.queryKey, updater);
   });
 }
 
@@ -51,10 +53,8 @@ export function useGalleryActions() {
     [openShare],
   );
 
-  const handleDownload = async (ids: string[]) => {
-    // TODO: tạo zip / download từng file
-    console.log("download", ids);
-  };
+  // Tải bản gốc: 1 ảnh = file gốc, nhiều ảnh = .zip (services/media.ts).
+  const handleDownload = useCallback((ids: string[]) => downloadMedia(ids), []);
 
   const handleDelete = useCallback(
     (ids: string[]) => {
@@ -76,7 +76,11 @@ export function useGalleryActions() {
         const cached = queryClient.getQueryData<{
           pages: { items: MediaListItem[] }[];
         }>(galleryQueryKey());
-        const items = cached?.pages.flatMap((p) => p.items) ?? [];
+        // Trang Yêu thích có cache riêng (["favorites", filter]) — gộp vào.
+        const saved = queryClient
+          .getQueriesData<{ items: MediaListItem[] }>({ queryKey: ["favorites"] })
+          .flatMap(([, data]) => data?.items ?? []);
+        const items = [...(cached?.pages.flatMap((p) => p.items) ?? []), ...saved];
         const selectedItems = items.filter((m) => ids.includes(m.id));
         makeFavorite =
           selectedItems.length === 0 || !selectedItems.every((m) => m.isFavorite);
@@ -97,10 +101,11 @@ export function useGalleryActions() {
           return { ...old, pages };
         });
 
-        // Home card "Favorites" phụ thuộc query này — làm mới để cover cập nhật.
+        // Home card "Favorites" + trang Yêu thích phụ thuộc — làm mới.
         await queryClient.invalidateQueries({
           queryKey: ["home", "favorites"],
         });
+        await queryClient.invalidateQueries({ queryKey: ["favorites"] });
       } catch (error) {
         console.error("Cập nhật yêu thích thất bại:", error);
       }
@@ -124,12 +129,21 @@ export function useGalleryActions() {
         const pages = old.pages.map((page) => ({
           ...page,
           items: page.items.filter((m) => !deleteSet.has(m.id)),
+          // Tổng số (header Thư viện) giảm ngay, không đợi refetch.
+          total:
+            page.total === undefined
+              ? undefined
+              : Math.max(0, page.total - deleteSet.size),
         }));
         return { ...old, pages };
       });
 
       await queryClient.invalidateQueries({ queryKey: galleryQueryPrefix });
-      await queryClient.invalidateQueries({ queryKey: ["favorites", "media"] });
+      await queryClient.invalidateQueries({ queryKey: ["favorites"] });
+      // Số ảnh / ảnh bìa của nhãn không tính ảnh trong thùng rác.
+      await queryClient.invalidateQueries({ queryKey: ["labels"] });
+      // Album (cả album tự động) đếm / hiện ảnh vừa xoá → làm mới.
+      await queryClient.invalidateQueries({ queryKey: ["albums"] });
     } catch (err) {
       console.error("Xóa thất bại:", err);
     } finally {

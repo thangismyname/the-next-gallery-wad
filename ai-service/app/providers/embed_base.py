@@ -5,6 +5,8 @@ dùng trực tiếp phép cosine similarity (toán tử `<=>` của pgvector).
 """
 from abc import ABC, abstractmethod
 
+import numpy as np
+
 
 class EmbeddingProvider(ABC):
     """Abstract base — tất cả embedding providers phải implement interface này."""
@@ -26,6 +28,11 @@ class EmbeddingProvider(ABC):
     def dimension(self) -> int:
         """Số chiều của vector embedding."""
         ...
+
+    @property
+    def logit_scale(self) -> float:
+        """Nhiệt độ softmax của CLIP (cosine × scale = logit). CLIP đã train ≈ 100."""
+        return 100.0
 
     @abstractmethod
     def encode_image(self, image_bytes: bytes) -> list[float]:
@@ -50,6 +57,18 @@ class EmbeddingProvider(ABC):
             list[float] độ dài `dimension`.
         """
         ...
+
+    def encode_images(self, images: list[bytes]) -> np.ndarray:
+        """Mã hoá nhiều ảnh một lượt → mảng (N, dimension) float32, unit norm.
+
+        Mặc định gọi `encode_image` từng ảnh; provider có model thật nên override
+        để chạy theo batch (benchmark trên hàng nghìn ảnh).
+        """
+        return np.asarray([self.encode_image(image) for image in images], dtype=np.float32)
+
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
+        """Mã hoá nhiều câu một lượt → mảng (N, dimension) float32, unit norm."""
+        return np.asarray([self.encode_text(text) for text in texts], dtype=np.float32)
 
     def classify(
         self,

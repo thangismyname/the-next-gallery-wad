@@ -34,6 +34,7 @@ export const SIGNAL = {
   PRESENCE_OFFLINE: "presence:offline",
   PRESENCE_SNAPSHOT: "presence:snapshot",
   MOMENT_COLLAB_INVITE: "moment:collab-invite",
+  ALBUM_INVITE: "album:invite",
   MOMENT_COLLAB_COMPLETE: "moment:collab-complete",
   MOMENT_MEME_ADDED: "moment:meme-added",
   MOMENT_MEME_REMOVED: "moment:meme-removed",

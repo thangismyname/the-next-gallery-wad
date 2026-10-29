@@ -6,6 +6,7 @@ import { useSelectionStore } from "@/hooks/useSelectionStore";
 import { BottomBarNav } from "./components/BottomBarNav";
 import { BottomBarSelectionActions } from "./components/BottomBarSelection";
 import { cn } from "@/lib/utils";
+import { floatingSwap } from "@/lib/motion";
 
 interface BottomBarProps {
   onShare: (ids: string[]) => void;
@@ -37,10 +38,7 @@ export const BottomBar: React.FC<BottomBarProps> = ({
         {isSelecting ? (
           <motion.div
             key="selection"
-            initial={{ opacity: 0, y: 8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.95 }}
-            transition={{ duration: 0.18 }}
+            {...floatingSwap}
           >
             <BottomBarSelectionActions
               onShare={onShare}
@@ -52,10 +50,7 @@ export const BottomBar: React.FC<BottomBarProps> = ({
         ) : (
           <motion.div
             key="nav"
-            initial={{ opacity: 0, y: 8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.95 }}
-            transition={{ duration: 0.18 }}
+            {...floatingSwap}
           >
             <BottomBarNav />
           </motion.div>

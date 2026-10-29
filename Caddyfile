@@ -10,12 +10,8 @@
 :80 {
     encode zstd gzip
 
-    # Định tuyến AI service requests sang ai-service FastAPI
-    handle /api/ai/* {
-        # AI service routes ở /api/v1/* — bỏ /api/ai → /api khi proxy
-        uri replace /api/ai /api
-        reverse_proxy ai-service:8000
-    }
+    # ai-service KHÔNG mở ra ngoài (không có auth) — chỉ backend gọi qua mạng
+    # nội bộ Docker (AI_SERVICE_URL=http://ai-service:8000).
 
     # Định tuyến API requests sang Backend Express
     handle /api/* {

@@ -1,0 +1,77 @@
+# ai-service dependencies — single source of truth (managed with uv).
+#
+#   uv sync                      # runtime + dev (tests)       ← default for contributors
+#   uv sync --group bench        # + benchmark tools (thesis reproduction)
+#   uv sync --no-dev             # runtime only (Docker)
+#   uv run pytest                # run inside the project env
+#
+# uv.lock pins exact versions for every platform (macOS / Linux / Windows), so
+# everyone — and Docker — installs the same versions. Commit uv.lock.
+# After editing dependencies: `uv lock` then commit both files.
+
+[project]
+name = "tng-ai-service"
+version = "0.4.0"
+description = "The Next Gallery AI service — OpenCLIP embeddings + YOLO26 object detection"
+# Same Python as the Docker images (python:3.12-slim) so benchmarks match.
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    # ── Core ──────────────────────────────────
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic-settings>=2.0",
+    "python-multipart>=0.0.12",
+    # ── Image processing ──────────────────────
+    "Pillow>=10.0",
+    "numpy>=1.26",
+    # ── Deep learning ─────────────────────────
+    # Linux (Docker) → CPU-only wheels from the PyTorch index (no CUDA, much
+    # smaller image). macOS → PyPI wheels, which include MPS (Apple Silicon).
+    "torch>=2.4",
+    "torchvision>=0.19",
+    # ── Semantic search (OpenCLIP) ─────────────
+    # 3.x: SigLIP2 / PE-Core configs; OpenAI weights load via the HF Hub.
+    "open_clip_torch>=3.3,<4",
+    # ── Object detection (YOLO26) ──────────────
+    # YOLO26 shipped in 8.4.0; current YOLO26 weights need >=8.4.183.
+    # Capped <8.5 so benchmark numbers stay comparable.
+    "ultralytics>=8.4.183,<8.5",
+    # ── Image similarity (DINOv3) ──────────────
+    # DINOv3 (AutoModel "dinov3_vit") landed in transformers 4.56.
+    "transformers>=4.56",
+]
+
+[dependency-groups]
+# Installed by `uv sync` by default (tests use stub providers — no model needed).
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",  # FastAPI TestClient
+]
+# Offline benchmarks in bench/ — `uv sync --group bench`.
+bench = [
+    "pycocotools>=2.0.8",  # official COCO evaluator (mAP)
+    # ONNX export + CPU runtime for bench/yolo_export_benchmark.py — matches the
+    # "CPU ONNX" speed column of the Ultralytics tables. Pinned here so
+    # Ultralytics doesn't pip-install them at runtime (bench sets YOLO_AUTOINSTALL=False).
+    "onnx>=1.12.0,<2.0.0",
+    "onnxruntime>=1.18",
+    "onnxslim>=0.1.82",
+    # Linear probe + metric (mAP, F1, macro-F1) cho bench/cls_eval.py.
+    "scikit-learn>=1.5",
+]
+
+[tool.uv]
+# Service app, not a library — don't build/install the project itself.
+package = false
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+torchvision = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true  # only torch/torchvision come from this index
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

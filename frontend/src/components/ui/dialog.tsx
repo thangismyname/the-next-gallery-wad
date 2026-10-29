@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button"
 
 function Dialog({ open, onOpenChange, ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   const handleOpenChange = (next: boolean) => {
-    if (next) document.activeElement?.blur()
+    if (next) (document.activeElement as HTMLElement | null)?.blur()
     onOpenChange?.(next)
   }
 
   React.useEffect(() => {
-    if (open) document.activeElement?.blur()
+    if (open) (document.activeElement as HTMLElement | null)?.blur()
   }, [open])
 
   return (

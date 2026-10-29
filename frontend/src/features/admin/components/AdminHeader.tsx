@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/features/toggles/ThemeToggle";
 import { LanguageToggle } from "@/features/toggles/LanguageToggle";
+import { AdminSearch } from "./AdminSearch";
 
 interface AdminHeaderProps {
   onMenuClick?: () => void;
@@ -21,7 +22,7 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden"
+          className="md:hidden"
           onClick={onMenuClick}
         >
           <Menu className="h-4 w-4" />
@@ -44,8 +45,9 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
         </Badge>
       </div>
 
-      {/* Phải: back to gallery */}
-      <div className="flex items-center justify-end">
+      {/* Phải: tìm nhanh (⌘K) + back to gallery */}
+      <div className="flex items-center justify-end gap-1 sm:gap-2">
+        <AdminSearch />
         <Button asChild variant="ghost" size="sm" className="gap-2">
           <Link to="/gallery">
             <ArrowLeft className="h-4 w-4" />

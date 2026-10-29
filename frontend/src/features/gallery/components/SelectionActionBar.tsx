@@ -1,9 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { X, Share2, Download, Trash2, Heart } from "lucide-react";
+import { X, Share2, Download, Trash2, Heart, FolderPlus, Bookmark } from "lucide-react";
 
 import { useSelectionStore } from "@/hooks/useSelectionStore";
+import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { cn } from "@/lib/utils";
+import { LabelMenu } from "@/features/favorites/components/LabelMenu";
 
 interface SelectionActionBarProps {
   onShare: (ids: string[]) => void;
@@ -23,13 +25,14 @@ export const SelectionActionBar: React.FC<SelectionActionBarProps> = ({
   const { t } = useTranslation();
   const selectedIds = useSelectionStore((s) => s.selectedIds);
   const clear = useSelectionStore((s) => s.clear);
+  const openAddToAlbum = useGalleryActionsStore((s) => s.openAddToAlbum);
   const ids = Array.from(selectedIds);
 
   return (
     <div
       className={cn(
         "flex items-center gap-1.5 p-1.5 pl-3",
-        "rounded-full border border-border/60 bg-sidebar/85 backdrop-blur-xl shadow-2xl shadow-black/20",
+        "glass rounded-full",
         className,
       )}
     >
@@ -52,6 +55,23 @@ export const SelectionActionBar: React.FC<SelectionActionBarProps> = ({
           aria-label={t("selection.favorite")}
         >
           <Heart className="h-4 w-4" />
+        </button>
+        <LabelMenu mediaIds={ids}>
+          <button
+            className="flex items-center justify-center rounded-full p-2 text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-95"
+            aria-label={t("favorites.labels.add")}
+            title={t("favorites.labels.add")}
+          >
+            <Bookmark className="h-4 w-4" />
+          </button>
+        </LabelMenu>
+        <button
+          onClick={() => openAddToAlbum(ids)}
+          className="flex items-center justify-center rounded-full p-2 text-muted-foreground hover:bg-muted/50 hover:text-foreground active:scale-95"
+          aria-label={t("albums.addTo")}
+          title={t("albums.addTo")}
+        >
+          <FolderPlus className="h-4 w-4" />
         </button>
         <button
           onClick={() => onShare(ids)}

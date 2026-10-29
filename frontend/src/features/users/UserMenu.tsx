@@ -15,7 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LogOut, Settings, User, Code2 } from "lucide-react";
+import { LogOut, Settings, User, Code2, Shield } from "lucide-react";
 import { authClient } from "@/services/authClient";
 import { useLogout } from "@/hooks/useLogout";
 import { getInitials } from "@/utils/string";
@@ -83,6 +83,14 @@ export function UserMenu() {
           <Code2 className="mr-2 h-4 w-4" />
           {t("developer.menuItem", "Developer Mode")}
         </DropdownMenuItem>
+        {user?.role === "admin" && (
+          <DropdownMenuItem asChild>
+            <Link to="/admin">
+              <Shield className="mr-2 h-4 w-4" />
+              {t("header.admin", "Admin dashboard")}
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={logout}

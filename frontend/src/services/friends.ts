@@ -85,7 +85,7 @@ export const searchFriend = async (
   query: string,
 ): Promise<FriendSearchResult | null> => {
   const response = await fetch(
-    `${BASE_URL}/friends/search?query=${encodeURIComponent(query)}`,
+    `${BASE_URL}/friends/search?q=${encodeURIComponent(query)}`,
     {
       credentials: "include",
       headers: { Accept: "application/json" },

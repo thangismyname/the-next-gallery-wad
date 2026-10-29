@@ -1,60 +1,15 @@
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
+from fastapi.concurrency import run_in_threadpool
 
+from app.api.deps import parse_json_field, read_image_or_400
 from app.schemas.embed import (
     ClassifyResponse,
-    EmbedInfoResponse,
+    ClipInfoResponse,
     EmbedResponse,
     TextEmbedRequest,
 )
 
 router = APIRouter()
-
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
-ALLOWED_CONTENT_TYPES = {
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-    "image/gif",
-}
-
-
-async def read_image_or_400(file: UploadFile) -> bytes:
-    """Kiểm tra content-type/kích thước rồi đọc hết file ảnh."""
-    if not file.content_type or file.content_type not in ALLOWED_CONTENT_TYPES:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Unsupported image type: {file.content_type}. "
-            f"Allowed: {', '.join(sorted(ALLOWED_CONTENT_TYPES))}",
-        )
-
-    image_bytes = await file.read()
-    if len(image_bytes) == 0:
-        raise HTTPException(status_code=400, detail="Empty file")
-    if len(image_bytes) > MAX_FILE_SIZE:
-        raise HTTPException(
-            status_code=400,
-            detail=f"File too large: {len(image_bytes)} bytes. Max: {MAX_FILE_SIZE}",
-        )
-    return image_bytes
-
-
-def parse_json_field(value: str, field_name: str) -> list[str]:
-    """Parse field multipart dạng JSON array ('["dog","car"]')."""
-    import json
-
-    try:
-        parsed = json.loads(value)
-    except json.JSONDecodeError as exc:
-        raise HTTPException(
-            status_code=400,
-            detail=f"{field_name} không phải JSON hợp lệ: {exc}",
-        ) from exc
-    if not isinstance(parsed, list) or any(not isinstance(x, str) or not x for x in parsed):
-        raise HTTPException(
-            status_code=400,
-            detail=f"{field_name} phải là JSON array các chuỗi không rỗng.",
-        )
-    return parsed
 
 
 @router.post("/embed/image", response_model=EmbedResponse)
@@ -63,7 +18,9 @@ async def embed_image(request: Request, file: UploadFile = File(...)):
     image_bytes = await read_image_or_400(file)
 
     provider = request.app.state.embed_provider
-    embedding = provider.encode_image(image_bytes)
+    # Inference CPU-bound → chạy trong threadpool để không chặn event loop
+    # (không thì mọi request khác, kể cả /health, đều stall trong lúc encode).
+    embedding = await run_in_threadpool(provider.encode_image, image_bytes)
 
     return EmbedResponse(
         provider=provider.name,
@@ -77,7 +34,7 @@ async def embed_image(request: Request, file: UploadFile = File(...)):
 async def embed_text(request: Request, payload: TextEmbedRequest):
     """Mã hoá câu truy vấn text thành vector embedding (CLIP text encoder)."""
     provider = request.app.state.embed_provider
-    embedding = provider.encode_text(payload.text)
+    embedding = await run_in_threadpool(provider.encode_text, payload.text)
 
     return EmbedResponse(
         provider=provider.name,
@@ -112,7 +69,9 @@ async def classify_image(
         )
 
     provider = request.app.state.embed_provider
-    predictions = provider.classify(image_bytes, label_list, template_list)
+    predictions = await run_in_threadpool(
+        provider.classify, image_bytes, label_list, template_list
+    )
 
     return ClassifyResponse(
         provider=provider.name,
@@ -123,12 +82,13 @@ async def classify_image(
     )
 
 
-@router.get("/embed/info", response_model=EmbedInfoResponse)
+@router.get("/embed/info", response_model=ClipInfoResponse)
 async def embed_info(request: Request):
-    """Thông tin provider embedding đang dùng (provider/model/dimension)."""
+    """Thông tin provider embedding đang dùng (provider/model/dimension/logit_scale)."""
     provider = request.app.state.embed_provider
-    return EmbedInfoResponse(
+    return ClipInfoResponse(
         provider=provider.name,
         model=provider.model,
         dimension=provider.dimension,
+        logit_scale=provider.logit_scale,
     )

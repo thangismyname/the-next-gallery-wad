@@ -10,12 +10,12 @@ function AlertDialog({
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
   const handleOpenChange = (next: boolean) => {
-    if (next) document.activeElement?.blur()
+    if (next) (document.activeElement as HTMLElement | null)?.blur()
     onOpenChange?.(next)
   }
 
   React.useEffect(() => {
-    if (open) document.activeElement?.blur()
+    if (open) (document.activeElement as HTMLElement | null)?.blur()
   }, [open])
 
   return (

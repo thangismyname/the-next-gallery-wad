@@ -65,6 +65,10 @@ CREATE TABLE
         -- Bản resize nhỏ (200px) cho lưới ảnh — nhẹ, tải nhanh.
         -- Nếu NULL (ảnh cũ), fallback về thumbnail_object (400px).
         thumbnail_small_object TEXT,
+        -- Bản xem ≤2048px giữ tỉ lệ (WebP) cho lightbox + đầu vào AI.
+        display_object TEXT,
+        -- Bản WebP độ phân giải gốc — chỉ cho HEIC, tạo khi xem "Bản gốc".
+        full_object TEXT,
 
         -- Lưu trữ MinIO
         minio_object TEXT NOT NULL,
@@ -100,6 +104,10 @@ CREATE TABLE
 CREATE INDEX IF NOT EXISTS idx_media_user_id ON media (user_id);
 CREATE INDEX IF NOT EXISTS idx_media_type ON media (media_type);
 CREATE INDEX IF NOT EXISTS idx_media_taken_at ON media (taken_at);
+-- Thư viện sắp/nhóm theo ngày chụp, thiếu thì ngày tải lên.
+CREATE INDEX IF NOT EXISTS idx_media_user_taken
+    ON media (user_id, (COALESCE(taken_at, created_at)) DESC)
+    WHERE deleted_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_media_deleted_at
     ON media (deleted_at)
     WHERE deleted_at IS NOT NULL;
@@ -113,6 +121,8 @@ COMMENT ON COLUMN media.media_type IS 'photo | video — quyết định các c�
 COMMENT ON COLUMN media.duration_seconds IS 'Chỉ có giá trị khi media_type = video (ràng buộc bởi chk_video_duration). NULL với ảnh.';
 COMMENT ON COLUMN media.thumbnail_object IS 'Object key trên MinIO của ảnh đại diện — cỡ trung (400px), dùng làm thumbnail lớn / fallback cho ảnh và video.';
 COMMENT ON COLUMN media.thumbnail_small_object IS 'Object key trên MinIO của bản resize nhỏ (200px) dùng cho lưới ảnh (grid) — nhẹ và tải nhanh. NULL với dữ liệu cũ thì fallback về thumbnail_object.';
+COMMENT ON COLUMN media.display_object IS 'Object key trên MinIO của bản xem (WebP, cạnh dài ≤2048px, giữ tỉ lệ) — lightbox hiển thị bản này thay vì file gốc; cũng là ảnh đưa cho CLIP/YOLO/DINO. Với video là poster (1 khung hình cắt bằng ffmpeg). NULL với ảnh cũ → endpoint thumbnail?size=display tự tạo khi được gọi lần đầu.';
+COMMENT ON COLUMN media.full_object IS 'Object key trên MinIO của bản WebP độ phân giải gốc — CHỈ cho ảnh HEIC/HEIF (Chrome/Firefox không hiển thị được file gốc). Tạo khi người dùng bấm "Bản gốc"/phóng to trong lightbox. NULL với mọi định dạng khác.';
 COMMENT ON COLUMN media.deleted_at IS 'Mốc soft-delete. NULL = file đang hiển thị bình thường ở Gallery. Khác NULL = file nằm trong Thùng rác (deleted_at là thời điểm xoá), vẫn còn nguyên trên MinIO để có thể khôi phục; chỉ bị gỡ object khi xoá vĩnh viễn.';
 COMMENT ON COLUMN media.decor_data IS 'Metadata filter/sticker/khung áp dụng lúc chụp (từ tính năng Moments). Không phải kết quả AI, chỉ là cấu hình chỉnh sửa.';
 COMMENT ON COLUMN media.extra_data IS 'Cột JSONB dự phòng — nơi phase AI sau này có thể lưu thêm dữ liệu linh hoạt mà không cần ALTER TABLE.';
@@ -131,6 +141,12 @@ CREATE TABLE
         cover_media_id UUID REFERENCES media (id) ON DELETE SET NULL,
 
         is_shared BOOLEAN DEFAULT false, -- có ai khác ngoài owner truy cập không (đồng bộ với album_members)
+
+        -- 'manual' = danh sách ảnh cố định (album_media) | 'smart' = truy vấn lưu lại
+        kind VARCHAR(10) NOT NULL DEFAULT 'manual',
+        -- Album thông minh: {"type":"tags","tags":["food"],"minConfidence":null}
+        -- hoặc {"type":"query","query":"2 con chó trên bãi biển"} (search kết hợp)
+        smart_rule JSONB,
 
         created_at TIMESTAMPTZ DEFAULT now (),
         updated_at TIMESTAMPTZ DEFAULT now ()
@@ -154,6 +170,7 @@ CREATE TABLE
         media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
 
         position INT, -- thứ tự hiển thị trong album, NULL = mặc định theo added_at
+        added_by TEXT REFERENCES "user" (id) ON DELETE SET NULL, -- ai thêm (album chung: editor chỉ gỡ được ảnh mình thêm)
         added_at TIMESTAMPTZ DEFAULT now (),
 
         UNIQUE (album_id, media_id)
@@ -218,6 +235,7 @@ CREATE TABLE
 
 CREATE INDEX IF NOT EXISTS idx_share_links_token ON share_links (token);
 CREATE INDEX IF NOT EXISTS idx_share_links_created_by ON share_links (created_by_user_id);
+CREATE INDEX IF NOT EXISTS idx_share_links_album ON share_links (album_id);
 
 COMMENT ON TABLE share_links IS 'Link chia sẻ công khai (kiểu Google Photos share link) — khác album_members ở chỗ người nhận KHÔNG cần có tài khoản trong hệ thống, chỉ cần link + token.';
 COMMENT ON COLUMN share_links.token IS 'Chuỗi random duy nhất dùng trong URL public, vd gallery.app/s/{token}. Phải random đủ dài để không đoán được (tránh brute-force truy cập trái phép).';
@@ -475,6 +493,53 @@ COMMENT ON COLUMN media_embeddings.model IS 'Tên model đã tạo embedding (vd
 COMMENT ON COLUMN media_embeddings.embedding IS 'Vector CLIP 512 chiều (đã chuẩn hoá L2). Query dùng 1 - (embedding <=> $query) để tính cosine similarity.';
 
 -- ==========================================================
+-- MEDIA_DINO_EMBEDDINGS — DINOv3 descriptor (ảnh tương tự)
+-- ==========================================================
+-- Tách bảng riêng với CLIP: DINOv3 chỉ có image encoder (không text), tối ưu
+-- cho so khớp ảnh↔ảnh. Dùng cho mục "Ảnh tương tự" trong Lightbox.
+CREATE TABLE
+    IF NOT EXISTS media_dino_embeddings (
+        media_id UUID PRIMARY KEY REFERENCES media (id) ON DELETE CASCADE,
+        user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+        model VARCHAR(100) NOT NULL, -- vd 'dinov3-vits16-pretrain-lvd1689m'
+        embedding vector(384) NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT now (),
+        updated_at TIMESTAMPTZ DEFAULT now ()
+    );
+
+CREATE INDEX IF NOT EXISTS idx_media_dino_embeddings_user
+    ON media_dino_embeddings (user_id);
+CREATE INDEX IF NOT EXISTS idx_media_dino_embeddings_hnsw
+    ON media_dino_embeddings USING hnsw (embedding vector_cosine_ops);
+
+COMMENT ON TABLE media_dino_embeddings IS 'Descriptor DINOv3 (pooler_output/CLS) của từng ảnh — phục vụ tìm ảnh tương tự. Mỗi media tối đa 1 row; xoá media thì tự xoá theo (CASCADE).';
+COMMENT ON COLUMN media_dino_embeddings.embedding IS 'Vector DINOv3 ViT-S/16 384 chiều (đã chuẩn hoá L2). Chỉ so với row cùng model.';
+
+-- ==========================================================
+-- MEDIA_TAGS — Gắn tag nội dung (classification)
+-- ==========================================================
+-- 17 tag (ai-service bench/cls_taxonomy.py) chấm từ vector CLIP đã lưu: object
+-- ← linear probe COCO, scene ← linear probe Places6, attribute ← CLIP zero-shot.
+-- Lưu xác suất của MỌI tag cho mỗi ảnh (kể cả dưới ngưỡng) để UI đổi ngưỡng tự
+-- do; ảnh "có" tag khi confidence >= threshold (ngưỡng tối ưu F1 khi train).
+CREATE TABLE
+    IF NOT EXISTS media_tags (
+        media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
+        user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+        tag VARCHAR(40) NOT NULL, -- vd 'food', 'beach', 'night'
+        confidence REAL NOT NULL, -- xác suất 0–1
+        threshold REAL NOT NULL, -- ngưỡng của tag lúc chấm
+        model VARCHAR(160) NOT NULL, -- vd 'coco-lp_clip · places6-lp_clip · attribute-zero-shot'
+        created_at TIMESTAMPTZ DEFAULT now (),
+        PRIMARY KEY (media_id, tag)
+    );
+
+CREATE INDEX IF NOT EXISTS idx_media_tags_user_tag
+    ON media_tags (user_id, tag, confidence DESC);
+
+COMMENT ON TABLE media_tags IS 'Xác suất 17 tag nội dung của từng ảnh (1 row / ảnh / tag). Xoá media thì tự xoá theo (CASCADE).';
+
+-- ==========================================================
 -- DEVELOPER_REQUESTS — Đăng ký & duyệt Developer Mode
 -- ==========================================================
 -- User bấm "Đăng ký Developer" → tạo 1 row status='pending'. Admin xem
@@ -549,3 +614,34 @@ COMMENT ON COLUMN media_detections.model IS 'Model tạo ra detection (vd yolo26
 -- ALTER TABLE media ADD COLUMN dino_status VARCHAR(30) DEFAULT 'pending';
 -- ALTER TABLE media ADD COLUMN cluster_id VARCHAR(100);
 -- -- rồi tạo thêm media_frames / media_object_tracks.
+-- ── Nhãn cá nhân (trang Yêu thích) ─────────────────────────────────────
+-- Do người dùng tự đặt ("Cần chỉnh sửa", "In ảnh"…), độc lập với
+-- media.is_favorite. Trang Yêu thích = ảnh có tim HOẶC có nhãn.
+CREATE TABLE
+    IF NOT EXISTS user_labels (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+        user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+        name VARCHAR(40) NOT NULL,
+        color VARCHAR(16) NOT NULL DEFAULT 'slate', -- key bảng màu FE
+        position INT NOT NULL DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT now ()
+    );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_user_labels_name ON user_labels (user_id, lower(name));
+
+CREATE TABLE
+    IF NOT EXISTS media_user_labels (
+        label_id UUID NOT NULL REFERENCES user_labels (id) ON DELETE CASCADE,
+        media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
+        created_at TIMESTAMPTZ DEFAULT now (),
+        PRIMARY KEY (label_id, media_id)
+    );
+
+CREATE INDEX IF NOT EXISTS idx_media_user_labels_media ON media_user_labels (media_id);
+
+-- Đã tạo bộ nhãn gợi ý cho user (xoá hết nhãn cũng không tạo lại).
+CREATE TABLE
+    IF NOT EXISTS user_label_seeds (
+        user_id TEXT PRIMARY KEY REFERENCES "user" (id) ON DELETE CASCADE,
+        created_at TIMESTAMPTZ DEFAULT now ()
+    );

@@ -11,6 +11,8 @@ import {
   reactToMoment,
   removeMomentReaction,
   momentMemesQueryKey,
+  momentsFeedQueryKey,
+  momentInvitationsQueryKey,
 } from "@/services/moments";
 import { SIGNAL } from "@/services/signaling";
 import { useSignaling } from "@/hooks/useSignaling";
@@ -19,9 +21,7 @@ import { MomentFeed } from "./components/MomentFeed";
 import { CreateMomentDialog } from "./components/CreateMomentDialog";
 import { MomentInviteButton } from "./components/MomentInviteButton";
 import { useMomentEditStore } from "@/hooks/useMomentEditStore";
-
-const momentsQueryKey = ["moments", "feed"] as const;
-const invitationsQueryKey = ["moments", "invitations"] as const;
+import { BottomBarNav } from "@/features/navigation/components/BottomBarNav";
 
 export const MomentsView: React.FC = () => {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export const MomentsView: React.FC = () => {
   const setEditDraft = useMomentEditStore((s) => s.setEditDraft);
 
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: momentsQueryKey,
+    queryKey: momentsFeedQueryKey,
     queryFn: () => fetchMoments(),
     staleTime: 30_000,
   });
@@ -40,39 +40,28 @@ export const MomentsView: React.FC = () => {
   const moments = useMemo(() => data?.items ?? [], [data]);
 
   const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: momentsQueryKey });
+    queryClient.invalidateQueries({ queryKey: momentsFeedQueryKey });
   const invalidateInvitations = () =>
-    queryClient.invalidateQueries({ queryKey: invitationsQueryKey });
+    queryClient.invalidateQueries({ queryKey: momentInvitationsQueryKey });
 
-  // Realtime meme: người khác thả/xóa meme trên moment → cập nhật
-  // list meme panel + memeCount ở feed mà không cần vuốt để refetch.
+  // Realtime meme: người khác thả/xóa/tim meme trên moment → cập nhật list
+  // meme panel (+ memeCount ở feed khi thêm/xóa) mà không cần vuốt để refetch.
   const signaling = useSignaling();
   useEffect(() => {
+    const onMemeEvent = (refreshFeed: boolean) => (payload: unknown) => {
+      const p = payload as { momentId?: string };
+      if (!p.momentId) return;
+      void queryClient.invalidateQueries({
+        queryKey: momentMemesQueryKey(p.momentId),
+      });
+      if (refreshFeed) {
+        void queryClient.invalidateQueries({ queryKey: momentsFeedQueryKey });
+      }
+    };
     const offs = [
-      signaling.on(SIGNAL.MOMENT_MEME_ADDED, (payload) => {
-        const p = payload as { momentId?: string };
-        if (!p.momentId) return;
-        void queryClient.invalidateQueries({
-          queryKey: momentMemesQueryKey(p.momentId),
-        });
-        void queryClient.invalidateQueries({ queryKey: momentsQueryKey });
-      }),
-      signaling.on(SIGNAL.MOMENT_MEME_REMOVED, (payload) => {
-        const p = payload as { momentId?: string };
-        if (!p.momentId) return;
-        void queryClient.invalidateQueries({
-          queryKey: momentMemesQueryKey(p.momentId),
-        });
-        void queryClient.invalidateQueries({ queryKey: momentsQueryKey });
-      }),
-      // Realtime heart (❤️): ai đó vừa tim/bỏ tim 1 meme → cập nhật số tim.
-      signaling.on(SIGNAL.MOMENT_MEME_REACTED, (payload) => {
-        const p = payload as { momentId?: string };
-        if (!p.momentId) return;
-        void queryClient.invalidateQueries({
-          queryKey: momentMemesQueryKey(p.momentId),
-        });
-      }),
+      signaling.on(SIGNAL.MOMENT_MEME_ADDED, onMemeEvent(true)),
+      signaling.on(SIGNAL.MOMENT_MEME_REMOVED, onMemeEvent(true)),
+      signaling.on(SIGNAL.MOMENT_MEME_REACTED, onMemeEvent(false)),
     ];
     return () => offs.forEach((off) => off());
   }, [signaling, queryClient]);
@@ -168,6 +157,15 @@ export const MomentsView: React.FC = () => {
           onNew={() => setCreateOpen(true)}
         />
       </main>
+
+      {/* Điều hướng — trang này toàn màn hình (ngoài MainLayout, không có
+          sidebar) nên hiện ở mọi cỡ màn; là footer riêng nên không đè feed. */}
+      <nav
+        aria-label={t("navigation.bottomBar.ariaLabel")}
+        className="flex shrink-0 justify-center px-4 pt-2 pb-[max(env(safe-area-inset-bottom),0.75rem)]"
+      >
+        <BottomBarNav />
+      </nav>
 
       <CreateMomentDialog
         open={createOpen || Boolean(editDraft)}

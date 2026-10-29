@@ -48,6 +48,12 @@ class EmbedInfoResponse(BaseModel):
     dimension: int = Field(..., examples=[512])
 
 
+class ClipInfoResponse(EmbedInfoResponse):
+    """Thông tin CLIP + logit_scale (nhiệt độ) — backend dùng để đổi cosine
+    thành xác suất cho search kết hợp."""
+    logit_scale: float = Field(..., examples=[100.0])
+
+
 class ClassifyPrediction(BaseModel):
     """Một nhãn + xác suất zero-shot CLIP."""
     label: str = Field(..., examples=["car"], description="Nhãn dự đoán.")

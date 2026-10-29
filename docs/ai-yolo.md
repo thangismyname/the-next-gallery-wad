@@ -92,8 +92,8 @@ curl -X POST http://localhost:8000/api/v1/detect/objects -F 'file=@bus.jpg'
 | Env | Default | Description |
 |-----|---------|-------------|
 | `AI_OBJECT_PROVIDER` | `stub` (prod) / `yolo` (dev compose) | `stub` / `yolo` |
-| `AI_YOLO_WEIGHTS` | `yolo26n.pt` / `/opt/yolo-cache/yolo26n.pt` | Weights path/host |
-| `AI_YOLO_DEVICE` | `auto` | `auto` (cuda>mps>cpu) / `cpu` |
+| `AI_YOLO_WEIGHTS` | `models/yolo26n.pt` (local) / `/opt/yolo-cache/yolo26n.pt` (Docker) | Weights path |
+| `AI_YOLO_DEVICE` | `auto` | `auto` (cuda>mps>cpu) / `mps` / `cpu` — Docker on macOS has no MPS |
 | `AI_YOLO_CONF` | `0.25` | Provider confidence threshold |
 | `AI_YOLO_IMGSZ` | `640` | Inference size |
 | `AI_YOLO_MIN_CONF` (backend) | `0.4` | Confidence threshold for search |
@@ -101,5 +101,11 @@ curl -X POST http://localhost:8000/api/v1/detect/objects -F 'file=@bus.jpg'
 
 Weights are baked into the image at `/opt/yolo-cache` (outside `/app` so the dev
 volume mount doesn't overwrite them) via
-`ai-service/scripts/download_yolo_weight.py` (host
-`https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26n.pt`).
+`ai-service/scripts/download_yolo_weight.py`. Locally the same script downloads
+to `ai-service/models/` (git-ignored) and the default `AI_YOLO_WEIGHTS` is
+`models/yolo26n.pt` (relative paths resolve from `ai-service/`, not the cwd).
+
+The script prints the file's **SHA-256** and the installed **ultralytics
+version** — record both in benchmark reports, since Ultralytics can re-publish
+weights under the same file name. Requires `ultralytics>=8.4.183,<8.5`
+(YOLO26 first shipped in 8.4.0; current weights need ≥8.4.183).

@@ -1,21 +1,27 @@
 FROM python:3.12-slim
 
+# uv — cài dependency đúng theo uv.lock (cùng phiên bản với dev/benchmark).
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /uvx /bin/
+
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    NODE_ENV=production
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    PATH="/opt/venv/bin:$PATH"
 
+# OpenCV (ultralytics) cần lib system
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
-# torch/torchvision: CPU wheel để image nhẹ (không kéo CUDA).
-RUN pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu \
-    torch torchvision
-RUN pip install --no-cache-dir -r requirements.txt
+# Chỉ dependency runtime (--no-dev) theo uv.lock. torch/torchvision trên Linux
+# lấy CPU wheel (cấu hình trong pyproject.toml) để image nhẹ, không kéo CUDA.
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-cache
 
 # Chạy bằng user không phải root - tốt hơn cho production
 RUN addgroup --system aigroup && adduser --system --ingroup aigroup aiuser

@@ -4,7 +4,7 @@
 
 **The Next Gallery** is an AI-powered gallery web application (thesis project) for managing, organizing, and sharing photos/videos. It features AI semantic search (CLIP/DINO embeddings), YOLO object detection, album management, moments (Locket-style ephemeral sharing), friend circles, and public share links.
 
-**Status**: Phase 1 (core media/album/moments, high-performance streaming, infinite scroll, WebP thumbnails) implemented. **Semantic search (OpenCLIP embeddings + pgvector)** implemented: ai-service `/api/v1/embed/*` (stub/open_clip provider), backend `media_embeddings` table + upload-time background embedding + backfill endpoint. **Object detection (YOLO26)** implemented: ai-service `/api/v1/detect/objects` (stub/yolo provider), backend `media_detections` table + upload-time background detection + backfill + Spotlight object search + Developer Mode bbox overlay. **Developer Mode** request/approval workflow implemented (user applies → admin approves). Dedup (CLIP/DINO) still planned.
+**Status**: Phase 1 (core media/album/moments, high-performance streaming, infinite scroll, WebP thumbnails) implemented. **Semantic search (OpenCLIP embeddings + pgvector)** implemented: ai-service `/api/v1/embed/*` (stub/open_clip provider), backend `media_embeddings` table + upload-time background embedding + backfill endpoint. **Object detection (YOLO26)** implemented: ai-service `/api/v1/detect/objects` (stub/yolo provider), backend `media_detections` table + upload-time background detection + backfill + Spotlight object search + Developer Mode bbox overlay. **Image similarity (DINOv3)** implemented: ai-service `/api/v1/similarity/embed` (stub/dinov3 provider), backend `media_dino_embeddings` table + upload-time background embedding + backfill + Lightbox "Similar photos" (CLIP image↔image fallback). **Developer Mode** request/approval workflow implemented (user applies → admin approves). Dedup still planned.
 
 ## Tech Stack
 
@@ -17,7 +17,7 @@
 - **Object Storage**: MinIO (S3-compatible) for media files
 - **Image Processing**: sharp (WebP thumbnails quality 80, EXIF rotation)
 - **Media Streaming**: High-performance stream endpoints (`/api/gallery/media/:id/thumbnail`, `/api/gallery/media/:id/file`) with `Cache-Control: public, max-age=31536000, immutable`, `ETag` (304 Not Modified support), and `Accept-Ranges` (video streaming)
-- **File Upload**: multer (memory storage, 100MB limit)
+- **File Upload**: multer (disk storage → temp file, 500MB limit; streamed to MinIO via `fPutObject`, temp file removed by the route)
 - **Email**: nodemailer (SMTP for password reset)
 - **Security**: helmet (with `crossOriginResourcePolicy: "cross-origin"`), CORS (configurable origins)
 - **Logging**: morgan
@@ -26,7 +26,7 @@
 ### Frontend (`frontend/`)
 - **Framework**: React 19 with Vite 8
 - **Language**: TypeScript (strict mode)
-- **Styling**: Tailwind CSS v4, shadcn/ui (radix-sera style, taupe base color)
+- **Styling**: Tailwind CSS v4, shadcn/ui (radix-sera style, neutral base color)
 - **Routing**: react-router-dom v7
 - **State Management**: Zustand
 - **Auth Client**: better-auth/react (`createAuthClient`)
@@ -34,7 +34,7 @@
 - **Gallery Performance**: Infinite Scroll with `IntersectionObserver` (400px preload threshold), progressive Skeleton shimmer loading, smooth fade-in, CSS `content-visibility: auto`
 - **Animation**: Framer Motion
 - **Charts**: Recharts
-- **i18n**: i18next + react-i18next (Vietnamese default, English)
+- **i18n**: i18next + react-i18next (Vietnamese default, English, Japanese)
 - **Theme**: next-themes (light/dark/system)
 - **Linter**: oxlint (React plugin: rules-of-hooks, only-export-components)
 - **Path Alias**: `@/` maps to `./src/`
@@ -42,9 +42,9 @@
 ### Infrastructure
 - **Database**: PostgreSQL 16 with pgvector (`pgvector/pgvector:pg16`)
 - **Object Storage**: MinIO (S3-compatible)
-- **Reverse Proxy**: Caddy 2 (production, reverse-proxies `/api/*` to backend, `/api/ai/*` to ai-service, `/*` to frontend)
+- **Reverse Proxy**: Caddy 2 (production, reverse-proxies `/api/*` to backend, `/*` to frontend). **ai-service is NOT exposed** (no auth) — only the backend reaches it on the internal Docker network.
 - **Web Server**: Nginx (production frontend static files)
-- **AI Service**: Python FastAPI microservice (`ai-service/`) for gesture (hand) + face expression recognition
+- **AI Service**: Python FastAPI microservice (`ai-service/`) for CLIP embeddings (semantic search) + YOLO26 object detection
 - **Containerization**: Docker + Docker Compose
 
 ## Directory Structure
@@ -67,36 +67,45 @@ The_Next_Gallery/
 │   ├── package.json              # ES modules, scripts: dev/start
 │   ├── package-lock.json
 │   └── src/
-│       ├── server.js             # Express entry point (routes, WebSocket, streaming)
+│       ├── server.js             # Entry point: express app + http.Server + WebSocket + listen
 │       ├── config/
 │       │   ├── env.js            # Loads .env from project root (3 levels up)
-│       │   └── minio.js          # MinIO client + presigned URL helper
+│       │   ├── db.js             # PostgreSQL pool (pg)
+│       │   └── minio.js          # MinIO client + bucket bootstrap (ensureBucketExists)
+│       ├── db/
+│       │   └── migrate.js        # ensureSchema() — idempotent DDL run on startup
 │       ├── lib/
 │       │   ├── auth.js           # Better Auth config (email+password, Google, GitHub, admin plugin)
-│       │   ├── db.js             # PostgreSQL pool (pg)
 │       │   └── mail.js           # Nodemailer transport + reset password email
 │       ├── middleware/
+│       │   ├── auth.js           # requireAuth / requireAdmin
+│       │   ├── validate.js       # Zod validation middleware
 │       │   └── errorHandler.js   # Error + 404 handlers
-│       ├── routes/
-│       │   ├── admin.routes.js   # Admin API routes
-│       │   ├── auth.routes.js    # Better Auth handler routes
-│       │   ├── health.routes.js  # Health check routes
-│       │   ├── index.js          # Route barrel (mounts all sub-routers)
-│       │   ├── media.routes.js   # Media upload + streaming + search routes
-│       │   └── share.routes.js   # Share session REST endpoints
+│       ├── modules/              # Feature modules (routes + schema + services colocated)
+│       │   ├── index.js          # Router barrel — mounts every module's routes
+│       │   ├── health/           # health.routes.js
+│       │   ├── auth/             # auth.routes.js (Better Auth handler)
+│       │   ├── admin/            # admin.routes.js · admin.schema.js · admin.service.js
+│       │   ├── developer/        # developer.routes.js · developer.schema.js · developer.service.js (request/approval)
+│       │   ├── friends/          # friends.routes.js · friends.schema.js · friends.service.js
+│       │   ├── share/            # share.routes.js · share.schema.js · share.service.js
+│       │   ├── profile/          # profile.routes.js · profile.service.js (stats + storage breakdown)
+│       │   ├── labels/           # labels.routes.js · labels.schema.js · labels.constants.js · labels.service.js (personal labels)
+│       │   ├── albums/           # albums.routes.js · albums.public.routes.js · albums.schema.js · albums.constants.js
+│       │   │                     #   · albums.mapper.js · albums.access.js (roles) · albums.notify.js (WS album:invite)
+│       │   │                     #   + albums.service.js (CRUD/media) · albums.smart.service.js · albums.members.service.js · albums.links.service.js
+│       │   ├── ai/               # ai.client.js · embedding.service.js (CLIP) · detection.service.js (YOLO26)
+│       │   │                     #   · similarity.service.js (DINOv3 similar photos) · tagging.service.js (17-tag classification)
+│       │   ├── media/            # media.routes.js · media.schema.js · media.mapper.js (pure, no DB)
+│       │   │                     #   + media.list|upload|trash|stream|search.service.js
+│       │   └── moments/          # moments.routes.js · moments.schema.js · moments.constants.js
+│       │                         #   · moments.mapper.js (pure) · moments.notify.js (WS events)
+│       │                         #   + moments.query|feed|collab|reaction|meme.service.js
 │       ├── scripts/
-│       │   ├── test-db.js        # DB connection test (legacy MariaDB)
+│       │   ├── backfill-embeddings.js  # CLIP embedding backfill CLI
+│       │   ├── backfill-detections.js  # YOLO26 detection backfill CLI
+│       │   ├── backfill-dino.js        # DINOv3 similarity backfill CLI
 │       │   └── test-minio.js     # MinIO connection + bucket test
-│       ├── services/
-│       │   ├── admin.service.js  # Admin business logic
-│       │   ├── media.service.js  # Media upload + MinIO + search (searchMedia/searchAlbums)
-│       │   ├── embedding.service.js  # CLIP embeddings: save/backfill + semanticSearch (pgvector)
-│       │   ├── detection.service.js  # YOLO26 detections: save/backfill + searchByObject + bbox
-│       │   ├── developer.service.js  # Developer Mode request/approval (developer_requests)
-│       │   ├── ai.service.js     # Client for ai-service (/api/v1/embed/image|text, /detect/objects)
-│       │   └── share.service.js  # Share session DB queries
-│       ├── utils/
-│       │   └── similarity.js     # Cosine similarity, embedding conversion, top-K search
 │       └── ws/                   # WebSocket signaling module
 │           ├── index.js          # setupWebSocket(server) entry point
 │           ├── protocol.js       # Message type constants + helpers
@@ -107,6 +116,7 @@ The_Next_Gallery/
 │           │   └── transfer.handler.js    # File transfer protocol
 │           └── services/
 │               ├── signaling.service.js   # In-memory rooms + peers
+│               ├── presence.service.js    # Friend online/offline presence
 │               └── transfer.service.js    # Transfer state tracking
 │
 ├── database/
@@ -119,6 +129,7 @@ The_Next_Gallery/
 │   ├── proposal.md               # Project proposal
 │   ├── ai-clip.md                # Semantic search + zero-shot classify (OpenCLIP)
 │   ├── ai-yolo.md                # Object detection (YOLO26)
+│   ├── ai-dino.md                # Similar photos (DINOv3) — what it is, setup, gated weights
 │   └── features/
 │       ├── share-p2p.md         # P2P sharing feature full spec
 │       └── live-vision.md       # Live Vision (camera AR) design — not implemented
@@ -131,7 +142,7 @@ The_Next_Gallery/
     ├── package.json              # Scripts: dev/build/lint/preview
     ├── tsconfig.json             # Strict, ES2020, path alias @/
     ├── vite.config.js            # React plugin, Tailwind, @ alias, envDir: ../
-    ├── components.json           # shadcn/ui config (radix-sera, taupe, lucide icons)
+    ├── components.json           # shadcn/ui config (radix-sera, neutral, lucide icons)
     ├── .oxlintrc.json            # oxlint rules (react plugin)
     └── src/
         ├── main.tsx              # React root (BrowserRouter, i18n import)
@@ -149,7 +160,7 @@ The_Next_Gallery/
         │   └── ui/               # shadcn/ui components (18 components)
         │       ├── alert.tsx, avatar.tsx, badge.tsx, button.tsx
         │       ├── card.tsx, chart.tsx, dialog.tsx, dropdown-menu.tsx
-        │       ├── input.tsx, label.tsx, resizable.tsx
+        │       ├── input.tsx, label.tsx
         │       ├── select.tsx, sheet.tsx, skeleton.tsx, table.tsx
         │       ├── tabs.tsx, theme-provider.tsx, tooltip.tsx
         ├── features/             # Feature modules (co-located view + components)
@@ -234,26 +245,29 @@ The_Next_Gallery/
         └── utils/
             └── string.ts
 │
-├── ai-service/                # Python FastAPI — gesture (hand) + face expression + OpenCLIP embeddings + YOLO26 object detection
-│   ├── Dockerfile.dev/prod     # Python 3.12 slim, libgl for OpenCV/MediaPipe; CPU torch; models downloaded at build
-│   ├── requirements.txt        # fastapi, uvicorn, Pillow, numpy, mediapipe, open_clip_torch, ultralytics
-│   ├── models/                 # Model weights (.task files — download via scripts/download_model.py)
+├── ai-service/                # Python FastAPI — OpenCLIP embeddings + YOLO26 object detection
+│   ├── Dockerfile.dev/prod     # Python 3.12 slim, libgl for OpenCV; CPU torch; models downloaded at build
+│   ├── pyproject.toml          # deps (uv): runtime + groups dev (pytest) / bench (pycocotools)
+│   ├── uv.lock                 # exact versions for all platforms — commit with pyproject.toml
+│   ├── bench/                  # offline benchmarks (thesis) — see bench/README.md: YOLOv10/YOLO26 COCO AP + latency +
+│   │                           #   Ultralytics benchmark(), CLIP retrieval/zero-shot (paper Tables 11/13), report.py → tables
+│   ├── pipeline/               # offline YOLO + CLIP on a whole dataset (no server): `uv run python -m pipeline run coco`
+│   │                           #   → $TNG_DATASETS/result-coco/ (csv, embeddings.npy, vis/), then `search` / `classify`
 │   ├── scripts/
 │   │   ├── download_clip_weight.py  # Bake OpenCLIP weights into the image (build time)
 │   │   ├── download_yolo_weight.py  # Bake YOLO26 weights into /opt/yolo-cache (build time)
-│   │   ├── clip_demo.py             # CLI demo: info/embed-image/embed-text/classify/similarity (HTTP or --direct)
-│   │   └── download_model.py        # (legacy mediapipe) Download models: --task hand|face|all
+│   │   ├── download_dino_weight.py  # DINOv3 (gated HF) → models/dinov3-vits16-pretrain-lvd1689m/
+│   │   └── clip_demo.py             # CLI demo: info/embed-image/embed-text/classify/similarity (HTTP or --direct)
 │   └── app/
 │       ├── main.py             # FastAPI app + CORS + routers
-│       ├── config.py           # pydantic-settings: AI_GESTURE_PROVIDER, AI_FACE_PROVIDER, AI_EMBED_PROVIDER, AI_OBJECT_PROVIDER
+│       ├── config.py           # pydantic-settings: AI_EMBED_PROVIDER, AI_OBJECT_PROVIDER
 │       ├── api/
 │       │   ├── health.py       # GET /health
 │       │   ├── embed.py        # POST /embed/image, /embed/text, /classify (zero-shot CLIP), GET /embed/info
-│       │   ├── detect.py       # POST /api/v1/detect (unified: hand + face → DetectResponse)
-│       │   └── object_detect.py  # POST /api/v1/detect/objects (YOLO26 → ObjectDetectResponse)
+│       │   ├── object_detect.py  # POST /api/v1/detect/objects (YOLO26 → ObjectDetectResponse)
+│       │   └── similarity.py   # POST /api/v1/similarity/embed, GET /similarity/info (DINOv3)
 │       ├── schemas/
 │       │   ├── embed.py        # EmbedResponse, ClassifyResponse (zero-shot CLIP)
-│       │   ├── detect.py       # HandResult + FaceResult + DetectResponse (Pydantic, unified)
 │       │   └── object_detect.py  # ObjectDetection + ObjectDetectResponse (bbox 0–1)
 │       └── providers/
 │           ├── embed_base.py   # EmbeddingProvider ABC (encode_image/encode_text/classify)
@@ -262,12 +276,9 @@ The_Next_Gallery/
 │           ├── object_base.py  # ObjectDetectionProvider ABC (detect)
 │           ├── yolo.py         # YoloDetectionProvider — YOLO26, 80 COCO class
 │           ├── object_stub.py  # StubDetectionProvider — detections=[]
-│           ├── base.py         # GestureProvider ABC (returns HandResult)
-│           ├── stub.py         # GestureProvider stub — detected=false
-│           ├── mediapipe.py    # MediaPipe GestureRecognizer (hand gesture)
-│           ├── face_base.py    # FaceProvider ABC (returns FaceResult)
-│           ├── face_stub.py    # FaceProvider stub — detected=false
-│           └── face_mediapipe.py  # MediaPipe FaceLandmarker → blendshape → expression mapping
+│           ├── similarity_base.py  # SimilarityProvider ABC (encode_image only)
+│           ├── dinov3.py       # Dinov3SimilarityProvider — transformers AutoModel, pooler_output, L2-norm, 384-d
+│           └── similarity_stub.py  # StubSimilarityProvider — deterministic 384-d vector
 ```
 
 ## Commands
@@ -279,6 +290,10 @@ npm run dev          # Start dev server with tsx watch (hot reload)
 npm start            # Run production server (node src/server.js)
 npm run backfill:embed    # Backfill CLIP embeddings for existing images (all users / 1 userId)
 npm run backfill:detect   # Backfill YOLO26 object detection for existing images
+npm run backfill:dino     # Backfill DINOv3 similarity descriptors for existing images
+npm run backfill:thumbs   # Generate missing small/med/display thumbnails for existing photos
+npm run backfill:tags     # Classify existing photos into the 17 content tags (embeds missing CLIP vectors first)
+npm run backfill:taken-at # Fill media.taken_at (EXIF / video creation_time) for existing media
 npm install          # Install dependencies
 ```
 
@@ -295,22 +310,19 @@ npm install          # Install dependencies
 ### AI Service
 ```bash
 cd ai-service
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python scripts/download_model.py --task all   # Download gesture + face models (run once, if using mediapipe)
-uvicorn app.main:app --reload --port 8000
+uv sync                                   # Python 3.12 .venv from uv.lock (+ --group bench for bench/)
+uv run uvicorn app.main:app --reload --port 8000
+uv run pytest                             # tests (stub providers)
+# Deps: `uv add <pkg>` / `uv lock --upgrade-package <pkg>` — always commit pyproject.toml + uv.lock
 
 # Docs API: http://localhost:8000/docs
-# Detect:  POST http://localhost:8000/api/v1/detect (multipart field: file)
-#          → returns { provider, hand: {detected,label,confidence}, face: {detected,expression,confidence} }
+# Embed:   POST http://localhost:8000/api/v1/embed/image (multipart field: file)
+#          POST http://localhost:8000/api/v1/embed/text (JSON: { "text": "..." })
+# Detect:  POST http://localhost:8000/api/v1/detect/objects (multipart field: file)
+#          → returns { provider, model, detections: [{ class_name, confidence, bbox }] }
+# Similar: POST http://localhost:8000/api/v1/similarity/embed (multipart field: file) → 384-d DINOv3 vector
+# DINOv3 weights are GATED: accept license on HF, `uv run hf auth login`, `uv run python scripts/download_dino_weight.py`
 ```
-
-> **MediaPipe on local machines**: mediapipe **MUST be 0.10.x** (`requirements.txt` pins `<0.11`) —
-> 1.0.x (1.0.0/1.0.1) aborts on macOS arm64 (`DrishtiMetalHelper` / `Check failed: service_
-> Service is unavailable`, even with the CPU delegate), and 0.10.x only supports Python ≤3.12.
-> If your local machine uses Python 3.14 (can't install 0.10.x) → keep `AI_GESTURE_PROVIDER`/`AI_FACE_PROVIDER` = `stub`
-> to run the skeleton, or run ai-service in Docker (python:3.12)
-> (`docker compose -f docker-compose.dev.yml --env-file .env --profile full up --build`).
 
 ### Docker (Dev)
 ```bash
@@ -338,7 +350,6 @@ cd backend && npx @better-auth/cli migrate
 ### Testing Scripts
 ```bash
 cd backend
-node src/scripts/test-db.js      # Test DB connection (legacy MariaDB script)
 node src/scripts/test-minio.js   # Test MinIO connection and bucket
 ```
 
@@ -347,70 +358,113 @@ node src/scripts/test-minio.js   # Test MinIO connection and bucket
 ### Backend
 - **ES Modules** everywhere (`"type": "module"`, `import/export`)
 - **Environment**: `.env` at project root, loaded via `config/env.js` (resolves path 3 levels up)
-- **Auth middleware**: `requireAuth` and `requireAdmin` in `server.js` — use `auth.api.getSession({ headers })` to verify
-- **Route mounting**: Better Auth handler at `/api/auth/*`, gallery routes at `/api/gallery/*`, admin at `/api/admin/*`, health checks at `/health` & `/api/health`
+- **Auth middleware**: `requireAuth` and `requireAdmin` in `middleware/auth.js` — use `auth.api.getSession({ headers })` to verify
+- **Route mounting**: `modules/index.js` barrel mounts every module's router — Better Auth handler at `/api/auth/*`, gallery at `/api/gallery/*`, friends at `/api/friends/*`, moments at `/api/moments/*`, share at `/api/share/*`, developer at `/api/developer/*`, profile at `/api/profile/*` (`GET /stats`, `GET /storage`), albums at `/api/albums/*`, public album links at `/api/public/*` (no auth), admin at `/api/admin/*`, health checks at `/health` & `/api/health`
 - **Media Streaming**:
-  - `GET /api/gallery/media/:id/thumbnail`: Streams thumbnail with `Cache-Control: public, max-age=31536000, immutable`, `ETag` (returns 304 on `If-None-Match`), and `Cross-Origin-Resource-Policy: cross-origin`.
-  - `GET /api/gallery/media/:id/file`: Streams raw file with `Cache-Control: public, max-age=86400`, `Accept-Ranges: bytes` (video streaming support), and `Cross-Origin-Resource-Policy: cross-origin`.
-  - `GET /api/gallery/media`: Returns immediate JSON array of media items without making expensive sequential MinIO presigned URL calls.
+  - **Signed media URLs** (`media.urls.js` + `media.access.js`): stream endpoints are NOT public by id. Every URL the API returns (`media.mapper.js::mediaUrls / mediaThumbUrl / mediaFileUrl`) carries `exp` + `sig` (HMAC of id + size|"file" + exp + scope, secret `MEDIA_URL_SECRET` or `BETTER_AUTH_SECRET`). `exp` is bucketed by `MEDIA_URL_TTL_HOURS` (24 → valid 24–48 h, URL stable within a bucket so browser cache still hits). Public-album URLs add `l=<share_link id>` and are rejected as soon as the link is revoked/expired (30 s cache, cleared on revoke). No/invalid signature → only the logged-in owner (cookie) gets the file, else 403. Never build media URLs by hand on the FE — use the URLs from the API. Profile avatars picked from the library use the stable public endpoint `GET /api/profile/avatar/:mediaId` (served only while that photo is its owner's current `user.image`).
+  - `GET /api/gallery/media/:id/thumbnail`: Streams thumbnail with `Cache-Control` from the access check (signed: `public, max-age=<until exp>, immutable`; link: `private, max-age=300`; owner cookie: `private, max-age=3600`), `ETag` (returns 304 on `If-None-Match`), and `Cross-Origin-Resource-Policy: cross-origin`.
+  - Image tiers (`media.derivatives.service.js`): `small` 200px cover (grid), `med` 400px cover, **`display` ≤2048px keep-aspect WebP** (`media.display_object`, lightbox + AI input). The original is decoded once at upload; photos missing any tier get all missing tiers generated on first thumbnail request (deduped, max 2 concurrent, undecodable files remembered for 10 min → 404). The thumbnail endpoint never streams a photo's original; the Lightbox loads the original only on zoom > 1x or "Original". Thumbnail URLs are built by `media.mapper.js::mediaThumbUrl` with a `v=` version (bump it when the pipeline changes — responses are `immutable`). Pre-generate for old photos: `npm run backfill:thumbs`.
+  - **Video + HEIC** (`media.sources.js`): video poster = 1 frame cut by ffmpeg (`ffmpeg-static`, override with `FFMPEG_PATH`; old videos read via presigned MinIO URL + HTTP Range, not downloaded) → same small/med/display tiers; `duration_seconds` (required by `chk_video_duration`) + rotated width/height from ffmpeg — an unreadable video is rejected with 400 `INVALID_VIDEO`. HEIC/HEIF decoded with `heic-decode` (libheif WASM) when sharp can't; `full` tier (`media.full_object`, full-res WebP) only for HEIC since browsers can't render the original. Uploads are classified by MIME **or extension** (`classifyUpload` — Windows/Android send HEIC/MOV as `application/octet-stream`).
+  - `GET /api/gallery/media/:id/thumbnail?size=small|med|display|full`: always WebP; 404 if the tier can't be produced (never streams the original).
+  - `GET /api/gallery/media/:id/file`: Streams raw file (same signed-URL access + `Cache-Control` rules as thumbnails), `Accept-Ranges: bytes` + real `Range` handling (206 Partial Content / 416, `If-Range`) for video seeking, and `Cross-Origin-Resource-Policy: cross-origin`.
+  - `GET /api/gallery/media`: `{ items, total, hasMore, limit, offset }` (`total` = all non-trashed media of the user). Items include `mimeType`, `takenAt` and `aiTags` (≤2 content-tag ids above threshold, from `media_tags`). Sort `newest`/`oldest` = `COALESCE(taken_at, created_at)`.
+  - **Taken date**: `media.taken_at` from EXIF (`DateTimeOriginal`/`CreateDate`, via `exifr`, incl. HEIC) or video `creation_time` (ffmpeg), read at upload (`media.sources.js::readPhotoTakenAt / readVideoTakenAt`). Old media: `npm run backfill:taken-at` (reads only the first 1 MB of each photo / video header). The gallery groups by `takenAt ?? createdAt`.
+  - **Download originals** (`media.download.service.js`): `GET /:id/file?download=1` adds `Content-Disposition: attachment` with the original filename (the param is not part of the signature); `POST /api/gallery/media/download/zip` (auth, form-urlencoded `ids=a,b,c` ≤ 1000, own non-trashed media) streams a `store` zip from MinIO one file at a time (safe + de-duplicated names). FE `services/media.ts::downloadMedia(ids)` (1 → file, many → zip via a hidden-iframe `<form>` POST so the browser streams to disk) — selection bar Download + Lightbox "Download original" (`downloadUrl`, hidden in Trash / public link which has its own button).
+  - `POST /api/gallery/media/trash/empty` (auth): permanently deletes every trashed item of the caller (DB + MinIO objects).
+  - `POST /api/gallery/media/lookup` (auth, body `{ ids }` ≤1000): the caller's own media by id, in `ids` order (unknown/foreign/trashed ids skipped). Used by ShareDialog to build transfer sources for the selected items.
 - **Media/Album Search** (Spotlight):
-  - `GET /api/gallery/media/search?q=` (auth): **semantic search first** — ai-service embeds the query (CLIP text) → cosine-compares against image embeddings in `media_embeddings` (pgvector `<=>`), returns `MediaListItem[]` in descending similarity (max 20). If ai-service errors / the user has no embeddings → fallback `original_filename ILIKE %q%`.
+  - `GET /api/gallery/media/search?q=&mode=` (auth): **hybrid search** (CLIP + content tags + YOLO objects, see "Spotlight image search" below; `mode=clip` = plain CLIP cosine) → `MediaListItem[]` (+ `score`, `scoreParts`), max 20. If ai-service errors / the user has no embeddings of the current CLIP model → fallback `original_filename ILIKE %q%`.
   - `GET /api/gallery/media/albums/search?q=` (auth): find albums by `name/description ILIKE %q%` → `{ id, name, description, coverUrl, mediaCount }` (max 10). Cover resolves from `albums.cover_media_id` (preferred) or the latest image in the album via `album_media JOIN media`.
   - Both live in `media.routes.js`, sharing the `searchQuerySchema` (`{ q: min(1) max(120) }`), validated at `"query"`.
 - **Semantic search (embeddings)**:
-  - `embedding.service.js`: `saveEmbedding`, `embedMediaBuffer` (normalizes images to ≤512px WebP via sharp before sending to AI), `embedMediaInBackground` (fire-and-forget), `embedMediaById` (per-user MinIO), `backfillEmbeddings` (batched), `getEmbeddingStats`, `semanticSearch` returns `{ hits, hadEmbeddings }` (`1 - (embedding <=> $query)`).
+  - `modules/ai/embedding.service.js`: `saveEmbedding`, `embedMediaBuffer` (normalizes images to ≤512px WebP via sharp before sending to AI), `embedMediaInBackground` (fire-and-forget), `embedMediaById` (per-user MinIO), `backfillEmbeddings` (batched), `getEmbeddingStats`, `semanticSearch` returns `{ hits, hadEmbeddings }` (`1 - (embedding <=> $query)`).
   - **Canonical CLIP (per the paper "Learning Transferable Visual Models…")**:
-    - Short queries (≤3 words) are wrapped in the template `"a photo of a {query}"` before text embedding (`embedding.service.js::applyQueryTemplate`).
+    - Short queries (≤3 words) are wrapped in the template `"a photo of a {query}"` before text embedding (`modules/ai/embedding.service.js::applyQueryTemplate`).
     - Default cosine threshold `0.22` (env `AI_CLIP_MIN_SIM`, set `0` to disable) — images below the threshold are not returned.
     - Search returns a `score` per image (shown as % in SearchView). When the user already has embeddings (`hadEmbeddings=true`) → trust the semantic result (possibly empty if below threshold); only fall back to `original_filename ILIKE` when nothing is embedded yet or ai-service errors.
   - Backfill: `npm run backfill:embed` (script `src/scripts/backfill-embeddings.js`, loops until `remaining=0`, all users or 1 userId).
   - ai-service: adds `POST /api/v1/classify` — **CLIP-style zero-shot classification** (image + multipart JSON-array `labels`/`templates` → softmax with the model's `logit_scale`; prompt ensembling). CLI script `ai-service/scripts/clip_demo.py` calls HTTP (`--url`) or imports the provider directly (`--direct`). Docs: `docs/ai-clip.md`.
-  - `ai.service.js`: client that calls ai-service `/api/v1/embed/image` (multipart) & `/api/v1/embed/text` (JSON). `AI_SERVICE_URL` env (dev: `http://localhost:8000`, compose: `http://ai-service:8000`).
-  - Image upload → `embedMediaInBackground` in `media.service.js::uploadMedia` (runs in the background, doesn't block upload; errors only logged).
+  - `modules/ai/ai.client.js`: client that calls ai-service `/api/v1/embed/image` (multipart) & `/api/v1/embed/text` (JSON). `AI_SERVICE_URL` env (dev: `http://localhost:8000`, compose: `http://ai-service:8000`).
+  - Image upload → `embedMediaInBackground` in `media.upload.service.js::uploadMedia` (runs in the background, doesn't block upload; errors only logged).
   - `GET /api/gallery/media/embed/status` (auth): `{ total, embedded, pending }`. `POST /api/gallery/media/embed/backfill` (auth, body `{ limit }`): embed existing images without embeddings.
 - **Object detection (YOLO26)** — pipeline parallel to CLIP:
-  - `detection.service.js`: `saveDetections` (deletes the old rows for media+model then inserts, in a transaction; dedup via UNIQUE index), `detectMediaBuffer` (resizes images to ≤1280px preserving aspect via sharp → sends to AI → stores → sets `media.yolo_processed_at`), `detectMediaInBackground` (fire-and-forget), `detectMediaById` (MinIO fetch, photos only), `backfillDetections` (batched, uses the `yolo_processed_at IS NULL` flag), `getDetectionStats`, `searchByObject` (fuzzy match `class_name ILIKE %q%`, threshold `AI_YOLO_MIN_CONF` default 0.4, returns `{ id, score }` = highest confidence), `listDetectionClasses`, `getMediaDetections` (with bbox for Developer Mode).
-  - `media.service.js::searchMediaObjects` → `MediaListItem[]` with `score`.
+  - `modules/ai/detection.service.js`: `saveDetections` (deletes the old rows for media+model then inserts, in a transaction; dedup via UNIQUE index), `detectMediaBuffer` (resizes images to ≤1280px preserving aspect via sharp → sends to AI → stores → sets `media.yolo_processed_at`), `detectMediaInBackground` (fire-and-forget), `detectMediaById` (MinIO fetch, photos only), `backfillDetections` (batched, uses the `yolo_processed_at IS NULL` flag), `getDetectionStats`, `searchByObject` (classes understood by `search.query.js::parseQuery` — "chai" → bottle, "犬" → dog — match exactly, otherwise fuzzy `class_name ILIKE %q%`; threshold `AI_YOLO_MIN_CONF` default 0.4; optional Spotlight scope `onlyIds`; returns `{ id, score }` = highest confidence), `listDetectionClasses`, `getMediaDetections` (with bbox for Developer Mode).
+  - `media.search.service.js::searchMediaObjects` → `MediaListItem[]` with `score`.
   - Routes (auth, `media.routes.js`): `GET /api/gallery/media/objects/search?q=`, `GET /api/gallery/media/objects/classes`, `GET /api/gallery/media/detection/status`, `POST /api/gallery/media/detection/backfill` (`{ limit }` ≤100), `GET /api/gallery/media/:id/detections` (with bbox).
-  - Image upload → `detectMediaInBackground` in `media.service.js::uploadMedia` (runs in the background alongside embedding).
+  - Image upload → `detectMediaInBackground` in `media.upload.service.js::uploadMedia` (runs in the background alongside embedding).
   - Backfill: `npm run backfill:detect` (script `src/scripts/backfill-detections.js`, loops until `remaining=0`, all users or 1 userId). Requires ai-service `/api/v1/detect/objects`.
   - ai-service: provider `yolo`/`stub` (`app/providers/yolo.py`), `POST /api/v1/detect/objects` (multipart) returns `{ provider, model, detections: [{ class_name, confidence, bbox[x1,y1,x2,y2] 0–1 }] }`. Weights `yolo26n.pt` baked at `/opt/yolo-cache`. Docs: `docs/ai-yolo.md`.
-  - Frontend: `SearchView` calls four sources in parallel (Friends/Albums/semantic-Images/Objects); `MediaDetailsPanel` shows object tag chips; `Lightbox` + `DetectionOverlay` draws bboxes when **Developer Mode** is on (hook `useMediaDetections`, cached by mediaId).
+  - Frontend: `SearchView` calls four sources in parallel (Friends/Albums/semantic-Images/Objects); `MediaDetailsPanel` shows object tag chips (below `AI_YOLO_MIN_CONF` = faded + note, since search ignores them — keep `YOLO_SEARCH_MIN_CONF` in sync); `Lightbox` + `DetectionOverlay` draws bboxes when **Developer Mode** is on (hook `useMediaDetections`, cached by mediaId).
+- **Image similarity (DINOv3)** — "Similar photos" in the Lightbox details panel:
+  - `modules/ai/similarity.service.js`: `saveDinoEmbedding`, `embedDinoBuffer` (≤512px WebP → ai-service `/api/v1/similarity/embed`; **stub results are not saved**), `embedDinoInBackground`, `embedDinoById`, `backfillDinoEmbeddings`, `getDinoStats`, `findSimilarMedia` (source vector → pgvector k-NN within the same user + same `model`, threshold `AI_DINO_MIN_SIM` default 0.35; source missing → embed on demand; still missing → fallback CLIP image↔image from `media_embeddings` with threshold 0.75). Returns `{ source: "dinov3"|"clip"|null, model, hits }`.
+  - Routes (auth, `media.routes.js`): `GET /api/gallery/media/:id/similar?limit=` (≤50, default 12 → `{ source, model, items: MediaListItem[] (+score) }`), `GET /api/gallery/media/similar/status`, `POST /api/gallery/media/similar/backfill` (`{ limit }` ≤200).
+  - Image upload → `embedDinoInBackground` (alongside CLIP + YOLO). Backfill: `npm run backfill:dino`.
+  - ai-service: provider `dinov3`/`stub` (`AI_SIMILARITY_PROVIDER`), `AI_DINO_MODEL` = local dir (relative to `ai-service/`, used if it has `config.json`) or HF repo id. Default model `facebook/dinov3-vits16-pretrain-lvd1689m` (21M params, 384-d) — **gated** on HF, not baked into Docker images. Docs: `docs/ai-dino.md`.
+  - Frontend: `services/media.ts::fetchSimilarMedia`, hook `useSimilarMedia` (session cache, empty results not cached), section in `MediaDetailsPanel` (`onSelectSimilar`); `Lightbox` jumps via `onSelect` if the item is in `mediaList`, otherwise shows it as a local "peek" (favorite/delete hidden; Esc/prev/next leave the peek).
+- **Spotlight image search = hybrid (compositional) search** — `GET /api/gallery/media/search?q=&mode=hybrid|clip` (default `hybrid`; `clip` = old cosine search kept for comparison):
+  - `modules/ai/search.query.js::parseQuery` (pure) understands tag names + COCO object names + counts in **vi / en / ja** ("2 con chó trên bãi biển", "two dogs", "犬が2匹") from `search.lexicon.json`, and returns `coverage` (share of the query understood).
+  - `modules/ai/hybrid.search.service.js`: parts = CLIP (margin `cos(q) − cos(generic "a photo.")`, z-scored over the user's photos → `σ(1.5·(z − 3))`), tag (mean confidence of named tags, `media_tags`), object (YOLO conf × count match, `media_detections` ≥ `AI_YOLO_MIN_CONF`). Score = weighted **geometric** mean (AND semantics); CLIP weight = `0.5·(1 − coverage)` when tags/objects are named (fully understood query → CLIP only breaks ties), else CLIP alone. Returns ≥ `AI_SEARCH_MIN_SCORE` (0.5), items carry `score` + `scoreParts` (Spotlight shows them as a tooltip).
+  - **Scope** (`&scope=favorites|label:<id>|album:<id>`, `media.scope.js::scopeMediaIds` — own, non-trashed photos only): hybrid scores are computed over the whole library (z-score unchanged), then filtered to the scope (`hybridSearch({ onlyIds })`); empty `q` + scope = list the scope (≤60). FE Spotlight: typing "fav" / a label / an album name suggests "Search in …" (Tab/Enter → chip inside `SearchBar` `prefix`, Backspace at start removes it), shortcut `favorite.dog` (`features/search/searchScope.ts`, `useSearchScopes`); "Edited photos" (AI Studio editing) is a disabled placeholder scope.
+  - Mirrored 1:1 by `ai-service/bench/search_eval.py` (same lexicon file + constants; `tests/test_bench_search.py` checks parser parity) — **change both together**.
+- **CLIP model switch (e.g. multilingual `xlm-roberta-base-ViT-B-32` / `laion5b_s13b_b90k`)**: set `AI_CLIP_MODEL`/`AI_CLIP_PRETRAINED`, restart ai-service. Backend reads the running model from `/api/v1/embed/info` (`ai.client.js::currentModels`, cached 60 s): embeddings of another model count as pending (embed backfill re-embeds + re-tags), search only compares vectors of the same model, and the tagger name (`"<clip>: coco-… · places6-… · attribute-zero-shot"`) changes so tags are redone. `app/tagging.py` only uses a probe trained on the running CLIP (`meta.clip_model`; `bench/runs/cls/<clip model>/` first) — otherwise zero-shot. Bench: `BENCH_CLIP=<model>:<pretrained>` keeps features/probes/CSV rows separate.
+- **Content classification (17 tags + confidence)** — AI Studio "Classification" tab:
+  - ai-service `app/tagging.py::Tagger` scores the 17-tag taxonomy (`bench/cls_taxonomy.py`) from a **stored CLIP vector** (no image needed), mirroring bench `TagSystem` but CLIP-only: object ← `bench/runs/cls/coco-<AI_TAG_CONFIG>.npz`, scene ← `places6-<config>.npz`, attribute ← CLIP zero-shot; missing/non-CLIP model → zero-shot for that group. Per-tag thresholds come from the .npz (F1-tuned on val; zero-shot 0.5). `POST /api/v1/tags/predict` (`{ embeddings: number[][] }` ≤500 → `{ model, tags, thresholds, scores }`), `GET /api/v1/tags/info`.
+  - backend `modules/ai/tagging.service.js`: `tagMediaIds` (one ai-service call per batch, replaces all rows), `backfillTags` (embeds photos lacking a CLIP vector first), `getTagStats`, `listTagSummary` (count ≥ threshold + cover), `listMediaIdsByTag` (`minConfidence` or per-tag threshold). Table `media_tags` stores the probability of **every** tag per photo (PK media_id+tag) so the UI can move the threshold freely; a photo with rows = classified.
+  - Upload: `embedMediaInBackground` embeds then tags. Backfill: `npm run backfill:tags`, Settings "AI processing" row, or the AI Studio banner (`hooks/useAiBackfill.ts`, shared batch loop).
+  - Routes (auth, `media.routes.js`): `GET /api/gallery/media/tags`, `GET /tags/status`, `POST /tags/backfill` (`{ limit }` ≤500), `GET /tags/:tag/media?minConfidence=&limit=&offset=` → `{ total, items: MediaListItem[] (+score) }`.
+  - Frontend `features/studio/` (`/studio`, sidebar "AI Studio"): category grid by group (`tagCatalog.ts` — keep ids in sync with the taxonomy; names in i18n `studio.tags.<id>`), tag view sorted by confidence with % badges + confidence-threshold slider (Auto = per-tag threshold), Lightbox. Selected tag lives in `?tag=`. "Editing" tab is a placeholder (not implemented).
+- **Albums** (`modules/albums/`, mounted at `/api/albums`; public `/api/public/albums/:token`):
+  - Kinds: `manual` (photos in `album_media`, `added_by` = who added) and `smart` (`albums.smart_rule` JSONB re-evaluated on every read — `{type:"tags", tags[≤3], minConfidence|null}` = photos having ALL tags in `media_tags`, or `{type:"query", query}` = hybrid search, ≤300 hits). `POST /:id/convert` snapshots a smart album into a manual one (keeps ranking via `position`).
+  - Roles (`albums.access.js::getAlbumAccess`): owner = `albums.user_id` (edit/delete/cover/share), `album_members` editor (add **own** photos, remove photos they added) / viewer; pending invitations (`accepted_at IS NULL`) only see accept/decline. No access → 404 (album existence isn't leaked). Invites only to accepted friends; WS `album:invite` → `AlbumInviteToast`.
+  - Routes: `GET /` → `{ owned, shared, invitations }`, `POST /`, `GET|PATCH|DELETE /:id`, `GET /:id/media?limit&offset` → `{ total, items (+ownerId, addedBy, score for smart) }`, `POST /:id/media`, `POST /:id/media/remove`, `GET|POST /:id/members`, `PATCH|DELETE /:id/members/:userId` (own id = leave), `POST /:id/invitation {accept}`, `GET|POST /:id/links`, `DELETE /:id/links/:linkId`, `PUT /:id/media/order {mediaIds}` (owner, full new order → `album_media.position`; unpositioned/new photos list first), `GET /containing/:mediaId` (regular albums containing a photo — Lightbox details panel `MediaAlbumsSection`).
+  - **Auto albums** (`albums.auto.service.js`, not stored — recomputed on read like smart albums, read-only): 4 groups, each one membership SQL `(id, key, ts)` shared by the list + media endpoints. `type` (photos/videos/screenshots by filename/favorites — every media is in Photos or Videos), `content` (tags ≥ threshold in `media_tags`, untagged photos → `tag-other`), `time` (`month-YYYY-MM` for all media in the client's `tz` + `event-YYYYMMDDHHmm` = runs of EXIF `taken_at` ≤ 3 h apart with ≥ 5 photos), `objects` (YOLO class → 12 COCO supercategories, `COCO_SUPERCATEGORY` in `albums.constants.js`). Routes (before `/:id`): `GET /auto?tz=` → `{ groups: [{ id, albums: [{ key, count, coverUrl, firstAt, lastAt }] }] }`, `GET /auto/:key/media`, `POST /auto/:key/save {name}` (→ manual album, keeps order via `position`). FE: rows in `AlbumsView`, `AutoAlbumView` (`/albums/auto/:key`), names built client-side by `features/albums/autoAlbums.ts::autoAlbumName` (i18n `albums.auto.*`).
+  - Public links (`share_links`): 32-char random token, `permission` view|download, optional expiry + max views (each first-page load counts 1 view; expired/exhausted → 410). Media URLs in a public response are signed with the link as scope, so revoking the link also blocks the images.
+  - Frontend `features/albums/`: `AlbumsView` (`/albums`: invitations · smart · mine · shared), `AlbumDetailView` (`/albums/:id`: header actions, select → remove / set cover, owner "Reorder" mode = `AlbumReorderGrid` with `@dnd-kit` (mouse, touch, keyboard), Lightbox only acts on own photos), `PublicAlbumView` (`/s/:token`, outside MainLayout/auth). Global `AddToAlbumDialog` (opened via `useGalleryActionsStore.openAddToAlbum(ids)` from `SelectionActionBar` and Lightbox `onAddToAlbum`). Spotlight: album result → `/albums/:id`, "Save as album" creates a smart query album; AI Studio tag view → "Create smart album".
+- **Personal labels** (`modules/labels/`, `/api/labels`, auth): user-defined labels ("To edit", "To print"…) to remember what to do with a photo — **independent of `media.is_favorite`**; the Favorites page shows photos that are hearted OR labeled. Tables `user_labels` (unique `user_id + lower(name)`, color key from `labels.constants.js::LABEL_COLORS` — keep in sync with FE `services/labels.ts`), `media_user_labels`, `user_label_seeds` (3 suggested labels created once per user via `POST /seed`). **i18n**: suggested labels are stored as a key (`user_labels.preset`, `name = NULL`) and the FE shows `favorites.labels.suggested.<preset>` in the current language (`useLabels` resolves `name`, `suggested: true`); once renamed, `name` is the user's own text and is never translated. `LABEL_PRESETS` (`labels.constants.js`) lists every preset with its names in all languages — used to block a custom label that duplicates a suggested one and to migrate old rows; keep it in sync with the locales. Spotlight matches suggested labels in every language. Routes: `GET /` → `{ seeded, totals: { all, favorites }, labels (+count, coverUrl) }`, `POST /`, `PATCH|DELETE /:id`, `POST /:id/media`, `POST /:id/media/remove`, `GET /saved?filter=all|favorites|<labelId>` (items + `labelIds`), `GET /media/:mediaId` → `{ editable, labelIds }` (editable = own, not trashed). FE `features/favorites/`: `FavoritesView` (filter chips in `?filter=`; mobile shows All · Hearted · the active label + a "Labels ▾" bottom sheet `LabelFilterSheet`, multi-select via the shared selection store), `useLabels` / `useLabelActions`, `LabelMenu` (Bookmark button in `SelectionActionBar`), `MediaLabelsSection` (Lightbox details), `LabelManagerDialog` (rendered in MainLayout, opened via `useLabelManager`). Favorites caches are `["favorites", filter]` — invalidate the `["favorites"]` prefix.
 - **Developer Mode** (request/approval):
-  - `developer.service.js` (`getDeveloperStatus`, `isApprovedDeveloper`, `requestDeveloper` upsert → pending, `listDeveloperRequests`, `reviewDeveloperRequest`) + the `developer_requests` table (status `pending|approved|rejected`).
-  - User: `GET /api/developer/status`, `POST /api/developer/request` (auth). Admin: `GET /api/admin/developer-requests`, `POST /api/admin/developer-requests/:id/review` (requireAdmin). Mounted at `/api/developer` + `/api/v1/developer`.
-  - Frontend: `services/developer.ts`, store/hook `useDeveloperMode` (zustand, `enabled` persisted to localStorage key `tng.devModeEnabled`, `devModeEnabled = approved && enabled`), `DeveloperModeDialog`, item in `UserMenu`; admin `AdminDeveloperRequests` inside `AdminDashboard`.
+  - `modules/developer/developer.service.js` (`getDeveloperStatus`, `requestDeveloper` upsert → pending, `listDeveloperRequests`, `reviewDeveloperRequest`) + the `developer_requests` table (status `pending|approved|rejected`).
+  - User: `GET /api/developer/status`, `POST /api/developer/request` (auth). Admin: `GET /api/admin/developer-requests`, `POST /api/admin/developer-requests/:id/review` (requireAdmin). Mounted at `/api/developer`.
+  - Frontend: `services/developer.ts`, store/hook `useDeveloperMode` (zustand, `enabled` persisted to localStorage key `tng.devModeEnabled`, `devModeEnabled = approved && enabled`), `DeveloperModeDialog`, item in `UserMenu`; admin page `/admin/developer` (`AdminDeveloperView`, status tabs; hook `useAdminDeveloperRequests` is react-query and also feeds the sidebar badge).
+- **Admin** (`modules/admin/`, all `requireAdmin`): `GET /api/admin/overview` (KPIs, 30-day `activity` signups+uploads with every day filled, 5 newest users), `GET /system` (ai-service `/health` + current models, AI coverage of all photos), `GET /users?q&role&status&sort&dir&limit&offset` (server-side search/sort/paging; media count, storage, last active = newest session), `GET /users/:userId` (profile + stats + AI coverage), `DELETE /users/:userId` (removes the user's MinIO objects, then the row — FE deletes through this, not Better Auth `removeUser`). Role / ban / sessions go through the Better Auth admin client (`services/admin.ts`). Better Auth columns are camelCase (`"createdAt"`, `"userId"`). FE `features/admin/`: `AdminDashboard` (`/admin`), `AdminUsersView` (`/admin/users`, filters in the URL, `?user=<id>` opens `AdminUserSheet`, table on md+ / cards on mobile, `AdminUserActions` menu, no actions on yourself), `AdminDeveloperView` (`/admin/developer`).
 - **WebSocket (signaling)**: Server uses `ws` library attached to `http.Server` via `setupWebSocket(server)` in `ws/index.js`. WebSocket path: `/ws`. Authentication via cookies on the upgrade request (same Better Auth session). In-memory room/peer management — rooms expire after 1 hour, auto-cleanup every 5 minutes. DB persistence of share_sessions is optional/graceful.
-- **MinIO bucket**: Must be lowercase with hyphens only (no underscores). Auto-created on server start.
-- **Error handling**: Global error handler in `server.js` catches all unhandled errors
-- **Note**: `routes/gallery.js` and `routes/search.js` are legacy code from MariaDB era — they use `mysql2` query syntax (`?` placeholders) and reference old tables (`image_gallery`, `image_embeddings`). The active routes are inline in `server.js` using PostgreSQL (`$1` placeholders) and the new `media` table.
+- **MinIO bucket**: Must be lowercase with hyphens only (no underscores). Auto-created on server start (`config/minio.js` — `ensureBucketExists`).
+- **DB schema bootstrap**: `db/migrate.js::ensureSchema()` runs idempotent DDL on server start: media columns, pgvector + `media_embeddings`, `media_detections` + `media.yolo_processed_at`, `developer_requests`. Keep it in sync with `database/pipeline/schema.sql`.
+- **Error handling**: Global error handler (`middleware/errorHandler.js`) registered in `server.js` catches all unhandled errors. 4xx (`httpError`, Zod, multer, body-parser) return their message + code; **5xx always return a generic message** (details only in the log) — never put internals in a 4xx message.
+- **Rate limits** (`middleware/rateLimit.js`, express-rate-limit, in-memory, per user after `requireAuth` else per IP): search 240/min (media/objects/albums/friends), upload 30/min, AI backfill 120/min, zip download 20/min, public album links 300/min → 429 `RATE_LIMITED`. Multiple backend instances would need a shared store (Redis).
+- **Security baseline**: production refuses to start without `CORS_ORIGINS` (CORS with cookies — never `origin: true` in prod) or with a placeholder / < 32-char `BETTER_AUTH_SECRET`; WebSocket handshakes from a browser Origin outside `CORS_ORIGINS` are rejected; `trust proxy` = 1 behind Caddy; uploads accept raster photos only (`media.sources.js::PHOTO_MIMES` — no SVG) + video; Google/GitHub sign-in is enabled only when both client id + secret are set. The prod container has no root `.env` — every backend/ai-service variable must be listed in `docker-compose.prod.yml`.
 
 ### Frontend
+- **AI colors + surfaces**: one color per AI source in `lib/aiColors.ts` (`AI_CHIP` theme-aware, `AI_CHIP_ON_DARK` for Lightbox/over photos, `AI_BAR` bars/dots): YOLO = emerald, CLIP = sky, Tag = zinc/primary, DINOv3 = violet — used by landing, Spotlight, Lightbox details, Settings AI. Floating bars / Spotlight use the `glass` utility (`index.css`, `@utility glass`). Stat blocks = hairline grid (`gap-px bg-border/60` + `bg-card` cells, mono uppercase label, `font-heading` number).
+- **Motion** (framer-motion; everything off under `prefers-reduced-motion`): shared timing in `lib/motion.ts` (`EASE_OUT`, `APP_DURATION` fast/base/slow = 0.15/0.22/0.32 s, `POP_SPRING`), shared effects in `components/motion/` (`effects.tsx`: ScrollProgress, Marquee, CountUp, ScrollWords; `AnimatedGridItem` for non-virtualized grids inside `<AnimatePresence initial={false} mode="popLayout">`). **Landing** may be expressive (Reveal on scroll, parallax, typewriter `hooks/useTypewriter.ts`); **the app stays functional and fast** (≤ 0.32 s, never delays content): MainLayout `PageTransition` = opacity only (a transform would break the virtualized grid's `scrollMargin` and every `position: fixed` child), Gallery first-load row stagger (first ~0.8 s only), Lightbox zooms from / back to the `ImageCard` with the same `data-media-id` (close animation runs inside Lightbox before `onClose`), AI chips pop (`POP_SPRING`), stats `CountUp`, `animate-float` on empty-state icons. No scroll-reveal / parallax in the app grids.
 - **Path alias**: `@/` → `./src/` (configured in vite.config.js and tsconfig.json)
 - **Feature-based architecture**: Each feature in `features/<name>/` contains its view, components, and logic
-- **shadcn/ui**: Components in `components/ui/`, configured with radix-sera style, taupe base color
-- **CSS**: Tailwind CSS v4 with CSS variables for theming (light/dark), "Playfair Display" (npm `@fontsource-variable`, for headings), body/UI font "Product Sans" — **proprietary, kept local only** (`frontend/src/assets/fonts/*` is git-ignored except a `README.md`; missing files fall back to `system-ui`)
+- **Keep `.tsx` for rendering**: motion presets live in `.ts` (`lib/motion.ts` shared: `popIn`, `floatingSwap`, `pageFade`…; `features/<name>/<name>.motion.ts` feature-only, e.g. `landing.motion.ts`), stateful logic in hooks (`hooks/useLightboxTransition.ts`, `useIntroStagger`, `usePointerTilt`, `useScrolled`, `useTypewriter`), pure helpers next to the feature (`features/search/searchScore.ts`, `features/gallery/gridLayout.ts`, `features/albums/autoAlbums.ts`). Components spread presets: `<motion.span {...popIn(i, reduce)}>`. Formatting helpers live only in `utils/format.ts` (`formatBytes`, `formatDuration`, `formatCountdown`, `formatSpeed`, `formatEta`, `formatDate`, `formatDateTime`, `formatRelative`; `utils/string.ts` = `getInitials`) — don't redefine them in components. No `fetch` in components: every API call goes through `services/*` (`services/share.ts` for the share friends tab). Page-level data + actions sit in a feature hook next to the view (`albums/useAlbumDetail.ts`, `friends/useFriends.ts`, `moments/useMomentDraft.ts`); shared UI logic in `hooks/` (`useSpotlightSearch`, `useGridSize`, `useInfiniteSentinel`, `useRangeSelection`, `useProgressiveImage`). Render-only helpers (badges, small handlers, icon/label maps) stay in the `.tsx`.
+- **shadcn/ui**: Components in `components/ui/`, configured with radix-sera style, neutral base color — grays in `index.css` are neutral (chroma ≈ 0, hue 85 to sit on the ivory background), monochrome like the landing; the only accent colors are the AI source colors in `lib/aiColors.ts`. Don't reintroduce taupe/brown
+- **CSS**: Tailwind CSS v4 with CSS variables for theming (light/dark), "DFVN Basteleur" for headings (`font-heading`; local `assets/fonts/DFVN-Basteleur-{Moonlight,Bold}.otf`, SIL OFL, committed — Moonlight ≤ 400, Bold ≥ 500), body/UI font "Product Sans" — **proprietary, kept local only** (`frontend/src/assets/fonts/*` is git-ignored except a `README.md`; missing files fall back to `system-ui`)
 - **Auth flow**: `AuthProvider` wraps the app → `useSession()` hook → `ProtectedRoute` / `AdminRoute` guards
 - **API config**: Single source of truth in `lib/config.ts` — `API_URL` from `VITE_API_URL` (or `VITE_API_BASE_URL` fallback)
 - **Media URLs**: Resolved via `resolveMediaUrl(url)` with `AUTH_BASE_URL` for seamless dev and prod streaming
-- **Meme Feature**: fully REMOVED, to be rebuilt from scratch — both the client-side MediaPipe/meme part (lib/vision, hooks/useLiveVision, services/ai, utils/memeOverlay, ArOverlay, `public/wasm`, the vite `/api/ai` proxy) and the **meme reaction (Moments)** part (`GestureMemeDialog.tsx`, `MemeCameraPane.tsx`, the meme button on moments, `reactionMediaId`/`kind="media"`/`myReactionMediaId` in FE + BE + DB). The FE no longer calls ai-service directly; ai-service serves the backend via `/api/v1/embed/*` + `/api/v1/detect/objects` (and `/health`, `/api/v1/detect` hand+face). Moment reactions are emoji-only for now.
+- **Moment memes (memegen.link)**: a separate, still-active feature — `moments.meme.service.js` + `/api/moments/memes/templates` and `/api/moments/:momentId/memes*` (template + caption on the back of a moment card, ❤️ react). Not related to the removed MediaPipe meme below.
+- **Meme Feature (MediaPipe)**: fully REMOVED, to be rebuilt from scratch — both the client-side MediaPipe/meme part (lib/vision, hooks/useLiveVision, services/ai, utils/memeOverlay, ArOverlay, `public/wasm`, the vite `/api/ai` proxy) and the **meme reaction (Moments)** part (`GestureMemeDialog.tsx`, `MemeCameraPane.tsx`, the meme button on moments, `reactionMediaId`/`kind="media"`/`myReactionMediaId` in FE + BE + DB). The FE no longer calls ai-service directly; ai-service serves the backend via `/api/v1/embed/*` + `/api/v1/detect/objects` (and `/health`). Moment reactions are emoji-only for now.
 - **Gallery Performance**:
-  - `GalleryView.tsx`: Infinite scroll with `IntersectionObserver` sentinel (400px bottom threshold) and initial 18-skeleton layout grid. **Selection mode**: long-press (450ms) or right-click an image to enter selection mode; click to toggle; `Escape` exits; a floating desktop toolbar (and mobile BottomBar) shows Share/Download/Delete via `useSelectionStore`.
+  - `GalleryView.tsx`: window-virtualized rows (`@tanstack/react-virtual`, `scrollMargin` = grid offset; row height = square cell + gap, re-measured on width change), columns from grid width × density (`useGridDensity`), infinite scroll sentinel (800px), skeleton with the real column count, sticky current-group label under the app header, group "select all" button on date headers, Shift+click range selection, total count from the API. **Selection mode**: long-press (450ms) or right-click an image to enter selection mode; click to toggle; `Escape` exits; a floating desktop toolbar (and mobile BottomBar) shows Share/Download/Delete via `useSelectionStore`.
   - `ImageCard.tsx`: Shimmer placeholder via `<Skeleton />`, smooth progressive fade-in transition (`opacity-0` → `opacity-100`), error fallback, CSS `content-visibility: auto`, selection check overlay (`selected`/`onToggle`/`onLongPress`).
-  - `SendView.tsx` (`/share`): send files directly from the device (no DB upload) — `File.stream()` into a `TransferSource` (real size → accurate progress), sharing `useShareContext`. Sidebar item "Quick send".
+  - `SendView.tsx` (`/share`): send files directly from the device (no DB upload) — `File.stream()` into a `TransferSource` (real size → accurate progress) — **or pick photos/videos already in the account** ("Choose from library" dialog → `MediaPicker`, streamed from `/api/gallery/media/:id/file`), sharing `useShareContext`. Sidebar item "Quick send".
+  - `features/gallery/components/MediaPicker.tsx`: shared picker grid for media already in the account (filter all/favorites/photos/videos via `fetchMediaByFilter`, 60/page + "load more"; controlled `selectedIds` + `onToggle(item)`). Used by FriendsTab and SendView. `features/share/mediaSource.ts::buildMediaSource` turns a `MediaListItem` into a `TransferSource` (real `mimeType`, keeps the original filename extension).
   - `Lightbox.tsx`: Progressive high-res loading with spinner and video player support.
   - `SearchView.tsx` (Spotlight modal): **multi-source search** — calls four APIs in parallel via `Promise.allSettled` (`searchFriend`, `searchAlbums`, `searchGallerySemantic`, `searchGalleryObjects`) on each debounced query (400ms). Renders results in four groups (Friends / Albums / Images / Objects), each with a header + count; object images have a `%` badge = confidence. Friend result click → `openShare([], { friendId })`; album/image click currently only `console.log`s (no album detail route / Lightbox integration yet). Uses `useGalleryActionsStore` to open ShareDialog.
-- **i18n**: Vietnamese (vi) is default/fallback language, English (en) supported with complete translation coverage. Detection: querystring > localStorage > cookie > navigator.
+- **Profile / Settings**: `features/profile/` (`/profile` — summary card + edit name/avatar via `authClient.updateUser` + change password, credential accounts only) and `features/settings/` (`/settings` — Appearance: theme/language/grid density; Storage: `/api/profile/storage` + empty trash; AI processing: CLIP/YOLO/DINO status + batched backfill loop via `services/aiProcessing.ts`, stops when a batch processes 0; Sessions: Better Auth `listSessions`/`revokeSession`/`revokeOtherSessions`). Grid density lives in `hooks/useGridDensity.ts` (zustand, localStorage `tng.gridDensity`) and drives Gallery columns + Favorites/Trash grid classes.
+- **i18n**: Vietnamese (vi) is default/fallback language, English (en) and Japanese (ja) supported with complete translation coverage. Language list lives in `lib/languages.ts` (`LANGUAGES`, `toLanguageCode`) — add a language by creating `locales/<code>/translation.json`, registering it in `i18n.js` (`resources` + `supportedLngs`) and adding one entry to `LANGUAGES`. `LanguageToggle` is a dropdown menu built from that list. Detection: querystring > localStorage > cookie > navigator.
 - **State**: Zustand for client state, React Query patterns for server state
 - **Linter**: oxlint (not ESLint) — run `npm run lint` in frontend/
 
 ### Database Schema (PostgreSQL)
 - **Better Auth tables**: `user`, `session`, `account`, `verification` (managed by Better Auth CLI, never manually alter)
 - **App tables**: `media`, `albums`, `album_media`, `album_members`, `share_links`, `friendships`, `moments`, `moment_reactions`
-- **AI tables**: `media_embeddings` (1 row/image — 512-dim CLIP vector, pgvector), `media_detections` (many rows/image — YOLO26 class + confidence + bbox) + the `media.yolo_processed_at` column.
+- **AI tables**: `media_embeddings` (1 row/image — 512-dim CLIP vector, pgvector), `media_dino_embeddings` (1 row/image — 384-dim DINOv3 vector), `media_detections` (many rows/image — YOLO26 class + confidence + bbox) + the `media.yolo_processed_at` column.
 - **User FK**: All app tables reference `"user".id` (TEXT type, not UUID) via `user_id`
 - **UUID primary keys**: All app tables use `gen_random_uuid()` for IDs
-- **AI columns**: Reserved in `media.extra_data` (JSONB) for future phase — do not add AI-specific columns to existing tables yet
+- **AI columns**: AI results live in their own tables (`media_embeddings`, `media_detections`); the only AI column on `media` is `yolo_processed_at` (backfill flag). Prefer new tables over adding more AI columns to `media`.
 - **DBML**: `database/pipeline/schema.dbml` can be pasted into https://dbdiagram.io for ERD visualization
 
 ### Environment Variables
@@ -424,10 +478,14 @@ Key env vars used across the stack (all defined in root `.env`):
 - `CORS_ORIGINS`, `TRUSTED_ORIGINS`
 - `PUBLIC_API_BASE_URL`, `PUBLIC_API_BASE_URL_ROOT` (production)
 - `AI_EMBED_PROVIDER` (`stub` | `open_clip`), `AI_CLIP_MODEL` (`ViT-B-32`), `AI_CLIP_PRETRAINED` (`laion2b_s34b_b79k`), `AI_CLIP_DEVICE` (`auto`)
-- `AI_OBJECT_PROVIDER` (`stub` | `yolo`), `AI_YOLO_WEIGHTS` (`yolo26n.pt` / `/opt/yolo-cache/yolo26n.pt`), `AI_YOLO_DEVICE` (`auto`), `AI_YOLO_CONF` (`0.25`), `AI_YOLO_MIN_CONF` (backend search, `0.4`)
-- `AI_SERVICE_URL` (backend → ai-service, `http://localhost:8000` dev)
-- `AI_GESTURE_PROVIDER` (`stub` | `mediapipe`), `AI_FACE_PROVIDER` (`stub` | `mediapipe`), `AI_PORT` (ai-service)
-- `AI_SERVICE_URL` (backend → ai-service, production compose)
+- `AI_OBJECT_PROVIDER` (`stub` | `yolo`), `AI_YOLO_WEIGHTS` (`models/yolo26n.pt` local, relative to `ai-service/` — download with `scripts/download_yolo_weight.py` / `/opt/yolo-cache/yolo26n.pt` Docker), `AI_YOLO_DEVICE` (`auto` → mps on Apple Silicon; Docker on macOS is CPU-only), `AI_YOLO_IMGSZ` (`640`). ai-service requires `ultralytics>=8.4.183,<8.5` and Python 3.12, `AI_YOLO_CONF` (`0.25`), `AI_YOLO_MIN_CONF` (backend search, `0.4`)
+- `AI_SIMILARITY_PROVIDER` (`stub` | `dinov3`), `AI_DINO_MODEL` (`models/dinov3-vits16-pretrain-lvd1689m`), `AI_DINO_DEVICE` (`auto`), `AI_DINO_MIN_SIM` (backend, `0.35`); ai-service needs `transformers>=4.56`
+- `AI_SEARCH_MIN_SCORE` (backend, hybrid search threshold, `0.5`)
+- `AI_TAG_MODELS_DIR` (`bench/runs/cls`, relative to `ai-service/`), `AI_TAG_CONFIG` (`lp_clip` | `zs_clip` — CLIP-only models)
+- `AI_SERVICE_URL` (backend → ai-service, dev `http://localhost:8000`, compose `http://ai-service:8000`), `AI_TIMEOUT_MS` (backend → ai-service request timeout; legacy `AI_EMBED_TIMEOUT_MS` still read)
+- `MEDIA_URL_TTL_HOURS` (backend, signed media URL bucket, `24`), `MEDIA_URL_SECRET` (optional, defaults to `BETTER_AUTH_SECRET`)
+- `FFMPEG_PATH` (backend, optional — defaults to the `ffmpeg-static` binary)
+- `AI_PORT` (ai-service)
 - `VITE_API_URL` / `VITE_API_BASE_URL` (frontend, defaults to `http://localhost:3000/api`)
 
 ### Ports
@@ -446,15 +504,16 @@ Key env vars used across the stack (all defined in root `.env`):
 ### Adding a new feature module (frontend)
 1. Create `src/features/<name>/` with `<Name>View.tsx` and `components/` subfolder
 2. Add route in `src/routes/AppRoutes.tsx`
-3. Add nav item in `src/features/navigation/SidebarNavItems.tsx` if needed
+3. Add nav item in `src/hooks/useNavItems.ts` if needed — one list for both Sidebar (grouped by `section`: home · photos · ai · social, `system` = Trash pinned in the footer) and the mobile BottomBar (`bottomBar` = slot 0–4, slot 2 = round Camera button; only the active item shows its label). Active state = `isNavActive` (prefix match, so sub-pages stay highlighted).
 4. Add i18n keys in `src/locales/vi/translation.json` and `src/locales/en/translation.json`
 5. Add types in `src/types/index.ts`
 
 ### Adding a new API endpoint (backend)
-1. Add route handler in `server.js` (preferred) or create new file in `src/routes/`
-2. Use `requireAuth` or `requireAdmin` middleware for protected endpoints
+1. Add a route handler inside the relevant `modules/<name>/` folder (e.g. `<name>.routes.js`, with logic in `<name>.service.js`) — mount it in `modules/index.js`
+2. Use `requireAuth` or `requireAdmin` middleware (`middleware/auth.js`) and `validate` (`middleware/validate.js`) for protected/validated endpoints — every route that reads `body`/`params`/`query` gets a Zod schema in `<name>.schema.js`. User ids are TEXT (Better Auth), so validate them with `z.string().min(1).max(64)`, never `.uuid()`.
+   - Module file roles: `*.routes.js` (thin: validate → call service → respond), `*.service.js` (business logic + SQL), `*.mapper.js` (pure row → DTO, no DB), `*.schema.js` (Zod), `*.constants.js`, `*.notify.js` (WebSocket events). Ownership checks (`user_id = $n`) belong in the service query.
 3. Use `dbPool.query()` with PostgreSQL parameterized queries (`$1`, `$2`, etc.)
-4. For MinIO operations, use the `minioClient` instance in `server.js`
+4. For MinIO operations, use the `minioClient` export from `config/minio.js`
 
 ### Adding a new shadcn/ui component
 ```bash
@@ -493,8 +552,6 @@ Components are installed to `src/components/ui/`.
 | 1.8 | Realtime WS invite (Friends tab) + real file size + online dot | ✅ DONE |
 
 ## Known Issues / Technical Debt
-- `routes/gallery.js` and `routes/search.js` are legacy MariaDB code (mysql2 `?` placeholders, old table names). The active gallery routes are inline in `server.js` using PostgreSQL.
-- `test-db.js` script still uses mysql2 — needs updating to pg.
 - File `ProtecedRoutes.tsx` has a typo in the filename (should be "Protected").
 - Better Auth auto-generated tables use camelCase column names (e.g., `userId`) while app tables use snake_case — this is intentional and must be maintained.
 

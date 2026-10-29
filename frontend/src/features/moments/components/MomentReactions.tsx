@@ -1,11 +1,59 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SmilePlus } from "lucide-react";
-import { Moment } from "@/types";
+import { Moment, MomentRecentReaction } from "@/types";
 import { cn } from "@/lib/utils";
-import { ReactionRow } from "./ReactionRow";
+import { getInitials } from "@/utils/string";
 
 const QUICK_EMOJIS = ["😡", "😢", "😮", "😂", "❤️"];
+
+/**
+ * Bubble tròn NHỎ 2 mặt: mặt TRƯỚC = emoji, mặt SAU = avatar người react.
+ * Tự lật vô hạn (CSS 3D flip), lệch pha nhẹ bằng animation-delay ÂM
+ * (index * 0.2s, tối đa 0.8s) để đọc được list "ai đã tim".
+ */
+function ReactionBubble({
+  reaction,
+  index,
+}: {
+  reaction: MomentRecentReaction;
+  index: number;
+}) {
+  const stagger = Math.min(index * 0.2, 0.8);
+
+  return (
+    <div
+      className="reaction-flip-3d relative size-5.5 shrink-0"
+      style={{ "--flip-delay": `${-stagger}s` } as React.CSSProperties}
+      title={reaction.userName}
+    >
+      <div
+        className="reaction-flip-card"
+        style={{ animationDelay: `${-stagger}s` }}
+      >
+        {/* Mặt trước — emoji */}
+        <div className="reaction-face absolute inset-0 grid size-full place-items-center overflow-hidden rounded-full bg-black/55 text-[12px] leading-none text-white shadow ring-1 ring-black/10 backdrop-blur-sm dark:ring-white/20">
+          {reaction.emoji ?? "👍"}
+        </div>
+
+        {/* Mặt sau — avatar (dùng img/fallback thuần để vừa size 22px) */}
+        <div className="reaction-face reaction-face-back absolute inset-0 size-full overflow-hidden rounded-full bg-muted shadow ring-1 ring-black/10 dark:ring-white/20">
+          {reaction.userAvatarUrl ? (
+            <img
+              src={reaction.userAvatarUrl}
+              alt={reaction.userName}
+              className="size-full object-cover"
+            />
+          ) : (
+            <span className="grid size-full place-items-center bg-muted text-[9px] font-semibold text-muted-foreground">
+              {getInitials(reaction.userName)}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type Props = {
   moment: Moment;
@@ -23,7 +71,7 @@ type Props = {
  *   └──────────────────────────────────────┘
  *
  * - Cụm reaction neo GÓC TRÁI (left-2.5 bottom-2.5): nút react trước,
- *   ReactionRow (bubble nhỏ) nằm ngay BÊN PHẢI nút, overflow-hidden giới hạn.
+ *   hàng bubble nhỏ nằm ngay BÊN PHẢI nút, overflow-hidden giới hạn.
  * - Popover (hiện khi open): emoji + input gõ emoji bằng bàn phím,
  *   mở phía trên cụm, neo trái.
  * - Nút xóa/rời nằm ở góc phải-dưới: do MomentSlide dựng chung stack
@@ -102,8 +150,21 @@ export const MomentReactions: React.FC<Props> = ({
           )}
         </button>
 
-        {/* Bubbles "ai đã tim" — BÊN PHẢI nút react, size nhỏ */}
-        <ReactionRow reactions={moment.recentReactions} />
+        {/* Bubbles "ai đã tim" — BÊN PHẢI nút react, MỚI → CŨ từ trái sang
+            phải (created_at DESC từ backend), chồng nhau bằng -ml-1.5. */}
+        {moment.recentReactions.length > 0 && (
+          <div className="ml-1 flex min-w-0 items-center overflow-hidden">
+            {moment.recentReactions.slice(0, 4).map((reaction, index) => (
+              <div
+                key={reaction.userId}
+                className={index > 0 ? "-ml-1.5" : undefined}
+                style={{ zIndex: moment.recentReactions.length - index }}
+              >
+                <ReactionBubble reaction={reaction} index={index} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Popover — phía TRÊN cụm reaction, neo TRÁI ── */}

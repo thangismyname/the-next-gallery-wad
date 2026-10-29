@@ -9,8 +9,12 @@ Model nhẹ (YOLO26n ~2.4M params) chạy tốt trên CPU.
 from __future__ import annotations
 
 import io
+from pathlib import Path
 
 from app.providers.object_base import ObjectDetectionProvider
+
+# Thư mục ai-service/ — gốc cho path weights tương đối (vd models/yolo26n.pt).
+SERVICE_ROOT = Path(__file__).resolve().parents[2]
 
 try:
     import torch
@@ -37,7 +41,7 @@ class YoloObjectDetectionProvider(ObjectDetectionProvider):
         self._conf = float(conf)
         self._imgsz = int(imgsz)
 
-        self._model = YOLO(weights)
+        self._model = YOLO(self._resolve_weights(weights))
 
     @property
     def name(self) -> str:
@@ -88,6 +92,16 @@ class YoloObjectDetectionProvider(ObjectDetectionProvider):
 
         detections.sort(key=lambda d: d["confidence"], reverse=True)
         return detections
+
+    @staticmethod
+    def _resolve_weights(weights: str) -> str:
+        """Path tương đối → tính từ ai-service/ (không phụ thuộc cwd)."""
+        path = Path(weights)
+        if path.is_absolute():
+            return weights
+        candidate = SERVICE_ROOT / path
+        # Chưa tải trước → để Ultralytics tự tải theo tên (vd 'yolo26n.pt') về cwd.
+        return str(candidate) if candidate.exists() else path.name
 
     @staticmethod
     def _resolve_device(device: str) -> str:

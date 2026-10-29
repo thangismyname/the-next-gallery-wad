@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SIGNAL } from "@/services/signaling";
 import { useSignaling } from "@/hooks/useSignaling";
 import { useMomentInviteStore } from "@/hooks/useMomentInviteStore";
+import { momentInvitationsQueryKey } from "@/services/moments";
 import { MomentTemplate } from "@/types";
 
 interface MomentCollabInvite {
@@ -52,7 +53,7 @@ export const MomentInviteToast: React.FC = () => {
         return [...prev, { key: invite.momentId as string, invite }];
       });
       void queryClient.invalidateQueries({
-        queryKey: ["moments", "invitations"],
+        queryKey: momentInvitationsQueryKey,
       });
     });
   }, [signaling, queryClient]);

@@ -22,18 +22,23 @@ import {
 } from "@/components/ui/dialog";
 import {
   fetchTrash,
+  trashQueryKey,
   restoreMedia,
   permanentDeleteMedia,
   toMedia,
 } from "@/services/media";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { galleryQueryPrefix } from "@/hooks/useGalleryMedia";
-import { TrashImageCard } from "./components/TrashImageCard";
-
-const trashQueryKey = ["trash", "media"] as const;
+import { AnimatePresence } from "framer-motion";
+import { AnimatedGridItem } from "@/components/motion/AnimatedGridItem";
+import { ImageCard } from "@/features/gallery/components/ImageCard";
+import { TrashCardActions } from "./components/TrashCardActions";
+import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { cn } from "@/lib/utils";
 
 export const TrashView: React.FC = () => {
   const { t } = useTranslation();
+  const density = useGridDensity((s) => s.density);
   const queryClient = useQueryClient();
 
   const { data, isPending, isError, refetch, isFetching } = useQuery({
@@ -175,7 +180,7 @@ export const TrashView: React.FC = () => {
 
       {/* Batch selection bar */}
       {selectedIds.size > 0 && (
-        <div className="mb-4 flex items-center gap-2 rounded-md border border-border/60 bg-sidebar/85 px-3 py-2 shadow backdrop-blur">
+        <div className="mb-4 flex items-center gap-2 rounded-xl px-3 py-2 glass">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -214,7 +219,7 @@ export const TrashView: React.FC = () => {
 
       {/* Content */}
       {isPending ? (
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
+        <div className={cn("grid gap-2 sm:gap-3", GRID_DENSITY_CLASS[density])}>
           {Array.from({ length: 10 }).map((_, i) => (
             <Skeleton key={i} className="aspect-square rounded-lg bg-muted/40" />
           ))}
@@ -228,24 +233,31 @@ export const TrashView: React.FC = () => {
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
-          <HardDrive className="size-10 text-muted-foreground/40" />
+          <HardDrive className="size-10 animate-float text-muted-foreground/40" />
           <p className="text-sm">{t("trash.empty")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-3">
-          {items.map((media) => (
-            <TrashImageCard
-              key={media.id}
-              media={media}
-              selected={selectedIds.has(media.id)}
-              onToggle={toggle}
-              onRestore={(m) => void doRestore([m.id])}
-              onDeleteForever={(m) => confirmDialog("single", m.id)}
-              onOpen={(m) =>
-                setSelectedIndex(items.findIndex((x) => x.id === m.id))
-              }
-            />
-          ))}
+        <div className={cn("grid gap-2 sm:gap-3", GRID_DENSITY_CLASS[density])}>
+          {/* Khôi phục / xoá vĩnh viễn → ô thu nhỏ biến mất, ô khác trượt lấp chỗ */}
+          <AnimatePresence initial={false} mode="popLayout">
+            {items.map((media, index) => (
+              <AnimatedGridItem key={media.id}>
+                <ImageCard
+                  media={media}
+                  selected={selectedIds.has(media.id)}
+                  onClick={() => setSelectedIndex(index)}
+                  onToggle={selectedIds.size > 0 ? toggle : undefined}
+                  onLongPress={toggle}
+                  actions={
+                    <TrashCardActions
+                      onRestore={() => void doRestore([media.id])}
+                      onDeleteForever={() => confirmDialog("single", media.id)}
+                    />
+                  }
+                />
+              </AnimatedGridItem>
+            ))}
+          </AnimatePresence>
         </div>
       )}
 
@@ -304,6 +316,7 @@ export const TrashView: React.FC = () => {
       {/* Lightbox: xem ảnh lớn + panel chi tiết */}
       {currentMedia && (
         <Lightbox
+          canDownload={false}
           media={currentMedia}
           mediaList={items.map(toMedia)}
           onClose={() => setSelectedIndex(null)}

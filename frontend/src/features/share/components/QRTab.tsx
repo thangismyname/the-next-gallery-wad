@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { formatDuration } from "@/utils/format";
 import { QRCodeSVG } from "qrcode.react";
 import { useTranslation } from "react-i18next";
 import { Copy, Check } from "lucide";
@@ -11,12 +12,6 @@ import { ShareRoomInfo } from "@/types";
 interface QRTabProps {
   session: ShareRoomInfo;
   onRefresh?: () => void;
-}
-
-function formatTime(totalSeconds: number): string {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${String(minutes).padStart(1, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
 export const QRTab: React.FC<QRTabProps> = ({ session, onRefresh }) => {
@@ -76,7 +71,7 @@ export const QRTab: React.FC<QRTabProps> = ({ session, onRefresh }) => {
         <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Hourglass className="size-3.5" />
           <span className="tabular-nums">
-            {expired ? "00:00" : formatTime(remaining)}
+            {expired ? "00:00" : formatDuration(remaining)}
           </span>
         </p>
       </div>

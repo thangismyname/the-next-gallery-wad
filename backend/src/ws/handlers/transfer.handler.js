@@ -17,7 +17,7 @@ import {
   failTransfer,
   getTransfer,
 } from "../services/transfer.service.js";
-import { completeShareSession } from "../../services/share.service.js";
+import { completeShareSession } from "../../modules/share/share.service.js";
 
 function sendError(ws, code, message) {
   if (ws.readyState === 1) {
@@ -130,7 +130,8 @@ export async function handleTransferComplete(ws, userId, payload = {}) {
 
   // Mark session as complete in DB
   try {
-    await completeShareSession(sessionId);
+    // Chỉ host (sender) mới đóng được phiên trong DB.
+    await completeShareSession(sessionId, userId);
   } catch (err) {
     console.error("[ws] Failed to complete share session in DB:", err.message);
   }

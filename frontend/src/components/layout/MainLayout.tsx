@@ -1,6 +1,7 @@
 // components/layout/MainLayout.tsx
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { PageTransition } from "@/components/motion/PageTransition";
 import { useTranslation } from "react-i18next";
 import { AlertTriangle, X } from "lucide-react";
 
@@ -16,29 +17,11 @@ import { ShareInvite } from "@/features/share/components/ShareInvite";
 import { TransferProgress } from "@/features/share/components/TransferProgress";
 import { DeleteConfirmDialog } from "@/features/gallery/components/DeleteConfirmDialog";
 import { MomentInviteToast } from "@/features/moments/components/MomentInviteToast";
-import { uploadMedia } from "@/services/media";
-import { ReceivedFile } from "@/hooks/useShare";
+import { AlbumInviteToast } from "@/features/albums/components/AlbumInviteToast";
+import { AddToAlbumDialog } from "@/features/albums/components/AddToAlbumDialog";
+import { LabelManagerDialog } from "@/features/favorites/components/LabelManagerDialog";
+import { saveDownload, saveGallery } from "@/features/share/receivedFile";
 import { Button } from "@/components/ui/button";
-
-const saveDownload = (received: ReceivedFile) => {
-  const blob = new Blob(received.chunks, { type: received.type });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = received.name;
-  anchor.click();
-  URL.revokeObjectURL(url);
-};
-
-const saveGallery = async (received: ReceivedFile) => {
-  const blob = new Blob(received.chunks, { type: received.type });
-  const file = new File([blob], received.name, { type: received.type });
-  try {
-    await uploadMedia([file]);
-  } catch {
-    saveDownload(received);
-  }
-};
 
 const ShareOverlays: React.FC = () => {
   const { t } = useTranslation();
@@ -140,7 +123,9 @@ const LayoutContent: React.FC = () => {
             onFavorite={handleFavorite}
           />
           <main className="flex-1 p-6 pb-24 overflow-y-auto">
-            <Outlet />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </div>
       </div>
@@ -168,6 +153,9 @@ export const MainLayout: React.FC = () => {
         <ShareOverlays />
       </ShareProvider>
       <MomentInviteToast />
+      <AlbumInviteToast />
+      <AddToAlbumDialog />
+      <LabelManagerDialog />
     </SidebarProvider>
   );
 };

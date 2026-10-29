@@ -5,12 +5,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.api import health, detect, embed, object_detect
+from app.api import health, embed, object_detect, similarity, tags
+from app.tagging import Tagger
 from app.providers import (
     get_embedding_provider,
-    get_face_provider,
-    get_gesture_provider,
     get_object_provider,
+    get_similarity_provider,
 )
 
 settings = get_settings()
@@ -18,28 +18,26 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Pre-warm provider (MediaPipe graph) NGAY TẠI STARTUP, trên main thread.
-    # Nếu tạo trong request threadpool → macOS abort: "Check failed: service_
-    # Service is unavailable" (DrishtiMetalHelper khởi tạo trong thread ngoài main).
-    # Std: FastAPI lifespan chạy trên event loop = main thread của process.
-    app.state.gesture_provider = get_gesture_provider()
-    app.state.face_provider = get_face_provider()
-    # Embedding provider (OpenCLIP) cũng load 1 lần tại startup — model nặng,
-    # không tạo lại theo request. Chỉ dùng khi bật semantic search.
+    # Embedding provider (OpenCLIP) load 1 lần tại startup — model nặng,
+    # không tạo lại theo request.
     app.state.embed_provider = get_embedding_provider()
     # Object detection (YOLO26) — load 1 lần tại startup khi bật provider.
     app.state.object_provider = get_object_provider()
-    # MediaPipe recognizer không thread-safe → serialize các detect call.
-    app.state.vision_lock = threading.Lock()
-    # YOLO predict cũng chạy tuần tự để tránh tranh chấp model trên CPU.
+    # YOLO predict chạy tuần tự để tránh tranh chấp model trên CPU.
     app.state.object_lock = threading.Lock()
+    # Image similarity (DINOv3) — load 1 lần tại startup khi bật provider.
+    app.state.similarity_provider = get_similarity_provider()
+    # Gắn tag nội dung — model nhỏ (.npz) chạy trên vector CLIP đã có.
+    app.state.tagger = Tagger(
+        app.state.embed_provider, settings.tag_models_dir, settings.tag_config
+    )
     yield
 
 
 app = FastAPI(
     title="The Next Gallery — AI Service",
-    description="Gesture (hand) + face expression recognition + OpenCLIP embeddings for semantic search",
-    version="0.3.0",
+    description="OpenCLIP embeddings for semantic search + YOLO26 object detection + DINOv3 image similarity + content tagging",
+    version="0.4.0",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
@@ -54,15 +52,16 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
-app.include_router(detect.router, prefix="/api/v1", tags=["gesture"])
 app.include_router(embed.router, prefix="/api/v1", tags=["embedding"])
 app.include_router(object_detect.router, prefix="/api/v1", tags=["object-detection"])
+app.include_router(similarity.router, prefix="/api/v1", tags=["similarity"])
+app.include_router(tags.router, prefix="/api/v1", tags=["tagging"])
 
 
 @app.get("/")
 async def root():
     return {
         "service": "ai-service",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "docs": "/docs",
     }

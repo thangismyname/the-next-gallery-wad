@@ -7,7 +7,7 @@
 //
 //   import { setupWebSocket } from "./ws/index.js";
 //   const server = http.createServer(app);
-//   setupWebSocket(server);
+//   setupWebSocket(server, { path: "/ws", allowedOrigins });
 //   server.listen(PORT, ...);
 // ==========================================================
 
@@ -19,12 +19,18 @@ let wss = null;
 
 export function setupWebSocket(server, options = {}) {
   const path = options.path || "/ws";
+  const allowedOrigins = options.allowedOrigins ?? [];
 
   wss = new WebSocketServer({
     server,
     path,
     maxPayload: 1024 * 1024, // 1MB max control message
     clientTracking: true,
+    // Chặn trang lạ mở WS bằng cookie của người dùng (cross-site WebSocket
+    // hijacking). Không có Origin = client không phải trình duyệt → cho qua;
+    // chưa cấu hình CORS_ORIGINS (dev) → cho qua.
+    verifyClient: ({ origin }) =>
+      !origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin),
   });
 
   wss.on("connection", (ws, req) => {

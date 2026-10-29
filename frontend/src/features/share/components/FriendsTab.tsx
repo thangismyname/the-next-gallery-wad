@@ -1,28 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Send, CheckSquare2 } from "lucide";
-import { Check, Film, ImageIcon, Loader2, Search, Users } from "lucide-react";
+import { Check, Loader2, Search, Users } from "lucide-react";
 import { MorphIcon } from "morphicons/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { API_URL } from "@/lib/config";
+import {
+  fetchShareFriends,
+  shareToFriends,
+  ShareHttpError,
+  type ShareFriend,
+} from "@/services/share";
 import { cn } from "@/lib/utils";
-import { fetchMedia, fetchFavorites, MediaListItem } from "@/services/media";
+import { MediaPicker } from "@/features/gallery/components/MediaPicker";
 
-type MediaCategory = "gallery" | "favorites";
-
-interface Friend {
-  id: string;
-  name: string;
-  email: string;
-  avatar_url?: string | null;
-}
+type Friend = ShareFriend;
 
 interface FriendsTabProps {
   mediaIds: string[];
@@ -45,9 +42,6 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   // Media picker
-  const [category, setCategory] = useState<MediaCategory>("gallery");
-  const [media, setMedia] = useState<MediaListItem[]>([]);
-  const [mediaLoading, setMediaLoading] = useState(true);
   const [picked, setPicked] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
     mediaIds.forEach((id) => {
@@ -60,14 +54,8 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
     let mounted = true;
     const load = async () => {
       try {
-        const response = await fetch(`${API_URL}/share/friends`, {
-          credentials: "include",
-          headers: { Accept: "application/json" },
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const json = await response.json();
-        const data = json.data ?? [];
-        if (mounted) setFriends(Array.isArray(data) ? data : []);
+        const data = await fetchShareFriends();
+        if (mounted) setFriends(data);
       } catch {
         if (mounted) setFriends([]);
       } finally {
@@ -79,38 +67,6 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
       mounted = false;
     };
   }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    const load = async () => {
-      setMediaLoading(true);
-      setMedia([]);
-      try {
-        const items: MediaListItem[] = [];
-        const pageSize = 100;
-        let offset = 0;
-        let hasMore = true;
-        while (hasMore) {
-          const page =
-            category === "favorites"
-              ? await fetchFavorites(offset, pageSize)
-              : await fetchMedia(offset, pageSize);
-          items.push(...page.items);
-          hasMore = page.hasMore && page.items.length > 0;
-          offset += page.items.length;
-        }
-        if (mounted) setMedia(items);
-      } catch {
-        if (mounted) setMedia([]);
-      } finally {
-        if (mounted) setMediaLoading(false);
-      }
-    };
-    void load();
-    return () => {
-      mounted = false;
-    };
-  }, [category]);
 
   const toggle = (id: string) => {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -124,9 +80,11 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
     .filter(([, value]) => value)
     .map(([id]) => id);
 
-  const pickedIds = Object.entries(picked)
-    .filter(([, value]) => value)
-    .map(([id]) => id);
+  const pickedSet = useMemo(
+    () => new Set(Object.keys(picked).filter((id) => picked[id])),
+    [picked],
+  );
+  const pickedIds = [...pickedSet];
 
   const canSend = pickedIds.length > 0 && selectedIds.length > 0 && !sending;
 
@@ -144,101 +102,15 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
     setSending(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/share/to-friends`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          mediaIds: pickedIds,
-          friendIds: selectedIds,
-        }),
-      });
-      if (!response.ok) {
-        const json = await response.json().catch(() => null);
-        setError(
-          json?.error?.message ?? `HTTP error! status: ${response.status}`,
-        );
-        return;
-      }
+      await shareToFriends(pickedIds, selectedIds);
       setSent(true);
       setTimeout(() => setSent(false), 2500);
-    } catch {
-      setError(t("share.sendFailed"));
+    } catch (err) {
+      // Lỗi từ server → hiện message của backend; lỗi mạng → câu chung.
+      setError(err instanceof ShareHttpError ? err.message : t("share.sendFailed"));
     } finally {
       setSending(false);
     }
-  };
-
-  // ---- Media picker UI ----
-  const renderPicker = () => {
-    if (mediaLoading) {
-      return (
-        <div className="grid grid-cols-5 gap-1.5">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square rounded-md bg-muted/40" />
-          ))}
-        </div>
-      );
-    }
-    if (media.length === 0) {
-      return (
-        <div className="flex flex-col items-center gap-2 py-6 text-center">
-          <ImageIcon className="size-8 text-muted-foreground/40" />
-          <p className="text-xs text-muted-foreground">
-            {t("share.noMedia")}
-          </p>
-        </div>
-      );
-    }
-    return (
-      <ScrollArea
-        type="always"
-        className="h-44 pr-1"
-      >
-        <div className="grid grid-cols-5 gap-1.5">
-          {media.map((m) => {
-            const isPicked = Boolean(picked[m.id]);
-            return (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => toggleMedia(m.id)}
-                className={cn(
-                  "relative aspect-square overflow-hidden rounded-md ring-1 transition [content-visibility:auto]",
-                  isPicked
-                    ? "ring-2 ring-primary"
-                    : "ring-border/50 hover:ring-primary/50",
-                )}
-                aria-label={m.title ?? m.id}
-              >
-                {m.mediaType === "video" ? (
-                  <span className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
-                    <Film className="size-4" />
-                  </span>
-                ) : (
-                  <img
-                    src={m.thumbnailUrl}
-                    alt=""
-                    draggable={false}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover"
-                  />
-                )}
-                {isPicked && (
-                  <span className="absolute right-0.5 top-0.5 flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <Check className="size-3" />
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </ScrollArea>
-    );
   };
 
   if (loading) {
@@ -268,26 +140,12 @@ export const FriendsTab: React.FC<FriendsTabProps> = ({
           <p className="text-xs font-medium text-muted-foreground">
             {t("share.pickMedia")}
           </p>
-          <Combobox
-            value={category}
-            onChange={(v: string) => {
-              if (v === "gallery" || v === "favorites") setCategory(v);
-            }}
-            options={[
-              { value: "gallery", label: t("sidebar.gallery") },
-              { value: "favorites", label: t("favorites.title") },
-            ]}
-            searchPlaceholder={t("share.categorySearch")}
-            emptyText={t("share.categoryEmpty")}
-            className="h-7"
-          />
         </div>
-        {renderPicker()}
-        {pickedIds.length > 0 && (
-          <p className="mt-1.5 text-xs text-muted-foreground">
-            {t("share.pickedCount", { count: pickedIds.length })}
-          </p>
-        )}
+        <MediaPicker
+          selectedIds={pickedSet}
+          onToggle={(item) => toggleMedia(item.id)}
+          gridClassName="max-h-44"
+        />
       </div>
 
       <Separator />

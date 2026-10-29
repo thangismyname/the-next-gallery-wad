@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "./PasswordInput";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff } from "lucide";
-import { MorphIcon } from "morphicons/react";
 import { useAuth } from "./AuthContext";
 import { OAuthButtons } from "./OAuthButtons";
 
@@ -20,15 +19,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onSwitchToRegister,
 }) => {
   const { t } = useTranslation();
-  const { login, loginWithProvider } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [oauthLoading, setOauthLoading] = useState<"google" | "github" | null>(
-    null,
-  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,18 +33,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     setLoading(false);
     if (error) {
       setError(error);
-      return;
-    }
-    onSuccess?.();
-  };
-
-  const handleOAuth = async (provider: "google" | "github") => {
-    setError(null);
-    setOauthLoading(provider);
-    const { error } = await loginWithProvider(provider);
-    setOauthLoading(null);
-    if (error) {
-      setError(t("auth.loginError"));
       return;
     }
     onSuccess?.();
@@ -87,25 +70,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             {t("auth.forgotPassword")}
           </Link>
         </div>
-        <div className="relative">
-          <Input
-            id="login-password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="pr-10"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            <MorphIcon icon={showPassword ? EyeOff : Eye} size={16} />
-          </button>
-        </div>
+        <PasswordInput
+          id="login-password"
+          autoComplete="current-password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+        />
       </div>
 
       <Button type="submit" className="w-full" disabled={loading}>

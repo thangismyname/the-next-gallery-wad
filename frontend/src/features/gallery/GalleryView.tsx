@@ -3,7 +3,6 @@ import React, {
   useState,
   useCallback,
   useRef,
-  useLayoutEffect,
   useMemo,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,15 +13,28 @@ import { Lightbox } from "./components/Lightbox";
 import { SelectionActionBar } from "./components/SelectionActionBar";
 import { Media } from "../../types";
 import { useGalleryMedia } from "@/hooks/useGalleryMedia";
+import { useIntroStagger } from "@/hooks/useIntroStagger";
+import { useGridSize } from "@/hooks/useGridSize";
+import { useInfiniteSentinel } from "@/hooks/useInfiniteSentinel";
+import { useRangeSelection } from "@/hooks/useRangeSelection";
+import { columnsFor, gridMetrics } from "./gridLayout";
+import { GALLERY_COLUMNS, useGridDensity } from "@/hooks/useGridDensity";
 import { toMedia } from "@/services/media";
 import type { GallerySort } from "@/services/media";
 import { useSelectionStore } from "@/hooks/useSelectionStore";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
+import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { Loader2 } from "lucide-react";
+import { Check, ImagePlus, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { buildDisplayRows, DisplayRow } from "@/utils/mediaGrouping";
+
+const HEADER_HEIGHT = 44;
+// Header của MainLayout (h-16) — tiêu đề nhóm dính ngay dưới.
+const APP_HEADER_HEIGHT = 64;
+
 
 export const GalleryView: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -42,21 +54,19 @@ export const GalleryView: React.FC = () => {
     () => pages.flatMap((p) => p.items.map(toMedia)),
     [pages],
   );
+  // Tổng số thật từ API (không chỉ số đã tải); API cũ không trả → số đã tải.
+  const totalCount = pages[0]?.total ?? mediaList.length;
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const isSelecting = useSelectionStore((s) => s.isSelecting);
   const selectedIds = useSelectionStore((s) => s.selectedIds);
-  const toggle = useSelectionStore((s) => s.toggle);
-  const clear = useSelectionStore((s) => s.clear);
   const setSelecting = useSelectionStore((s) => s.setSelecting);
-  const {
-    handleShare,
-    handleDownload,
-    handleDelete,
-    handleFavorite,
-  } = useGalleryActions();
+  const { handleShare, handleDownload, handleDelete, handleFavorite } =
+    useGalleryActions();
+  const openAddToAlbum = useGalleryActionsStore((s) => s.openAddToAlbum);
 
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  // Tải thêm khi cuộn gần đáy (hooks/useInfiniteSentinel).
+  const sentinelRef = useInfiniteSentinel({ hasNextPage, isFetchingNextPage, fetchNextPage });
   const sortOptions = [
     { value: "newest", label: t("gallery.sort.newest") },
     { value: "oldest", label: t("gallery.sort.oldest") },
@@ -70,9 +80,20 @@ export const GalleryView: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Container đo chiều rộng grid (đặt wrapper full width của main)
-  const gridWrapRef = useRef<HTMLDivElement | null>(null);
-  const [columns, setColumns] = useState(4);
+  // ── Kích thước lưới (hooks/useGridSize) ────────────────────────────────
+  // Đo lại vị trí khi banner lỗi / trạng thái tải làm lưới dịch xuống.
+  const {
+    ref: gridWrapRef,
+    width: gridWidth,
+    scrollMargin,
+  } = useGridSize(`${isError}-${isPending}`);
+  const density = useGridDensity((s) => s.density);
+  const columns = columnsFor(gridWidth, GALLERY_COLUMNS[density]);
+  const { gap: gridGap, cell: cellSize, rowHeight: gridRowHeight } = gridMetrics(
+    gridWidth,
+    columns,
+  );
+
 
   // Nhãn nhóm thời gian/chữ cái
   const groupLabels = useMemo(
@@ -97,72 +118,43 @@ export const GalleryView: React.FC = () => {
     rowsRef.current = rows;
   }, [rows]);
 
+  // Nhãn nhóm của từng hàng (để hiện nhóm đang xem ở thanh dính trên cùng).
+  const groupOfRow = useMemo(() => {
+    let current = "";
+    return rows.map((row) => {
+      if (row.type === "header") current = row.label;
+      return current;
+    });
+  }, [rows]);
+
   // Virtualizer theo hàng HỖN HỢP (header row + grid row).
   // Scroll container là window (trang cuộn toàn màn hình như Google Photos).
-  const gridWidth = gridWrapRef.current?.clientWidth ?? 0;
-  const gridGap = gridWidth >= 640 ? 12 : 8;
-  const headerHeight = 44;
-  const gridRowHeight = Math.floor((gridWidth - (columns - 1) * gridGap) / columns);
   const rowVirtualizer = useWindowVirtualizer({
     count: rows.length,
-    estimateSize: (index) => {
-      const row = rowsRef.current[index];
-      return row?.type === "header" ? headerHeight : gridRowHeight;
-    },
+    estimateSize: (index) =>
+      rowsRef.current[index]?.type === "header" ? HEADER_HEIGHT : gridRowHeight,
     overscan: 4,
+    scrollMargin,
     getItemKey: (index) => rowsRef.current[index]?.key ?? index,
   });
 
-  // Đo chiều rộng container để tính số cột theo breakpoint
-  useLayoutEffect(() => {
-    const el = gridWrapRef.current;
-    if (!el) return;
-
-    const measure = () => {
-      const width = el.clientWidth;
-      // Breakpoint chuẩn Tailwind: dưới 640px (sm) = mobile, luôn tối thiểu 3 cột.
-      // Trên đó giãn cột theo chiều rộng container, giữ aspect ratio vuông.
-      if (width < 640) setColumns(3);
-      else if (width < 1024) setColumns(4);
-      else if (width < 1440) setColumns(5);
-      else setColumns(6);
-    };
-
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // Reset measurements khi số cột đổi (resize viewport)
+  // Ô to / nhỏ đi (đổi cỡ cửa sổ, đổi số cột) → đo lại mọi hàng.
   useEffect(() => {
     rowVirtualizer.measure();
-  }, [columns, rowVirtualizer]);
+  }, [gridRowHeight, columns, rowVirtualizer]);
 
-  // Tự động load thêm khi lướt tới gần đáy (IntersectionObserver)
-  useEffect(() => {
-    if (!sentinelRef.current || !hasNextPage || isFetchingNextPage) return;
+  const virtualItems = rowVirtualizer.getVirtualItems();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      {
-        root: null,
-        rootMargin: "800px",
-        threshold: 0,
-      },
-    );
+  // Lần đầu có dữ liệu: các hàng đầu hiện nối nhau (chỉ ~0.8s đầu).
+  const introStyle = useIntroStagger(!isPending);
+  // Nhóm đang ở đầu màn hình: hàng đầu tiên còn thấy dưới header của app.
+  const viewTop = (rowVirtualizer.scrollOffset ?? 0) + APP_HEADER_HEIGHT;
+  const firstVisible = virtualItems.find((v) => v.end > viewTop);
+  const stickyLabel =
+    firstVisible && viewTop > scrollMargin + HEADER_HEIGHT
+      ? groupOfRow[firstVisible.index]
+      : null;
 
-    const currentSentinel = sentinelRef.current;
-    observer.observe(currentSentinel);
-
-    return () => {
-      if (currentSentinel) observer.unobserve(currentSentinel);
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleUploaded = useCallback(() => {
     void refetch();
@@ -191,23 +183,16 @@ export const GalleryView: React.FC = () => {
     }
   }, [selectedIndex, mediaList.length]);
 
+  // ── Chọn ảnh: Shift + click chọn dải, chọn cả nhóm, Esc thoát ─────────
+  const orderedIds = useMemo(() => mediaList.map((m) => m.id), [mediaList]);
+  const { toggleItem, toggleGroup } = useRangeSelection(orderedIds, sort);
   const handleToggle = useCallback(
     (media: Media) => {
-      toggle(media.id);
+      toggleItem(media.id);
       setSelectedIndex(null);
     },
-    [toggle],
+    [toggleItem],
   );
-
-  // Escape thoát khỏi chế độ chọn
-  useEffect(() => {
-    if (!isSelecting) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") clear();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [isSelecting, clear]);
 
   const goPrev = useCallback(
     () =>
@@ -223,31 +208,45 @@ export const GalleryView: React.FC = () => {
     [mediaList.length],
   );
 
+  const gridStyle = {
+    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+    gap: gridGap,
+  };
+  // Bề rộng ô thật (đã trừ sidebar, padding) → trình duyệt chọn đúng bản 200/400px.
+  const cellSizes = `${Math.ceil(cellSize)}px`;
+
   return (
     <div className="space-y-4">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-          {t("gallery.allPhotos.title")}
-        </h2>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
-            {t("gallery.allPhotos.itemCount", { count: mediaList.length })}
-          </span>
+      {/* Header — mobile: tiêu đề 1 hàng, nút 1 hàng lấp đầy (ô sắp xếp giãn);
+          từ sm: tiêu đề trái, nút phải. Mọi nút cùng cao h-9. */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-baseline gap-3">
+          <h2 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
+            {t("gallery.allPhotos.title")}
+          </h2>
+          {!isPending && (
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {t("gallery.allPhotos.itemCount", { count: totalCount })}
+            </span>
+          )}
+        </div>
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           <Combobox
             value={sort}
             onChange={handleSortChange}
             options={sortOptions}
             placeholder={t("gallery.sort.label")}
             searchPlaceholder={t("gallery.sort.label")}
-            className="min-w-[7rem]"
+            className="h-9 min-w-0 flex-1 px-3 sm:w-36 sm:flex-none"
           />
           <Button
             variant={isSelecting ? "secondary" : "outline"}
             size="sm"
             onClick={() => setSelecting(!isSelecting)}
           >
-            {isSelecting ? t("gallery.selection.cancel") : t("gallery.selection.select")}
+            {isSelecting
+              ? t("gallery.selection.cancel")
+              : t("gallery.selection.select")}
           </Button>
           <UploadButton onUploaded={handleUploaded} />
         </div>
@@ -260,89 +259,138 @@ export const GalleryView: React.FC = () => {
         </div>
       )}
 
-      {/* Trạng thái load ban đầu (Skeleton Grid) */}
-      {isPending ? (
-        <div className="grid grid-cols-1 min-[640px]:grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-2 sm:gap-3">
-          {Array.from({ length: 18 }).map((_, i) => (
-            <Skeleton
-              key={i}
-              className="aspect-square rounded-lg bg-muted/40"
-            />
-          ))}
+      <div ref={gridWrapRef}>
+        {/* Nhóm đang xem — dính ngay dưới header của app khi cuộn qua tiêu đề nhóm */}
+        {/* Luôn render (cao 0) → hiện / ẩn nhãn không làm lưới nhảy. */}
+        <div
+          className="pointer-events-none sticky z-30 h-0"
+          style={{ top: APP_HEADER_HEIGHT }}
+          aria-hidden={!stickyLabel}
+        >
+          {stickyLabel && (
+            <span className="absolute top-2 left-0 inline-flex items-center rounded-full border border-border/60 bg-background/90 px-3 py-1 text-sm font-semibold text-foreground shadow-sm backdrop-blur">
+              {stickyLabel}
+            </span>
+          )}
         </div>
-      ) : mediaList.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground text-sm">
-          {t("gallery.empty")}
-        </div>
-      ) : (
-        <>
-          {/* Gallery Grid (virtualized theo hàng) */}
-          <div ref={gridWrapRef}>
+        {isPending ? (
+          // Khung chờ cùng số cột + khoảng cách với lưới thật → không nhảy bố cục.
+          <div className="grid" style={gridStyle}>
+            {Array.from({ length: columns * 4 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="aspect-square rounded-lg bg-muted/40"
+              />
+            ))}
+          </div>
+        ) : mediaList.length === 0 && !isError ? (
+          <div className="flex flex-col items-center gap-3 py-20 text-center text-muted-foreground">
+            <ImagePlus className="size-10 animate-float text-muted-foreground/40" />
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {t("gallery.empty")}
+              </p>
+              <p className="mt-1 text-xs">{t("gallery.emptyHint")}</p>
+            </div>
+            <UploadButton onUploaded={handleUploaded} />
+          </div>
+        ) : mediaList.length === 0 ? null : (
+          /* Gallery Grid (virtualized theo hàng) */
+          <div
+            className="relative w-full"
+            style={{
+              height: `${Math.max(rowVirtualizer.getTotalSize(), 1)}px`,
+            }}
+          >
             <div
-              className="relative w-full"
-              style={{ height: `${Math.max(rowVirtualizer.getTotalSize(), 1)}px` }}
+              className="absolute top-0 left-0 w-full"
+              style={{
+                transform: `translateY(${(virtualItems[0]?.start ?? scrollMargin) - scrollMargin}px)`,
+              }}
             >
-              <div
-                className="absolute top-0 left-0 w-full"
-                style={{
-                  transform: `translateY(${rowVirtualizer.getVirtualItems()[0]?.start ?? 0}px)`,
-                }}
-              >
-                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                  const row = rows[virtualRow.index];
-                  if (!row) return null;
+              {virtualItems.map((virtualRow) => {
+                const row = rows[virtualRow.index];
+                if (!row) return null;
 
-                  if (row.type === "header") {
-                    return (
-                      <div
-                        key={virtualRow.key}
-                        data-index={virtualRow.index}
-                        className="h-11 flex items-end px-1 pb-1"
-                      >
-                        <span className="text-sm font-semibold text-foreground/80">
-                          {row.label}
-                        </span>
-                      </div>
-                    );
-                  }
-
+                if (row.type === "header") {
+                  const allSelected =
+                    isSelecting && row.ids.every((id) => selectedIds.has(id));
                   return (
                     <div
                       key={virtualRow.key}
                       data-index={virtualRow.index}
-                      className="grid gap-2 sm:gap-3"
-                      style={{
-                        gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-                      }}
+                      className="group/header flex items-end gap-2 px-1 pb-2"
+                      style={{ height: HEADER_HEIGHT }}
                     >
-                      {row.items.map((media) => (
-                        <ImageCard
-                          key={media.id}
-                          media={media}
-                          onClick={openPreview}
-                          selected={selectedIds.has(media.id)}
-                          onToggle={isSelecting ? handleToggle : undefined}
-                          onLongPress={handleToggle}
-                        />
-                      ))}
+                      <span className="text-sm font-semibold text-foreground/80">
+                        {row.label}
+                      </span>
+                      {/* Chọn cả nhóm — hiện khi rê chuột hoặc đang chọn */}
+                      <button
+                        type="button"
+                        onClick={() => toggleGroup(row.ids)}
+                        aria-pressed={allSelected}
+                        aria-label={t("gallery.selection.selectGroup", {
+                          group: row.label,
+                        })}
+                        title={t("gallery.selection.selectGroup", {
+                          group: row.label,
+                        })}
+                        className={cn(
+                          "mb-0.5 flex size-5 items-center justify-center rounded-full border transition-opacity",
+                          "focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-ring",
+                          allSelected
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-muted-foreground/50 text-transparent hover:text-muted-foreground",
+                          isSelecting
+                            ? "opacity-100"
+                            : "opacity-0 group-hover/header:opacity-100",
+                        )}
+                      >
+                        <Check className="size-3" />
+                      </button>
                     </div>
                   );
-                })}
-              </div>
+                }
+
+                const appear = introStyle(virtualRow.index);
+                return (
+                  <div
+                    key={virtualRow.key}
+                    data-index={virtualRow.index}
+                    className={cn("grid", appear.className)}
+                    style={{ ...gridStyle, paddingBottom: gridGap, ...appear.style }}
+                  >
+                    {row.items.map((media) => (
+                      <ImageCard
+                        key={media.id}
+                        media={media}
+                        sizes={cellSizes}
+                        onClick={openPreview}
+                        selected={selectedIds.has(media.id)}
+                        onToggle={isSelecting ? handleToggle : undefined}
+                        onLongPress={handleToggle}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Sentinel trigger tải tiếp khi cuộn (dùng khi cuộn window chính) */}
-          <div ref={sentinelRef} className="h-4 w-full" />
+      {/* Sentinel trigger tải tiếp khi cuộn (dùng khi cuộn window chính) */}
+      {!isPending && mediaList.length > 0 && (
+        <div ref={sentinelRef} className="h-4 w-full" />
+      )}
 
-          {/* Indicator khi đang tải thêm ngầm */}
-          {isFetchingNextPage && (
-            <div className="flex justify-center items-center py-6 gap-2 text-muted-foreground text-xs">
-              <Loader2 className="w-4 h-4 animate-spin text-primary" />
-              <span>{t("gallery.loadingMore", "Đang tải thêm ảnh...")}</span>
-            </div>
-          )}
-        </>
+      {/* Indicator khi đang tải thêm ngầm */}
+      {isFetchingNextPage && (
+        <div className="flex justify-center items-center py-6 gap-2 text-muted-foreground text-xs">
+          <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          <span>{t("gallery.loadingMore")}</span>
+        </div>
       )}
 
       {/* Lightbox xem ảnh lớn */}
@@ -356,6 +404,7 @@ export const GalleryView: React.FC = () => {
           onSelect={setSelectedIndex}
           onToggleFavorite={() => handleFavorite([mediaList[selectedIndex].id])}
           onDelete={() => handleDelete([mediaList[selectedIndex].id])}
+          onAddToAlbum={() => openAddToAlbum([mediaList[selectedIndex].id])}
         />
       )}
 

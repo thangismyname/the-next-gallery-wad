@@ -91,8 +91,28 @@ services:
       BETTER_AUTH_URL: ${PUBLIC_API_BASE_URL_ROOT}
       # CORS_ORIGINS nên gồm cả domain FE web lẫn scheme app mobile nếu cần (vd: capacitor://localhost)
       CORS_ORIGINS: ${CORS_ORIGINS}
-      TRUSTED_ORIGINS: ${CORS_ORIGINS}
+      TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-${CORS_ORIGINS}}
+      # Container không có file .env gốc → mọi biến backend đọc phải khai ở đây.
+      MEDIA_URL_SECRET: ${MEDIA_URL_SECRET:-}
+      MEDIA_URL_TTL_HOURS: ${MEDIA_URL_TTL_HOURS:-24}
+      # Đăng nhập Google / GitHub: để trống = tắt.
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      # Email đặt lại mật khẩu: SMTP_USER / SMTP_PASS trống = tắt.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
       AI_SERVICE_URL: http://ai-service:8000
+      AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-15000}
+      AI_CLIP_MIN_SIM: ${AI_CLIP_MIN_SIM:-0.22}
+      AI_YOLO_MIN_CONF: ${AI_YOLO_MIN_CONF:-0.4}
+      AI_DINO_MIN_SIM: ${AI_DINO_MIN_SIM:-0.35}
+      AI_SEARCH_MIN_SCORE: ${AI_SEARCH_MIN_SCORE:-0.5}
     networks:
       - internal
     logging: *default-logging
@@ -148,15 +168,16 @@ services:
     environment:
       AI_HOST: 0.0.0.0
       AI_PORT: 8000
-      AI_GESTURE_PROVIDER: ${AI_GESTURE_PROVIDER:-stub}
-      AI_FACE_PROVIDER: ${AI_FACE_PROVIDER:-stub}
-      AI_MODEL_DIR: models
       AI_EMBED_PROVIDER: ${AI_EMBED_PROVIDER:-stub}
       AI_CLIP_MODEL: ${AI_CLIP_MODEL:-ViT-B-32}
       AI_CLIP_PRETRAINED: ${AI_CLIP_PRETRAINED:-laion2b_s34b_b79k}
       AI_OBJECT_PROVIDER: ${AI_OBJECT_PROVIDER:-stub}
       AI_YOLO_WEIGHTS: ${AI_YOLO_WEIGHTS:-/opt/yolo-cache/yolo26n.pt}
       AI_YOLO_CONF: ${AI_YOLO_CONF:-0.25}
+      AI_YOLO_IMGSZ: ${AI_YOLO_IMGSZ:-640}
+      AI_SIMILARITY_PROVIDER: ${AI_SIMILARITY_PROVIDER:-stub}
+      AI_DINO_MODEL: ${AI_DINO_MODEL:-facebook/dinov3-vits16-pretrain-lvd1689m}
+      AI_TAG_CONFIG: ${AI_TAG_CONFIG:-lp_clip}
     networks:
       - internal
     logging: *default-logging
@@ -164,7 +185,7 @@ services:
       resources:
         limits:
           cpus: "1.0"
-          memory: 512M
+          memory: 3G # CLIP + YOLO26 (+ DINOv3) trên CPU — 512M không đủ nạp model
 
   reverse-proxy:
     image: caddy:2-alpine

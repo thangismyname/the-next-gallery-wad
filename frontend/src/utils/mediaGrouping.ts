@@ -11,6 +11,8 @@ export interface DisplayHeaderRow {
   type: "header";
   key: string;
   label: string;
+  /** Id mọi ảnh (đã tải) trong nhóm — nút "chọn cả nhóm". */
+  ids: string[];
 }
 
 export type DisplayRow = DisplayGridRow | DisplayHeaderRow;
@@ -40,10 +42,14 @@ interface Group {
 }
 
 function startOfDayMs(date: Date): number {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  ).getTime();
 }
 
-// Nhóm theo mốc thời gian kiểu Google Photos.
+// Nhóm theo mốc thời gian kiểu Google Photos (theo ngày chụp nếu có).
 // Tuần/tháng dùng rolling (7 ngày), còn "Tháng này" là tháng dương lịch hiện tại
 // để các ảnh cùng tháng luôn gộp vào 1 header (tránh 2 header trùng tháng).
 function dateBucket(
@@ -51,7 +57,8 @@ function dateBucket(
   labels: GroupLabels,
   lang: string,
 ): { key: string; label: string } {
-  const raw = item.createdAt;
+  // Nhóm theo NGÀY CHỤP (EXIF), không có thì ngày tải lên.
+  const raw = item.takenAt ?? item.createdAt;
   const ts = raw ? new Date(raw).getTime() : NaN;
   if (!raw || Number.isNaN(ts)) {
     return { key: "__undated", label: labels.undated };
@@ -59,9 +66,7 @@ function dateBucket(
 
   const date = new Date(ts);
   const now = new Date();
-  const days = Math.round(
-    (startOfDayMs(now) - startOfDayMs(date)) / DAY_MS,
-  );
+  const days = Math.round((startOfDayMs(now) - startOfDayMs(date)) / DAY_MS);
 
   if (days <= 0) return { key: "today", label: labels.today };
   if (days === 1) return { key: "yesterday", label: labels.yesterday };
@@ -118,7 +123,12 @@ export function buildDisplayRows(
 
   const rows: DisplayRow[] = [];
   for (const group of groups) {
-    rows.push({ type: "header", key: `h:${group.key}`, label: group.label });
+    rows.push({
+      type: "header",
+      key: `h:${group.key}`,
+      label: group.label,
+      ids: group.items.map((m) => m.id),
+    });
     for (let i = 0; i < group.items.length; i += columns) {
       const chunk = group.items.slice(i, i + columns);
       rows.push({

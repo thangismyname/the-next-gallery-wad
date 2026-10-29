@@ -1,5 +1,5 @@
 // src/features/landing/components/LandingFooter.tsx
-import { href, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   IconBrandGithub,
@@ -13,22 +13,32 @@ const SOCIAL_LINKS = [
   { key: "twitter", href: "https://twitter.com", icon: IconBrandX },
 ];
 
+// Chỉ trỏ tới trang có thật trong app.
 const FOOTER_LINKS = [
   {
     titleKey: "footer.sections.explore",
     links: [
       { key: "nav.gallery", to: "/gallery" },
-      { key: "nav.about", to: "/about" },
-      { key: "nav.contact", to: "/contact" },
+      { key: "nav.albums", to: "/albums" },
+      { key: "nav.studio", to: "/studio" },
     ],
   },
   {
-    titleKey: "footer.sections.legal",
+    titleKey: "footer.sections.account",
     links: [
-      { key: "footer.terms", to: "/terms" },
-      { key: "footer.privacy", to: "/privacy" },
+      { key: "header.profile", to: "/profile" },
+      { key: "header.settings", to: "/settings" },
     ],
   },
+];
+
+// Công nghệ xây dựng hệ thống (tên riêng — không dịch).
+const TECH_STACK = [
+  "React 19 · Vite",
+  "Express · Better Auth",
+  "PostgreSQL · pgvector",
+  "MinIO",
+  "FastAPI · PyTorch",
 ];
 
 export function LandingFooter() {
@@ -38,13 +48,13 @@ export function LandingFooter() {
   return (
     <footer className="border-t border-border/60 bg-background">
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr]">
+        <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr]">
           <div className="space-y-3">
             <Link
               to="/"
               className="font-mono text-sm uppercase tracking-[0.2em]"
             >
-              {t("brand.name")}
+              {t("app.name")}
             </Link>
             <p className="max-w-xs text-sm text-muted-foreground">
               {t("footer.tagline")}
@@ -84,11 +94,24 @@ export function LandingFooter() {
               </ul>
             </div>
           ))}
+
+          <div className="space-y-3">
+            <h3 className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              {t("footer.sections.tech")}
+            </h3>
+            <ul className="space-y-2">
+              {TECH_STACK.map((item) => (
+                <li key={item} className="text-sm text-muted-foreground">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border/60 pt-6 font-mono text-xs uppercase tracking-widest text-muted-foreground md:flex-row">
           <span>
-            © {year} {t("brand.name")}. {t("footer.rights")}
+            © {year} {t("app.name")}. {t("footer.rights")}
           </span>
           <span>{t("footer.madeWith")}</span>
         </div>

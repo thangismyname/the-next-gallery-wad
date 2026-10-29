@@ -4,18 +4,27 @@ import { API_URL as BASE_URL, AUTH_BASE_URL } from "@/lib/config";
 export interface MediaListItem {
   id: string;
   mediaType: "photo" | "video";
+  mimeType?: string | null;
   title: string | null;
   url: string;
   thumbnailUrl: string;
   thumbnailUrlLarge?: string;
+  /** Bản xem ≤2048px (chỉ ảnh) — lightbox dùng bản này, file gốc chỉ khi phóng to. */
+  displayUrl?: string | null;
+  /** Chỉ HEIC: WebP độ phân giải gốc (trình duyệt không hiển thị được file gốc). */
+  fullUrl?: string | null;
   width?: number;
   height?: number;
   durationSeconds?: number | null;
   sizeBytes?: number;
   isFavorite: boolean;
   createdAt?: string | null;
+  /** Ngày chụp (EXIF / metadata video); null → dùng createdAt. */
+  takenAt?: string | null;
   aiTags: string[];
   score?: number | null;
+  /** Search kết hợp: điểm từng nguồn (0–1) — CLIP, tag nội dung, vật thể YOLO. */
+  scoreParts?: { clip: number; tag?: number; object?: number } | null;
 }
 
 export interface TrashItem extends MediaListItem {
@@ -24,6 +33,8 @@ export interface TrashItem extends MediaListItem {
 
 export interface MediaPage {
   items: MediaListItem[];
+  /** Tổng số media (không chỉ trang này) — chỉ API danh sách Thư viện trả. */
+  total?: number;
   hasMore: boolean;
   limit: number;
   offset: number;
@@ -45,17 +56,24 @@ export interface AlbumSearchResult {
 
 export function resolveMediaUrl(url?: string): string {
   if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:") || url.startsWith("data:")) {
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("blob:") ||
+    url.startsWith("data:")
+  ) {
     return url;
   }
   return `${AUTH_BASE_URL}${url.startsWith("/") ? "" : "/"}${url}`;
 }
 
-function mapMediaItem(item: Record<string, unknown>): MediaListItem {
+export function mapMediaItem(item: Record<string, unknown>): MediaListItem {
   return {
     ...item,
     isFavorite: Boolean(item.isFavorite),
     createdAt: (item.createdAt as string | null) ?? null,
+    takenAt: (item.takenAt as string | null) ?? null,
+    aiTags: Array.isArray(item.aiTags) ? (item.aiTags as string[]) : [],
     url: resolveMediaUrl(item.url as string | undefined),
     thumbnailUrl: resolveMediaUrl(
       (item.thumbnailUrl as string | undefined) ||
@@ -64,6 +82,12 @@ function mapMediaItem(item: Record<string, unknown>): MediaListItem {
     thumbnailUrlLarge: (item.thumbnailUrlLarge as string | undefined)
       ? resolveMediaUrl(item.thumbnailUrlLarge as string)
       : undefined,
+    displayUrl: (item.displayUrl as string | null | undefined)
+      ? resolveMediaUrl(item.displayUrl as string)
+      : null,
+    fullUrl: (item.fullUrl as string | null | undefined)
+      ? resolveMediaUrl(item.fullUrl as string)
+      : null,
   } as MediaListItem;
 }
 
@@ -89,7 +113,10 @@ export const fetchMedia = async (
   sort?: GallerySort,
 ): Promise<MediaPage> => {
   try {
-    const params = new URLSearchParams({ offset: String(offset), limit: String(limit) });
+    const params = new URLSearchParams({
+      offset: String(offset),
+      limit: String(limit),
+    });
     if (sort) params.set("sort", sort);
     const response = await fetch(
       `${BASE_URL}/gallery/media?${params.toString()}`,
@@ -106,13 +133,19 @@ export const fetchMedia = async (
     const json = await response.json();
     const data = json.data ?? json;
 
-    const items: MediaListItem[] = (Array.isArray(data.items) ? data.items : []).map(
-      (item: { url: string | undefined; thumbnailUrl: any; thumbnailUrlLarge: string | undefined; }) =>
-        mapMediaItem(item as Record<string, unknown>),
+    const items: MediaListItem[] = (
+      Array.isArray(data.items) ? data.items : []
+    ).map(
+      (item: {
+        url: string | undefined;
+        thumbnailUrl: any;
+        thumbnailUrlLarge: string | undefined;
+      }) => mapMediaItem(item as Record<string, unknown>),
     );
 
     return {
       items,
+      total: typeof data.total === "number" ? data.total : undefined,
       hasMore: Boolean(data.hasMore),
       limit: data.limit ?? limit,
       offset: data.offset ?? offset,
@@ -126,6 +159,27 @@ export const fetchMedia = async (
       offset,
     };
   }
+};
+
+/** Lấy media của mình theo danh sách id (giữ thứ tự `ids`; id không hợp lệ bị bỏ qua). */
+export const fetchMediaByIds = async (
+  ids: string[],
+): Promise<MediaListItem[]> => {
+  if (ids.length === 0) return [];
+  const response = await fetch(`${BASE_URL}/gallery/media/lookup`, {
+    method: "POST",
+    credentials: "include",
+    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    body: JSON.stringify({ ids }),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const json = await response.json();
+  const data = json.data ?? json;
+  return (Array.isArray(data.items) ? data.items : []).map(
+    (item: Record<string, unknown>) => mapMediaItem(item),
+  );
 };
 
 export const uploadMedia = async (files: File[]): Promise<string[]> => {
@@ -166,9 +220,9 @@ export const fetchFavorites = async (
   const json = await response.json();
   const data = json.data ?? json;
 
-  const items: MediaListItem[] = (Array.isArray(data.items) ? data.items : []).map(
-    (item: Record<string, unknown>) => mapMediaItem(item),
-  );
+  const items: MediaListItem[] = (
+    Array.isArray(data.items) ? data.items : []
+  ).map((item: Record<string, unknown>) => mapMediaItem(item));
 
   return {
     items,
@@ -211,9 +265,9 @@ export const fetchMediaByFilter = async (
   const json = await response.json();
   const data = json.data ?? json;
 
-  const items: MediaListItem[] = (Array.isArray(data.items) ? data.items : []).map(
-    (item: Record<string, unknown>) => mapMediaItem(item),
-  );
+  const items: MediaListItem[] = (
+    Array.isArray(data.items) ? data.items : []
+  ).map((item: Record<string, unknown>) => mapMediaItem(item));
 
   return {
     items,
@@ -242,13 +296,13 @@ export const fetchAlbumCovers = async (
     const json = await response.json();
     const data = json.data ?? json;
 
-    const items: AlbumCover[] = (Array.isArray(data.items) ? data.items : []).map(
-      (item: { id: string; name: string; coverUrl: string | null }) => ({
-        id: item.id,
-        name: item.name,
-        coverUrl: item.coverUrl ? resolveMediaUrl(item.coverUrl) : null,
-      }),
-    );
+    const items: AlbumCover[] = (
+      Array.isArray(data.items) ? data.items : []
+    ).map((item: { id: string; name: string; coverUrl: string | null }) => ({
+      id: item.id,
+      name: item.name,
+      coverUrl: item.coverUrl ? resolveMediaUrl(item.coverUrl) : null,
+    }));
 
     return { items };
   } catch (error) {
@@ -260,19 +314,23 @@ export const fetchAlbumCovers = async (
 export const searchGallerySemantic = async (
   query: string,
   signal?: AbortSignal,
+  /** Phạm vi Spotlight: favorites | label:<id> | album:<id> (q được để trống). */
+  scope?: string | null,
 ): Promise<MediaListItem[]> => {
   try {
+    const params = new URLSearchParams({ q: query });
+    if (scope) params.set("scope", scope);
     const response = await fetch(
-      `${BASE_URL}/gallery/media/search?q=${encodeURIComponent(query)}`,
+      `${BASE_URL}/gallery/media/search?${params}`,
       { signal, credentials: "include" },
     );
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    const items: MediaListItem[] = (Array.isArray(data.data) ? data.data : []).map(
-      (item: Record<string, unknown>) => mapMediaItem(item),
-    );
+    const items: MediaListItem[] = (
+      Array.isArray(data.data) ? data.data : []
+    ).map((item: Record<string, unknown>) => mapMediaItem(item));
     return items;
   } catch (error) {
     if ((error as Error).name === "AbortError") {
@@ -305,10 +363,14 @@ export interface DetectionStats {
 export const searchGalleryObjects = async (
   query: string,
   signal?: AbortSignal,
+  /** Phạm vi Spotlight: favorites | label:<id> | album:<id>. */
+  scope?: string | null,
 ): Promise<MediaListItem[]> => {
   try {
+    const params = new URLSearchParams({ q: query });
+    if (scope) params.set("scope", scope);
     const response = await fetch(
-      `${BASE_URL}/gallery/media/objects/search?q=${encodeURIComponent(query)}`,
+      `${BASE_URL}/gallery/media/objects/search?${params}`,
       { signal, credentials: "include" },
     );
     if (!response.ok) {
@@ -370,6 +432,44 @@ export const fetchMediaDetections = async (
   }
 };
 
+export interface SimilarMediaResult {
+  /** Nguồn vector: DINOv3, fallback CLIP image↔image, hoặc null khi chưa có. */
+  source: "dinov3" | "clip" | null;
+  model: string | null;
+  items: MediaListItem[];
+}
+
+/** Ảnh tương tự của 1 ảnh (DINOv3) — dùng cho Lightbox. `score` = cosine. */
+export const fetchSimilarMedia = async (
+  mediaId: string,
+  limit = 12,
+): Promise<SimilarMediaResult> => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/gallery/media/${mediaId}/similar?limit=${limit}`,
+      {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const json = await response.json();
+    const data = json.data ?? {};
+    return {
+      source: data.source ?? null,
+      model: data.model ?? null,
+      items: (Array.isArray(data.items) ? data.items : []).map(
+        (item: Record<string, unknown>) => mapMediaItem(item),
+      ),
+    };
+  } catch (error) {
+    console.error("Failed to fetch similar media:", error);
+    return { source: null, model: null, items: [] };
+  }
+};
+
 export const searchAlbums = async (
   query: string,
   signal?: AbortSignal,
@@ -383,8 +483,16 @@ export const searchAlbums = async (
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    const items: AlbumSearchResult[] = (Array.isArray(data.data) ? data.data : []).map(
-      (item: { id: string; name: string; description: string; coverUrl: string | null; mediaCount: number }) => ({
+    const items: AlbumSearchResult[] = (
+      Array.isArray(data.data) ? data.data : []
+    ).map(
+      (item: {
+        id: string;
+        name: string;
+        description: string;
+        coverUrl: string | null;
+        mediaCount: number;
+      }) => ({
         id: item.id,
         name: item.name,
         description: item.description || "",
@@ -404,10 +512,12 @@ export const searchAlbums = async (
 
 // ================= THÙNG RÁC =================
 
+export const trashQueryKey = ["trash", "media"] as const;
+
 export const fetchTrash = async (
   offset = 0,
   limit = 100,
-): Promise<MediaPage> => {
+): Promise<Omit<MediaPage, "items"> & { items: TrashItem[] }> => {
   try {
     const response = await fetch(
       `${BASE_URL}/gallery/media/trash?offset=${offset}&limit=${limit}`,
@@ -424,8 +534,10 @@ export const fetchTrash = async (
     const json = await response.json();
     const data = json.data ?? json;
 
-    const items: TrashItem[] = (Array.isArray(data.items) ? data.items : []).map(
-      (item) =>
+    const items: TrashItem[] = (
+      Array.isArray(data.items) ? data.items : []
+    ).map(
+      (item: Record<string, unknown>) =>
         ({ ...mapMediaItem(item), deletedAt: item.deletedAt }) as TrashItem,
     );
 
@@ -495,3 +607,132 @@ export const permanentDeleteMedia = async (ids: string[]): Promise<void> => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 };
+/** Dọn sạch thùng rác (xoá vĩnh viễn mọi mục). Trả về số mục đã xoá. */
+export const emptyTrash = async (): Promise<number> => {
+  const response = await fetch(`${BASE_URL}/gallery/media/trash/empty`, {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const json = await response.json();
+  return json.data?.deleted ?? 0;
+};
+
+// ============ Gắn tag nội dung (AI Studio — phân loại) ============
+
+export interface TagSummary {
+  tag: string;
+  /** Số ảnh có confidence ≥ ngưỡng của tag. */
+  count: number;
+  threshold: number;
+  coverUrl: string | null;
+  topConfidence: number;
+}
+
+export interface TagMediaPage {
+  items: MediaListItem[];
+  total: number;
+}
+
+export const tagSummaryQueryKey = ["ai", "tags", "summary"] as const;
+export const tagMediaQueryKey = (tag: string, minConfidence: number | null) =>
+  ["ai", "tags", "media", tag, minConfidence] as const;
+
+/** Tổng quan theo tag (số ảnh + ảnh bìa) cho lưới danh mục. */
+export const fetchTagSummary = async (): Promise<TagSummary[]> => {
+  const response = await fetch(`${BASE_URL}/gallery/media/tags`, {
+    credentials: "include",
+    headers: { Accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const json = await response.json();
+  return (json.data ?? []).map((row: TagSummary) => ({
+    ...row,
+    coverUrl: row.coverUrl ? resolveMediaUrl(row.coverUrl) : null,
+  }));
+};
+
+/**
+ * Ảnh của 1 tag theo confidence giảm dần (`score` = confidence).
+ * `minConfidence` null → dùng ngưỡng riêng của tag.
+ */
+export const fetchTagMedia = async (
+  tag: string,
+  {
+    minConfidence,
+    limit = 60,
+    offset = 0,
+  }: { minConfidence: number | null; limit?: number; offset?: number },
+): Promise<TagMediaPage> => {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+  if (minConfidence !== null)
+    params.set("minConfidence", String(minConfidence));
+  const response = await fetch(
+    `${BASE_URL}/gallery/media/tags/${encodeURIComponent(tag)}/media?${params}`,
+    { credentials: "include", headers: { Accept: "application/json" } },
+  );
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const json = await response.json();
+  const data = json.data ?? {};
+  return {
+    total: data.total ?? 0,
+    items: (Array.isArray(data.items) ? data.items : []).map(
+      (item: Record<string, unknown>) => mapMediaItem(item),
+    ),
+  };
+};
+
+/** URL tải về (Content-Disposition: attachment + tên file gốc) từ URL file đã ký. */
+export function downloadUrl(fileUrl: string): string {
+  const url = new URL(fileUrl, window.location.href);
+  url.searchParams.set("download", "1");
+  return url.toString();
+}
+
+/**
+ * Tải bản gốc: 1 ảnh → file gốc; nhiều ảnh → 1 file .zip do server nén.
+ * Dùng <a> / <form> điều hướng (trình duyệt tự lưu file đang stream, không qua
+ * RAM của tab). Đích là iframe ẩn để lỗi (401 / 429) không làm rời trang.
+ */
+export function downloadMedia(ids: string[]) {
+  if (ids.length === 0) return;
+  const target = "tng-download";
+  if (!document.querySelector(`iframe[name="${target}"]`)) {
+    const frame = document.createElement("iframe");
+    frame.name = target;
+    frame.hidden = true;
+    document.body.appendChild(frame);
+  }
+  if (ids.length === 1) {
+    const a = document.createElement("a");
+    // Không có chữ ký → backend kiểm tra cookie chủ ảnh.
+    a.href = `${BASE_URL}/gallery/media/${ids[0]}/file?download=1`;
+    a.target = target;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return;
+  }
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = `${BASE_URL}/gallery/media/download/zip`;
+  form.target = target;
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "ids";
+  input.value = ids.join(",");
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+}

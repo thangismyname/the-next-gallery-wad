@@ -1,4 +1,5 @@
 import React from "react";
+import { formatEta, formatSpeed } from "@/utils/format";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2, FileUp, XCircle } from "lucide-react";
 
@@ -11,19 +12,6 @@ import { cn } from "@/lib/utils";
 interface TransferProgressProps {
   progress: TransferProgressData;
   onCancel?: () => void;
-}
-
-function formatSpeed(bytesPerSec: number): string {
-  const mb = bytesPerSec / (1024 * 1024);
-  return mb >= 1 ? `${mb.toFixed(1)} MB/s` : `${Math.round(bytesPerSec / 1024)} KB/s`;
-}
-
-function formatEta(seconds: number): string {
-  if (!Number.isFinite(seconds) || seconds <= 0) return "—";
-  const total = Math.round(seconds);
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
 export const TransferProgress: React.FC<TransferProgressProps> = ({

@@ -1,14 +1,17 @@
 export function errorHandler(err, req, res, _next) {
   console.error(err);
 
-  const status = err.status || 500;
-  const code = err.code || "INTERNAL_ERROR";
+  // Lỗi tự ném (httpError, multer…) mang status 4xx → trả message cho client.
+  // Lỗi 5xx / không rõ (Postgres, MinIO, ai-service) → chỉ trả câu chung,
+  // chi tiết nằm trong log — tránh lộ câu SQL, tên bảng, đường dẫn nội bộ.
+  const status = Number.isInteger(err.status) && err.status >= 400 ? err.status : 500;
+  const expose = status < 500;
 
   res.status(status).json({
     success: false,
     error: {
-      code,
-      message: err.message || "Lỗi server không xác định",
+      code: expose ? (typeof err.code === "string" ? err.code : "BAD_REQUEST") : "INTERNAL_ERROR",
+      message: expose ? err.message || "Yêu cầu không hợp lệ" : "Lỗi server không xác định",
     },
   });
 }

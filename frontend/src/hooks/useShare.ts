@@ -290,7 +290,7 @@ export function useShare() {
           | Array<{ userId: string; username: string; avatarUrl?: string | null }>
           | undefined;
         if (!Array.isArray(online)) return;
-        const next: Record<string, never> = {};
+        const next: typeof presence = {};
         for (const user of online) {
           if (user.userId) next[user.userId] = user;
         }

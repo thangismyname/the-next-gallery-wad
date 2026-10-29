@@ -4,10 +4,12 @@ import LanguageDetector from "i18next-browser-languagedetector";
 
 import translationVI from "./locales/vi/translation.json";
 import translationEN from "./locales/en/translation.json";
+import translationJA from "./locales/ja/translation.json";
 
 const resources = {
   vi: { translation: translationVI },
   en: { translation: translationEN },
+  ja: { translation: translationJA },
 };
 
 i18n
@@ -16,6 +18,10 @@ i18n
   .init({
     resources,
     fallbackLng: "vi", // Ngôn ngữ dùng khi không phát hiện được hoặc thiếu key
+    // Chỉ nhận ngôn ngữ có trong resources; "ja-JP" / "en-US" → "ja" / "en".
+    supportedLngs: ["vi", "en", "ja"],
+    nonExplicitSupportedLngs: true,
+    load: "languageOnly",
 
     // Cấu hình cho LanguageDetector
     detection: {
@@ -32,9 +38,6 @@ i18n
 
       // 4. Thời gian sống của Cookie (tính bằng phút)
       cookieMinutes: 10080, // 7 ngày
-
-      // 5. Bỏ qua các ngôn ngữ không hỗ trợ (chỉ chấp nhận ngôn ngữ có trong resources)
-      checkWhitelist: true,
     },
 
     interpolation: {

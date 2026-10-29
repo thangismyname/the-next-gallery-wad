@@ -91,6 +91,26 @@ class OpenClipEmbeddingProvider(EmbeddingProvider):
             features = features / features.norm(dim=-1, keepdim=True)
         return features[0].float().cpu().tolist()
 
+    def encode_images(self, images: list[bytes]) -> np.ndarray:
+        if not images:
+            return np.zeros((0, self._dimension), dtype=np.float32)
+        tensor = torch.stack(
+            [self._preprocess(Image.open(io.BytesIO(b)).convert("RGB")) for b in images]
+        ).to(self._device)
+        with torch.no_grad():
+            features = self._model.encode_image(tensor)
+            features = features / features.norm(dim=-1, keepdim=True)
+        return features.float().cpu().numpy()
+
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
+        if not texts:
+            return np.zeros((0, self._dimension), dtype=np.float32)
+        tokens = self._tokenizer(texts).to(self._device)
+        with torch.no_grad():
+            features = self._model.encode_text(tokens)
+            features = features / features.norm(dim=-1, keepdim=True)
+        return features.float().cpu().numpy()
+
     def classify(
         self,
         image_bytes: bytes,

@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 import { MomentReactions } from "./MomentReactions";
 import { TemplateMedia } from "./TemplateMedia";
 import { MomentMemePanel } from "./MomentMemePanel";
-import { getInitials, getMomentParticipants } from "../participants";
+import { getInitials } from "@/utils/string";
+import { getMomentParticipants, timeAgo } from "../participants";
 
 type Props = {
   moment: Moment;
@@ -17,20 +18,6 @@ type Props = {
   onLeave?: () => void;
   onToggleReaction: (emoji: string) => void;
 };
-
-function timeAgo(
-  iso: string,
-  t: ReturnType<typeof useTranslation>["t"],
-): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return t("moments.timeJustNow");
-  if (mins < 60) return t("moments.timeMin", { n: mins });
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return t("moments.timeHour", { n: hours });
-  const days = Math.floor(hours / 24);
-  return t("moments.timeDay", { n: days });
-}
 
 // Double-tap window (ms) — nếu 2 lần click ≤ ngưỡng này → heart reaction.
 const DOUBLE_TAP_MS = 300;
@@ -101,32 +88,20 @@ export const MomentSlide: React.FC<Props> = ({
 
           {/* ── Góc TRÊN TRÁI: avatar (stack) + tên (+N người) (+ time) ── */}
           <div className="absolute top-2.5 left-2.5 z-20 flex max-w-[calc(100%-8rem)] items-center gap-1.5">
-            {participants.length > 1 ? (
-              <div className="flex shrink-0 -space-x-1.5">
-                {participants.slice(0, 3).map((p) => (
-                  <Avatar
-                    key={p.userId}
-                    size="sm"
-                    className="shrink-0 ring-2 ring-white/70"
-                  >
-                    {p.userAvatarUrl ? (
-                      <AvatarImage src={p.userAvatarUrl} alt={p.userName} />
-                    ) : null}
-                    <AvatarFallback>{getInitials(p.userName)}</AvatarFallback>
-                  </Avatar>
-                ))}
-              </div>
-            ) : (
-              <Avatar size="sm" className="shrink-0 ring-2 ring-white/70">
-                {moment.userAvatarUrl ? (
-                  <AvatarImage
-                    src={moment.userAvatarUrl}
-                    alt={moment.userName}
-                  />
-                ) : null}
-                <AvatarFallback>{getInitials(moment.userName)}</AvatarFallback>
-              </Avatar>
-            )}
+            <div className="flex shrink-0 -space-x-1.5">
+              {participants.slice(0, 3).map((p) => (
+                <Avatar
+                  key={p.userId}
+                  size="sm"
+                  className="shrink-0 ring-2 ring-white/70"
+                >
+                  {p.userAvatarUrl ? (
+                    <AvatarImage src={p.userAvatarUrl} alt={p.userName} />
+                  ) : null}
+                  <AvatarFallback>{getInitials(p.userName)}</AvatarFallback>
+                </Avatar>
+              ))}
+            </div>
             <span className="inline-flex min-w-0 flex-1 items-center gap-1">
               <span className="truncate rounded-full bg-black/45 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm">
                 {participants.length > 1

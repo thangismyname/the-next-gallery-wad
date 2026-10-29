@@ -3,9 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "./PasswordInput";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff } from "lucide";
-import { MorphIcon } from "morphicons/react";
 import { useAuth } from "./AuthContext";
 import { OAuthButtons } from "./OAuthButtons";
 
@@ -24,8 +23,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -83,26 +80,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       {/* Field Password */}
       <div className="space-y-2">
         <Label htmlFor="register-password">{t("auth.password")}</Label>
-        <div className="relative">
-          <Input
-            id="register-password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="pr-10"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            <MorphIcon icon={showPassword ? EyeOff : Eye} size={16} />
-          </button>
-        </div>
+        <PasswordInput
+          id="register-password"
+          autoComplete="new-password"
+          required
+          minLength={8}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="••••••••"
+        />
       </div>
 
       {/* Field Confirm Password */}
@@ -110,25 +96,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <Label htmlFor="register-confirm-password">
           {t("auth.confirmPassword")}
         </Label>
-        <div className="relative">
-          <Input
-            id="register-confirm-password"
-            type={showConfirmPassword ? "text" : "password"}
-            autoComplete="new-password"
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="••••••••"
-            className="pr-10"
-          />
-          <button
-            type="button"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-          >
-            <MorphIcon icon={showConfirmPassword ? EyeOff : Eye} size={16} />
-          </button>
-        </div>
+        <PasswordInput
+          id="register-confirm-password"
+          autoComplete="new-password"
+          required
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="••••••••"
+        />
       </div>
 
       <Button type="submit" className="w-full" disabled={loading}>

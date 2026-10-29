@@ -13,7 +13,7 @@ import {
 } from "../services/signaling.service.js";
 let createShareSessionDb;
 try {
-  const mod = await import("../../services/share.service.js");
+  const mod = await import("../../modules/share/share.service.js");
   createShareSessionDb = mod.createShareSession;
 } catch {
   // Table may not exist yet — DB persistence is optional

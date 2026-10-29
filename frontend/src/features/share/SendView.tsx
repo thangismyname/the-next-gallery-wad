@@ -4,45 +4,59 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { useShareContext } from "./ShareProvider";
-import { TransferSource } from "@/hooks/useFileTransfer";
+import { MediaListItem } from "@/services/media";
+import { MediaPicker } from "@/features/gallery/components/MediaPicker";
 import { QRTab } from "./components/QRTab";
 import { LanTab } from "./components/LanTab";
 import { RoomCodeInput } from "./components/RoomCodeInput";
+import {
+  buildSource,
+  entryIsVideo,
+  entryName,
+  entryPreview,
+  entrySize,
+  localEntry,
+  type SendEntry,
+} from "./sendEntry";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, FileImage, FileVideo, Loader2, Plus, Send, Wifi, X } from "lucide-react";
-
-interface LocalFileEntry {
-  id: string;
-  file: File;
-  previewUrl?: string;
-}
-
-let localIdCounter = 0;
-
-function buildSource(entry: LocalFileEntry): TransferSource {
-  return {
-    id: entry.id,
-    name: entry.file.name,
-    type: entry.file.type || "application/octet-stream",
-    size: entry.file.size,
-    stream: () => entry.file.stream(),
-  };
-}
-
-function formatSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
+import { formatBytes } from "@/utils/format";
+import {
+  ArrowLeft,
+  FileImage,
+  FileVideo,
+  Images,
+  Loader2,
+  Plus,
+  Send,
+  Wifi,
+  X,
+} from "lucide-react";
 
 export const SendView: React.FC = () => {
   const { t } = useTranslation();
   const share = useShareContext();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [files, setFiles] = useState<LocalFileEntry[]>([]);
+  const [files, setFiles] = useState<SendEntry[]>([]);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  // Bản nháp lựa chọn trong dialog thư viện — chỉ áp dụng khi bấm xác nhận.
+  const [libraryDraft, setLibraryDraft] = useState<Map<string, MediaListItem>>(
+    () => new Map(),
+  );
+  const libraryDraftIds = useMemo(
+    () => new Set(libraryDraft.keys()),
+    [libraryDraft],
+  );
   const createdSessionRef = useRef(false);
   const previewUrlsRef = useRef<Set<string>>(new Set());
 
@@ -86,11 +100,8 @@ export const SendView: React.FC = () => {
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
-    const next: LocalFileEntry[] = Array.from(list).map((file) => {
-      const entry: LocalFileEntry = {
-        id: `local-${++localIdCounter}`,
-        file,
-      };
+    const next: SendEntry[] = Array.from(list).map((file) => {
+      const entry = localEntry(file);
       if (file.type.startsWith("image/")) {
         const url = URL.createObjectURL(file);
         entry.previewUrl = url;
@@ -104,7 +115,7 @@ export const SendView: React.FC = () => {
   const removeFile = (id: string) => {
     setFiles((prev) => {
       const target = prev.find((f) => f.id === id);
-      if (target?.previewUrl) {
+      if (target?.kind === "local" && target.previewUrl) {
         URL.revokeObjectURL(target.previewUrl);
         previewUrlsRef.current.delete(target.previewUrl);
       }
@@ -115,6 +126,43 @@ export const SendView: React.FC = () => {
       }
       return next;
     });
+  };
+
+  // Mở dialog thư viện, đánh dấu sẵn các media đã thêm trước đó.
+  const openLibrary = () => {
+    const current = new Map<string, MediaListItem>();
+    for (const entry of files) {
+      if (entry.kind === "library") current.set(entry.item.id, entry.item);
+    }
+    setLibraryDraft(current);
+    setLibraryOpen(true);
+  };
+
+  const toggleLibraryItem = (item: MediaListItem) => {
+    setLibraryDraft((prev) => {
+      const next = new Map(prev);
+      if (next.has(item.id)) next.delete(item.id);
+      else next.set(item.id, item);
+      return next;
+    });
+  };
+
+  // Thay toàn bộ media thư viện bằng lựa chọn mới, giữ nguyên file từ máy.
+  const confirmLibrary = () => {
+    setFiles((prev) => {
+      const next: SendEntry[] = [
+        ...prev.filter((entry) => entry.kind === "local"),
+        ...[...libraryDraft.values()].map(
+          (item): SendEntry => ({ kind: "library", id: item.id, item }),
+        ),
+      ];
+      if (next.length === 0) {
+        createdSessionRef.current = false;
+        share.leaveRoom();
+      }
+      return next;
+    });
+    setLibraryOpen(false);
   };
 
   const sendToConnected = async () => {
@@ -188,38 +236,53 @@ export const SendView: React.FC = () => {
                 e.target.value = "";
               }}
             />
-            <Button onClick={() => inputRef.current?.click()}>
-              <Plus className="size-4" />
-              {t("send.pickFiles")}
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={openLibrary}>
+                <Images className="size-4" />
+                {t("send.pickFromLibrary")}
+              </Button>
+              <Button onClick={() => inputRef.current?.click()}>
+                <Plus className="size-4" />
+                {t("send.pickFiles")}
+              </Button>
+            </div>
           </div>
 
           {files.length === 0 ? (
-            <Card
-              className="flex cursor-pointer flex-col items-center gap-3 border-dashed border-border/60 p-12 text-center"
-              onClick={() => inputRef.current?.click()}
-            >
+            <Card className="flex flex-col items-center gap-3 border-dashed border-border/60 p-12 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted">
                 <FileImage className="size-7 text-muted-foreground" />
               </div>
               <p className="text-sm text-muted-foreground">
                 {t("send.filesEmpty")}
               </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button variant="outline" size="sm" onClick={openLibrary}>
+                  <Images className="size-3.5" />
+                  {t("send.pickFromLibrary")}
+                </Button>
+                <Button size="sm" onClick={() => inputRef.current?.click()}>
+                  <Plus className="size-3.5" />
+                  {t("send.pickFiles")}
+                </Button>
+              </div>
             </Card>
           ) : (
             <>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
                 {files.map((entry) => {
-                  const isVideo = entry.file.type.startsWith("video/");
+                  const isVideo = entryIsVideo(entry);
+                  const previewUrl = entryPreview(entry);
+                  const name = entryName(entry);
                   return (
                     <div
                       key={entry.id}
                       className="group relative aspect-square overflow-hidden rounded-lg border border-border/40 bg-muted/30"
                     >
-                      {entry.previewUrl ? (
+                      {previewUrl ? (
                         <img
-                          src={entry.previewUrl}
-                          alt={entry.file.name}
+                          src={previewUrl}
+                          alt={name}
                           className="absolute inset-0 h-full w-full object-cover"
                         />
                       ) : (
@@ -233,12 +296,18 @@ export const SendView: React.FC = () => {
                       )}
                       <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-2">
                         <p className="truncate text-xs font-medium text-white">
-                          {entry.file.name}
+                          {name}
                         </p>
                         <p className="text-[10px] text-white/70">
-                          {formatSize(entry.file.size)}
+                          {formatBytes(entrySize(entry))}
                         </p>
                       </div>
+                      {entry.kind === "library" && (
+                        <span className="absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] text-white">
+                          <Images className="size-3" />
+                          {t("send.fromLibrary")}
+                        </span>
+                      )}
                       <button
                         onClick={() => removeFile(entry.id)}
                         className="absolute right-1.5 top-1.5 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
@@ -285,8 +354,8 @@ export const SendView: React.FC = () => {
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground">
                       {t("send.totalSize", {
-                        size: Math.round(
-                          sources.reduce((sum, s) => sum + s.size, 0) / 1024 / 1024,
+                        size: formatBytes(
+                          sources.reduce((sum, s) => sum + s.size, 0),
                         ),
                       })}
                     </p>
@@ -305,6 +374,28 @@ export const SendView: React.FC = () => {
           )}
         </>
       )}
+
+      <Dialog open={libraryOpen} onOpenChange={setLibraryOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{t("send.libraryTitle")}</DialogTitle>
+            <DialogDescription>{t("send.libraryDescription")}</DialogDescription>
+          </DialogHeader>
+          <MediaPicker
+            selectedIds={libraryDraftIds}
+            onToggle={toggleLibraryItem}
+            gridClassName="max-h-[50vh]"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLibraryOpen(false)}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={confirmLibrary}>
+              {t("send.libraryConfirm", { count: libraryDraft.size })}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

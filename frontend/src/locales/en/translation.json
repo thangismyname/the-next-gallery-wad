@@ -1,4 +1,43 @@
 {
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Your account information",
+    "admin": "Admin",
+    "verified": "Email verified",
+    "unverified": "Email not verified",
+    "joined": "Joined {{date}}",
+    "stats": {
+      "photos": "Photos",
+      "videos": "Videos",
+      "favorites": "Favorites",
+      "friends": "Friends",
+      "moments": "Moments",
+      "storage": "Storage"
+    },
+    "infoTitle": "Personal info",
+    "infoDesc": "The display name and avatar your friends see.",
+    "name": "Display name",
+    "email": "Email",
+    "emailHint": "Your sign-in email can't be changed yet.",
+    "avatarChoose": "Choose from library",
+    "avatarRemove": "Remove",
+    "avatarPickTitle": "Choose an avatar",
+    "avatarPickDesc": "Pick one photo from your library.",
+    "avatarUse": "Use this photo",
+    "save": "Save changes",
+    "reset": "Undo",
+    "cancel": "Cancel",
+    "saved": "Profile saved.",
+    "saveFailed": "Couldn't save your profile, please try again.",
+    "passwordTitle": "Change password",
+    "passwordDesc": "Your new password must be at least 8 characters.",
+    "currentPassword": "Current password",
+    "revokeOthers": "Sign out of other devices",
+    "changePassword": "Change password",
+    "passwordChanged": "Password changed.",
+    "passwordFailed": "Couldn't change password — check your current password.",
+    "noPassword": "This account signs in with Google/GitHub, so it has no separate password to change."
+  },
   "header": {
     "toggleTheme": "Toggle theme",
     "toggleSidebar": "Toggle sidebar",
@@ -8,7 +47,9 @@
     "settings": "Settings",
     "logout": "Sign out",
     "openSidebar": "Open menu",
-    "account": "Account"
+    "account": "Account",
+    "admin": "Admin dashboard",
+    "toggleLanguage": "Change language"
   },
   "app": {
     "name": "The Next Gallery",
@@ -20,7 +61,7 @@
     "backHome": "Back to home"
   },
   "navigation": {
-    "capture": "Capture",
+    "capture": "Camera",
     "aiEdit": "AI Studio",
     "bottomBar": {
       "ariaLabel": "Mode navigation bar"
@@ -62,23 +103,24 @@
     "saved": "Saved"
   },
   "sidebar": {
-    "shortcuts": "Shortcuts",
-    "library": "Library",
-    "personal": "Personal",
-    "gallery": "Gallery",
+    "gallery": "Library",
     "albums": "Albums",
     "friends": "Friends",
     "moments": "Moments",
     "favorites": "Favorites",
-    "share": "Send quickly",
-    "trash": "Trash"
+    "share": "Quick send",
+    "trash": "Trash",
+    "home": "Home",
+    "photos": "My photos",
+    "ai": "AI",
+    "social": "Sharing"
   },
   "hero": {
-    "eyebrow": "AI-powered photo gallery",
-    "titleLine1": "Reinventing",
-    "titleLine2": "every moment",
-    "subcopy": "Object detection, semantic search, and photo clustering — all running behind the scenes.",
-    "stack": "YOLOv26 · CLIP ViT-B/32 · DINOv2",
+    "eyebrow": "AI-powered photo library",
+    "titleLine1": "Find every",
+    "titleLine2": "moment again",
+    "subcopy": "Upload once — AI detects objects, tags content and understands searches in Vietnamese, English and Japanese. Just describe the moment you're looking for.",
+    "stack": "YOLO26 · CLIP ViT-B/32 · DINOv3",
     "cta": "Explore Gallery"
   },
   "auth": {
@@ -113,18 +155,19 @@
     "badge": "Admin",
     "loading": "Loading...",
     "header": {
-      "backToGallery": "Back to Gallery"
-    },
-    "stats": {
-      "totalUsers": "Total Users",
-      "totalPhotos": "Total Photos"
+      "backToGallery": "Back to Gallery",
+      "openSidebar": "Open menu",
+      "closeSidebar": "Close menu"
     },
     "table": {
-      "name": "Name",
-      "email": "Email",
       "role": "Role",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "user": "User",
+      "media": "Media",
+      "storage": "Storage",
+      "joined": "Joined",
+      "lastActive": "Last active"
     },
     "role": {
       "user": "User",
@@ -135,24 +178,31 @@
       "active": "Active"
     },
     "action": {
-      "ban": "Ban",
+      "ban": "Ban account",
       "unban": "Unban",
-      "delete": "Delete",
-      "deleteTitle": "Delete Account",
-      "deleteConfirm": "Are you sure you want to delete {name}'s account? This action cannot be undone."
+      "delete": "Delete account",
+      "deleteTitle": "Delete account",
+      "deleteConfirm": "Permanently delete {{name}} with {{n}} photos/videos and all their albums and moments. This cannot be undone.",
+      "makeAdmin": "Make admin",
+      "makeUser": "Demote to user",
+      "revokeSessions": "Sign out all devices",
+      "banTitle": "Ban account",
+      "banConfirm": "{{name}} will be signed out and cannot sign in again until unbanned.",
+      "banReason": "Reason (optional)",
+      "banReasonPlaceholder": "e.g. Terms violation"
     },
     "error": {
       "loadFailed": "Failed to load admin data."
     },
     "nav": {
-      "dashboard": "Dashboard",
+      "dashboard": "Overview",
       "users": "Users",
-      "photos": "Photos",
-      "settings": "Settings"
+      "developer": "Developer requests"
     },
     "chart": {
-      "userGrowth": "User Growth",
-      "roleDistribution": "Role Distribution"
+      "activity": "Last 30 days",
+      "uploads": "Uploads",
+      "signups": "New users"
     },
     "developer": {
       "title": "Developer Requests",
@@ -163,7 +213,59 @@
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected"
-      }
+      },
+      "desc": "Users asking to enable Developer Mode (YOLO boxes, AI scores)",
+      "all": "All",
+      "message": "Message",
+      "sentAt": "Sent"
+    },
+    "overviewDesc": "System health, 30-day activity and AI",
+    "kpi": {
+      "users": "Users",
+      "newUsers": "New (7 days)",
+      "photos": "Photos",
+      "videos": "Videos",
+      "storage": "Storage",
+      "pendingRequests": "Pending"
+    },
+    "system": {
+      "title": "AI system",
+      "online": "Online",
+      "offline": "Offline",
+      "offlineHint": "Cannot reach ai-service — uploads still work but new photos are not processed by AI yet.",
+      "coverage": "Processing progress over {{n}} photos"
+    },
+    "recentUsers": "Newest users",
+    "viewAll": "View all",
+    "you": "You",
+    "users": {
+      "count": "{{n}} users",
+      "search": "Search by name or email…",
+      "allRoles": "All roles",
+      "allStatus": "All statuses",
+      "empty": "No users match the filters.",
+      "range": "{{from}}–{{to}} of {{total}}",
+      "prev": "Previous page",
+      "next": "Next page"
+    },
+    "detail": {
+      "title": "User details",
+      "albums": "Albums",
+      "moments": "Moments",
+      "trashed": "Trash",
+      "banReason": "Ban reason: {{reason}}",
+      "joined": "Joined {{date}}",
+      "lastActive": "Active {{time}}",
+      "ai": "AI processing",
+      "sessions": "Sessions",
+      "noSessions": "No active sessions.",
+      "revoke": "Sign out this session"
+    },
+    "search": {
+      "placeholder": "Search users, requests, pages…",
+      "empty": "No results found.",
+      "pages": "Pages",
+      "allUsers": "See all {{n}} users matching “{{q}}”"
     }
   },
   "developer": {
@@ -207,7 +309,8 @@
     },
     "selection": {
       "select": "Select",
-      "cancel": "Cancel selection"
+      "cancel": "Cancel selection",
+      "selectGroup": "Select all photos from {{group}}"
     },
     "sort": {
       "newest": "Newest",
@@ -222,7 +325,11 @@
       "thisWeek": "This week",
       "thisMonth": "This month",
       "undated": "Undated"
-    }
+    },
+    "imageLoadError": "Failed to load image",
+    "noImage": "No image",
+    "photo": "Photo",
+    "emptyHint": "Upload photos or videos and AI will start classifying and tagging them."
   },
   "share": {
     "title": "Share photos",
@@ -255,11 +362,7 @@
     "friendSendTitle": "Choose photos and send to friends",
     "pickMedia": "Choose photos / videos",
     "pickFriends": "Choose recipients",
-    "pickedCount": "{{count}} items selected",
-    "noMedia": "No photos to send yet",
     "sendFailed": "Send failed, try again later",
-    "categorySearch": "Search categories...",
-    "categoryEmpty": "No categories found",
     "searchFriends": "Search name or email...",
     "noFriendResults": "No friends found",
     "hotspotGuide": {
@@ -271,7 +374,7 @@
     "senderNotification": "{{name}} wants to send you {{count}} photos",
     "inviteBody": "Wants to send you {{count}} photos",
     "inviteView": "Receive",
-    "totalSize": "{{size}} MB",
+    "totalSize": "{{size}}",
     "connectionState": {
       "idle": "Not connected",
       "connecting": "Connecting...",
@@ -327,24 +430,85 @@
     "detailDuration": "Duration",
     "detailDate": "Added",
     "detailObjects": "Detected objects",
+    "similar": "Similar photos",
+    "similarLoading": "Finding similar photos…",
+    "similarEmpty": "No similar photos yet",
     "detailFavorite": "Favorite",
     "detailFavoriteYes": "Favorited",
-    "detailFavoriteNo": "Not favorited"
+    "detailFavoriteNo": "Not favorited",
+    "viewOriginal": "Original",
+    "loadingOriginal": "Loading original…",
+    "detailTaken": "Taken",
+    "detailTags": "Content tags",
+    "lowConfidence": "{{pct}}% confidence — low, not used by search",
+    "lowConfidenceNote": "Faded chips = YOLO is unsure (< {{pct}}%), so search ignores them.",
+    "download": "Download original"
   },
   "favorites": {
     "title": "Favorites",
-    "subtitle": "{{count}} favorite photos",
-    "empty": "No favorite photos yet\nTap the star on any photo to add it here."
+    "subtitle": "{{count}} saved photos",
+    "empty": "Nothing saved yet\nHeart or label a photo (Lightbox → Details, or select several photos) to keep it here.",
+    "emptyHearts": "No hearted photos yet.",
+    "emptyLabel": "No photos labeled “{{name}}” yet.\nAdd labels in Lightbox → Details, or select photos in the Library.",
+    "filters": {
+      "all": "All",
+      "favorites": "Hearted"
+    },
+    "labels": {
+      "title": "Labels",
+      "add": "Add label",
+      "manage": "Manage labels",
+      "manageDesc": "Use labels to remember what to do with a photo. Labeled photos always show up in Favorites, even without a heart.",
+      "namePlaceholder": "Label name…",
+      "create": "Add",
+      "delete": "Delete label",
+      "deleteConfirm": "Delete?",
+      "empty": "No labels yet — create your first one below.",
+      "color": "Color",
+      "exists": "A label with this name already exists.",
+      "limit": "You have reached the label limit (30).",
+      "failed": "Couldn't save, try again later.",
+      "colors": {
+        "slate": "Gray",
+        "rose": "Pink",
+        "amber": "Yellow",
+        "emerald": "Green",
+        "sky": "Blue",
+        "violet": "Purple"
+      },
+      "suggested": {
+        "edit": "To edit",
+        "print": "To print",
+        "family": "Send to family"
+      }
+    }
   },
   "send": {
     "title": "Share directly",
-    "subtitle": "Pick photos/videos from your device and share instantly — no upload needed",
+    "subtitle": "Pick photos/videos from your device or your library and send them directly",
     "pickFiles": "Choose files",
     "filesEmpty": "No files chosen yet",
     "remove": "Remove",
     "readyToSend": "{{count}} files ready to send",
     "readyToSend_other": "{{count}} files ready to send",
-    "totalSize": "Total {{size}} MB"
+    "totalSize": "Total {{size}}",
+    "pickFromLibrary": "Choose from library",
+    "fromLibrary": "Library",
+    "libraryTitle": "Choose from library",
+    "libraryDescription": "Photos and videos already in your account",
+    "libraryConfirm": "Done ({{count}})"
+  },
+  "mediaPicker": {
+    "filterAll": "All",
+    "filterFavorites": "Favorites",
+    "filterPhotos": "Photos",
+    "filterVideos": "Videos",
+    "filterSearch": "Search filters...",
+    "filterEmpty": "No filters found",
+    "empty": "No photos yet",
+    "loadMore": "Load more",
+    "video": "Video",
+    "selectedCount": "{{count}} selected"
   },
   "trash": {
     "title": "Trash",
@@ -428,10 +592,24 @@
     "objectResults": "Objects",
     "sendToFriend": "Send photos",
     "photos": "photos",
-    "hint": "Type to search photos, friends or albums — e.g. \"sunset\"",
+    "hint": "Type to search photos, friends or albums — e.g. \"sunset\". Type \"favorite\", a label or an album name (or \"favorite.dog\") to search inside it.",
     "resizeHandle": "Drag to resize · Double-click to reset",
     "resetHint": "Double-click to reset",
-    "dragHint": "Drag to move"
+    "dragHint": "Drag to move",
+    "scope": {
+      "edited": "Edited photos",
+      "remove": "Remove scope",
+      "placeholder": "Search in this scope… (empty = show all)",
+      "searchIn": "Search in",
+      "soon": "Soon",
+      "results": "Photos in {{name}}",
+      "kind": {
+        "favorites": "Favorites",
+        "label": "Label",
+        "album": "Album",
+        "edited": "AI Studio"
+      }
+    }
   },
   "moments": {
     "title": "Moments",
@@ -460,8 +638,6 @@
     "open": "View {{name}}'s moment",
     "video": "video",
     "close": "Close",
-    "prev": "Previous",
-    "next": "Next",
     "timeJustNow": "just now",
     "timeMin": "{{n}}m ago",
     "timeHour": "{{n}}h ago",
@@ -495,16 +671,6 @@
     "fillSlotTitle": "Add {{n}} photos to the moment",
     "fillSlotDesc": "Pick {{n}} of your photos to join the moment with {{user}}",
     "confirmFill": "Submit",
-    "viewAll": "View all photos",
-    "photoOf": "Photo {{current}}/{{total}}",
-    "photoBy": "Photo by {{name}}",
-    "filterAll": "All",
-    "filterFavorites": "Favorites",
-    "filterPhotos": "Photos",
-    "filterVideos": "Videos",
-    "filterSearch": "Search filters...",
-    "filterEmpty": "No photos found",
-    "loadMore": "Load more",
     "photoCount": "{{n}} photos",
     "editDraft": "Edit",
     "saveChanges": "Save changes",
@@ -519,15 +685,11 @@
     "memeSearchEmpty": "No templates found",
     "memePick": "Drop a meme",
     "memePickDesc": "Pick a template and type your lines — the image is generated automatically",
-    "memeTemplateLoading": "Loading templates…",
     "memeTemplateFailed": "Failed to load meme templates",
-    "memeText": "Line {{n}}",
     "memeTextPlaceholder": "Type line {{n}}",
     "memeCaptionPlaceholder": "Add a note (optional)",
     "memeCreate": "Create meme",
     "memeTextOptional": "Text is optional — leave blank to use the original meme",
-    "memeCreated": "Meme dropped",
-    "memeCreateFailed": "Couldn't create the meme. Please try again.",
     "memeDelete": "Delete meme",
     "memeDeleteConfirm": "Delete this meme?",
     "memeDeleteFailed": "Couldn't delete the meme",
@@ -538,5 +700,391 @@
   "common": {
     "cancel": "Cancel",
     "deleting": "Deleting..."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Appearance, devices, AI processing and storage",
+    "appearance": {
+      "title": "Appearance",
+      "desc": "Saved in this browser",
+      "theme": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System",
+      "language": "Language",
+      "density": "Photo grid density",
+      "compact": "Small",
+      "comfortable": "Medium",
+      "large": "Large"
+    },
+    "sessions": {
+      "title": "Signed-in devices",
+      "desc": "Sessions currently signed in to your account",
+      "current": "This device",
+      "unknownDevice": "Unknown device",
+      "revoke": "Sign out this device",
+      "revokeOthers": "Sign out all other devices",
+      "loadFailed": "Couldn't load devices"
+    },
+    "ai": {
+      "title": "AI processing",
+      "desc": "New photos are processed automatically on upload. Older photos that are missing can be processed here.",
+      "tags": {
+        "name": "Content classification",
+        "desc": "17 tags with confidence (AI Studio)"
+      },
+      "clip": {
+        "name": "Semantic search (CLIP)",
+        "desc": "Find photos by description"
+      },
+      "yolo": {
+        "name": "Object detection (YOLO26)",
+        "desc": "Tag objects in photos"
+      },
+      "dino": {
+        "name": "Similar photos (DINOv3)",
+        "desc": "Suggest look-alike photos in the Lightbox"
+      },
+      "progress": "{{done}}/{{total}} photos processed",
+      "process": "Process {{n}} photos",
+      "stop": "Stop",
+      "complete": "Complete",
+      "stalled": "No photos could be processed — check ai-service or the enabled model.",
+      "failed": "Processing failed, try again later.",
+      "manage": "Manage"
+    },
+    "storage": {
+      "title": "Storage",
+      "desc": "Size of the original files you uploaded",
+      "used": "Used",
+      "photos": "Photos",
+      "videos": "Videos",
+      "trash": "Trash",
+      "trashCount": "{{n}} items in trash",
+      "viewTrash": "View",
+      "emptyTrash": "Empty trash",
+      "emptyTitle": "Empty the trash?",
+      "emptyDesc": "{{n}} items ({{size}}) will be permanently deleted and can't be restored.",
+      "emptyConfirm": "Delete forever",
+      "emptyFailed": "Couldn't empty the trash, try again later."
+    }
+  },
+  "studio": {
+    "title": "AI Studio",
+    "subtitle": "AI-assisted photo classification and editing",
+    "tabClassify": "Classification",
+    "tabEdit": "Editing",
+    "comingSoon": "Soon",
+    "groups": {
+      "object": {
+        "title": "Subjects",
+        "desc": "Linear probe on CLIP, trained on COCO"
+      },
+      "scene": {
+        "title": "Scenes",
+        "desc": "Linear probe on CLIP, trained on Places365"
+      },
+      "attribute": {
+        "title": "Attributes",
+        "desc": "CLIP zero-shot — no training data yet"
+      }
+    },
+    "photoCount": "{{n}} photos",
+    "pendingTitle": "{{n}} photos not classified yet",
+    "classifyNow": "Classify now",
+    "loadFailed": "Couldn't load categories",
+    "emptyTag": "No photos reach this confidence threshold",
+    "back": "Back to categories",
+    "threshold": "Confidence threshold",
+    "thresholdAuto": "Auto",
+    "thresholdAutoHint": "Per-tag threshold chosen for the best F1 during training",
+    "tags": {
+      "portrait": "Portrait",
+      "group": "Group of people",
+      "pets": "Pets",
+      "animals": "Animals",
+      "food": "Food",
+      "vehicles": "Vehicles",
+      "sports": "Sports",
+      "beach": "Beach & sea",
+      "mountain": "Mountains",
+      "nature": "Nature",
+      "street": "Street & city",
+      "architecture": "Architecture",
+      "indoor": "Indoor",
+      "night": "Night",
+      "sunset": "Sunset / sunrise",
+      "event": "Event & party",
+      "document": "Document & screenshot"
+    },
+    "createAlbum": "Create smart album"
+  },
+  "albums": {
+    "title": "Albums",
+    "subtitle": "Your albums, smart albums and albums shared with you",
+    "newAlbum": "New album",
+    "create": "Create album",
+    "save": "Save",
+    "saveFailed": "Couldn't save the album, try again later.",
+    "createTitle": "Create album",
+    "editTitle": "Edit album",
+    "createDesc": "Regular album: you pick the photos yourself.",
+    "kind": "Album type",
+    "kindManual": "Regular album",
+    "kindSmart": "Smart album",
+    "name": "Album name",
+    "namePlaceholder": "e.g. Kyoto 2026",
+    "description": "Description (optional)",
+    "photoCount": "{{n}} photos",
+    "memberCount": "{{n}} members",
+    "smartBadge": "AI",
+    "smartSection": "Smart albums",
+    "mine": "My albums",
+    "sharedWithMe": "Shared with me",
+    "invitations": "Invitations",
+    "sharedBy": "Shared by {{name}} · {{role}}",
+    "empty": "You have no albums yet. Create one to organise photos, or let AI group them for you.",
+    "emptyAlbum": "This album has no photos yet.",
+    "loadFailed": "Couldn't load albums",
+    "notFound": "This album doesn't exist or you don't have access.",
+    "accept": "Join",
+    "decline": "Decline",
+    "addTo": "Add to album",
+    "addToDesc": "Choose an album for {{n}} photos",
+    "addPhotos": "Add photos",
+    "addPhotosDesc": "Pick photos from your library",
+    "addCount": "Add {{n}} photos",
+    "share": "Share",
+    "shareTitle": "Share album",
+    "shareDesc": "Invite friends to view or add photos, or create a link for people without an account.",
+    "members": "Members",
+    "more": "More actions",
+    "edit": "Edit album",
+    "convert": "Convert to regular album",
+    "leave": "Leave album",
+    "delete": "Delete album",
+    "setCover": "Set as cover",
+    "removeFromAlbum": "Remove from album",
+    "removeOnlyOwn": "You can only remove photos you added",
+    "saveSearch": "Save as album",
+    "role": "Permission",
+    "roles": {
+      "owner": "Owner",
+      "editor": "Can add photos",
+      "viewer": "View only"
+    },
+    "roleHint": {
+      "editor": "Can add their own photos and remove photos they added.",
+      "viewer": "Can only view the photos."
+    },
+    "inviteFriends": "Invite friends",
+    "noFriendsToInvite": "No more friends to invite.",
+    "invite": "Invite {{n}}",
+    "removeMember": "Remove from album",
+    "pendingInvite": "Invited",
+    "inviteToastTitle": "Album invitation",
+    "inviteToastBody": "{{name}} invited you to the album \"{{album}}\"",
+    "viewInvitation": "View invitation",
+    "smart": {
+      "desc": "Smart albums update themselves: new photos that match the query appear automatically.",
+      "ruleType": "Group photos by",
+      "byTags": "Content tags",
+      "byQuery": "Search query",
+      "tagsHint": "Photos must have all selected tags (up to {{max}}).",
+      "query": "Search query",
+      "queryPlaceholder": "e.g. two dogs on the beach",
+      "queryHint": "Uses the same hybrid search as the search box: understands tags, objects and counts.",
+      "rule": "Query",
+      "empty": "No photos match this album's query yet."
+    },
+    "links": {
+      "title": "Public link",
+      "permission": "Link permission",
+      "view": "View only",
+      "download": "View and download",
+      "expiry": "Expires after",
+      "never": "Never",
+      "days": "{{n}} days",
+      "maxViews": "View limit",
+      "unlimited": "Unlimited",
+      "create": "Create and copy link",
+      "active": "Active links",
+      "none": "No links yet.",
+      "copy": "Copy link",
+      "revoke": "Revoke link",
+      "until": "until {{date}}",
+      "views": "{{n}}/{{max}} views",
+      "expired": "no longer valid"
+    },
+    "confirm": {
+      "delete": {
+        "title": "Delete album?",
+        "desc": "\"{{name}}\" will be deleted. Its photos stay in your library.",
+        "action": "Delete album"
+      },
+      "leave": {
+        "title": "Leave album?",
+        "desc": "You won't be able to see \"{{name}}\" anymore. Photos you added stay in the album.",
+        "action": "Leave"
+      },
+      "convert": {
+        "title": "Convert to a regular album?",
+        "desc": "The current photos are kept as a fixed list; new photos won't be added automatically.",
+        "action": "Convert"
+      },
+      "remove": {
+        "title": "Remove photos from album?",
+        "desc": "{{n}} photos will be removed from the album (they stay in your library).",
+        "action": "Remove"
+      }
+    },
+    "public": {
+      "sharedBy": "Shared by {{name}}",
+      "download": "Download this photo",
+      "notFound": "This link doesn't exist or has been revoked.",
+      "expired": "This link has expired.",
+      "exhausted": "This link has reached its view limit."
+    },
+    "inAlbums": "In albums",
+    "reorder": {
+      "button": "Reorder",
+      "hint": "Drag to change the order (keyboard: Space to pick up, arrows to move).",
+      "save": "Save order",
+      "item": "Photo {{n}}: {{title}}"
+    },
+    "auto": {
+      "groups": {
+        "type": "Media types",
+        "content": "By content",
+        "time": "By time",
+        "objects": "By objects"
+      },
+      "groupHints": {
+        "type": "Every photo and video is here",
+        "content": "Grouped by AI tags (17-tag classification) — untagged photos go to \"Other\"",
+        "time": "By month, plus events = photos taken close together (EXIF date taken)",
+        "objects": "Grouped by objects detected by YOLO"
+      },
+      "type": {
+        "photos": "Photos",
+        "videos": "Videos",
+        "screenshots": "Screenshots",
+        "favorites": "Favorites"
+      },
+      "otherTag": "Other",
+      "event": "Event {{date}}",
+      "objects": {
+        "person": "People",
+        "vehicle": "Vehicles",
+        "outdoor": "Outdoors",
+        "animal": "Animals",
+        "accessory": "Accessories",
+        "sports": "Sports",
+        "kitchen": "Kitchenware",
+        "food": "Food",
+        "furniture": "Furniture",
+        "electronic": "Electronics",
+        "appliance": "Appliances",
+        "indoor": "Household items"
+      },
+      "readOnly": "Auto album · updates itself",
+      "save": "Save as album",
+      "showAll": "Show all ({{n}})",
+      "showLess": "Show less"
+    }
+  },
+  "nav": {
+    "gallery": "Gallery",
+    "albums": "Albums",
+    "studio": "AI Studio",
+    "login": "Sign in",
+    "openGallery": "Open gallery",
+    "download": "Get the app",
+    "menu": "Menu"
+  },
+  "capabilities": {
+    "pipelineTitle": "Processing pipeline",
+    "pipelineBody": "Results are stored, so search, tagging and albums are instant — photos are never re-processed each time you search.",
+    "semanticSearch": "Semantic search",
+    "objectDetection": "Object detection",
+    "visualSimilarity": "Similar photos",
+    "autoClassification": "Auto classification",
+    "smartAlbums": "Smart albums",
+    "sharing": "P2P sharing & shared albums",
+    "pipelineHeadline": "Three vision models, run once at upload.",
+    "stats": {
+      "models": "AI models",
+      "tags": "Content tags",
+      "objects": "Object classes",
+      "languages": "Search languages"
+    },
+    "desc": {
+      "semanticSearch": "Type \"two dogs on the beach\": the query is split into objects, counts and context, then scored by CLIP + tags + YOLO together.",
+      "objectDetection": "Detects 80 object classes in every photo with boxes and confidence — it can count how many people or cars there are.",
+      "visualSimilarity": "Open a photo and instantly see look-alikes: same angle, same scene, same subject.",
+      "autoClassification": "17 tags such as Portrait, Food, Beach, Night… each with its own confidence and threshold, shown in AI Studio.",
+      "smartAlbums": "Save a search or a set of tags as an album — new matching photos appear automatically.",
+      "sharing": "Send photos device-to-device, invite friends into shared albums or create links that expire."
+    }
+  },
+  "closing": {
+    "statement": "Stop scrolling through thousands of photos. Describe the moment — your library will find it.",
+    "eyebrow": "Get started",
+    "cta": "Create a free account",
+    "note": "Nothing to install · Runs in your browser"
+  },
+  "footer": {
+    "tagline": "A photo library that understands every picture — search, classify and share your moments.",
+    "sections": {
+      "explore": "Explore",
+      "account": "Account",
+      "tech": "Technology"
+    },
+    "rights": "All rights reserved",
+    "madeWith": "Graduation thesis project"
+  },
+  "preview": {
+    "query": "two people on the street"
+  },
+  "workflow": {
+    "eyebrow": "Workflow",
+    "title": "From upload to found.",
+    "subtitle": "All the heavy analysis happens once in the background. At search time, the system only has to understand your words.",
+    "steps": {
+      "upload": {
+        "label": "Upload",
+        "title": "Drop photos into your library",
+        "desc": "Photos, videos and iPhone HEIC. Previews are generated up front so the library stays smooth even with huge originals."
+      },
+      "analyze": {
+        "label": "Analyze",
+        "title": "AI looks at every photo",
+        "desc": "CLIP understands meaning, YOLO26 finds objects, DINOv3 remembers visual features — all in the background, no waiting."
+      },
+      "find": {
+        "label": "Find & organise",
+        "title": "Search by description",
+        "desc": "Type what you remember, filter by tags, open similar photos or let smart albums gather photos for you."
+      }
+    }
+  },
+  "download": {
+    "eyebrow": "Mobile app · Coming soon",
+    "title": "Your whole library, right in your pocket.",
+    "subtitle": "The iOS and Android apps are in the works — same account, same AI, synced with the web.",
+    "features": {
+      "backup": "Automatic photo backup from your phone",
+      "search": "Search photos in plain words — Vietnamese, English, Japanese",
+      "moments": "Moments to share what's happening with friends",
+      "send": "Send photos device-to-device, no server in between"
+    },
+    "comingOn": "Coming soon on",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "soon": "Soon",
+    "web": "Or use it on the web now",
+    "qr": "Scan to open on your phone",
+    "mockTitle": "Library",
+    "mockToday": "Today"
   }
 }

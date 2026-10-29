@@ -344,6 +344,10 @@ export const removeMomentReaction = async (momentId: string): Promise<void> => {
   }
 };
 
+/** Query key của feed moments + danh sách lời mời collab. */
+export const momentsFeedQueryKey = ["moments", "feed"] as const;
+export const momentInvitationsQueryKey = ["moments", "invitations"] as const;
+
 // ================= Memes (mặt sau thẻ moment khi lật) =================
 
 /** Query key của list meme 1 moment (["moments", momentId, "memes"]). */

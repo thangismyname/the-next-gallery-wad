@@ -1,0 +1,40 @@
+{
+  "classes": 174,
+  "splits": {
+    "validation": {
+      "candidates": 40949,
+      "excluded_rotated": 460,
+      "selected": 3000,
+      "min_pos": 30,
+      "median_pos": 27.0,
+      "p10_pos": 19.6,
+      "classes_below_half_min_pos": [
+        "Stop sign",
+        "Parking meter",
+        "Flying disc",
+        "Snowboard",
+        "Remote control",
+        "Toaster",
+        "Scissors",
+        "Hair dryer",
+        "Toothbrush",
+        "Lighthouse"
+      ]
+    },
+    "test": {
+      "candidates": 123782,
+      "excluded_rotated": 1462,
+      "selected": 5000,
+      "min_pos": 50,
+      "median_pos": 46.0,
+      "p10_pos": 36.3,
+      "classes_below_half_min_pos": [
+        "Parking meter",
+        "Flying disc",
+        "Toaster",
+        "Hair dryer",
+        "Toothbrush"
+      ]
+    }
+  }
+}

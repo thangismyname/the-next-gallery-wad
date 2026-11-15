@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
 import { AdminSearch } from "./AdminSearch";
 
 interface AdminHeaderProps {

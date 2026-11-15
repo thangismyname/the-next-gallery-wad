@@ -1,3 +1,4 @@
+import { LABEL_COLORS, type LabelColor, type UserLabel } from "@tng/shared";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2, Plus, Trash2 } from "lucide-react";
@@ -16,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { LABEL_COLORS, type LabelColor, type UserLabel } from "@/services/labels";
 import { cn } from "@/lib/utils";
 import { LABEL_DOT } from "../labelColors";
 import { useLabelActions, useLabels } from "../useLabels";

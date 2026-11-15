@@ -1,0 +1,180 @@
+{
+  "train_images": 15000,
+  "baselines": {
+    "zs_clip": "20261107-033218",
+    "e5_per_tag": "20261108-222131"
+  },
+  "precision_target": 0.9,
+  "selected": {
+    "fused_learned": {
+      "l2": 0.01,
+      "unknown_weight": 1.0,
+      "val_mAP": 0.9478930043937641,
+      "grid_edge": [
+        "unknown_weight"
+      ]
+    }
+  },
+  "test_all_classes": {
+    "zs_clip": {
+      "mAP": 0.8840618838881236,
+      "macro_f1": 0.8257278158076521,
+      "macro_f1_at_precision": 0.7003411652310679,
+      "ece": 0.030928270116943154
+    },
+    "e5_per_tag": {
+      "mAP": 0.8879528986809355,
+      "macro_f1": 0.8484113128834125,
+      "macro_f1_at_precision": 0.7636636391115225,
+      "ece": 0.02618468104350078
+    },
+    "fused_learned": {
+      "mAP": 0.9445808934011117,
+      "macro_f1": 0.8772132423523377,
+      "macro_f1_at_precision": 0.8185936799201913,
+      "ece": 0.0219555136806063
+    }
+  },
+  "paired_ci95": {
+    "fused_learned_minus_e5_per_tag_mAP_lo": 0.048551181533088704,
+    "fused_learned_minus_e5_per_tag_mAP_hi": 0.06322329054057357,
+    "fused_learned_minus_e5_per_tag_macro_f1_lo": 0.023620371346162915,
+    "fused_learned_minus_e5_per_tag_macro_f1_hi": 0.03662500106933472,
+    "fused_learned_minus_e5_per_tag_macro_f1_at_precision_lo": 0.04868732216536611,
+    "fused_learned_minus_e5_per_tag_macro_f1_at_precision_hi": 0.06623246832243648
+  },
+  "groups": [
+    {
+      "config": "zs_clip",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.86301335205674,
+      "macro_f1": 0.7927577358641827,
+      "micro_f1": 0.7704332291201429,
+      "ece": 0.022892249370185344,
+      "macro_f1_at_precision": 0.6568870773783313,
+      "micro_precision_at_precision": 0.8959248901318418
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9425300278641878,
+      "macro_f1": 0.9173113712061768,
+      "micro_f1": 0.944659255679072,
+      "ece": 0.11870914889704827,
+      "macro_f1_at_precision": 0.8210469648220023,
+      "micro_precision_at_precision": 0.9541643376187814
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.8654151630755171,
+      "macro_f1": 0.7880909603297459,
+      "micro_f1": 0.8040439560439561,
+      "ece": 0.02289160633413762,
+      "macro_f1_at_precision": 0.6430502109310916,
+      "micro_precision_at_precision": 0.8951638065522621
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.8998710602292462,
+      "macro_f1": 0.8576373237128333,
+      "micro_f1": 0.8253589756881448,
+      "ece": 0.04046728221449826,
+      "macro_f1_at_precision": 0.7489139308332217,
+      "micro_precision_at_precision": 0.9351180516824689
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.8690149405008757,
+      "macro_f1": 0.8235982215924326,
+      "micro_f1": 0.8108431516936672,
+      "ece": 0.021684570464725165,
+      "macro_f1_at_precision": 0.7503068627738176,
+      "micro_precision_at_precision": 0.9160085054678008
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9405583380699912,
+      "macro_f1": 0.9173365664694673,
+      "micro_f1": 0.9446726262382218,
+      "ece": 0.08643777263152205,
+      "macro_f1_at_precision": 0.8007657956051462,
+      "micro_precision_at_precision": 0.9578313253012049
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.8898059935487259,
+      "macro_f1": 0.8375134356772148,
+      "micro_f1": 0.8880590047614602,
+      "ece": 0.021185789208978213,
+      "macro_f1_at_precision": 0.7990124090291307,
+      "micro_precision_at_precision": 0.9202302631578947
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.8863817965104177,
+      "macro_f1": 0.8576508174712759,
+      "micro_f1": 0.8253951800984711,
+      "ece": 0.03197003160098664,
+      "macro_f1_at_precision": 0.7336940298335499,
+      "micro_precision_at_precision": 0.9400691509796388
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.9372021787430318,
+      "macro_f1": 0.8575841761309875,
+      "micro_f1": 0.8709007486114465,
+      "ece": 0.019459464631145517,
+      "macro_f1_at_precision": 0.8018642558080016,
+      "micro_precision_at_precision": 0.9238004524348137
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9650773230068891,
+      "macro_f1": 0.9317384263005326,
+      "micro_f1": 0.9534855329019656,
+      "ece": 0.07322994049004095,
+      "macro_f1_at_precision": 0.8650643024540517,
+      "micro_precision_at_precision": 0.9587710084033614
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.9380237149549203,
+      "macro_f1": 0.8516743667846044,
+      "micro_f1": 0.8806236498544191,
+      "ece": 0.020153755013376167,
+      "macro_f1_at_precision": 0.793168974549752,
+      "micro_precision_at_precision": 0.9232074671192193
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.9501402403446216,
+      "macro_f1": 0.8988657672901988,
+      "micro_f1": 0.9022960162200668,
+      "ece": 0.027068473155037638,
+      "macro_f1_at_precision": 0.8401494083864334,
+      "micro_precision_at_precision": 0.941945816095022
+    }
+  ]
+}

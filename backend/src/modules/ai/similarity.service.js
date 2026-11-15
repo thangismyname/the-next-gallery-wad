@@ -10,6 +10,7 @@ import { dbPool } from "../../config/db.js";
 import { readAiSourceBuffer } from "../media/media.derivatives.service.js";
 import { embedImageDino } from "./ai.client.js";
 import sharp from "sharp";
+import { logger } from "../../lib/logger.js";
 
 // DINOv3 processor resize về 224px — 512px là dư đủ, payload nhỏ.
 const DINO_MAX_EDGE = 512;
@@ -68,7 +69,7 @@ export async function embedDinoBuffer({ mediaId, userId, buffer }) {
 /** Fire-and-forget: chạy nền, không chặn response upload. Mọi lỗi chỉ log. */
 export function embedDinoInBackground(args) {
   embedDinoBuffer(args).catch((err) => {
-    console.warn(`⚠️  DINOv3 embed media ${args.mediaId} lỗi: ${err.message}`);
+    logger.warn({ err }, `DINOv3 embed media ${args.mediaId} lỗi`);
   });
 }
 
@@ -115,7 +116,7 @@ export async function backfillDinoEmbeddings(userId, { limit = 50 } = {}) {
       else failed += 1;
     } catch (err) {
       failed += 1;
-      console.warn(`⚠️  Backfill DINOv3 ${row.id} lỗi: ${err.message}`);
+      logger.warn({ err }, `Backfill DINOv3 ${row.id} lỗi`);
     }
   }
 
@@ -203,7 +204,7 @@ export async function findSimilarMedia(userId, mediaId, { limit = 12 } = {}) {
         });
       }
     } catch (err) {
-      console.warn(`⚠️  DINOv3 on-demand ${mediaId} lỗi: ${err.message}`);
+      logger.warn({ err }, `DINOv3 on-demand ${mediaId} lỗi`);
     }
   }
   if (dino) return { source: "dinov3", ...dino };

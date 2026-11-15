@@ -1,8 +1,8 @@
-// src/features/admin/components/AdminLayout.tsx
+import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { RouteFallback } from "@/components/layout/RouteFallback";
 import { AdminHeader } from "@/features/admin/components/AdminHeader";
 import { AdminSidebar } from "@/features/admin/components/AdminSidebar";
-import { useState } from "react";
 
 export function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,7 +16,9 @@ export function AdminLayout() {
       <div className="flex flex-1">
         <AdminSidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
         <main className="flex-1 overflow-y-auto">
-          <Outlet />
+          <Suspense fallback={<RouteFallback />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

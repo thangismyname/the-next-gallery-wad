@@ -41,7 +41,7 @@ def main() -> int:
 
     try:
         import open_clip
-    except ImportError as exc:
+    except ImportError:
         print(
             "Lỗi: chưa cài open_clip_torch. Chạy: "
             "pip install open_clip_torch (Dockerfile đã cài sẵn).",

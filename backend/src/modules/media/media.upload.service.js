@@ -12,6 +12,7 @@ import {
   putDerivative,
 } from "./media.derivatives.service.js";
 import { classifyUpload, readPhotoTakenAt } from "./media.sources.js";
+import { logger } from "../../lib/logger.js";
 
 // `files` từ multer diskStorage — mỗi file có `path` (file tạm), không có buffer.
 // Route tự xoá file tạm sau khi xong.
@@ -62,7 +63,7 @@ export async function uploadMedia(userId, files) {
         ]);
     } catch (thumbErr) {
       // Không chặn upload — endpoint thumbnail sẽ thử tạo lại khi được gọi.
-      console.error("Lỗi tạo thumbnail:", thumbErr.message);
+      logger.error({ err: thumbErr }, "Lỗi tạo thumbnail");
     }
 
     // DB bắt buộc video có duration (chk_video_duration). ffmpeg không đọc nổi

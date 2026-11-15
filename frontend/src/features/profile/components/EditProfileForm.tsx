@@ -3,17 +3,10 @@ import { useTranslation } from "react-i18next";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/services/authClient";
-import { getInitials } from "@/utils/string";
+import { getInitials } from "@tng/shared";
 import { AvatarPickerDialog } from "./AvatarPickerDialog";
 import { FormStatus, FormStatusMessage } from "./FormStatusMessage";
 
@@ -73,12 +66,7 @@ export const EditProfileForm: React.FC<Props> = ({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("profile.infoTitle")}</CardTitle>
-        <CardDescription>{t("profile.infoDesc")}</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <>
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Ảnh đại diện */}
           <div className="flex items-center gap-4">
@@ -154,13 +142,12 @@ export const EditProfileForm: React.FC<Props> = ({
             </Button>
           </div>
         </form>
-      </CardContent>
 
       <AvatarPickerDialog
         open={pickerOpen}
         onOpenChange={setPickerOpen}
         onPick={(url) => setDraftImage(url)}
       />
-    </Card>
+    </>
   );
 };

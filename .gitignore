@@ -17,6 +17,8 @@ pnpm-debug.log*
 dist/
 dist-ssr/
 build/
+.expo/
+apps/mobile/.expo/
 
 # ── Python / ai-service ───────
 ai-service/.venv/
@@ -32,7 +34,12 @@ __pycache__/
 frontend/src/assets/fonts/*
 !frontend/src/assets/fonts/README.md
 # DFVN Basteleur (heading) — SIL OFL, được phép phân phối lại → commit để deploy có font
-!frontend/src/assets/fonts/DFVN-Basteleur-*.otf
+!frontend/src/assets/fonts/DFVN-Basteleur-*.woff2
+!frontend/src/assets/fonts/Zen*.woff2
+!frontend/src/assets/fonts/OFL-Zen.txt
+
+# ── Graphify (generated knowledge graph) ──
+graphify-out/
 
 # ── OS / IDE ──────────────────
 .DS_Store
@@ -40,3 +47,28 @@ frontend/src/assets/fonts/*
 ._*
 .vscode/
 .idea/
+
+# ── Thesis datasets (database/datasets) — xem ai-service/experiments/README.md ──
+# Nặng / tải lại được → ignore. Kết quả nhẹ (Results/, History/), subset đã chọn và
+# nhãn chấm tay → commit.
+database/datasets/Data/
+database/datasets/Classes/*
+!database/datasets/Classes/open-images/
+database/datasets/Classes/open-images/*
+!database/datasets/Classes/open-images/subset/
+!database/datasets/Classes/open-images/judgments.csv
+!database/datasets/Classes/gallery-gt/
+!database/datasets/Results/oi/build/
+database/datasets/Results/cache/
+database/datasets/Results/**/artifacts/*.npz
+# Weights Ultralytics của yolo_ft (best/last.pt, 5–26 MB) — bản dùng được đã chép sang ai-service/models/ (ignore)
+database/datasets/Results/**/*.pt
+database/datasets/Results/**/events.jsonl
+database/datasets/Results/*.log
+database/datasets/Results/oi/*.log
+database/datasets/Results/oi/*/*-smoke/
+database/datasets/Results/oi/*/latest_smoke.json
+database/datasets/Results/pipeline/**/*.npy
+database/datasets/Results/pipeline/**/vis/
+database/datasets/**/judge.html
+database/datasets/**/.DS_Store

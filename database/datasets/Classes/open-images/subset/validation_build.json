@@ -1,0 +1,11 @@
+{
+  "images": 3000,
+  "missing": 0,
+  "broken": 0,
+  "exif_rotated_excluded": 0,
+  "known_pairs": 28488,
+  "positive_pairs": 7749,
+  "images_with_boxes": 2744,
+  "group_of_boxes": 1483,
+  "images_with_captions": 3000
+}

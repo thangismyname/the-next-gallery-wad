@@ -26,3 +26,4 @@ models/dinov2-*/
 # ── Benchmark ─────────────
 bench/runs/
 bench/results/*_smoke.csv
+pipeline/runs/

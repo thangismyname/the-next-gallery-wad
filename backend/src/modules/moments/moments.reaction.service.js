@@ -1,19 +1,27 @@
 import { dbPool } from "../../config/db.js";
 import { canViewMoment } from "./moments.query.service.js";
+import { httpError } from "../../middleware/errorHandler.js";
 
 // React 1 lần / moment (UNIQUE moment_id+user_id). Nếu đã có → cập nhật lại.
 export async function createReaction(userId, momentId, { emoji = null }) {
   if (!emoji) {
-    throw Object.assign(new Error("Phải có emoji"), {
-      status: 400,
-    });
+    throw httpError(400, null, "Phải có emoji");
   }
 
   if (!(await canViewMoment(userId, momentId))) {
-    throw Object.assign(new Error("Không tìm thấy moment"), { status: 404 });
+    throw httpError(404, null, "Không tìm thấy moment");
   }
 
-  const cleanEmoji = String(emoji).slice(0, 10);
+  const cleanEmoji = String(emoji).trim();
+  // Chỉ chấp nhận 1 grapheme emoji: Extended_Pictographic + tuỳ chọn skin tone
+  // modifier + variation selector + ZWJ sequence.
+  if (
+    !/^\p{Extended_Pictographic}[\u{1F3FB}-\u{1F3FF}]?(\u200d\p{Extended_Pictographic}[\u{1F3FB}-\u{1F3FF}]?)*\uFE0F?$/u.test(
+      cleanEmoji,
+    )
+  ) {
+    throw httpError(400, null, "Emoji không hợp lệ");
+  }
   const result = await dbPool.query(
     `INSERT INTO moment_reactions (moment_id, user_id, reaction_emoji)
      VALUES ($1, $2, $3)

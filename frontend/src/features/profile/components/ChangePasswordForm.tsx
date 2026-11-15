@@ -2,13 +2,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/features/auth/components/PasswordInput";
 import { authClient } from "@/services/authClient";
@@ -58,12 +51,7 @@ export const ChangePasswordForm: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("profile.passwordTitle")}</CardTitle>
-        <CardDescription>{t("profile.passwordDesc")}</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="current-password">
@@ -124,7 +112,6 @@ export const ChangePasswordForm: React.FC = () => {
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+    </>
   );
 };

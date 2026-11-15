@@ -1,53 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { popIn } from "@/lib/motion";
-import { SearchBar } from "./components/SearchBar";
-import { useDebounce } from "@/hooks/useDebounce";
-import { toMedia, MediaListItem } from "@/services/media";
-import { useSpotlightSearch } from "@/hooks/useSpotlightSearch";
-import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import {
-  Loader2,
-  Search,
-  User,
-  Image,
-  FolderOpen,
-  Boxes,
-  GripHorizontal,
-  Sparkles,
-  Heart,
-  Wand2,
-  X,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { GripHorizontal, Loader2, Search, X } from "lucide-react";
+import { popIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { AI_BAR, AI_CHIP } from "@/lib/aiColors";
-import {
-  describeScoreParts,
-  presentScoreParts,
-  SCORE_SOURCE,
-  sourceChipsFor,
-} from "./searchScore";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Lightbox } from "@/features/gallery/components/Lightbox";
+import { AI_CHIP } from "@/lib/aiColors";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useResizablePanel } from "@/hooks/useResizablePanel";
 import { useDraggablePanel } from "@/hooks/useDraggablePanel";
-import { Media } from "@/types";
-import { useNavigate } from "react-router-dom";
+import { type Media, toMedia, type MediaListItem, type FriendSearchResult } from "@tng/shared";
+import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { AlbumFormDialog } from "@/features/albums/components/AlbumFormDialog";
-import { LABEL_DOT } from "@/features/favorites/labelColors";
-import { parseScopedQuery, suggestScopes, type SearchScope } from "./searchScope";
+import { SearchBar } from "./components/SearchBar";
+import { ScopeIcon } from "./components/ScopeIcon";
+import { ScopeQuickPicks, ScopeSuggestions } from "./components/ScopeSuggestions";
+import { SearchResults } from "./components/SearchResults";
+import { sourceChipsFor } from "./searchScore";
+import { useScopedQuery } from "./useScopedQuery";
 import { useSearchScopes } from "./useSearchScopes";
-
-/** Icon của 1 phạm vi tìm kiếm (Yêu thích / nhãn / album / ảnh đã sửa). */
-const ScopeIcon: React.FC<{ scope: SearchScope; className?: string }> = ({ scope, className }) => {
-  if (scope.kind === "favorites") return <Heart className={cn("size-3.5 text-rose-500", className)} />;
-  if (scope.kind === "album") return <FolderOpen className={cn("size-3.5", className)} />;
-  if (scope.kind === "edited") return <Wand2 className={cn("size-3.5", className)} />;
-  return (
-    <span className={cn("size-2 shrink-0 rounded-full", scope.color && LABEL_DOT[scope.color])} />
-  );
-};
+import { useSpotlightSearch } from "./useSpotlightSearch";
 
 interface SearchViewProps {
   open: boolean;
@@ -61,83 +33,19 @@ const PANEL_MIN_WIDTH = 380;
 const PANEL_MIN_HEIGHT = 260;
 
 export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
-  const [query, setQuery] = useState("");
-  const debouncedQuery = useDebounce(query, 400);
-  // Phạm vi (chip trong ô search): chỉ tìm trong Yêu thích / 1 nhãn / 1 album.
-  const [scope, setScope] = useState<SearchScope | null>(null);
   const scopes = useSearchScopes(open);
-  // 4 nguồn song song (bạn bè · album · ảnh · vật thể) — hooks/useSpotlightSearch;
-  // có phạm vi thì chỉ tìm ảnh trong phạm vi.
-  // Ô vừa trống (chọn chip / xoá) → dùng ngay, không chờ debounce tìm chữ cũ.
+  // Ô tìm + chip phạm vi (Yêu thích / 1 nhãn / 1 album) + gợi ý "Tìm trong …".
+  const input = useScopedQuery(scopes);
+  const { query, scope, suggestions } = input;
+  const debouncedQuery = useDebounce(query, 400);
+  // 4 nguồn song song (bạn bè · album · ảnh · vật thể) — useSpotlightSearch.ts;
+  // có phạm vi thì chỉ tìm ảnh trong phạm vi. Ô vừa trống (chọn chip / xoá) →
+  // dùng ngay, không chờ debounce tìm chữ cũ.
   const { results, reset: resetResults } = useSpotlightSearch(
     query.trim() ? debouncedQuery : "",
     scope?.key,
   );
-  // Gõ "fav", "in ảnh"… → gợi ý "Tìm trong …" (Tab / Enter chọn gợi ý đầu).
-  const suggestions = scope ? [] : suggestScopes(query, scopes);
-  // ↑ / ↓ chuyển gợi ý đang chọn (bỏ qua mục "Sắp có"); gõ chữ → về gợi ý đầu.
-  const selectable = suggestions.filter((s) => !s.disabled);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeSuggestion = selectable[Math.min(activeIndex, selectable.length - 1)];
-
-  // Chèn / gỡ chip (hoặc bấm chuột vào gợi ý) → con trỏ về lại cuối ô nhập
-  // để gõ tiếp liền mạch.
-  const inputRef = useRef<HTMLInputElement>(null);
-  const refocusInput = () =>
-    requestAnimationFrame(() => {
-      const input = inputRef.current;
-      if (!input) return;
-      input.focus();
-      input.setSelectionRange(input.value.length, input.value.length);
-    });
-
-  // Chữ vừa "đổi" thành chip (vd "fav"). Bộ gõ tiếng Việt chốt chữ đang gõ
-  // dở khi bấm Tab → chèn lại chữ đó ngay sau khi đã xoá; bỏ qua lần chèn này.
-  const consumedRef = useRef<{ text: string; until: number } | null>(null);
-
-  const pickScope = (next: SearchScope, rest = "") => {
-    if (next.disabled) return;
-    consumedRef.current = { text: query, until: performance.now() + 300 };
-    setScope(next);
-    setQuery(rest);
-    refocusInput();
-  };
-
-  const clearScope = () => {
-    setScope(null);
-    refocusInput();
-  };
-
-  // Cú pháp tắt "favorite.dog" → chip Yêu thích + "dog".
-  const handleQueryChange = (value: string) => {
-    setActiveIndex(0);
-    const consumed = consumedRef.current;
-    if (consumed && performance.now() < consumed.until && value.trim() === consumed.text.trim()) {
-      consumedRef.current = null;
-      setQuery("");
-      return;
-    }
-    const parsed = scope ? null : parseScopedQuery(value, scopes);
-    if (parsed) pickScope(parsed.scope, parsed.rest);
-    else setQuery(value);
-  };
-
-  const handleQueryKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === "ArrowDown" || e.key === "ArrowUp") && selectable.length > 0) {
-      e.preventDefault();
-      const step = e.key === "ArrowDown" ? 1 : -1;
-      const current = Math.min(activeIndex, selectable.length - 1);
-      setActiveIndex((current + step + selectable.length) % selectable.length);
-    } else if ((e.key === "Tab" || e.key === "Enter") && !e.shiftKey && activeSuggestion) {
-      e.preventDefault();
-      pickScope(activeSuggestion);
-    } else if (e.key === "Backspace" && scope && e.currentTarget.selectionStart === 0 && e.currentTarget.selectionEnd === 0) {
-      e.preventDefault();
-      clearScope();
-    }
-  };
   const reduce = useReducedMotion();
-  const openShare = useGalleryActionsStore((s) => s.openShare);
   const { t } = useTranslation();
   const navigate = useNavigate();
   // "Lưu thành album thông minh" từ câu đang tìm (album tự cập nhật theo câu).
@@ -208,21 +116,26 @@ export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
     };
   }, [open, onClose]);
 
+  const resetInput = input.reset;
   useEffect(() => {
     if (open) {
-      setQuery("");
-      setScope(null);
+      resetInput();
       resetResults();
       setLightbox(null);
     }
-  }, [open, resetResults]);
+  }, [open, resetInput, resetResults]);
 
-  const handleSendToFriend = useCallback(
-    (friendId: string) => {
-      openShare([], { friendId });
+  // Bạn bè → gửi ảnh; người lạ → trang Bạn bè với câu đang tìm.
+  const handleFriend = useCallback(
+    (friend: FriendSearchResult) => {
+      navigate(
+        friend.relationship === "friends"
+          ? `/share?to=${encodeURIComponent(friend.id)}`
+          : `/friends?q=${encodeURIComponent(query.trim())}`,
+      );
       onClose();
     },
-    [openShare, onClose],
+    [navigate, onClose, query],
   );
 
   const openLightbox = useCallback(
@@ -289,13 +202,13 @@ export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
                 />
                 <SearchBar
                   value={query}
-                  onChange={handleQueryChange}
+                  onChange={input.onChange}
                   onClear={() => {
-                    setQuery("");
-                    clearScope();
+                    input.setQuery("");
+                    input.clearScope();
                   }}
-                  inputRef={inputRef}
-                  onKeyDown={handleQueryKeyDown}
+                  inputRef={input.inputRef}
+                  onKeyDown={input.onKeyDown}
                   prefix={
                     scope && (
                       <span className="flex max-w-[45%] shrink-0 items-center gap-1.5 rounded-full bg-muted py-0.5 pr-1 pl-2 text-xs font-medium dark:bg-white/10">
@@ -303,7 +216,7 @@ export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
                         <span className="truncate">{scope.name}</span>
                         <button
                           type="button"
-                          onClick={clearScope}
+                          onClick={input.clearScope}
                           onMouseDown={(e) => e.preventDefault()}
                           aria-label={t("search.scope.remove")}
                           className="rounded-full p-0.5 text-muted-foreground hover:bg-background/60 hover:text-foreground"
@@ -348,42 +261,12 @@ export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
 
             <div className="flex-1 min-h-0 overflow-y-auto p-3">
               {suggestions.length > 0 && (
-                <div className="mb-4">
-                  <div className="mb-2 px-1 font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                    {t("search.scope.searchIn")}
-                  </div>
-                  <div className="space-y-0.5">
-                    {suggestions.map((s) => (
-                      <button
-                        key={s.key}
-                        onMouseEnter={() => !s.disabled && setActiveIndex(selectable.indexOf(s))}
-                        aria-selected={s === activeSuggestion}
-                        type="button"
-                        disabled={s.disabled}
-                        onClick={() => pickScope(s)}
-                        onMouseDown={(e) => e.preventDefault()}
-                        className={cn(
-                          "flex w-full items-center gap-2.5 rounded-lg p-2 text-left text-sm transition-colors",
-                          s.disabled ? "cursor-not-allowed opacity-50" : "hover:bg-accent/50",
-                          s === activeSuggestion && "bg-accent/60",
-                        )}
-                      >
-                        <span className="flex size-6 items-center justify-center">
-                          <ScopeIcon scope={s} />
-                        </span>
-                        <span className="min-w-0 flex-1 truncate">{s.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {s.disabled ? t("search.scope.soon") : t(`search.scope.kind.${s.kind}`)}
-                        </span>
-                        {s === activeSuggestion && (
-                          <kbd className="hidden h-5 items-center rounded-md bg-muted/70 px-1.5 font-mono text-[10px] text-muted-foreground sm:inline-flex">
-                            Tab
-                          </kbd>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <ScopeSuggestions
+                  suggestions={suggestions}
+                  active={input.activeSuggestion}
+                  onHover={input.hover}
+                  onPick={(s) => input.pickScope(s)}
+                />
               )}
 
               {results.loading && (
@@ -410,217 +293,19 @@ export const SearchView: React.FC<SearchViewProps> = ({ open, onClose }) => {
                 )}
 
               {!results.loading && hasResults && (
-                <div className="space-y-4">
-                  {results.friends.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2 px-1">
-                        <User className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                          {t("search.friendResults")} ({results.friends.length})
-                        </span>
-                      </div>
-                      <div className="space-y-1">
-                        {results.friends.map((item) => (
-                          <button
-                            key={item.user.id}
-                            onClick={() => handleSendToFriend(item.user.id)}
-                            className={cn(
-                              "w-full flex items-center gap-3 p-2 rounded-lg",
-                              "hover:bg-accent/50 transition-colors text-left",
-                            )}
-                          >
-                            <Avatar className="h-8 w-8 shrink-0">
-                              <AvatarImage
-                                src={item.user.avatar_url ?? undefined}
-                              />
-                              <AvatarFallback className="text-xs">
-                                {item.user.name?.charAt(0)?.toUpperCase() ??
-                                  "?"}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium truncate">
-                                {item.user.name}
-                              </div>
-                              <div className="text-xs text-muted-foreground truncate">
-                                {item.user.email}
-                              </div>
-                            </div>
-                            <span className="text-xs text-primary shrink-0">
-                              {t("search.sendToFriend")}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {results.albums.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2 px-1">
-                        <FolderOpen className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                          {t("search.albumResults")} ({results.albums.length})
-                        </span>
-                      </div>
-                      <div className="space-y-1">
-                        {results.albums.map((album) => (
-                          <button
-                            key={album.id}
-                            type="button"
-                            onClick={() => openAlbum(album.id)}
-                            className="flex w-full items-center gap-3 p-2 rounded-lg text-left hover:bg-accent/50 transition-colors"
-                          >
-                            {album.coverUrl ? (
-                              <img
-                                src={album.coverUrl}
-                                alt={album.name}
-                                className="h-10 w-10 rounded object-cover shrink-0"
-                              />
-                            ) : (
-                              <div className="h-10 w-10 rounded bg-muted flex items-center justify-center shrink-0">
-                                <FolderOpen className="h-4 w-4 text-muted-foreground" />
-                              </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <div className="text-sm font-medium truncate">
-                                {album.name}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {album.mediaCount} {t("search.photos")}
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {results.media.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2 px-1">
-                        <Image className="h-3.5 w-3.5 text-sky-500" />
-                        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                          {scope
-                            ? t("search.scope.results", { name: scope.name })
-                            : t("search.mediaResults")}{" "}
-                          ({results.media.length})
-                        </span>
-                        {/* Album thông minh chỉ lưu được câu tìm, không lưu phạm vi */}
-                        {!scope && (
-                          <button
-                            type="button"
-                            onClick={() => setSavingQuery(debouncedQuery.trim())}
-                            className="ml-auto flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs text-primary hover:bg-primary/10"
-                          >
-                            <Sparkles className="h-3 w-3" />
-                            {t("albums.saveSearch")}
-                          </button>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                        {results.media.map((item) => (
-                          <button
-                            key={item.id}
-                            className="relative aspect-square rounded-md overflow-hidden group focus:outline-none focus:ring-2 focus:ring-ring"
-                            data-media-id={item.id}
-                            onClick={() => openLightbox(results.media, item)}
-                            title={describeScoreParts(item.scoreParts)}
-                          >
-                            <img
-                              src={item.thumbnailUrl}
-                              alt={item.title ?? ""}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            />
-                            {typeof item.score === "number" && (
-                              <span className="absolute bottom-1 left-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                                {Math.round(item.score * 100)}%
-                              </span>
-                            )}
-                            {/* Nguồn góp điểm (CLIP / Tag / YOLO) — chi tiết ở tooltip */}
-                            {item.scoreParts && (
-                              <span className="absolute top-1 right-1 flex gap-0.5 rounded-full bg-black/50 p-1">
-                                {presentScoreParts(item.scoreParts).map((k) => (
-                                    <span
-                                      key={k}
-                                      className={cn("size-1.5 rounded-full", AI_BAR[SCORE_SOURCE[k]])}
-                                    />
-                                  ))}
-                              </span>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {results.objects.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2 px-1">
-                        <Boxes className="h-3.5 w-3.5 text-emerald-500" />
-                        <span className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">
-                          {t("search.objectResults")} ({results.objects.length})
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                        {results.objects.map((item) => (
-                          <button
-                            key={item.id}
-                            className="relative aspect-square rounded-md overflow-hidden group focus:outline-none focus:ring-2 focus:ring-ring"
-                            data-media-id={item.id}
-                            onClick={() => openLightbox(results.objects, item)}
-                          >
-                            <img
-                              src={item.thumbnailUrl}
-                              alt={item.title ?? ""}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            />
-                            {typeof item.score === "number" && (
-                              <span className="absolute bottom-1 left-1 rounded bg-emerald-400 px-1.5 py-0.5 text-[10px] font-medium text-black">
-                                {Math.round(item.score * 100)}%
-                              </span>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <SearchResults
+                  results={results}
+                  scopeName={scope?.name ?? null}
+                  onFriend={handleFriend}
+                  onAlbum={openAlbum}
+                  onMedia={openLightbox}
+                  // Album thông minh chỉ lưu được câu tìm, không lưu phạm vi
+                  onSaveQuery={scope ? undefined : () => setSavingQuery(debouncedQuery.trim())}
+                />
               )}
 
               {!hasQuery && !results.loading && suggestions.length === 0 && (
-                <div className="flex flex-col items-center gap-4 py-10 text-center text-sm text-muted-foreground">
-                  <p>{t("search.hint")}</p>
-                  {/* Chọn nhanh phạm vi — Yêu thích + nhãn (album: gõ tên) */}
-                  <div className="flex max-w-md flex-wrap justify-center gap-1.5">
-                    {scopes
-                      .filter((s) => s.kind !== "album")
-                      .map((s) => (
-                        <button
-                          key={s.key}
-                          type="button"
-                          disabled={s.disabled}
-                          onClick={() => pickScope(s)}
-                        onMouseDown={(e) => e.preventDefault()}
-                          title={s.disabled ? t("search.scope.soon") : undefined}
-                          className={cn(
-                            "inline-flex h-7 items-center gap-1.5 rounded-full border border-border/60 px-2.5 text-xs transition-colors",
-                            s.disabled
-                              ? "cursor-not-allowed opacity-50"
-                              : "hover:border-border hover:text-foreground",
-                          )}
-                        >
-                          <ScopeIcon scope={s} />
-                          {s.name}
-                          {s.disabled && (
-                            <span className="font-mono text-[9px] tracking-widest uppercase">
-                              {t("search.scope.soon")}
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                  </div>
-                </div>
+                <ScopeQuickPicks scopes={scopes} onPick={(s) => input.pickScope(s)} />
               )}
             </div>
 

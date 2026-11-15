@@ -1,7 +1,9 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2, Users } from "lucide-react";
+import { Lock, Loader2, Users } from "lucide-react";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -9,12 +11,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { MediaPicker } from "@/features/gallery/components/MediaPicker";
-import { Moment, MomentVisibility } from "@/types";
+import { Textarea } from "@/components/ui/textarea";
+import { MediaPicker } from "@/features/media-picker/MediaPicker";
+import { Moment, MomentVisibility } from "@tng/shared";
 import { cn } from "@/lib/utils";
 import { MomentTemplatePicker } from "./MomentTemplatePicker";
 import { MomentFriendPicker } from "./MomentFriendPicker";
 import { useMomentDraft } from "../useMomentDraft";
+
+const VISIBILITIES: { value: MomentVisibility; icon: React.ElementType; labelKey: string }[] = [
+  { value: "circle", icon: Users, labelKey: "moments.visibilityCircle" },
+  { value: "private", icon: Lock, labelKey: "moments.visibilityPrivate" },
+];
+
+/** 1 mục của form: nhãn nhỏ + chú thích phải (đếm, số bạn…) + nội dung. */
+const Section: React.FC<{ title: React.ReactNode; hint?: React.ReactNode; children: React.ReactNode }> = ({
+  title,
+  hint,
+  children,
+}) => (
+  <section className="space-y-2">
+    <div className="flex items-center justify-between gap-2">
+      <h3 className="text-xs font-medium text-muted-foreground">{title}</h3>
+      {hint !== undefined && (
+        <span className="flex items-center gap-1 text-xs font-medium tabular-nums text-muted-foreground">{hint}</span>
+      )}
+    </div>
+    {children}
+  </section>
+);
 
 type Props = {
   open: boolean;
@@ -64,119 +89,114 @@ export const CreateMomentDialog: React.FC<Props> = ({
     onCreated,
     onClose: () => onOpenChange(false),
   });
+  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+
+  const collab = isCollabTemplate && mode === "collab";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
+      <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden sm:max-w-lg">
+        <DialogHeader className="pb-4">
           <DialogTitle>
             {isEditing ? t("moments.editDraft") : t("moments.newMoment")}
           </DialogTitle>
-          <DialogDescription>{t("moments.selectTemplate")}</DialogDescription>
+          <DialogDescription>{t("moments.createDesc")}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
-          {error && <p className="text-xs text-destructive">{error}</p>}
-
-          {/* Bước 1 + 2 — Template + chế độ (edit mode chỉ cho template ghép nhiều ảnh) */}
-          <MomentTemplatePicker
-            template={template}
-            onTemplateChange={(value) => {
-              setTemplate(value);
-              setSelectedIds([]);
-            }}
-            mode={mode}
-            onModeChange={(value) => {
-              setMode(value);
-              if (value === "self") setFriendIds([]);
-            }}
-            isEditing={isEditing}
-          />
-
-          {/* Chọn bạn bè (chế độ collab) */}
-          {isCollabTemplate && mode === "collab" && (
-            <MomentFriendPicker
-              selectedIds={friendIds}
-              max={maxFriendCount}
-              onToggle={toggleFriend}
-            />
+        <DialogBody className="space-y-5">
+          {error && (
+            <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>
           )}
 
-          {/* Bước 3 — Picker ảnh */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between gap-2 text-xs">
-              <p className="text-muted-foreground">
-                {isCollabTemplate && mode === "collab"
-                  ? t("moments.yourPhotoSlots", {
-                      min: 1,
-                      max: photoLimit,
-                      total: slotCount,
-                    })
-                  : t("moments.selectPhoto")}
+          {/* Bố cục (template) + chế độ (edit chỉ cho template ghép nhiều ảnh) */}
+          <Section title={t("moments.sectionLayout")}>
+            <MomentTemplatePicker
+              template={template}
+              onTemplateChange={(value) => {
+                setTemplate(value);
+                setSelectedIds([]);
+              }}
+              mode={mode}
+              onModeChange={(value) => {
+                setMode(value);
+                if (value === "self") setFriendIds([]);
+              }}
+              isEditing={isEditing}
+            />
+          </Section>
+
+          {collab && (
+            <Section
+              title={t("moments.sectionFriends")}
+              hint={
+                <>
+                  <Users className="size-3.5" />
+                  {friendIds.length}/{maxFriendCount}
+                </>
+              }
+            >
+              <MomentFriendPicker selectedIds={friendIds} max={maxFriendCount} onToggle={toggleFriend} />
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
+                {t("moments.collabHint")}
+                {maxFriendCount > 1 && ` ${t("moments.collabSplitHint")}`}
               </p>
-              <p
-                className={cn(
-                  "font-medium",
-                  isCollabTemplate &&
-                    selectedIds.length < photoLimit
-                    ? "text-amber-500"
-                    : "text-primary",
-                )}
-              >
+            </Section>
+          )}
+
+          <Section
+            title={
+              collab
+                ? t("moments.yourPhotoSlots", { min: 1, max: photoLimit, total: slotCount })
+                : t("moments.sectionPhotos")
+            }
+            hint={
+              <span className={cn(selectedIds.length < photoLimit && isCollabTemplate ? "text-amber-500" : "text-primary")}>
                 {selectedIds.length}/{photoLimit}
-              </p>
-            </div>
+              </span>
+            }
+          >
             <MediaPicker
-              selectedIds={new Set(selectedIds)}
+              selectedIds={selectedIdSet}
+              max={photoLimit}
+              showCount={false}
               onToggle={(item) => toggleMedia(item.id)}
             />
-          </div>
+          </Section>
 
-          {/* Caption */}
-          <textarea
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-            maxLength={280}
-            rows={2}
-            placeholder={t("moments.captionPlaceholder")}
-            className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40"
-          />
+          <Section title={t("moments.sectionCaption")} hint={`${caption.length}/280`}>
+            <Textarea
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              maxLength={280}
+              rows={2}
+              placeholder={t("moments.captionPlaceholder")}
+              className="min-h-0 rounded-md border-border px-3 py-2"
+            />
+          </Section>
 
-          {/* Visibility */}
-          <label className="flex items-center justify-between gap-3 text-sm">
-            <span className="text-muted-foreground">
-              {t("moments.visibility")}
-            </span>
-            <select
-              value={visibility}
-              onChange={(e) =>
-                setVisibility(e.target.value as MomentVisibility)
-              }
-              className="rounded-md border border-border bg-background px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-primary/40"
-            >
-              <option value="circle">{t("moments.visibilityCircle")}</option>
-              <option value="public">{t("moments.visibilityPublic")}</option>
-              <option value="private">{t("moments.visibilityPrivate")}</option>
-            </select>
-          </label>
-
-          {/* Ghi chú chế độ collab */}
-          {isCollabTemplate && mode === "collab" && (
-            <div className="space-y-1">
-              <p className="flex items-start gap-1.5 text-[11px] leading-relaxed text-muted-foreground">
-                <Users className="mt-0.5 size-3.5 shrink-0 text-primary" />
-                {t("moments.collabHint")}
-              </p>
-              {maxFriendCount > 1 && (
-                <p className="text-[11px] leading-relaxed text-muted-foreground/80">
-                  {t("moments.collabSplitHint")}
-                </p>
-              )}
+          <Section title={t("moments.visibility")}>
+            <div role="radiogroup" className="grid grid-cols-3 gap-1 rounded-lg bg-muted/50 p-1">
+              {VISIBILITIES.map(({ value, icon: Icon, labelKey }) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={visibility === value}
+                  onClick={() => setVisibility(value)}
+                  className={cn(
+                    "flex items-center justify-center gap-1.5 rounded-md px-2 py-1.5 text-xs transition",
+                    visibility === value ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <Icon className="size-3.5" />
+                  {t(labelKey)}
+                </button>
+              ))}
             </div>
-          )}
-        </div>
+          </Section>
+        </DialogBody>
 
-        <DialogFooter>
+        <DialogFooter className="border-t border-border/50 pt-4">
           <Button
             variant="outline"
             onClick={() => {

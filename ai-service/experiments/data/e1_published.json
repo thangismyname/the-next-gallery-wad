@@ -1,0 +1,13 @@
+{
+  "_readme": "Số công bố để đối chiếu E1 (R@K, %). Khoá = MODEL:PRETRAINED (OpenCLIP) → dataset. t2i = text→image (image retrieval), i2t = image→text (text retrieval). caption_prefix = tiền tố paper thêm vào caption khi đo.",
+  "ViT-L-14-336:openai": {
+    "flickr30k": {"t2i_R@1": 68.7, "t2i_R@5": 90.6, "t2i_R@10": 95.2,
+                  "i2t_R@1": 88.0, "i2t_R@5": 98.7, "i2t_R@10": 99.4,
+                  "caption_prefix": "a photo of",
+                  "source": "Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, Flickr30k 1K test"},
+    "mscoco_captions": {"t2i_R@1": 37.8, "t2i_R@5": 62.4, "t2i_R@10": 72.2,
+                        "i2t_R@1": 58.4, "i2t_R@5": 81.5, "i2t_R@10": 88.1,
+                        "caption_prefix": "a photo of",
+                        "source": "Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, MSCOCO 5K test"}
+  }
+}

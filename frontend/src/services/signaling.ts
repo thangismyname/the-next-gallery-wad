@@ -10,26 +10,30 @@
 export const SIGNAL = {
   // Client → Server
   AUTH: "auth",
-  ROOM_CREATE: "room:create",
-  ROOM_JOIN: "room:join",
-  ROOM_LEAVE: "room:leave",
-  SIGNAL_OFFER: "signal:offer",
-  SIGNAL_ANSWER: "signal:answer",
-  SIGNAL_ICE: "signal:ice-candidate",
-  TRANSFER_METADATA: "transfer:metadata",
-  TRANSFER_ACCEPT: "transfer:accept",
-  TRANSFER_REJECT: "transfer:reject",
-  TRANSFER_PROGRESS: "transfer:progress",
-  TRANSFER_COMPLETE: "transfer:complete",
+  XFER_HOST: "xfer:host",
+  XFER_UNHOST: "xfer:unhost",
+  XFER_JOIN: "xfer:join",
+  XFER_LEAVE: "xfer:leave",
+  XFER_REPORT: "xfer:report",
+  XFER_RELAY_REQUEST: "xfer:relay-request",
+  /** Hai chiều: offer / answer / ICE / trao khoá (server chỉ chuyển tiếp). */
+  XFER_SIGNAL: "xfer:signal",
 
   // Server → Client
   AUTH_SUCCESS: "auth:success",
-  AUTH_ERROR: "auth:error",
-  ROOM_CREATED: "room:created",
-  ROOM_JOINED: "room:joined",
-  ROOM_PEER_JOINED: "room:peer-joined",
-  ROOM_PEER_LEFT: "room:peer-left",
-  SHARE_INVITE: "share:invite",
+  XFER_HOSTING: "xfer:hosting",
+  XFER_JOINED: "xfer:joined",
+  XFER_PEER_JOINED: "xfer:peer-joined",
+  XFER_PEER_LEFT: "xfer:peer-left",
+  XFER_HOST_ONLINE: "xfer:host-online",
+  XFER_HOST_OFFLINE: "xfer:host-offline",
+  XFER_RECIPIENT: "xfer:recipient",
+  XFER_RELAY: "xfer:relay",
+  XFER_INCOMING: "xfer:incoming",
+  XFER_CLOSED: "xfer:closed",
+  FRIEND_REQUEST: "friend:request",
+  FRIEND_ACCEPTED: "friend:accepted",
+  FRIEND_CHANGED: "friend:changed",
   PRESENCE_ONLINE: "presence:online",
   PRESENCE_OFFLINE: "presence:offline",
   PRESENCE_SNAPSHOT: "presence:snapshot",
@@ -39,13 +43,27 @@ export const SIGNAL = {
   MOMENT_MEME_ADDED: "moment:meme-added",
   MOMENT_MEME_REMOVED: "moment:meme-removed",
   MOMENT_MEME_REACTED: "moment:meme-reacted",
+  MOMENT_REACTION: "moment:reaction",
+  MOMENT_DELETED: "moment:deleted",
+  MOMENT_LEFT: "moment:left",
+  MOMENT_UPDATED: "moment:updated",
   ERROR: "error",
 } as const;
 
-export type SignalType = (typeof SIGNAL)[keyof typeof SIGNAL] | string;
-
 type SignalPayload = Record<string, unknown>;
 type SignalHandler = (payload: SignalPayload) => void;
+
+const GUEST_ID_KEY = "tng.guestId";
+
+/** Id ổn định của trình duyệt khi chưa đăng nhập (nhận file qua link / mã). */
+export function getGuestId(): string {
+  let id = localStorage.getItem(GUEST_ID_KEY);
+  if (!id) {
+    id = crypto.randomUUID().replace(/-/g, "");
+    localStorage.setItem(GUEST_ID_KEY, id);
+  }
+  return id;
+}
 
 // Backoff: 1s, 2s, 4s, 8s, 16s, 30s (max)
 function backoffDelay(attempt: number): number {
@@ -61,6 +79,8 @@ class SignalingClient {
   private readonly maxReconnectAttempts = 10;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private intentionallyClosed = false;
+  /** Tên hiển thị khi là khách (người gửi thấy trong danh sách người nhận). */
+  guestName: string | null = null;
 
   constructor(url: string) {
     this.url = url;
@@ -80,7 +100,8 @@ class SignalingClient {
 
     this.ws.onopen = () => {
       this.reconnectAttempts = 0;
-      this.send(SIGNAL.AUTH, {});
+      // Có cookie → server nhận là user; không → khách với guestId.
+      this.send(SIGNAL.AUTH, { guestId: getGuestId(), name: this.guestName });
       this.flushQueue();
     };
 

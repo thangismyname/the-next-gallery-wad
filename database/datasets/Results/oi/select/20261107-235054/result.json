@@ -1,0 +1,23 @@
+{
+  "classes": 174,
+  "splits": {
+    "train": {
+      "candidates": 428856,
+      "excluded_rotated": 4003,
+      "selected": 15000,
+      "min_pos": 100,
+      "median_pos": 101.0,
+      "p10_pos": 100.0,
+      "classes_below_half_min_pos": [
+        "Parking meter",
+        "Toaster",
+        "Hair dryer",
+        "Toothbrush",
+        "Island",
+        "Valley",
+        "Sunrise",
+        "Document"
+      ]
+    }
+  }
+}

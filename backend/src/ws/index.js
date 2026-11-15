@@ -13,7 +13,7 @@
 
 import { WebSocketServer } from "ws";
 import { handleConnection } from "./handlers/connection.handler.js";
-import { buildMessage } from "./protocol.js";
+import { logger } from "../lib/logger.js";
 
 let wss = null;
 
@@ -34,29 +34,16 @@ export function setupWebSocket(server, options = {}) {
   });
 
   wss.on("connection", (ws, req) => {
-    console.log(`[ws] New connection from ${req.socket.remoteAddress} on ${path}`);
+    logger.info(`[ws] New connection from ${req.socket.remoteAddress} on ${path}`);
     handleConnection(ws, req);
   });
 
   wss.on("error", (err) => {
-    console.error("[ws] WebSocketServer error:", err);
+    logger.error({ err }, "[ws] WebSocketServer error");
   });
 
-  console.log(`[ws] WebSocket server listening at ${path}`);
+  logger.info(`[ws] WebSocket server listening at ${path}`);
 
   return wss;
 }
 
-export function getWSS() {
-  return wss;
-}
-
-export function broadcastAll(type, payload) {
-  if (!wss) return;
-  const msg = buildMessage(type, payload);
-  for (const client of wss.clients) {
-    if (client.readyState === 1) {
-      client.send(msg);
-    }
-  }
-}

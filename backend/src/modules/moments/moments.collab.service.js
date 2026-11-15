@@ -1,11 +1,20 @@
 import { dbPool } from "../../config/db.js";
-import { COLLAB_SLOT_COUNT, MOMENT_JOIN } from "./moments.constants.js";
+import { updateMomentMeta } from "./moments.query.service.js";
+import {
+  COLLAB_SLOT_COUNT,
+  DRAFT_TTL_MS,
+  MOMENT_JOIN,
+  slotFilledSql,
+} from "./moments.constants.js";
 import { toMomentItem } from "./moments.mapper.js";
 import { attachSlots } from "./moments.query.service.js";
+import { httpError } from "../../middleware/errorHandler.js";
 
 // ---- Validate + chuẩn hoá payload moment (single / self-fill / collab) ----
 // Dùng chung cho createMoment (tạo mới) và updateDraftMoment (chỉnh sửa draft).
-async function normalizeDraftPayload(userId, payload) {
+// `db` = client của transaction khi gọi từ updateDraftMoment → đọc media/bạn bè
+// trong CÙNG transaction (P2.5).
+async function normalizeDraftPayload(userId, payload, db = dbPool) {
   const {
     template = "single",
     mediaId = null,
@@ -21,7 +30,7 @@ async function normalizeDraftPayload(userId, payload) {
 
   if (!isCollab) {
     if (!mediaId) {
-      throw Object.assign(new Error("Thiếu ảnh cho moment"), { status: 400 });
+      throw httpError(400, null, "Thiếu ảnh cho moment");
     }
     creatorMediaIds = [mediaId];
   } else if (collaboratorIds.length === 0) {
@@ -60,12 +69,10 @@ async function normalizeDraftPayload(userId, payload) {
       );
     }
     if (collaboratorIds.includes(userId)) {
-      throw Object.assign(new Error("Không thể mời chính mình"), {
-        status: 400,
-      });
+      throw httpError(400, null, "Không thể mời chính mình");
     }
     if (new Set(collaboratorIds).size !== collaboratorIds.length) {
-      throw Object.assign(new Error("Bạn bè trùng lặp"), { status: 400 });
+      throw httpError(400, null, "Bạn bè trùng lặp");
     }
   }
 
@@ -73,7 +80,7 @@ async function normalizeDraftPayload(userId, payload) {
   const ownerMediaIds = creatorMediaIds;
 
   if (ownerMediaIds.length > 0) {
-    const owned = await dbPool.query(
+    const owned = await db.query(
       `SELECT id FROM media
        WHERE id = ANY($1::uuid[]) AND user_id = $2 AND deleted_at IS NULL`,
       [ownerMediaIds, userId],
@@ -88,7 +95,7 @@ async function normalizeDraftPayload(userId, payload) {
 
   // --- Kiểm tra bạn bè (chỉ khi collaborative) ---
   if (collaboratorIds.length > 0) {
-    const friends = await dbPool.query(
+    const friends = await db.query(
       `SELECT addressee_id FROM friendships
        WHERE status = 'accepted'
          AND (
@@ -156,13 +163,21 @@ async function insertMomentSlots(client, momentId, userId, norm) {
 }
 
 // Nạp 1 moment (kèm slots + item response) theo id.
-async function getMomentItem(momentId, userId) {
+export async function getMomentItem(momentId, userId) {
   const rowResult = await dbPool.query(`${MOMENT_JOIN} WHERE m.id = $1`, [
     momentId,
   ]);
   if (rowResult.rows.length === 0) return null;
   await attachSlots(rowResult.rows);
   return toMomentItem(rowResult.rows[0], userId);
+}
+
+// Sửa caption/visibility của moment đã đăng (P3.1).
+export async function patchMomentMeta(userId, momentId, patch) {
+  const ok = await updateMomentMeta(userId, momentId, patch);
+  if (!ok) return null;
+  const item = await getMomentItem(momentId, userId);
+  return item;
 }
 
 // ---- Tạo moment từ 1 ảnh/video đã có trong media của user ----
@@ -202,49 +217,76 @@ export async function createMoment(userId, payload) {
 // Cho phép "quay lại edit" trước khi moment được hoàn thiện (vào feed):
 // đổi template/ảnh của mình/caption/visibility/bạn bè → rebuild lại slots.
 // Trả về { moment, previousCollaboratorIds } để route biết ai là bạn mới cần mời lại.
+//
+// Toàn bộ kiểm tra + ghi nằm trong 1 transaction, khoá row moments FOR UPDATE
+// (P2.5): tránh TOCTOU "còn slot trống" rồi bạn điền hết trong lúc đó, và tránh
+// xoá mất ảnh người khác khi đổi template.
 export async function updateDraftMoment(userId, momentId, payload) {
-  const draft = await dbPool.query(
-    `SELECT m.id, m.template
-     FROM moments m
-     WHERE m.id = $1 AND m.user_id = $2`,
-    [momentId, userId],
-  );
-  if (draft.rows.length === 0) {
-    throw Object.assign(new Error("Không tìm thấy moment"), { status: 404 });
-  }
-
-  // Chỉ cho chỉnh sửa khi vẫn còn draft (more 1 slot trống) — moment đủ ảnh rồi thì không đổi được.
-  const incomplete = await dbPool.query(
-    `SELECT 1 FROM moment_collab mc
-     WHERE mc.moment_id = $1 AND mc.filled_at IS NULL LIMIT 1`,
-    [momentId],
-  );
-  if (draft.rows[0].template === "single" || incomplete.rowCount === 0) {
-    throw Object.assign(new Error("Moment đã hoàn chỉnh, không thể chỉnh sửa"), {
-      status: 409,
-    });
-  }
-
-  const norm = await normalizeDraftPayload(userId, payload);
-  if (!norm.isCollab || norm.collaboratorIds.length === 0) {
-    throw Object.assign(
-      new Error("Draft collab phải giữ chế độ cùng bạn bè điền ảnh"),
-      { status: 400 },
-    );
-  }
-
-  // Bạn bè hiện tại của draft (để biết ai được thêm mới khi edit)
-  const previous = await dbPool.query(
-    `SELECT user_id FROM moment_collab
-     WHERE moment_id = $1 AND user_id <> $2 AND user_id IS NOT NULL
-     GROUP BY user_id`,
-    [momentId, userId],
-  );
-  const previousCollaboratorIds = previous.rows.map((r) => r.user_id);
-
   const client = await dbPool.connect();
+  let previousCollaboratorIds = [];
   try {
     await client.query("BEGIN");
+
+    const draft = await client.query(
+      `SELECT m.id, m.template, m.created_at
+       FROM moments m
+       WHERE m.id = $1 AND m.user_id = $2
+       FOR UPDATE`,
+      [momentId, userId],
+    );
+    if (draft.rows.length === 0) {
+      throw httpError(404, null, "Không tìm thấy moment");
+    }
+    const { template: currentTemplate, created_at: createdAt } = draft.rows[0];
+
+    // Draft quá hạn → không cho sửa (khớp 410 của fillMomentSlots).
+    if (new Date(createdAt) < new Date(Date.now() - DRAFT_TTL_MS)) {
+      throw httpError(410, null, "Moment này đã hết hạn");
+    }
+
+    // Vẫn phải là draft (còn ít nhất 1 slot chưa có ảnh) mới sửa được.
+    const incomplete = await client.query(
+      `SELECT 1 FROM moment_collab mc
+       WHERE mc.moment_id = $1 AND NOT ${slotFilledSql("mc")} LIMIT 1`,
+      [momentId],
+    );
+    if (currentTemplate === "single" || incomplete.rowCount === 0) {
+      throw httpError(409, null, "Moment đã hoàn chỉnh, không thể chỉnh sửa");
+    }
+
+    // Đổi template khi bạn bè đã điền ảnh → có thể làm mất ảnh của họ.
+    if (payload.template && payload.template !== currentTemplate) {
+      const others = await client.query(
+        `SELECT 1 FROM moment_collab mc
+         WHERE mc.moment_id = $1 AND mc.user_id <> $2
+           AND ${slotFilledSql("mc")} LIMIT 1`,
+        [momentId, userId],
+      );
+      if (others.rowCount > 0) {
+        throw Object.assign(
+          new Error("Không thể đổi template khi bạn bè đã điền ảnh"),
+          { status: 409 },
+        );
+      }
+    }
+
+    const norm = await normalizeDraftPayload(userId, payload, client);
+    if (!norm.isCollab || norm.collaboratorIds.length === 0) {
+      throw Object.assign(
+        new Error("Draft collab phải giữ chế độ cùng bạn bè điền ảnh"),
+        { status: 400 },
+      );
+    }
+
+    // Bạn bè hiện tại của draft (để biết ai được thêm mới khi edit)
+    const previous = await client.query(
+      `SELECT user_id FROM moment_collab
+       WHERE moment_id = $1 AND user_id <> $2 AND user_id IS NOT NULL
+       GROUP BY user_id`,
+      [momentId, userId],
+    );
+    previousCollaboratorIds = previous.rows.map((r) => r.user_id);
+
     await client.query(`DELETE FROM moment_collab WHERE moment_id = $1`, [
       momentId,
     ]);
@@ -257,7 +299,7 @@ export async function updateDraftMoment(userId, momentId, payload) {
     await insertMomentSlots(client, momentId, userId, norm);
     await client.query("COMMIT");
   } catch (error) {
-    await client.query("ROLLBACK");
+    await client.query("ROLLBACK").catch(() => {});
     throw error;
   } finally {
     client.release();
@@ -272,72 +314,112 @@ export async function updateDraftMoment(userId, momentId, payload) {
 // user gửi mediaIds (1+ ảnh) để lấp tuần tự những slot trống của họ.
 // 1 người giữ nhiều slot (vd 3 ảnh chỉ 1 bạn) thì gửi nhiều ảnh một lúc.
 // Trả về { filled, complete, moment } — complete = moment giờ đủ slot (vào feed).
+//
+// Toàn bộ đọc slot → ghi slot → tính complete nằm trong 1 transaction, khoá cả
+// moment lẫn các slot FOR UPDATE (P2.4): 2 request song song thì 1 thắng, 1 nhận
+// lỗi; không có trạng thái nửa vời và không notify trùng.
 export async function fillMomentSlots(userId, momentId, mediaIds) {
-  // Các slot trống của user hiện tại trong moment (sắp theo thứ tự ô)
-  const slotResult = await dbPool.query(
-    `SELECT mc.slot_index, m.created_at
-     FROM moment_collab mc
-     JOIN moments m ON m.id = mc.moment_id
-     WHERE mc.moment_id = $1 AND mc.user_id = $2 AND mc.filled_at IS NULL
-     ORDER BY mc.slot_index`,
-    [momentId, userId],
-  );
-  if (slotResult.rows.length === 0) {
-    throw Object.assign(
-      new Error("Không tìm thấy slot của bạn để điền ảnh"),
-      { status: 404 },
+  const client = await dbPool.connect();
+  let filled = 0;
+  try {
+    await client.query("BEGIN");
+
+    // Khoá moment: tránh updateDraftMoment chen ngang giữa chừng.
+    const momentResult = await client.query(
+      `SELECT id, created_at FROM moments WHERE id = $1 FOR UPDATE`,
+      [momentId],
     );
-  }
+    if (momentResult.rows.length === 0) {
+      throw httpError(404, null, "Không tìm thấy moment");
+    }
+    if (
+      new Date(momentResult.rows[0].created_at) <
+      new Date(Date.now() - DRAFT_TTL_MS)
+    ) {
+      throw httpError(410, null, "Moment này đã hết hạn");
+    }
 
-  const firstSlot = slotResult.rows[0];
-  if (firstSlot.created_at < new Date(Date.now() - 24 * 3600 * 1000)) {
-    throw Object.assign(new Error("Moment này đã hết hạn"), { status: 410 });
-  }
-
-  if (mediaIds.length === 0 || mediaIds.length > slotResult.rows.length) {
-    throw Object.assign(
-      new Error(`Bạn chỉ có ${slotResult.rows.length} slot trống để điền ảnh`),
-      { status: 400 },
+    // Có tham gia moment này không?
+    const member = await client.query(
+      `SELECT 1 FROM moment_collab WHERE moment_id = $1 AND user_id = $2 LIMIT 1`,
+      [momentId, userId],
     );
-  }
-  if (new Set(mediaIds).size !== mediaIds.length) {
-    throw Object.assign(new Error("Ảnh trùng lặp"), { status: 400 });
-  }
+    if (member.rowCount === 0) {
+      throw Object.assign(
+        new Error("Không tìm thấy slot của bạn để điền ảnh"),
+        { status: 404 },
+      );
+    }
 
-  // Kiểm tra media đều thuộc về user
-  const mediaResult = await dbPool.query(
-    `SELECT id FROM media WHERE id = ANY($1::uuid[]) AND user_id = $2 AND deleted_at IS NULL`,
-    [mediaIds, userId],
-  );
-  if (mediaResult.rows.length !== mediaIds.length) {
-    throw Object.assign(new Error("Không tìm thấy ảnh/video để điền slot"), {
-      status: 404,
-    });
-  }
-
-  // Lấp tuần tự các slot trống (ô đầu tiên ↔ ảnh đầu tiên)
-  const targetSlots = slotResult.rows.slice(0, mediaIds.length);
-  for (let i = 0; i < targetSlots.length; i++) {
-    await dbPool.query(
-      `UPDATE moment_collab
-       SET media_id = $1, filled_at = now()
-       WHERE moment_id = $2 AND slot_index = $3 AND user_id = $4`,
-      [mediaIds[i], momentId, targetSlots[i].slot_index, userId],
+    // Các slot còn trống của tôi (khoá trong transaction).
+    const slotResult = await client.query(
+      `SELECT mc.slot_index
+       FROM moment_collab mc
+       WHERE mc.moment_id = $1 AND mc.user_id = $2
+         AND NOT ${slotFilledSql("mc")}
+       ORDER BY mc.slot_index
+       FOR UPDATE`,
+      [momentId, userId],
     );
+    if (slotResult.rows.length === 0) {
+      throw Object.assign(
+        new Error("Bạn đã điền đủ ảnh cho moment này"),
+        { status: 409 },
+      );
+    }
+
+    if (mediaIds.length === 0 || mediaIds.length > slotResult.rows.length) {
+      throw Object.assign(
+        new Error(`Bạn chỉ có ${slotResult.rows.length} slot trống để điền ảnh`),
+        { status: 400 },
+      );
+    }
+    if (new Set(mediaIds).size !== mediaIds.length) {
+      throw httpError(400, null, "Ảnh trùng lặp");
+    }
+
+    // Kiểm tra media đều thuộc về user
+    const mediaResult = await client.query(
+      `SELECT id FROM media WHERE id = ANY($1::uuid[]) AND user_id = $2 AND deleted_at IS NULL`,
+      [mediaIds, userId],
+    );
+    if (mediaResult.rows.length !== mediaIds.length) {
+      throw httpError(404, null, "Không tìm thấy ảnh/video để điền slot");
+    }
+
+    // Lấp tuần tự các slot trống (ô đầu tiên ↔ ảnh đầu tiên)
+    const targetSlots = slotResult.rows.slice(0, mediaIds.length);
+    for (let i = 0; i < targetSlots.length; i++) {
+      await client.query(
+        `UPDATE moment_collab
+         SET media_id = $1, filled_at = now()
+         WHERE moment_id = $2 AND slot_index = $3 AND user_id = $4`,
+        [mediaIds[i], momentId, targetSlots[i].slot_index, userId],
+      );
+    }
+    filled = targetSlots.length;
+
+    // Đã đủ slot chưa? (tính trong transaction, coi slot mất ảnh là trống)
+    const remaining = await client.query(
+      `SELECT COUNT(*)::int AS total,
+              COUNT(*) FILTER (WHERE NOT ${slotFilledSql("mc")})::int AS empty
+       FROM moment_collab mc
+       WHERE mc.moment_id = $1`,
+      [momentId],
+    );
+    const { total, empty } = remaining.rows[0];
+    const complete = total > 0 && empty === 0;
+
+    await client.query("COMMIT");
+
+    const moment = await getMomentItem(momentId, userId);
+    return { filled, complete, moment };
+  } catch (error) {
+    await client.query("ROLLBACK").catch(() => {});
+    throw error;
+  } finally {
+    client.release();
   }
-
-  // Kiểm tra đã đủ slot chưa
-  const remaining = await dbPool.query(
-    `SELECT COUNT(*)::int AS cnt FROM moment_collab
-     WHERE moment_id = $1 AND filled_at IS NULL`,
-    [momentId],
-  );
-  const complete = remaining.rows[0].cnt === 0;
-
-  const rowResult = await dbPool.query(`${MOMENT_JOIN} WHERE m.id = $1`, [momentId]);
-  await attachSlots(rowResult.rows);
-  const moment = toMomentItem(rowResult.rows[0], userId);
-  return { filled: targetSlots.length, complete, moment };
 }
 
 // ---- Xóa moment của chính mình ----
@@ -361,13 +443,11 @@ export async function leaveMoment(userId, momentId) {
     [momentId],
   );
   if (momentResult.rows.length === 0) {
-    throw Object.assign(new Error("Không tìm thấy moment"), { status: 404 });
+    throw httpError(404, null, "Không tìm thấy moment");
   }
   const moment = momentResult.rows[0];
   if (moment.template === "single") {
-    throw Object.assign(new Error("Không thể rời moment chỉ có 1 ảnh"), {
-      status: 400,
-    });
+    throw httpError(400, null, "Không thể rời moment chỉ có 1 ảnh");
   }
   if (moment.user_id === userId) {
     throw Object.assign(
@@ -382,9 +462,7 @@ export async function leaveMoment(userId, momentId) {
     [momentId, userId],
   );
   if (slotResult.rows.length === 0) {
-    throw Object.assign(new Error("Bạn không tham gia moment này"), {
-      status: 404,
-    });
+    throw httpError(404, null, "Bạn không tham gia moment này");
   }
 
   await dbPool.query(

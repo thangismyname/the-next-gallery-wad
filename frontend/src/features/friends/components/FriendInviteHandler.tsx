@@ -5,7 +5,7 @@ import { CheckCircle2, Loader2, UserPlus, Users, XCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { claimInviteToken } from "@/services/friends";
-import { FriendRequestResult } from "@/types";
+import { FriendRequestResult } from "@tng/shared";
 
 export const FriendInviteHandler: React.FC = () => {
   const { t } = useTranslation();
@@ -70,7 +70,14 @@ export const FriendInviteHandler: React.FC = () => {
 
         {state === "done" && (
           <div className="flex flex-col items-center gap-3 py-8">
-            {result === "already_friends" ? (
+            {result === "accepted" ? (
+              <>
+                <CheckCircle2 className="size-10 text-primary" />
+                <p className="text-sm text-foreground">
+                  {t("friends.nowFriends", { name: ownerName })}
+                </p>
+              </>
+            ) : result === "already_friends" ? (
               <>
                 <CheckCircle2 className="size-10 text-primary" />
                 <p className="text-sm text-foreground">

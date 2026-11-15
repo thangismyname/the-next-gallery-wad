@@ -74,3 +74,12 @@ def test_reject_empty_file(client):
         files={"file": ("empty.png", b"", "image/png")},
     )
     assert res.status_code == 400
+
+
+def test_reject_corrupted_image(client, tiny_png):
+    """Đúng content-type nhưng bytes hỏng → 400 (không để provider ném 500)."""
+    for endpoint in ("/api/v1/embed/image", "/api/v1/detect/objects", "/api/v1/similarity/embed"):
+        res = client.post(endpoint, files={"file": ("x.png", b"not an image at all", "image/png")})
+        assert res.status_code == 400, endpoint
+        res = client.post(endpoint, files={"file": ("x.png", tiny_png[: len(tiny_png) // 2], "image/png")})
+        assert res.status_code == 400, endpoint

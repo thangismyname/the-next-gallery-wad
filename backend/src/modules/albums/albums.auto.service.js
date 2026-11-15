@@ -6,10 +6,11 @@
 //   objects  nhóm vật thể COCO từ YOLO (media_detections ≥ AI_YOLO_MIN_CONF)
 // Mỗi nhóm = 1 câu SQL "thành viên" trả (id, key, ts); danh sách album và ảnh
 // của 1 album đều đọc từ cùng câu đó → không bao giờ lệch nhau.
+import { categoryTagSql } from "../ai/tagging.constants.js";
 import { dbPool } from "../../config/db.js";
 import { mediaThumbUrl } from "../media/media.mapper.js";
 import { getMediaItemsByIds } from "../media/media.list.service.js";
-import { httpError } from "./albums.access.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import { getAlbum } from "./albums.service.js";
 import {
   AUTO_EVENT_GAP_HOURS,
@@ -33,7 +34,7 @@ const OBJECT_GROUPS = OBJECT_CLASSES.map((c) => COCO_SUPERCATEGORY[c]);
 // $1 = user. Tham số riêng của từng nhóm đánh số từ $2 (Postgres báo lỗi nếu
 // truyền tham số mà câu SQL không dùng → mỗi nhóm chỉ nhận đúng phần của mình).
 const BASE = `
-  SELECT id, media_type, is_favorite, original_filename, taken_at,
+  SELECT id, media_type, original_filename, taken_at,
          COALESCE(taken_at, created_at) AS ts
   FROM media
   WHERE user_id = $1 AND deleted_at IS NULL`;
@@ -48,20 +49,20 @@ const MEMBERS = {
         (CASE WHEN m.media_type = 'photo' THEN 'type-photos' END),
         (CASE WHEN m.media_type = 'video' THEN 'type-videos' END),
         (CASE WHEN m.media_type = 'photo'
-               AND m.original_filename ~* '${SCREENSHOT_RE}' THEN 'type-screenshots' END),
-        (CASE WHEN m.is_favorite THEN 'type-favorites' END)
+               AND m.original_filename ~* '${SCREENSHOT_RE}' THEN 'type-screenshots' END)
       ) v(key)
       WHERE v.key IS NOT NULL`,
     params: [],
   }),
 
-  // Ảnh có thể thuộc nhiều tag; ảnh chưa phân loại / không đạt ngưỡng tag nào → other.
+  // Chỉ 17 tag danh mục (nhãn chi tiết "oi.*" xem ở AI Studio). Ảnh có thể
+  // thuộc nhiều tag; ảnh chưa phân loại / không đạt ngưỡng tag nào → other.
   content: () => ({
     sql: `
       WITH m AS (${BASE} AND media_type = 'photo'),
       t AS (
         SELECT t.media_id, t.tag FROM media_tags t
-        WHERE t.user_id = $1 AND t.confidence >= t.threshold
+        WHERE t.user_id = $1 AND t.confidence >= t.threshold AND ${categoryTagSql()}
       )
       SELECT m.id, 'tag-' || t.tag AS key, m.ts FROM m JOIN t ON t.media_id = m.id
       UNION ALL
@@ -178,13 +179,13 @@ export async function listAutoAlbums(userId, { tz } = {}) {
 /** Id ảnh của 1 album tự động, mới nhất trước. Không có ảnh → 404. */
 async function resolveAutoIds(userId, key, zone) {
   const group = groupOfKey(key);
-  if (!group) throw httpError(404, "Không tìm thấy album", "ALBUM_NOT_FOUND");
+  if (!group) throw httpError(404, "ALBUM_NOT_FOUND", "Không tìm thấy album");
   const { sql, params } = MEMBERS[group](zone);
   const result = await dbPool.query(
     `SELECT id FROM (${sql}) x WHERE key = $${params.length + 2} ORDER BY ts DESC`,
     [userId, ...params, key],
   );
-  if (result.rowCount === 0) throw httpError(404, "Không tìm thấy album", "ALBUM_NOT_FOUND");
+  if (result.rowCount === 0) throw httpError(404, "ALBUM_NOT_FOUND", "Không tìm thấy album");
   return result.rows.map((r) => String(r.id));
 }
 

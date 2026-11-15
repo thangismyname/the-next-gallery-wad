@@ -12,7 +12,7 @@
 - **Runtime**: Node.js 20 (ES Modules, `"type": "module"`)
 - **Framework**: Express 4.x
 - **Language**: JavaScript (plain JS with TypeScript type-checking via `tsx`)
-- **Auth**: Better Auth v1.7 (email/password + Google + GitHub OAuth, admin plugin)
+- **Auth**: Better Auth v1.7 (email/password + Google + GitHub OAuth, plugins admin + bearer + `@better-auth/expo` for the mobile app — its `tng://` scheme is always a trusted origin, `MOBILE_APP_SCHEME`)
 - **Database**: PostgreSQL 16 with pgvector extension (`pg` driver)
 - **Object Storage**: MinIO (S3-compatible) for media files
 - **Image Processing**: sharp (WebP thumbnails quality 80, EXIF rotation)
@@ -35,7 +35,7 @@
 - **Animation**: Framer Motion
 - **Charts**: Recharts
 - **i18n**: i18next + react-i18next (Vietnamese default, English, Japanese)
-- **Theme**: next-themes (light/dark/system)
+- **Theme**: custom `ThemeProvider` (`components/ui/theme-provider.tsx`, light/dark/system, localStorage `theme`)
 - **Linter**: oxlint (React plugin: rules-of-hooks, only-export-components)
 - **Path Alias**: `@/` maps to `./src/`
 
@@ -73,13 +73,15 @@ The_Next_Gallery/
 │       │   ├── db.js             # PostgreSQL pool (pg)
 │       │   └── minio.js          # MinIO client + bucket bootstrap (ensureBucketExists)
 │       ├── db/
-│       │   └── migrate.js        # ensureSchema() — idempotent DDL run on startup
+│       │   ├── migrate.js        # ensureSchema() on startup: Better Auth migration → schema.sql (empty DB) → idempotent DDL
+│       │   └── schema.sql        # full app schema + COMMENTs (run automatically on an empty DB)
 │       ├── lib/
 │       │   ├── auth.js           # Better Auth config (email+password, Google, GitHub, admin plugin)
 │       │   └── mail.js           # Nodemailer transport + reset password email
 │       ├── middleware/
 │       │   ├── auth.js           # requireAuth / requireAdmin
 │       │   ├── validate.js       # Zod validation middleware
+│       │   ├── asyncHandler.js   # asyncHandler(fn) (errors → next) · respond(fn) (+ { success, data }) — every route uses them
 │       │   └── errorHandler.js   # Error + 404 handlers
 │       ├── modules/              # Feature modules (routes + schema + services colocated)
 │       │   ├── index.js          # Router barrel — mounts every module's routes
@@ -88,7 +90,9 @@ The_Next_Gallery/
 │       │   ├── admin/            # admin.routes.js · admin.schema.js · admin.service.js
 │       │   ├── developer/        # developer.routes.js · developer.schema.js · developer.service.js (request/approval)
 │       │   ├── friends/          # friends.routes.js · friends.schema.js · friends.service.js
-│       │   ├── share/            # share.routes.js · share.schema.js · share.service.js
+│       │   ├── transfers/        # Quick send: transfers.routes.js · .schema.js · .constants.js · .access.js (sender/recipient/token)
+│       │   │                     #   · .service.js · .relay.service.js (encrypted parts → MinIO) · .copy.service.js (library → friend)
+│       │   │                     #   · .keys.service.js (device keys + TURN creds) · .jobs.js (purge expired relay)
 │       │   ├── profile/          # profile.routes.js · profile.service.js (stats + storage breakdown)
 │       │   ├── labels/           # labels.routes.js · labels.schema.js · labels.constants.js · labels.service.js (personal labels)
 │       │   ├── albums/           # albums.routes.js · albums.public.routes.js · albums.schema.js · albums.constants.js
@@ -96,190 +100,134 @@ The_Next_Gallery/
 │       │   │                     #   + albums.service.js (CRUD/media) · albums.smart.service.js · albums.members.service.js · albums.links.service.js
 │       │   ├── ai/               # ai.client.js · embedding.service.js (CLIP) · detection.service.js (YOLO26)
 │       │   │                     #   · similarity.service.js (DINOv3 similar photos) · tagging.service.js (17-tag classification)
-│       │   ├── media/            # media.routes.js · media.schema.js · media.mapper.js (pure, no DB)
+│       │   ├── media/            # media.routes.js (list/favorites/trash/upload) + media.stream.routes.js (thumbnail/file/zip)
+│       │   │                     #   + media.ai.routes.js (search, embed/detection/similar/tags) — one prefix · media.schema.js · media.mapper.js (pure, no DB)
 │       │   │                     #   + media.list|upload|trash|stream|search.service.js
-│       │   └── moments/          # moments.routes.js · moments.schema.js · moments.constants.js
+│       │   └── moments/          # moments.routes.js (+ moments.meme.routes.js, mounted inside) · moments.schema.js · moments.constants.js
 │       │                         #   · moments.mapper.js (pure) · moments.notify.js (WS events)
 │       │                         #   + moments.query|feed|collab|reaction|meme.service.js
 │       ├── scripts/
 │       │   ├── backfill-embeddings.js  # CLIP embedding backfill CLI
 │       │   ├── backfill-detections.js  # YOLO26 detection backfill CLI
 │       │   ├── backfill-dino.js        # DINOv3 similarity backfill CLI
-│       │   └── test-minio.js     # MinIO connection + bucket test
+│       │   ├── backfill-tags.js        # 17 categories + 174 labels (embeds missing CLIP vectors first)
+│       │   ├── backfill-taken-at.js    # media.taken_at from EXIF / video creation_time
+│       │   ├── backfill-thumbnails.js  # missing small/med/display thumbnail tiers
+│       │   └── check-minio.js     # MinIO connection + bucket test
 │       └── ws/                   # WebSocket signaling module
 │           ├── index.js          # setupWebSocket(server) entry point
 │           ├── protocol.js       # Message type constants + helpers
 │           ├── handlers/
 │           │   ├── connection.handler.js  # Auth + message router
-│           │   ├── room.handler.js        # Room create/join/leave
-│           │   ├── signal.handler.js      # WebRTC signal relay
-│           │   └── transfer.handler.js    # File transfer protocol
+│           │   └── xfer.handler.js        # xfer:* — host/join/signal/report/relay-request (guests allowed)
 │           └── services/
-│               ├── signaling.service.js   # In-memory rooms + peers
+│               ├── signaling.service.js   # Users (multi-socket) + connections (connId, guests)
 │               ├── presence.service.js    # Friend online/offline presence
-│               └── transfer.service.js    # Transfer state tracking
+│               └── transfer.hub.js        # Who hosts / receives each transfer (in-memory)
 │
 ├── database/
+│   ├── datasets/                 # thesis AI data ($TNG_DATASETS default): Data/ + Classes/ git-ignored (GBs),
+│   │                             #   Results/ + History/ + Classes/open-images/{subset,judgments.csv} committed
 │   └── pipeline/
-│       ├── schema.sql            # PostgreSQL schema (media, albums, moments, friendships, etc.)
-│       └── schema.dbml           # DBML diagram for dbdiagram.io
+│       └── schema.dbml           # DBML diagram for dbdiagram.io — GENERATED (`npm run db:dbml`), don't edit
 │
 ├── docs/
 │   ├── setup.md                  # Setup guide (env, run, Docker, production)
+│   ├── git-workflow.md           # 2 repos (origin/collab), branches, PR + sync steps, troubleshooting
 │   ├── proposal.md               # Project proposal
 │   ├── ai-clip.md                # Semantic search + zero-shot classify (OpenCLIP)
 │   ├── ai-yolo.md                # Object detection (YOLO26)
 │   ├── ai-dino.md                # Similar photos (DINOv3) — what it is, setup, gated weights
 │   └── features/
-│       ├── share-p2p.md         # P2P sharing feature full spec
-│       └── live-vision.md       # Live Vision (camera AR) design — not implemented
+│       ├── share-p2p.md          # P2P sharing feature full spec
+│       ├── moments.md            # Moments spec (templates, collab, memes)
+│       └── moments-todo.md       # Moments remaining work list (dated 2026-11-01)
+│
+├── package.json / package-lock.json  # npm workspaces root (frontend, packages/*, apps/*) — the ONLY lockfile
+├── .dockerignore                     # for the frontend images (built from the repo root)
+├── packages/shared/                  # @tng/shared — types, API services, stores, utils, i18n JSON (web + mobile)
+├── apps/mobile/                      # Expo app (uses @tng/shared)
 │
 └── frontend/
-    ├── Dockerfile.dev            # Node 20 Alpine, Vite dev server
-    ├── Dockerfile.prod           # Multi-stage: build → Nginx
-    ├── nginx.conf                # Production Nginx config (SPA fallback, gzip, cache)
-    ├── index.html
-    ├── package.json              # Scripts: dev/build/lint/preview
-    ├── tsconfig.json             # Strict, ES2020, path alias @/
-    ├── vite.config.js            # React plugin, Tailwind, @ alias, envDir: ../
-    ├── components.json           # shadcn/ui config (radix-sera, neutral, lucide icons)
-    ├── .oxlintrc.json            # oxlint rules (react plugin)
+    ├── Dockerfile.dev / .prod    # build context = repo root (needs packages/shared); prod → Nginx
+    ├── nginx.conf · vite.config.js (alias @/, envDir ../, chunk limit, Vitest) · tsconfig.json (strict)
+    ├── components.json · .oxlintrc.json · README.md
     └── src/
-        ├── main.tsx              # React root (BrowserRouter, i18n import)
-        ├── App.tsx               # ThemeProvider > TooltipProvider > AuthProvider > Routes
-        ├── index.css             # Tailwind v4, CSS variables (light/dark), custom fonts
-        ├── i18n.js               # i18next setup (vi default, en)
-        ├── vite-env.d.ts
-        ├── assets/
-        │   ├── fonts/            # Product Sans (body/UI font, local-only — git-ignored)
-        │   └── images/
+        ├── main.tsx · App.tsx · index.css · i18n.ts (locales from @tng/shared)
+        ├── assets/               # fonts/ (WOFF2; Product Sans local-only) · images/ (WebP)
         ├── components/
-        │   ├── layout/
-        │   │   ├── MainLayout.tsx    # Main app shell with sidebar + header
-        │   │   └── AdminLayout.tsx   # Admin dashboard layout
-        │   └── ui/               # shadcn/ui components (18 components)
-        │       ├── alert.tsx, avatar.tsx, badge.tsx, button.tsx
-        │       ├── card.tsx, chart.tsx, dialog.tsx, dropdown-menu.tsx
-        │       ├── input.tsx, label.tsx
-        │       ├── select.tsx, sheet.tsx, skeleton.tsx, table.tsx
-        │       ├── tabs.tsx, theme-provider.tsx, tooltip.tsx
-        ├── features/             # Feature modules (co-located view + components)
-        │   ├── admin/
-        │   │   ├── AdminDashboard.tsx
-        │   │   └── components/
-        │   ├── auth/
-        │   │   ├── AuthView.tsx
-        │   │   ├── ForgotPasswordView.tsx
-        │   │   ├── ResetPasswordView.tsx
-        │   │   └── components/   # AuthContext, login/register forms
-        │   ├── gallery/
-        │   │   ├── GalleryView.tsx   # Infinite scroll + Skeleton grid
-        │   │   └── components/       # ImageCard (progressive load), Lightbox, UploadButton
-        │   ├── home/
-        │   │   ├── HomeView.tsx
-        │   │   └── components/
-        │   ├── landing/
-        │   │   ├── LandingView.tsx
-        │   │   └── components/
-        │   ├── layout/
-        │   │   ├── BottomBar.tsx
-        │   │   ├── Header.tsx
-        │   │   ├── Sidebar.tsx
-        │   │   └── components/
-        │   ├── navigation/
-        │   │   └── SidebarNavItems.tsx
-        │   ├── not-found/
-        │   │   └── NotFoundView.tsx
-        │   ├── search/
-        │   │   ├── SearchView.tsx
-        │   │   └── components/
-│       ├── share/                # P2P share feature
-│       │   ├── ShareDialog.tsx       # Main modal (tabs: QR / Friends / LAN)
-│       │   ├── ShareProvider.tsx     # React Context — app-wide useShare() singleton
-│       │   ├── ShareView.tsx         # Receiver join screen (/share/:roomCode)
-│       │   ├── SendView.tsx          # Sender page (/share) — share local files w/o upload
-│       │   └── components/
-│       │       ├── FriendsTab.tsx
-│       │       ├── LanTab.tsx
-│       │       ├── PeerCard.tsx
-│       │       ├── QRTab.tsx
-│       │       ├── ShareInvite.tsx        # "View photos" invite toast (WS share:invite)
-│       │       ├── ShareNotification.tsx
-│       │       └── TransferProgress.tsx
-        │   ├── toggles/
-        │   │   ├── LanguageToggle.tsx
-        │   │   └── ThemeToggle.tsx
-        │   └── users/
-        │       └── UserMenu.tsx
-        ├── hooks/
-        │   ├── useAdminStats.ts
-        │   ├── useAdminUsers.ts
-        │   ├── useDebounce.ts
-        │   ├── useFileTransfer.ts   # TransferSource + sendFiles/startReceiving
-        │   ├── useGalleryActions.ts
-        │   ├── useKeyboardShortcut.ts
-        │   ├── useLogout.ts
-        │   ├── useNavItems.ts
-        │   ├── useSelectionStore.ts
-        │   ├── useShare.ts          # Share orchestrator (signaling + WebRTC + transfer)
-        │   └── useSignaling.ts
-        ├── lib/
-        │   ├── config.ts         # API_URL, AUTH_BASE_URL, WS_URL
-        │   └── utils.ts          # cn() — clsx + tailwind-merge
-        ├── locales/
-        │   ├── en/translation.json
-        │   └── vi/translation.json
-        ├── routes/
-        │   ├── AppRoutes.tsx     # All routes (public, protected, admin)
-        │   └── ProtecedRoutes.tsx # ProtectedRoute + AdminRoute guards
-        ├── services/
-        │   ├── api.ts            # Barrel re-export
-        │   ├── authClient.ts     # better-auth client (signIn, signUp, signOut, useSession)
-        │   ├── media.ts          # fetchMedia, uploadMedia, searchGallerySemantic, searchAlbums, resolveMediaUrl
-        │   ├── signaling.ts      # SignalingClient + SIGNAL constants (WS /ws)
-        │   ├── upload.ts         # Batch upload with XHR progress tracking
-        │   └── webrtc.ts         # WebRTCPeer, WebRTCManager, chunk framing
-        ├── types/
-        │   ├── index.ts          # Media (mediaType, durationSeconds), SearchResultItem, NavMenuItem, etc.
-        │   └── view-transitions.d.ts
-        └── utils/
-            └── string.ts
+        │   ├── layout/           # MainLayout · AdminLayout · RouteFallback (Suspense fallback)
+        │   ├── motion/           # PageTransition · AnimatedGridItem · effects
+        │   ├── toggles/          # ThemeToggle · LanguageToggle
+        │   └── ui/               # shadcn/ui primitives
+        ├── features/             # one folder per feature: <Name>View.tsx + components/ + feature hooks + helpers (+ *.test.ts)
+        │   ├── admin/ albums/ auth/ camera/ favorites/ friends/ gallery/
+        │   ├── landing/ media-picker/ moments/ navigation/ (Header · Sidebar · BottomBar · UserMenu · useNavItems)
+        │   ├── not-found/ profile/ search/ settings/ studio/ trash/
+        │   └── share/            # Quick send — see docs/features/share-p2p.md (engine/ = no React)
+        ├── hooks/                # hooks shared by several features only
+        ├── lib/                  # config (API_URL…) · utils (cn) · motion · aiColors · http.web
+        ├── routes/               # AppRoutes (lazy pages) · ProtectedRoutes (ProtectedRoute + AdminRoute)
+        ├── services/             # web API layer (upload, signaling, transfers, authClient) + @tng/shared services
+        ├── types/                # view-transitions.d.ts only (app types come from @tng/shared)
+        └── utils/                # mediaGrouping · themeTransition (formatters come from @tng/shared)
 │
-├── ai-service/                # Python FastAPI — OpenCLIP embeddings + YOLO26 object detection
+├── ai-service/                # Python FastAPI — OpenCLIP + YOLO26 + DINOv3 + content tagging (internal, backend only)
 │   ├── Dockerfile.dev/prod     # Python 3.12 slim, libgl for OpenCV; CPU torch; models downloaded at build
-│   ├── pyproject.toml          # deps (uv): runtime + groups dev (pytest) / bench (pycocotools)
+│   ├── pyproject.toml          # deps (uv): runtime + groups dev (pytest, ruff) / bench (pycocotools, sklearn…) + [tool.ruff]
 │   ├── uv.lock                 # exact versions for all platforms — commit with pyproject.toml
 │   ├── bench/                  # offline benchmarks (thesis) — see bench/README.md: YOLOv10/YOLO26 COCO AP + latency +
 │   │                           #   Ultralytics benchmark(), CLIP retrieval/zero-shot (paper Tables 11/13), report.py → tables
+│   ├── experiments/            # thesis experiment plan E1–E6 on Open Images V7 — see experiments/README.md:
+│   │                           #   `uv run python -m experiments status|select|build|e1…e6|schema|archive` → $TNG_DATASETS/Results/oi/
+│   │                           #   <exp>/<run>/ (status.json + events.jsonl + result.json — UI-ready; params = dataclasses)
+│   │                           # $TNG_DATASETS (default database/datasets) layout: Data/ (images) · Classes/ (class lists +
+│   │                           #   annotations) · Results/ (runs, cache/) · History/<exp>/vNNN + index.csv (auto-archived, never
+│   │                           #   overwritten). Build paths only via bench/common.py data_dir/classes_dir/results_dir/history_dir.
+│   │                           # Needs `uv sync --group bench`. `--no-latest` = variant run (e.g. E4 with fine-tuned YOLO) →
+│   │                           #   later steps take it by id (`e5 --e4-ft-run`, `e6 --probe-ft-run`). `yolo_ft --pseudo-label
+│   │                           #   [--freeze N]` = fine-tune with base-YOLO pseudo boxes for unverified COCO classes (pseudo_label.py).
 │   ├── pipeline/               # offline YOLO + CLIP on a whole dataset (no server): `uv run python -m pipeline run coco`
-│   │                           #   → $TNG_DATASETS/result-coco/ (csv, embeddings.npy, vis/), then `search` / `classify`
+│   │                           #   → $TNG_DATASETS/Results/pipeline/coco/ (csv, embeddings.npy, vis/), then `search` / `classify`
 │   ├── scripts/
 │   │   ├── download_clip_weight.py  # Bake OpenCLIP weights into the image (build time)
 │   │   ├── download_yolo_weight.py  # Bake YOLO26 weights into /opt/yolo-cache (build time)
 │   │   ├── download_dino_weight.py  # DINOv3 (gated HF) → models/dinov3-vits16-pretrain-lvd1689m/
+│   │   ├── convert_dino_pth.py      # DINOv3 .pth checkpoint → HF folder
+│   │   ├── sync_search_lexicon.py   # app/tagging/labels.csv → backend search.lexicon.json `labels` (never edit by hand)
 │   │   └── clip_demo.py             # CLI demo: info/embed-image/embed-text/classify/similarity (HTTP or --direct)
 │   └── app/
-│       ├── main.py             # FastAPI app + CORS + routers
+│       ├── main.py             # FastAPI app + routers (no CORS, no auth — internal only)
 │       ├── config.py           # pydantic-settings: AI_EMBED_PROVIDER, AI_OBJECT_PROVIDER
 │       ├── api/
+│       │   ├── deps.py         # read_image_or_400 (type, size, decodable → 400) · run_model (1 lock / model)
 │       │   ├── health.py       # GET /health
 │       │   ├── embed.py        # POST /embed/image, /embed/text, /classify (zero-shot CLIP), GET /embed/info
 │       │   ├── object_detect.py  # POST /api/v1/detect/objects (YOLO26 → ObjectDetectResponse)
-│       │   └── similarity.py   # POST /api/v1/similarity/embed, GET /similarity/info (DINOv3)
+│       │   ├── similarity.py   # POST /api/v1/similarity/embed, GET /similarity/info (DINOv3)
+│       │   └── tags.py         # POST /api/v1/tags/predict (from stored CLIP vectors), GET /tags/info
+│       ├── tagging/            # Tagger: taxonomy.py (17 tags) · classifiers.py (inference) · labels.py + labels.csv
+│       │                       #   (174 OI labels, 15 sections) · probes/*.npz (committed models used by the app)
 │       ├── schemas/
 │       │   ├── embed.py        # EmbedResponse, ClassifyResponse (zero-shot CLIP)
-│       │   └── object_detect.py  # ObjectDetection + ObjectDetectResponse (bbox 0–1)
+│       │   ├── object_detect.py  # ObjectDetection + ObjectDetectResponse (bbox 0–1)
+│       │   └── tags.py         # TagPredictRequest / TagPredictResponse
 │       └── providers/
+│           ├── device.py       # resolve_device ("auto" → cuda > mps > cpu), shared by providers + bench
 │           ├── embed_base.py   # EmbeddingProvider ABC (encode_image/encode_text/classify)
 │           ├── clip.py         # OpenClipEmbeddingProvider — ViT-B-32, L2-norm, logit_scale, classify
 │           ├── embed_stub.py   # StubEmbeddingProvider — deterministic vector, mock classify
 │           ├── object_base.py  # ObjectDetectionProvider ABC (detect)
-│           ├── yolo.py         # YoloDetectionProvider — YOLO26, 80 COCO class
-│           ├── object_stub.py  # StubDetectionProvider — detections=[]
+│           ├── yolo.py         # YoloObjectDetectionProvider — YOLO26, 80 COCO class
+│           ├── object_stub.py  # StubObjectDetectionProvider — detections=[]
 │           ├── similarity_base.py  # SimilarityProvider ABC (encode_image only)
 │           ├── dinov3.py       # Dinov3SimilarityProvider — transformers AutoModel, pooler_output, L2-norm, 384-d
 │           └── similarity_stub.py  # StubSimilarityProvider — deterministic 384-d vector
 ```
+
+## Git workflow
+
+Two remotes: `origin` (primary repo) and `collab` (team copy), branches `main` / `develop` / `thang-ismyname/<feature>` / `sync/*`, everything through PRs. **Read `docs/git-workflow.md` before suggesting or running any git command** — no git config, always name the remote, never push / open PRs / merge on your own.
 
 ## Commands
 
@@ -294,6 +242,7 @@ npm run backfill:dino     # Backfill DINOv3 similarity descriptors for existing 
 npm run backfill:thumbs   # Generate missing small/med/display thumbnails for existing photos
 npm run backfill:tags     # Classify existing photos into the 17 content tags (embeds missing CLIP vectors first)
 npm run backfill:taken-at # Fill media.taken_at (EXIF / video creation_time) for existing media
+npm test             # Unit tests (node:test, no DB needed) — *.test.js next to the module
 npm install          # Install dependencies
 ```
 
@@ -340,17 +289,15 @@ docker compose -f docker-compose.prod.yml --env-file .env up --build -d
 
 ### Database
 ```bash
-# Better Auth migration (creates user, session, account, verification tables):
-cd backend && npx @better-auth/cli migrate
-
-# App schema (run after Better Auth migration):
-# Execute database/pipeline/schema.sql against PostgreSQL
+# Nothing to run: the backend creates/upgrades the schema on start (db/migrate.js) —
+# Better Auth migration → backend/src/db/schema.sql on an empty DB → idempotent DDL.
+cd backend && npm run db:dbml    # regenerate database/pipeline/schema.dbml (run on a fresh DB)
 ```
 
 ### Testing Scripts
 ```bash
 cd backend
-node src/scripts/test-minio.js   # Test MinIO connection and bucket
+node src/scripts/check-minio.js   # Test MinIO connection and bucket
 ```
 
 ## Key Conventions
@@ -359,7 +306,7 @@ node src/scripts/test-minio.js   # Test MinIO connection and bucket
 - **ES Modules** everywhere (`"type": "module"`, `import/export`)
 - **Environment**: `.env` at project root, loaded via `config/env.js` (resolves path 3 levels up)
 - **Auth middleware**: `requireAuth` and `requireAdmin` in `middleware/auth.js` — use `auth.api.getSession({ headers })` to verify
-- **Route mounting**: `modules/index.js` barrel mounts every module's router — Better Auth handler at `/api/auth/*`, gallery at `/api/gallery/*`, friends at `/api/friends/*`, moments at `/api/moments/*`, share at `/api/share/*`, developer at `/api/developer/*`, profile at `/api/profile/*` (`GET /stats`, `GET /storage`), albums at `/api/albums/*`, public album links at `/api/public/*` (no auth), admin at `/api/admin/*`, health checks at `/health` & `/api/health`
+- **Route mounting**: `modules/index.js` barrel mounts every module's router — Better Auth handler at `/api/auth/*`, gallery at `/api/gallery/*`, friends at `/api/friends/*`, moments at `/api/moments/*`, transfers at `/api/transfers/*`, developer at `/api/developer/*`, profile at `/api/profile/*` (`GET /stats`, `GET /storage`), albums at `/api/albums/*`, public album links at `/api/public/*` (no auth), admin at `/api/admin/*`, health checks at `/health` & `/api/health`
 - **Media Streaming**:
   - **Signed media URLs** (`media.urls.js` + `media.access.js`): stream endpoints are NOT public by id. Every URL the API returns (`media.mapper.js::mediaUrls / mediaThumbUrl / mediaFileUrl`) carries `exp` + `sig` (HMAC of id + size|"file" + exp + scope, secret `MEDIA_URL_SECRET` or `BETTER_AUTH_SECRET`). `exp` is bucketed by `MEDIA_URL_TTL_HOURS` (24 → valid 24–48 h, URL stable within a bucket so browser cache still hits). Public-album URLs add `l=<share_link id>` and are rejected as soon as the link is revoked/expired (30 s cache, cleared on revoke). No/invalid signature → only the logged-in owner (cookie) gets the file, else 403. Never build media URLs by hand on the FE — use the URLs from the API. Profile avatars picked from the library use the stable public endpoint `GET /api/profile/avatar/:mediaId` (served only while that photo is its owner's current `user.image`).
   - `GET /api/gallery/media/:id/thumbnail`: Streams thumbnail with `Cache-Control` from the access check (signed: `public, max-age=<until exp>, immutable`; link: `private, max-age=300`; owner cookie: `private, max-age=3600`), `ETag` (returns 304 on `If-None-Match`), and `Cross-Origin-Resource-Policy: cross-origin`.
@@ -375,7 +322,7 @@ node src/scripts/test-minio.js   # Test MinIO connection and bucket
 - **Media/Album Search** (Spotlight):
   - `GET /api/gallery/media/search?q=&mode=` (auth): **hybrid search** (CLIP + content tags + YOLO objects, see "Spotlight image search" below; `mode=clip` = plain CLIP cosine) → `MediaListItem[]` (+ `score`, `scoreParts`), max 20. If ai-service errors / the user has no embeddings of the current CLIP model → fallback `original_filename ILIKE %q%`.
   - `GET /api/gallery/media/albums/search?q=` (auth): find albums by `name/description ILIKE %q%` → `{ id, name, description, coverUrl, mediaCount }` (max 10). Cover resolves from `albums.cover_media_id` (preferred) or the latest image in the album via `album_media JOIN media`.
-  - Both live in `media.routes.js`, sharing the `searchQuerySchema` (`{ q: min(1) max(120) }`), validated at `"query"`.
+  - Both live in `media.ai.routes.js` (mounted by `media.routes.js`, same prefix), sharing the `searchQuerySchema` (`{ q: min(1) max(120) }`), validated at `"query"`.
 - **Semantic search (embeddings)**:
   - `modules/ai/embedding.service.js`: `saveEmbedding`, `embedMediaBuffer` (normalizes images to ≤512px WebP via sharp before sending to AI), `embedMediaInBackground` (fire-and-forget), `embedMediaById` (per-user MinIO), `backfillEmbeddings` (batched), `getEmbeddingStats`, `semanticSearch` returns `{ hits, hadEmbeddings }` (`1 - (embedding <=> $query)`).
   - **Canonical CLIP (per the paper "Learning Transferable Visual Models…")**:
@@ -390,82 +337,96 @@ node src/scripts/test-minio.js   # Test MinIO connection and bucket
 - **Object detection (YOLO26)** — pipeline parallel to CLIP:
   - `modules/ai/detection.service.js`: `saveDetections` (deletes the old rows for media+model then inserts, in a transaction; dedup via UNIQUE index), `detectMediaBuffer` (resizes images to ≤1280px preserving aspect via sharp → sends to AI → stores → sets `media.yolo_processed_at`), `detectMediaInBackground` (fire-and-forget), `detectMediaById` (MinIO fetch, photos only), `backfillDetections` (batched, uses the `yolo_processed_at IS NULL` flag), `getDetectionStats`, `searchByObject` (classes understood by `search.query.js::parseQuery` — "chai" → bottle, "犬" → dog — match exactly, otherwise fuzzy `class_name ILIKE %q%`; threshold `AI_YOLO_MIN_CONF` default 0.4; optional Spotlight scope `onlyIds`; returns `{ id, score }` = highest confidence), `listDetectionClasses`, `getMediaDetections` (with bbox for Developer Mode).
   - `media.search.service.js::searchMediaObjects` → `MediaListItem[]` with `score`.
-  - Routes (auth, `media.routes.js`): `GET /api/gallery/media/objects/search?q=`, `GET /api/gallery/media/objects/classes`, `GET /api/gallery/media/detection/status`, `POST /api/gallery/media/detection/backfill` (`{ limit }` ≤100), `GET /api/gallery/media/:id/detections` (with bbox).
+  - Routes (auth, `media.ai.routes.js`): `GET /api/gallery/media/objects/search?q=`, `GET /api/gallery/media/objects/classes`, `GET /api/gallery/media/detection/status`, `POST /api/gallery/media/detection/backfill` (`{ limit }` ≤100), `GET /api/gallery/media/:id/detections` (with bbox).
   - Image upload → `detectMediaInBackground` in `media.upload.service.js::uploadMedia` (runs in the background alongside embedding).
   - Backfill: `npm run backfill:detect` (script `src/scripts/backfill-detections.js`, loops until `remaining=0`, all users or 1 userId). Requires ai-service `/api/v1/detect/objects`.
   - ai-service: provider `yolo`/`stub` (`app/providers/yolo.py`), `POST /api/v1/detect/objects` (multipart) returns `{ provider, model, detections: [{ class_name, confidence, bbox[x1,y1,x2,y2] 0–1 }] }`. Weights `yolo26n.pt` baked at `/opt/yolo-cache`. Docs: `docs/ai-yolo.md`.
   - Frontend: `SearchView` calls four sources in parallel (Friends/Albums/semantic-Images/Objects); `MediaDetailsPanel` shows object tag chips (below `AI_YOLO_MIN_CONF` = faded + note, since search ignores them — keep `YOLO_SEARCH_MIN_CONF` in sync); `Lightbox` + `DetectionOverlay` draws bboxes when **Developer Mode** is on (hook `useMediaDetections`, cached by mediaId).
 - **Image similarity (DINOv3)** — "Similar photos" in the Lightbox details panel:
   - `modules/ai/similarity.service.js`: `saveDinoEmbedding`, `embedDinoBuffer` (≤512px WebP → ai-service `/api/v1/similarity/embed`; **stub results are not saved**), `embedDinoInBackground`, `embedDinoById`, `backfillDinoEmbeddings`, `getDinoStats`, `findSimilarMedia` (source vector → pgvector k-NN within the same user + same `model`, threshold `AI_DINO_MIN_SIM` default 0.35; source missing → embed on demand; still missing → fallback CLIP image↔image from `media_embeddings` with threshold 0.75). Returns `{ source: "dinov3"|"clip"|null, model, hits }`.
-  - Routes (auth, `media.routes.js`): `GET /api/gallery/media/:id/similar?limit=` (≤50, default 12 → `{ source, model, items: MediaListItem[] (+score) }`), `GET /api/gallery/media/similar/status`, `POST /api/gallery/media/similar/backfill` (`{ limit }` ≤200).
+  - Routes (auth, `media.ai.routes.js`): `GET /api/gallery/media/:id/similar?limit=` (≤50, default 12 → `{ source, model, items: MediaListItem[] (+score) }`), `GET /api/gallery/media/similar/status`, `POST /api/gallery/media/similar/backfill` (`{ limit }` ≤200).
   - Image upload → `embedDinoInBackground` (alongside CLIP + YOLO). Backfill: `npm run backfill:dino`.
   - ai-service: provider `dinov3`/`stub` (`AI_SIMILARITY_PROVIDER`), `AI_DINO_MODEL` = local dir (relative to `ai-service/`, used if it has `config.json`) or HF repo id. Default model `facebook/dinov3-vits16-pretrain-lvd1689m` (21M params, 384-d) — **gated** on HF, not baked into Docker images. Docs: `docs/ai-dino.md`.
   - Frontend: `services/media.ts::fetchSimilarMedia`, hook `useSimilarMedia` (session cache, empty results not cached), section in `MediaDetailsPanel` (`onSelectSimilar`); `Lightbox` jumps via `onSelect` if the item is in `mediaList`, otherwise shows it as a local "peek" (favorite/delete hidden; Esc/prev/next leave the peek).
 - **Spotlight image search = hybrid (compositional) search** — `GET /api/gallery/media/search?q=&mode=hybrid|clip` (default `hybrid`; `clip` = old cosine search kept for comparison):
-  - `modules/ai/search.query.js::parseQuery` (pure) understands tag names + COCO object names + counts in **vi / en / ja** ("2 con chó trên bãi biển", "two dogs", "犬が2匹") from `search.lexicon.json`, and returns `coverage` (share of the query understood).
-  - `modules/ai/hybrid.search.service.js`: parts = CLIP (margin `cos(q) − cos(generic "a photo.")`, z-scored over the user's photos → `σ(1.5·(z − 3))`), tag (mean confidence of named tags, `media_tags`), object (YOLO conf × count match, `media_detections` ≥ `AI_YOLO_MIN_CONF`). Score = weighted **geometric** mean (AND semantics); CLIP weight = `0.5·(1 − coverage)` when tags/objects are named (fully understood query → CLIP only breaks ties), else CLIP alone. Returns ≥ `AI_SEARCH_MIN_SCORE` (0.5), items carry `score` + `scoreParts` (Spotlight shows them as a tooltip).
-  - **Scope** (`&scope=favorites|label:<id>|album:<id>`, `media.scope.js::scopeMediaIds` — own, non-trashed photos only): hybrid scores are computed over the whole library (z-score unchanged), then filtered to the scope (`hybridSearch({ onlyIds })`); empty `q` + scope = list the scope (≤60). FE Spotlight: typing "fav" / a label / an album name suggests "Search in …" (Tab/Enter → chip inside `SearchBar` `prefix`, Backspace at start removes it), shortcut `favorite.dog` (`features/search/searchScope.ts`, `useSearchScopes`); "Edited photos" (AI Studio editing) is a disabled placeholder scope.
-  - Mirrored 1:1 by `ai-service/bench/search_eval.py` (same lexicon file + constants; `tests/test_bench_search.py` checks parser parity) — **change both together**.
-- **CLIP model switch (e.g. multilingual `xlm-roberta-base-ViT-B-32` / `laion5b_s13b_b90k`)**: set `AI_CLIP_MODEL`/`AI_CLIP_PRETRAINED`, restart ai-service. Backend reads the running model from `/api/v1/embed/info` (`ai.client.js::currentModels`, cached 60 s): embeddings of another model count as pending (embed backfill re-embeds + re-tags), search only compares vectors of the same model, and the tagger name (`"<clip>: coco-… · places6-… · attribute-zero-shot"`) changes so tags are redone. `app/tagging.py` only uses a probe trained on the running CLIP (`meta.clip_model`; `bench/runs/cls/<clip model>/` first) — otherwise zero-shot. Bench: `BENCH_CLIP=<model>:<pretrained>` keeps features/probes/CSV rows separate.
-- **Content classification (17 tags + confidence)** — AI Studio "Classification" tab:
-  - ai-service `app/tagging.py::Tagger` scores the 17-tag taxonomy (`bench/cls_taxonomy.py`) from a **stored CLIP vector** (no image needed), mirroring bench `TagSystem` but CLIP-only: object ← `bench/runs/cls/coco-<AI_TAG_CONFIG>.npz`, scene ← `places6-<config>.npz`, attribute ← CLIP zero-shot; missing/non-CLIP model → zero-shot for that group. Per-tag thresholds come from the .npz (F1-tuned on val; zero-shot 0.5). `POST /api/v1/tags/predict` (`{ embeddings: number[][] }` ≤500 → `{ model, tags, thresholds, scores }`), `GET /api/v1/tags/info`.
-  - backend `modules/ai/tagging.service.js`: `tagMediaIds` (one ai-service call per batch, replaces all rows), `backfillTags` (embeds photos lacking a CLIP vector first), `getTagStats`, `listTagSummary` (count ≥ threshold + cover), `listMediaIdsByTag` (`minConfidence` or per-tag threshold). Table `media_tags` stores the probability of **every** tag per photo (PK media_id+tag) so the UI can move the threshold freely; a photo with rows = classified.
+  - `modules/ai/search.query.js::parseQuery` (pure) understands tag names + COCO object names + counts + the **174 detailed label names** in **vi / en / ja** ("2 con chó trên bãi biển", "two dogs", "犬が2匹", "thác nước") from `search.lexicon.json`, and returns `coverage` (share of the query understood). The lexicon's `labels` section is **generated** from `ai-service/app/tagging/labels.csv` by `uv run python scripts/sync_search_lexicon.py` (copies COCO synonyms for labels that are COCO classes; a test fails if out of sync) — never edit it by hand. Labels are matched in a separate pass; a label on the same words as a tag/object gets `link` to it.
+  - `modules/ai/hybrid.search.service.js`: parts = CLIP (margin `cos(q) − cos(generic "a photo.")`, z-scored over the user's photos → `σ(1.5·(z − 3))`), tag (mean confidence of named tags, `media_tags`), object (YOLO conf × count match, `media_detections` ≥ `AI_YOLO_MIN_CONF`). label (unlinked detailed labels, mean confidence from `media_tags` `oi.*`; a linked label is alternative evidence: tag/object part = max(tag or YOLO, label), label × 0.5 when a count is asked). Score = weighted **geometric** mean (AND semantics); CLIP weight = `0.5·(1 − coverage)` when tags/objects are named (fully understood query → CLIP only breaks ties), else CLIP alone. Returns ≥ `AI_SEARCH_MIN_SCORE` (0.5), items carry `score` + `scoreParts` (Spotlight shows them as a tooltip).
+  - **Scope** (`&scope=favorites|label:<id>|album:<id>`, `media.scope.js::scopeMediaIds` — own, non-trashed photos only): hybrid scores are computed over the whole library (z-score unchanged), then filtered to the scope (`hybridSearch({ onlyIds })`); empty `q` + scope = list the scope (≤60). FE Spotlight: typing "fav" / a label / an album name — or a **color word in vi/en/ja** ("đỏ", "red", "赤" → labels of that color, `COLOR_ALIASES` in `searchScope.ts`, keep in sync with `LABEL_COLORS`) — suggests "Search in …" (Tab/Enter → chip inside `SearchBar` `prefix`, Backspace at start removes it), shortcut `favorite.dog` (`features/search/searchScope.ts`, `useSearchScopes`); "Edited photos" (AI Studio editing) is a disabled placeholder scope.
+  - Mirrored 1:1 by `ai-service/bench/search_eval.py` (same lexicon file + constants; `tests/test_bench_search.py` runs the backend JS through `node` and checks parser **and** score parity) — **change both together**. Bench: `--labels` adds the detailed labels (off by default to stay comparable with earlier runs).
+- **CLIP model switch (e.g. multilingual `xlm-roberta-base-ViT-B-32` / `laion5b_s13b_b90k`)**: set `AI_CLIP_MODEL`/`AI_CLIP_PRETRAINED`, restart ai-service. Backend reads the running model from `/api/v1/embed/info` (`ai.client.js::currentModels`, cached 60 s): embeddings of another model count as pending (embed backfill re-embeds + re-tags), search only compares vectors of the same model, and the tagger name (`"<clip>: coco-… · places6-… · attribute-zero-shot"`) changes so tags are redone. `app/tagging/` only uses a probe trained on the running CLIP (`meta.clip_model`; `app/tagging/probes/<clip model>/` first) — otherwise zero-shot (categories) / no detailed labels. Bench: `BENCH_CLIP=<model>:<pretrained>` keeps features/probes/CSV rows separate.
+- **Content classification (17 categories + 174 detailed labels, with confidence)** — AI Studio "Classification" tab:
+  - ai-service `app/tagging/` (`Tagger`, no dependency on `bench/`) scores from a **stored CLIP vector** (no image needed), two tiers: (1) the 17-tag taxonomy (`app/tagging/taxonomy.py`): object ← `app/tagging/probes/coco-<AI_TAG_CONFIG>.npz`, scene ← `places6-<config>.npz` (trained by `bench.cls_eval`, copied from `bench/runs/cls/`), attribute ← CLIP zero-shot; (2) **174 detailed Open Images labels** (`app/tagging/labels.csv`: id, vi/en/ja names, 15 UI `section`s — same order as `experiments/data/oi_classes.csv`) ← `oi-<config>.npz` from `experiments export_tags` (open-world retrain of the `probe` lp_clip; isotonic-calibrated probabilities, per-label threshold = precision ≥ 0.9 on val, ~1.5 labels/photo). Models in `app/tagging/probes/` are committed (~0.5 MB). `POST /api/v1/tags/predict` (`{ embeddings }` ≤500 → `{ model, tags, thresholds, scores, labels, label_thresholds, label_scores }`), `GET /api/v1/tags/info` (+ `sections`, `labels`, `label_model` metrics). `/health` → `tagger` shows what is really loaded (probe vs zero-shot).
+  - backend `modules/ai/tagging.service.js`: `tagMediaIds` (one ai-service call per batch, replaces all rows; detailed labels stored as tag `oi.<id>` in the same `media_tags` table, only when confidence ≥ `LABEL_STORE_MIN` 0.02 — `tagging.constants.js`), `getTagCatalog` (`GET /tags/catalog` → label names/sections from ai-service), `getMediaTags` (`GET /:id/tags`, Lightbox), `backfillTags` (embeds photos lacking a CLIP vector first), `getTagStats`, `listTagSummary` (count ≥ threshold + cover), `listMediaIdsByTag` (`minConfidence` or per-tag threshold). Table `media_tags` stores the probability of **every** tag per photo (PK media_id+tag) so the UI can move the threshold freely; a photo with rows = classified.
   - Upload: `embedMediaInBackground` embeds then tags. Backfill: `npm run backfill:tags`, Settings "AI processing" row, or the AI Studio banner (`hooks/useAiBackfill.ts`, shared batch loop).
-  - Routes (auth, `media.routes.js`): `GET /api/gallery/media/tags`, `GET /tags/status`, `POST /tags/backfill` (`{ limit }` ≤500), `GET /tags/:tag/media?minConfidence=&limit=&offset=` → `{ total, items: MediaListItem[] (+score) }`.
-  - Frontend `features/studio/` (`/studio`, sidebar "AI Studio"): category grid by group (`tagCatalog.ts` — keep ids in sync with the taxonomy; names in i18n `studio.tags.<id>`), tag view sorted by confidence with % badges + confidence-threshold slider (Auto = per-tag threshold), Lightbox. Selected tag lives in `?tag=`. "Editing" tab is a placeholder (not implemented).
+  - Routes (auth, `media.ai.routes.js`): `GET /api/gallery/media/tags`, `GET /tags/status`, `POST /tags/backfill` (`{ limit }` ≤500), `GET /tags/:tag/media?minConfidence=&limit=&offset=` → `{ total, items: MediaListItem[] (+score) }`.
+  - Frontend `features/studio/` (`/studio`, sidebar "AI Studio"): category grid by group (`tagCatalog.ts` — keep ids in sync with the taxonomy; names in i18n `studio.tags.<id>`), tag view sorted by confidence with % badges + confidence-threshold slider (Auto = per-tag threshold), Lightbox. Below the categories: `LabelSections` = detailed labels grouped by the 15 sections (`SECTION_ICONS` in `tagCatalog.ts`, names `studio.sections.<id>`), chip = name + photo count, accent-insensitive filter, empty labels hidden by default; label names come from the API (`useTagCatalog` → `describe(tag)` gives name + icon for any tag id), not i18n. Selected tag lives in `?tag=` (`?tag=oi.dog` for a label). Lightbox details `MediaAiTagsSection` (categories + labels with %, a few below-threshold ones dashed). Gallery `aiTags` chips and the auto "content" albums use categories only (`t.tag NOT LIKE 'oi.%'`); smart tag albums accept both (`TAG_ID_RE`). "Editing" tab is a placeholder (not implemented).
 - **Albums** (`modules/albums/`, mounted at `/api/albums`; public `/api/public/albums/:token`):
-  - Kinds: `manual` (photos in `album_media`, `added_by` = who added) and `smart` (`albums.smart_rule` JSONB re-evaluated on every read — `{type:"tags", tags[≤3], minConfidence|null}` = photos having ALL tags in `media_tags`, or `{type:"query", query}` = hybrid search, ≤300 hits). `POST /:id/convert` snapshots a smart album into a manual one (keeps ranking via `position`).
+  - Kinds: `manual` (photos in `album_media`, `added_by` = who added) and `smart` (`albums.smart_rule` JSONB re-evaluated on every read — `{type:"tags", tags[≤3], minConfidence|null}` = photos having ALL tags in `media_tags`, or `{type:"query", query}` = hybrid search, ≤300 hits). `POST /:id/convert` snapshots a smart album into a manual one (keeps ranking via `position`). `POST /smart/preview { smartRule }` → `{ total, thumbnails[≤4] }` = what a rule matches now (form preview before saving; ai-service errors are thrown, not swallowed like the list summary).
   - Roles (`albums.access.js::getAlbumAccess`): owner = `albums.user_id` (edit/delete/cover/share), `album_members` editor (add **own** photos, remove photos they added) / viewer; pending invitations (`accepted_at IS NULL`) only see accept/decline. No access → 404 (album existence isn't leaked). Invites only to accepted friends; WS `album:invite` → `AlbumInviteToast`.
   - Routes: `GET /` → `{ owned, shared, invitations }`, `POST /`, `GET|PATCH|DELETE /:id`, `GET /:id/media?limit&offset` → `{ total, items (+ownerId, addedBy, score for smart) }`, `POST /:id/media`, `POST /:id/media/remove`, `GET|POST /:id/members`, `PATCH|DELETE /:id/members/:userId` (own id = leave), `POST /:id/invitation {accept}`, `GET|POST /:id/links`, `DELETE /:id/links/:linkId`, `PUT /:id/media/order {mediaIds}` (owner, full new order → `album_media.position`; unpositioned/new photos list first), `GET /containing/:mediaId` (regular albums containing a photo — Lightbox details panel `MediaAlbumsSection`).
-  - **Auto albums** (`albums.auto.service.js`, not stored — recomputed on read like smart albums, read-only): 4 groups, each one membership SQL `(id, key, ts)` shared by the list + media endpoints. `type` (photos/videos/screenshots by filename/favorites — every media is in Photos or Videos), `content` (tags ≥ threshold in `media_tags`, untagged photos → `tag-other`), `time` (`month-YYYY-MM` for all media in the client's `tz` + `event-YYYYMMDDHHmm` = runs of EXIF `taken_at` ≤ 3 h apart with ≥ 5 photos), `objects` (YOLO class → 12 COCO supercategories, `COCO_SUPERCATEGORY` in `albums.constants.js`). Routes (before `/:id`): `GET /auto?tz=` → `{ groups: [{ id, albums: [{ key, count, coverUrl, firstAt, lastAt }] }] }`, `GET /auto/:key/media`, `POST /auto/:key/save {name}` (→ manual album, keeps order via `position`). FE: rows in `AlbumsView`, `AutoAlbumView` (`/albums/auto/:key`), names built client-side by `features/albums/autoAlbums.ts::autoAlbumName` (i18n `albums.auto.*`).
+  - **Auto albums** (`albums.auto.service.js`, not stored — recomputed on read like smart albums, read-only): 4 groups, each one membership SQL `(id, key, ts)` shared by the list + media endpoints. `type` (photos/videos/screenshots by filename — every media is in Photos or Videos; no favorites album, Favorites is the Collections section below), `content` (tags ≥ threshold in `media_tags`, untagged photos → `tag-other`), `time` (`month-YYYY-MM` for all media in the client's `tz` + `event-YYYYMMDDHHmm` = runs of EXIF `taken_at` ≤ 3 h apart with ≥ 5 photos), `objects` (YOLO class → 12 COCO supercategories, `COCO_SUPERCATEGORY` in `albums.constants.js`). Routes (before `/:id`): `GET /auto?tz=` → `{ groups: [{ id, albums: [{ key, count, coverUrl, firstAt, lastAt }] }] }`, `GET /auto/:key/media`, `POST /auto/:key/save {name}` (→ manual album, keeps order via `position`). FE: rows in `AlbumsView`, `AutoAlbumView` (`/albums/auto/:key`), names built client-side by `@tng/shared` `utils/autoAlbums.ts::autoAlbumName` (i18n `albums.auto.*`).
   - Public links (`share_links`): 32-char random token, `permission` view|download, optional expiry + max views (each first-page load counts 1 view; expired/exhausted → 410). Media URLs in a public response are signed with the link as scope, so revoking the link also blocks the images.
-  - Frontend `features/albums/`: `AlbumsView` (`/albums`: invitations · smart · mine · shared), `AlbumDetailView` (`/albums/:id`: header actions, select → remove / set cover, owner "Reorder" mode = `AlbumReorderGrid` with `@dnd-kit` (mouse, touch, keyboard), Lightbox only acts on own photos), `PublicAlbumView` (`/s/:token`, outside MainLayout/auth). Global `AddToAlbumDialog` (opened via `useGalleryActionsStore.openAddToAlbum(ids)` from `SelectionActionBar` and Lightbox `onAddToAlbum`). Spotlight: album result → `/albums/:id`, "Save as album" creates a smart query album; AI Studio tag view → "Create smart album".
-- **Personal labels** (`modules/labels/`, `/api/labels`, auth): user-defined labels ("To edit", "To print"…) to remember what to do with a photo — **independent of `media.is_favorite`**; the Favorites page shows photos that are hearted OR labeled. Tables `user_labels` (unique `user_id + lower(name)`, color key from `labels.constants.js::LABEL_COLORS` — keep in sync with FE `services/labels.ts`), `media_user_labels`, `user_label_seeds` (3 suggested labels created once per user via `POST /seed`). **i18n**: suggested labels are stored as a key (`user_labels.preset`, `name = NULL`) and the FE shows `favorites.labels.suggested.<preset>` in the current language (`useLabels` resolves `name`, `suggested: true`); once renamed, `name` is the user's own text and is never translated. `LABEL_PRESETS` (`labels.constants.js`) lists every preset with its names in all languages — used to block a custom label that duplicates a suggested one and to migrate old rows; keep it in sync with the locales. Spotlight matches suggested labels in every language. Routes: `GET /` → `{ seeded, totals: { all, favorites }, labels (+count, coverUrl) }`, `POST /`, `PATCH|DELETE /:id`, `POST /:id/media`, `POST /:id/media/remove`, `GET /saved?filter=all|favorites|<labelId>` (items + `labelIds`), `GET /media/:mediaId` → `{ editable, labelIds }` (editable = own, not trashed). FE `features/favorites/`: `FavoritesView` (filter chips in `?filter=`; mobile shows All · Hearted · the active label + a "Labels ▾" bottom sheet `LabelFilterSheet`, multi-select via the shared selection store), `useLabels` / `useLabelActions`, `LabelMenu` (Bookmark button in `SelectionActionBar`), `MediaLabelsSection` (Lightbox details), `LabelManagerDialog` (rendered in MainLayout, opened via `useLabelManager`). Favorites caches are `["favorites", filter]` — invalidate the `["favorites"]` prefix.
+  - Frontend `features/albums/`: `AlbumsView` (`/albums`: invitations · smart · mine · shared), `AlbumDetailView` (`/albums/:id`: header actions, select → remove / set cover, owner "Reorder" mode = `AlbumReorderGrid` with `@dnd-kit` (mouse, touch, keyboard), Lightbox only acts on own photos), `PublicAlbumView` (`/s/:token`, outside MainLayout/auth). Global `AddToAlbumDialog` (opened via `useGalleryActionsStore.openAddToAlbum(ids)` from `SelectionActionBar` and Lightbox `onAddToAlbum`). Spotlight: album result → `/albums/:id`, "Save as album" creates a smart query album; AI Studio tag view → "Create smart album". Smart tag rules accept detailed labels (`SmartRuleFields`: 17 category chips + a label search box).
+- **Basic edit (non-destructive, web only)** — `/edit/:id` (`features/editor/`), opened from the Lightbox "Edit" button / `E` key (only where the parent passes `editable`: Gallery, Favorites; photos only, not while peeking a similar photo). `engine/` = WebGL2 renderer + one GLSL pass (`shader.ts`: white balance + exposure in linear → levels → shadows/highlights → contrast → vibrance/saturation → vignette); the canvas is the **original** display tier (`?size=base`, ≤2048 px), so the preview is exactly the saved image. `recipe.ts` = `DEFAULT_RECIPE` / `SLIDER_GROUPS` / `normalizeRecipe` (ranges mirror backend `media.schema.js::editRecipeSchema` — change both). Save = recipe JSON + rendered WebP (PNG on Safari) → `POST /api/gallery/media/:id/edit` (multipart, ≤25 MB) → `media.edit.service.js` re-derives display/med/small with `buildImageDerivatives` into `media_edits` (`<userId>/edits/<mediaId>/<ts>-*.webp`, old edit objects removed after the row points to the new ones); `GET /:id/edit` → `{ recipe, updatedAt, sourceUrl }`, `DELETE /:id/edit` = revert. The thumbnail endpoint serves edited small/med/display when a row exists (`base` + `full` stay original); `MEDIA_COLUMNS.edited_at` → `v=2.<ms>` in thumbnail URLs (immutable cache) + `editedAt` on items (Lightbox never swaps an edited photo for the unedited original on zoom). AI (CLIP/YOLO/DINO/tags) keeps using the original; "Download original" stays the original. Permanent delete + admin delete user also remove the edit objects. Not yet: LUT presets, AI preset recommendation, crop/rotate, mobile, Studio "Editing" tab + Spotlight "Edited photos" scope (still placeholders).
+- **Personal labels** (`modules/labels/`, `/api/labels`, auth): user-defined labels ("To edit", "To print"…) to remember what to do with a photo — **independent of `media.is_favorite`**; the Favorites page shows photos that are hearted OR labeled. Tables `user_labels` (unique `user_id + lower(name)`, color key from `labels.constants.js::LABEL_COLORS` — keep in sync with FE `services/labels.ts`), `media_user_labels`, `user_label_seeds` (3 suggested labels created once per user via `POST /seed`). **i18n**: suggested labels are stored as a key (`user_labels.preset`, `name = NULL`) and the FE shows `favorites.labels.suggested.<preset>` in the current language (`useLabels` resolves `name`, `suggested: true`); once renamed, `name` is the user's own text and is never translated. `LABEL_PRESETS` (`labels.constants.js`) lists every preset with its names in all languages — used to block a custom label that duplicates a suggested one and to migrate old rows; keep it in sync with the locales. Spotlight matches suggested labels in every language. Routes: `GET /` → `{ seeded, totals: { all, favorites }, labels (+count, coverUrl) }`, `POST /`, `PATCH|DELETE /:id`, `POST /:id/media`, `POST /:id/media/remove`, `GET /saved?filter=all|favorites|<labelId>` (items + `labelIds`), `GET /media/:mediaId` → `{ editable, labelIds }` (editable = own, not trashed). FE `features/favorites/`: Favorites lives **inside Albums** like the mobile app — `AlbumsView` starts with `FavoriteCollections` ("Collections": Favorites card + one card per label + **Trash** card last, shared `CoverCard` with auto albums), no sidebar item; Trash = `features/trash/TrashView` at `TRASH_PATH` `/albums/trash` (old `/trash` redirects; card count/size from `/profile/storage` + cover = newest trashed item via `useTrashSummary`, cover key under `trashQueryKey` — trashing from the gallery invalidates `trashQueryKey` + `storageQueryKey`); `FavoritesView` at `/albums/favorites` (`favoritesPath(filter)`; old `/favorites?…` and `/albums/auto/type-favorites` redirect) (filter chips in `?filter=`; mobile shows All · Hearted · the active label + a "Labels ▾" bottom sheet `LabelFilterSheet`, multi-select via the shared selection store), `useLabels` / `useLabelActions`, `LabelMenu` (Bookmark button in `SelectionActionBar`), `MediaLabelsSection` (Lightbox details), `LabelManagerDialog` (rendered in MainLayout, opened via `useLabelManager`). Favorites caches are `["favorites", filter]` — invalidate the `["favorites"]` prefix.
 - **Developer Mode** (request/approval):
   - `modules/developer/developer.service.js` (`getDeveloperStatus`, `requestDeveloper` upsert → pending, `listDeveloperRequests`, `reviewDeveloperRequest`) + the `developer_requests` table (status `pending|approved|rejected`).
   - User: `GET /api/developer/status`, `POST /api/developer/request` (auth). Admin: `GET /api/admin/developer-requests`, `POST /api/admin/developer-requests/:id/review` (requireAdmin). Mounted at `/api/developer`.
-  - Frontend: `services/developer.ts`, store/hook `useDeveloperMode` (zustand, `enabled` persisted to localStorage key `tng.devModeEnabled`, `devModeEnabled = approved && enabled`), `DeveloperModeDialog`, item in `UserMenu`; admin page `/admin/developer` (`AdminDeveloperView`, status tabs; hook `useAdminDeveloperRequests` is react-query and also feeds the sidebar badge).
+  - Frontend: `services/developer.ts`, store/hook `useDeveloperMode` (zustand, `enabled` persisted to localStorage key `tng.devModeEnabled`, `devModeEnabled = approved && enabled`), inline `features/settings/components/DeveloperGroup` (status · request with reason · on/off switch) in the account sheet / `/settings`; admin page `/admin/developer` (`AdminDeveloperView`, same toolbar as Users: search `?q=` + status Select `?status=`; hook `useAdminDeveloperRequests` is react-query and also feeds the sidebar badge).
 - **Admin** (`modules/admin/`, all `requireAdmin`): `GET /api/admin/overview` (KPIs, 30-day `activity` signups+uploads with every day filled, 5 newest users), `GET /system` (ai-service `/health` + current models, AI coverage of all photos), `GET /users?q&role&status&sort&dir&limit&offset` (server-side search/sort/paging; media count, storage, last active = newest session), `GET /users/:userId` (profile + stats + AI coverage), `DELETE /users/:userId` (removes the user's MinIO objects, then the row — FE deletes through this, not Better Auth `removeUser`). Role / ban / sessions go through the Better Auth admin client (`services/admin.ts`). Better Auth columns are camelCase (`"createdAt"`, `"userId"`). FE `features/admin/`: `AdminDashboard` (`/admin`), `AdminUsersView` (`/admin/users`, filters in the URL, `?user=<id>` opens `AdminUserSheet`, table on md+ / cards on mobile, `AdminUserActions` menu, no actions on yourself), `AdminDeveloperView` (`/admin/developer`).
-- **WebSocket (signaling)**: Server uses `ws` library attached to `http.Server` via `setupWebSocket(server)` in `ws/index.js`. WebSocket path: `/ws`. Authentication via cookies on the upgrade request (same Better Auth session). In-memory room/peer management — rooms expire after 1 hour, auto-cleanup every 5 minutes. DB persistence of share_sessions is optional/graceful.
+- **WebSocket (signaling)**: Server uses `ws` library attached to `http.Server` via `setupWebSocket(server)` in `ws/index.js`. WebSocket path: `/ws`. First message `auth { guestId, name }`: Better Auth cookie → user, otherwise **guest** (only `xfer:join/leave/signal/report/relay-request`). Every socket gets a `connId` (WebRTC signals target one tab). Message list in `ws/protocol.js`.
+- **Quick send** (`modules/transfers/`, `/api/transfers`; spec `docs/features/share-p2p.md`): send to friends (pick, no room) or anyone via link/QR/6-char code (no login). Library photos: friends = server `copyObject` + AI rows copied, link = `GET /:id/files/:fileId/content` (Range). Device files: WebRTC P2P (STUN) → TURN (coturn, `GET /ice` HMAC creds) → **encrypted relay** (AES-GCM parts 4 MiB → MinIO `transfers/<id>/…`, 5 GB/transfer, kept 1 day, purge job + MinIO lifecycle). E2E key: link `#k=` fragment / ECDH-wrapped per friend device (`user_device_keys`) / ephemeral ECDH via signaling for code joiners. Server stores only token hashes. `transfer_recipients.via` = p2p|turn|relay|server|copy (thesis metrics). FE receiver writes to OPFS in a worker (multi-GB, resumable).
 - **MinIO bucket**: Must be lowercase with hyphens only (no underscores). Auto-created on server start (`config/minio.js` — `ensureBucketExists`).
-- **DB schema bootstrap**: `db/migrate.js::ensureSchema()` runs idempotent DDL on server start: media columns, pgvector + `media_embeddings`, `media_detections` + `media.yolo_processed_at`, `developer_requests`. Keep it in sync with `database/pipeline/schema.sql`.
+- **API versioning**: `/api/v1/*` tự động rewrite sang `/api/*` (middleware trong `server.js`) — mobile app và web dùng chung endpoint. Backend chỉ maintain 1 version.
+- **Redis**: Tự động dùng Redis store cho rate-limit khi `REDIS_URL` set (fallback in-memory). Cache layer (`linkCache`, `memeTemplatesCache`) vẫn in-memory — scale horizontal cần Redis cache.
+- **Health check**: `GET /health` (liveness) + `GET /health/ready` (readiness: DB + MinIO). Dùng cho Docker/k8s probe.
+- **Graceful shutdown**: SIGTERM/SIGINT → đóng HTTP server gracefully, force exit sau 10s.
+- **Structured logging**: `pino` + `pino-http` — server code logs through `logger` from `lib/logger.js` (`logger.error({ err }, "msg")` so the stack is kept), never `console.*`; only the CLI `scripts/` and `config/env.js` (runs before `.env` is loaded) use `console`. Request tracing qua `X-Request-ID` header (client gửi hoặc server tự sinh). Log level qua `LOG_LEVEL` env.
+- **DB schema bootstrap**: `db/migrate.js::ensureSchema()` on server start: (1) Better Auth `getMigrations().runMigrations()`, (2) empty DB (no `media`) → runs `db/schema.sql`, (3) idempotent DDL for existing DBs. (1)–(2) failing stops the server; (3) only logs. Postgres has no `initdb` mount. A schema change goes into **both** `schema.sql` (fresh DBs) and `migrate.js` (existing DBs); then `npm run db:dbml`. Expired Better Auth sessions/verifications are purged hourly (`modules/auth/auth.jobs.js`).
 - **Error handling**: Global error handler (`middleware/errorHandler.js`) registered in `server.js` catches all unhandled errors. 4xx (`httpError`, Zod, multer, body-parser) return their message + code; **5xx always return a generic message** (details only in the log) — never put internals in a 4xx message.
-- **Rate limits** (`middleware/rateLimit.js`, express-rate-limit, in-memory, per user after `requireAuth` else per IP): search 240/min (media/objects/albums/friends), upload 30/min, AI backfill 120/min, zip download 20/min, public album links 300/min → 429 `RATE_LIMITED`. Multiple backend instances would need a shared store (Redis).
+- **Rate limits** (`middleware/rateLimit.js`, express-rate-limit, store = Redis nếu `REDIS_URL` set else in-memory, per user after `requireAuth` else per IP): search 240/min (media/objects/albums/friends), upload 30/min, AI backfill 120/min, zip download 20/min, public album links 300/min, transfer code redeem 20/min, transfer writes 60/min, relay parts 3000/min, **moments read 240/min (`GET /`, `GET /invitations`, `GET /invitations/count`), moments write 30/min (`POST /`, `PUT /:id`, `POST /:id/fill`, `DELETE /:id`, `POST /:id/leave`, reactions), meme write 10/min (`POST /:momentId/memes`, `POST .../react`, `DELETE .../memes/:id`) → 429 `RATE_LIMITED`. Redis store tự động khi `REDIS_URL` set (multi-instance ready).
 - **Security baseline**: production refuses to start without `CORS_ORIGINS` (CORS with cookies — never `origin: true` in prod) or with a placeholder / < 32-char `BETTER_AUTH_SECRET`; WebSocket handshakes from a browser Origin outside `CORS_ORIGINS` are rejected; `trust proxy` = 1 behind Caddy; uploads accept raster photos only (`media.sources.js::PHOTO_MIMES` — no SVG) + video; Google/GitHub sign-in is enabled only when both client id + secret are set. The prod container has no root `.env` — every backend/ai-service variable must be listed in `docker-compose.prod.yml`.
 
 ### Frontend
-- **AI colors + surfaces**: one color per AI source in `lib/aiColors.ts` (`AI_CHIP` theme-aware, `AI_CHIP_ON_DARK` for Lightbox/over photos, `AI_BAR` bars/dots): YOLO = emerald, CLIP = sky, Tag = zinc/primary, DINOv3 = violet — used by landing, Spotlight, Lightbox details, Settings AI. Floating bars / Spotlight use the `glass` utility (`index.css`, `@utility glass`). Stat blocks = hairline grid (`gap-px bg-border/60` + `bg-card` cells, mono uppercase label, `font-heading` number).
+- **Content-tag colors**: categories + detailed labels are colored by **group** — `@tng/shared` `utils/tagColors.ts` (`tagColor(tag, section)`: label → its catalog `section`, category → `TAG_CATEGORY_SECTION`; 15 sections → Tailwind color names, never emerald/sky/violet = AI source colors) → static classes `TAG_CHIP` in web + mobile `lib/aiColors.ts`. Used by Lightbox tag chips (web `MediaAiTagsSection`, mobile `InfoSheet`) and AI Studio `LabelSections` (labels with photos). Sync test `features/studio/tagColors.test.ts`; adding a section/category → add its color.
+- **Account-kind colors**: `@tng/shared` `userKind({ role, isDeveloper })` → admin (red) · developer (amber, Developer Mode approved; admin wins) · user (blue) = card border + soft icon chip — web `lib/userKind.ts` (`KIND_STYLE`) + `components/KindBadge.tsx`, mobile `features/admin/components/AdminUi.tsx`. Used by Admin Users (table left accent / cards), user sheet, profile card (web + mobile). `AdminUser.isDeveloper` comes from `admin.service.js` (`developer_requests.status = approved`).
+- **AI colors + surfaces**: one color per AI source in `lib/aiColors.ts` (`AI_CHIP` theme-aware — also in the Lightbox, which follows the light/dark theme; `AI_BAR` bars/dots). Only elements drawn ON a photo (thumbnail badges, YOLO bboxes) stay dark-on-image: YOLO = emerald, CLIP = sky, Tag = zinc/primary, DINOv3 = violet — used by landing, Spotlight, Lightbox details, Settings AI. Floating bars / Spotlight use the `glass` utility (`index.css`, `@utility glass`). Stat blocks = hairline grid (`gap-px bg-border/60` + `bg-card` cells, mono uppercase label, `font-heading` number).
 - **Motion** (framer-motion; everything off under `prefers-reduced-motion`): shared timing in `lib/motion.ts` (`EASE_OUT`, `APP_DURATION` fast/base/slow = 0.15/0.22/0.32 s, `POP_SPRING`), shared effects in `components/motion/` (`effects.tsx`: ScrollProgress, Marquee, CountUp, ScrollWords; `AnimatedGridItem` for non-virtualized grids inside `<AnimatePresence initial={false} mode="popLayout">`). **Landing** may be expressive (Reveal on scroll, parallax, typewriter `hooks/useTypewriter.ts`); **the app stays functional and fast** (≤ 0.32 s, never delays content): MainLayout `PageTransition` = opacity only (a transform would break the virtualized grid's `scrollMargin` and every `position: fixed` child), Gallery first-load row stagger (first ~0.8 s only), Lightbox zooms from / back to the `ImageCard` with the same `data-media-id` (close animation runs inside Lightbox before `onClose`), AI chips pop (`POP_SPRING`), stats `CountUp`, `animate-float` on empty-state icons. No scroll-reveal / parallax in the app grids.
 - **Path alias**: `@/` → `./src/` (configured in vite.config.js and tsconfig.json)
 - **Feature-based architecture**: Each feature in `features/<name>/` contains its view, components, and logic
-- **Keep `.tsx` for rendering**: motion presets live in `.ts` (`lib/motion.ts` shared: `popIn`, `floatingSwap`, `pageFade`…; `features/<name>/<name>.motion.ts` feature-only, e.g. `landing.motion.ts`), stateful logic in hooks (`hooks/useLightboxTransition.ts`, `useIntroStagger`, `usePointerTilt`, `useScrolled`, `useTypewriter`), pure helpers next to the feature (`features/search/searchScore.ts`, `features/gallery/gridLayout.ts`, `features/albums/autoAlbums.ts`). Components spread presets: `<motion.span {...popIn(i, reduce)}>`. Formatting helpers live only in `utils/format.ts` (`formatBytes`, `formatDuration`, `formatCountdown`, `formatSpeed`, `formatEta`, `formatDate`, `formatDateTime`, `formatRelative`; `utils/string.ts` = `getInitials`) — don't redefine them in components. No `fetch` in components: every API call goes through `services/*` (`services/share.ts` for the share friends tab). Page-level data + actions sit in a feature hook next to the view (`albums/useAlbumDetail.ts`, `friends/useFriends.ts`, `moments/useMomentDraft.ts`); shared UI logic in `hooks/` (`useSpotlightSearch`, `useGridSize`, `useInfiniteSentinel`, `useRangeSelection`, `useProgressiveImage`). Render-only helpers (badges, small handlers, icon/label maps) stay in the `.tsx`.
-- **shadcn/ui**: Components in `components/ui/`, configured with radix-sera style, neutral base color — grays in `index.css` are neutral (chroma ≈ 0, hue 85 to sit on the ivory background), monochrome like the landing; the only accent colors are the AI source colors in `lib/aiColors.ts`. Don't reintroduce taupe/brown
-- **CSS**: Tailwind CSS v4 with CSS variables for theming (light/dark), "DFVN Basteleur" for headings (`font-heading`; local `assets/fonts/DFVN-Basteleur-{Moonlight,Bold}.otf`, SIL OFL, committed — Moonlight ≤ 400, Bold ≥ 500), body/UI font "Product Sans" — **proprietary, kept local only** (`frontend/src/assets/fonts/*` is git-ignored except a `README.md`; missing files fall back to `system-ui`)
+- **Keep `.tsx` for rendering**: motion presets live in `.ts` (`lib/motion.ts` shared: `popIn`, `pageFade`…; `features/<name>/<name>.motion.ts` feature-only, e.g. `landing.motion.ts`), stateful logic in hooks next to the feature (`features/gallery/useLightboxTransition.ts`, `useIntroStagger`, `features/landing/usePointerTilt.ts`, `useScrolled`, `useTypewriter`), pure helpers next to the feature (`features/search/searchScore.ts`, `features/gallery/gridLayout.ts`). Components spread presets: `<motion.span {...popIn(i, reduce)}>`. Formatting helpers live only in `@tng/shared` (`packages/shared/src/utils`: `formatBytes`, `formatDuration`, `formatCountdown`, `formatDate`, `formatDateTime`, `formatRelative`, `getInitials`) — import from `@tng/shared`, don't redefine them in components. Types and the selection / grid-density stores are also imported straight from `@tng/shared` (no re-export shims). No `fetch` in components: every API call goes through `services/*` (`services/transfers.ts` for Quick send). Page-level data + actions sit in a feature hook next to the view (`albums/useAlbumDetail.ts`, `friends/useFriends.ts`, `moments/useMomentDraft.ts`); `hooks/` only holds hooks used by **several** features (`useRangeSelection`, `useGalleryActions`, `useSignaling`, `usePresence`, `useDraggablePanel`…); a hook used by one feature lives in that feature (`search/useSpotlightSearch.ts`, `gallery/useGridSize.ts`, `moments/useMomentInvitations.ts`). Big views are split into a hook + `components/` (e.g. `SearchView` = `useScopedQuery` + `SearchResults` + `ScopeSuggestions`). Pure helpers get a Vitest file next to them (`gridLayout.test.ts`, `searchScope.test.ts`…; `npm test`). Render-only helpers (badges, small handlers, icon/label maps) stay in the `.tsx`.
+- **shadcn/ui**: Components in `components/ui/`, configured with radix-sera style, neutral base color — grays in `index.css` are neutral (chroma ≈ 0, hue 85 to sit on the ivory background), monochrome like the landing; the only accent colors are the AI source colors + content-tag group colors in `lib/aiColors.ts`. Don't reintroduce taupe/brown
+- **CSS**: Tailwind CSS v4 with CSS variables for theming (light/dark), "DFVN Basteleur" for headings (`font-heading`; local `assets/fonts/DFVN-Basteleur-{Moonlight,Bold}.woff2`, SIL OFL, committed; fonts are served as WOFF2 — see `assets/fonts/README.md` to convert — Moonlight ≤ 400, Bold ≥ 500), Japanese = "Zen Old Mincho" (headings) + "Zen Kaku Gothic New" (body) — SIL OFL, committed **subsets**, CJK `unicode-range` + after the Latin font in the stack (glyph fallback, downloaded only on Japanese pages; re-subset: `assets/fonts/README.md`); body/UI font "Product Sans" — **proprietary, kept local only** (`frontend/src/assets/fonts/*` is git-ignored except a `README.md`; missing files fall back to `system-ui`)
 - **Auth flow**: `AuthProvider` wraps the app → `useSession()` hook → `ProtectedRoute` / `AdminRoute` guards
 - **API config**: Single source of truth in `lib/config.ts` — `API_URL` from `VITE_API_URL` (or `VITE_API_BASE_URL` fallback)
 - **Media URLs**: Resolved via `resolveMediaUrl(url)` with `AUTH_BASE_URL` for seamless dev and prod streaming
-- **Moment memes (memegen.link)**: a separate, still-active feature — `moments.meme.service.js` + `/api/moments/memes/templates` and `/api/moments/:momentId/memes*` (template + caption on the back of a moment card, ❤️ react). Not related to the removed MediaPipe meme below.
+- **Recent moments** (Gallery strip, web `moments/components/RecentMoments` in `GalleryView` above the grid; mobile in the Library list header): "+" tile → `/camera?mode=moments` (web `useCamera({ initialMode })`) · newest 12 moments of the first feed page as 3:4 tiles (every slot photo stacked, ≤ 3; ≤ 3 people avatars via `momentPeople`; foreground ring = unseen; monochrome, no rose) → `/moments?id=` (feed opens at that page). Both read the feed through one `momentsFeedOptions` (`moments/momentsQuery.ts`, web + mobile) → same cache as the Moments page. `useGridSize` also observes the grid's parent so the strip appearing re-measures the virtualizer `scrollMargin`.
+- **Moments UI** (web `features/moments/`, mirrored by mobile): one moment per page (`MomentFeed` = vertical snap pager, 3:4 portrait card (`MOMENT_ASPECT` in `@tng/shared`), width = min(width, (height − `CARD_CHROME`) ÷ aspect, 560), ↑/↓/j/k + side buttons, current page ± 1 mounted) · `MomentFilterBar` (All · Me · friends from the loaded feed, soft foreground ring = new) · `MomentCard` (who · when · "New" · ⋯ above; only the caption on the photo; **click = flip** (no swipe gesture — tried and dropped; each turn = one more half-turn left on an unbounded angle, odd multiples of 180° = meme side) to `MomentMemePanel` on the back (scrolls; clicking a non-control there flips back), double-click = ❤️; below: ONE reaction button (click = ❤️ / take mine back, hold or right-click = `QUICK_EMOJIS` + any emoji), who reacted, Meme button (= flip)). Slot avatars sit at the middle of each slot's left edge and video controls inside the corners (the 36px radius clips anything in a corner). Camera Moment mode = rose pill + rose shutter ring + rose "Post" button (Moments identity color = rose, not Locket's yellow) (same as mobile). Filter + unseen helpers are pure in `@tng/shared` `utils/moments.ts` (tests `features/moments/momentsFilter.test.ts`); "seen until" mark = `useMomentsSeen` (localStorage `tng.momentsSeenUntil`, frozen at open for the badges). No 3D flip / infinite reaction animations.
+- **Moment memes (memegen.link)**: a separate, still-active feature — `moments.meme.service.js` + `/api/moments/memes/templates` and `/api/moments/:momentId/memes*` (template + caption on the back of a moment card, ❤️ react). Not related to the removed MediaPipe meme below. **Meme images are stored in MinIO** (`moments/<momentId>/memes/<memeId>.<ext>`) and served via signed stream URL `GET /api/moments/:momentId/memes/:memeId/image?exp&sig` (same HMAC secret/TTL as media URLs; cross-origin `<img>` works without cookies; fallback to session + `canViewMoment` when unsigned). Meme objects are cleaned up by the moments job (orphan scan). **Trash behavior**: media in trash is hidden from moments feed (`media.access.js` rejects `deleted_at IS NOT NULL` for signed URLs; single moments with trashed media are hidden from feed; collab slots with deleted media show "Ảnh đã bị xoá" placeholder). Moment single media FK is `ON DELETE SET NULL` (not CASCADE) so moments survive media deletion.
 - **Meme Feature (MediaPipe)**: fully REMOVED, to be rebuilt from scratch — both the client-side MediaPipe/meme part (lib/vision, hooks/useLiveVision, services/ai, utils/memeOverlay, ArOverlay, `public/wasm`, the vite `/api/ai` proxy) and the **meme reaction (Moments)** part (`GestureMemeDialog.tsx`, `MemeCameraPane.tsx`, the meme button on moments, `reactionMediaId`/`kind="media"`/`myReactionMediaId` in FE + BE + DB). The FE no longer calls ai-service directly; ai-service serves the backend via `/api/v1/embed/*` + `/api/v1/detect/objects` (and `/health`). Moment reactions are emoji-only for now.
 - **Gallery Performance**:
   - `GalleryView.tsx`: window-virtualized rows (`@tanstack/react-virtual`, `scrollMargin` = grid offset; row height = square cell + gap, re-measured on width change), columns from grid width × density (`useGridDensity`), infinite scroll sentinel (800px), skeleton with the real column count, sticky current-group label under the app header, group "select all" button on date headers, Shift+click range selection, total count from the API. **Selection mode**: long-press (450ms) or right-click an image to enter selection mode; click to toggle; `Escape` exits; a floating desktop toolbar (and mobile BottomBar) shows Share/Download/Delete via `useSelectionStore`.
   - `ImageCard.tsx`: Shimmer placeholder via `<Skeleton />`, smooth progressive fade-in transition (`opacity-0` → `opacity-100`), error fallback, CSS `content-visibility: auto`, selection check overlay (`selected`/`onToggle`/`onLongPress`).
-  - `SendView.tsx` (`/share`): send files directly from the device (no DB upload) — `File.stream()` into a `TransferSource` (real size → accurate progress) — **or pick photos/videos already in the account** ("Choose from library" dialog → `MediaPicker`, streamed from `/api/gallery/media/:id/file`), sharing `useShareContext`. Sidebar item "Quick send".
-  - `features/gallery/components/MediaPicker.tsx`: shared picker grid for media already in the account (filter all/favorites/photos/videos via `fetchMediaByFilter`, 60/page + "load more"; controlled `selectedIds` + `onToggle(item)`). Used by FriendsTab and SendView. `features/share/mediaSource.ts::buildMediaSource` turns a `MediaListItem` into a `TransferSource` (real `mimeType`, keeps the original filename extension).
+  - `SendView.tsx` (`/share`, sidebar "Quick send"): pick device files and/or library items → friends (`?to=<id>` preselects, from FriendsView / Spotlight) or link/QR/code → `HostPanel` (`?t=<id>`); tabs Received (inbox + code entry) / Sent.
+  - **Media picker** (`features/media-picker/`, used by Albums "Add photos", Profile avatar, Moments create/fill, Quick send library): `MediaPicker` (embeddable, controlled `selectedIds` + `onToggle`, optional `onToggleMany` for Shift-range, `selectedItems` → "Selected" chip, `max`), `MediaPickerDialog` (controlled dialog with its own selection, `onConfirm(items)`), `pickMedia(options)` → `Promise<MediaListItem[] | null>` (dialog rendered by `MediaPickerHost` in MainLayout). The dialog is draggable (header) + resizable (corner, double-click = default) like Spotlight via `useDraggablePanel` / `useResizablePanel` (`shiftY` keeps the top edge fixed for vertically-centered panels), stored in localStorage `tng.mediaPickerSize` / `tng.mediaPickerPos`. Row-virtualized grid inside its own scroll box (`components/PickerGrid.tsx`, `@tanstack/react-virtual`, auto-loads near the end, 100/page = API max for list + tag endpoints), memoized tiles (`PickerTile`, only the toggled tile re-renders). Search bar shares Spotlight logic (`lens.ts`: suggestions for favorites / labels / albums / label colors / AI tag names in vi·en·ja, Tab → chip, Backspace removes, `fav.dog` shortcut); chip rows = type filters + labels + AI tags with counts. Lens → data (`useMediaPickerQuery`): filter = paged list, tag = paged `fetchTagMedia`, scope or typed text = hybrid search (`scope=`; tag + text = `"<tag name> <text>"`). Load errors show a retry instead of an empty grid. Cache key `[...galleryQueryPrefix, "picker", filter]` so gallery invalidations/updaters (upload, delete, favorite) keep it fresh.
+- **Friends** (`modules/friends/`, `/api/friends`; FE `features/friends/`): DTOs are camelCase via `friends.mapper.js`. Search `GET /search?q=` → list: exact email (1 user, full email) or name contains (≥ 2 chars, ≤ 8, email masked `th•••@domain` unless already friends), never yourself, each with `relationship` + pending `requestId`. Add by id `POST / { userId }` (legacy `{ query }` still accepted); if they already invited you → `accepted`. `GET /requests` (incoming) · `GET /requests/sent` · `DELETE /requests/:id` (cancel own) · accept/decline · `DELETE /:friendId`. WS (`friends.notify.js`): `friend:request`, `friend:accepted` (+ instant presence swap), `friend:changed` → `FriendEventsToast` (MainLayout: invalidates `friendsKeys.all`, accept from toast) + sidebar badge = incoming count. UI = **same layout as the mobile Friends screen** on every width (one centered `max-w-xl` column, tabs Friends · Requests · Add, grouped bordered lists with dividers) in web style (shadcn `Button`s / colors, not pills); Add tab = `AddFriendPanel` + `FriendInviteCard`; `?tab=` / `?q=` in URL (Spotlight non-friend result → `/friends?q=`). Friend rows are memoized (filter without accents, sort online/A→Z/newest, ⋯ menu).
   - `Lightbox.tsx`: Progressive high-res loading with spinner and video player support.
-  - `SearchView.tsx` (Spotlight modal): **multi-source search** — calls four APIs in parallel via `Promise.allSettled` (`searchFriend`, `searchAlbums`, `searchGallerySemantic`, `searchGalleryObjects`) on each debounced query (400ms). Renders results in four groups (Friends / Albums / Images / Objects), each with a header + count; object images have a `%` badge = confidence. Friend result click → `openShare([], { friendId })`; album/image click currently only `console.log`s (no album detail route / Lightbox integration yet). Uses `useGalleryActionsStore` to open ShareDialog.
-- **Profile / Settings**: `features/profile/` (`/profile` — summary card + edit name/avatar via `authClient.updateUser` + change password, credential accounts only) and `features/settings/` (`/settings` — Appearance: theme/language/grid density; Storage: `/api/profile/storage` + empty trash; AI processing: CLIP/YOLO/DINO status + batched backfill loop via `services/aiProcessing.ts`, stops when a batch processes 0; Sessions: Better Auth `listSessions`/`revokeSession`/`revokeOtherSessions`). Grid density lives in `hooks/useGridDensity.ts` (zustand, localStorage `tng.gridDensity`) and drives Gallery columns + Favorites/Trash grid classes.
-- **i18n**: Vietnamese (vi) is default/fallback language, English (en) and Japanese (ja) supported with complete translation coverage. Language list lives in `lib/languages.ts` (`LANGUAGES`, `toLanguageCode`) — add a language by creating `locales/<code>/translation.json`, registering it in `i18n.js` (`resources` + `supportedLngs`) and adding one entry to `LANGUAGES`. `LanguageToggle` is a dropdown menu built from that list. Detection: querystring > localStorage > cookie > navigator.
+  - `SearchView.tsx` (Spotlight modal): **multi-source search** — calls four APIs in parallel via `Promise.allSettled` (`searchFriend`, `searchAlbums`, `searchGallerySemantic`, `searchGalleryObjects`) on each debounced query (400ms). Renders results in four groups (Friends / Albums / Images / Objects), each with a header + count; object images have a `%` badge = confidence. Friend result click → `/share?to=<id>`; album/image click currently only `console.log`s (no album detail route / Lightbox integration yet). Uses `useGalleryActionsStore` to open ShareDialog.
+- **Account & settings** (same structure as the mobile account sheet): content = `features/settings/components/AccountPanel.tsx`, shown by the header avatar as a **bottom sheet** (`features/settings/AccountSheet.tsx`: Radix Dialog + framer-motion, slides up, centered ≤ 42rem × 90 dvh, grabber/title bar drags it down to close, closes on navigation; `UserMenu` = just the avatar button) and by the `/settings` page (`AccountView`; `/profile` redirects) — `features/profile/components/ProfileSummary` (account card + hairline stat grid) · Account group (edit name/avatar `EditProfileForm` via `authClient.updateUser`, change password `ChangePasswordForm` for credential accounts only — both in dialogs, the forms are card-less) · `AppearanceGroup` (theme / language / grid density, `Segmented`) · `StorageGroup` (`/api/profile/storage` bar, Trash row, empty trash) · `AiProcessingGroup` (tags/CLIP/YOLO/DINO status + batched backfill loop via `services/aiProcessing.ts`, stops when a batch processes 0; Developer Mode `DeveloperGroup` · admin dashboard row (admins) · `SessionsGroup` (Better Auth `listSessions`/`revokeSession`/`revokeOtherSessions`) · sign out. Rows = `features/settings/components/SettingsGroup.tsx` (`SettingsGroup` / `SettingsRow` / `Segmented`): **same order as mobile, web styling** — bordered `bg-card` groups, actions are shadcn `Button`s (outline / ghost, size sm) and `Badge`s, option groups = bordered tiles (`border-primary bg-primary/10` when active), no mobile pills / switches. Dialogs go outside a group (every child is a row); dialog forms sit in `DialogBody` (DialogContent has no padding). Grid density lives in `hooks/useGridDensity.ts` (zustand, localStorage `tng.gridDensity`) and drives Gallery columns + Favorites/Trash grid classes.
+- **i18n**: Vietnamese (vi) is default/fallback language, English (en) and Japanese (ja) supported with complete translation coverage. Language list lives in `@tng/shared` (`utils/languages.ts`: `LANGUAGES`, `toLanguageCode` — shared with mobile) — add a language by creating `packages/shared/src/i18n/locales/<code>/translation.json` (shared with mobile), registering it in `frontend/src/i18n.ts` (`LOCALES`: only `vi` is bundled, other languages are lazy chunks loaded by a tiny i18next backend when picked / detected) + `apps/mobile/src/lib/i18n.ts` (`resources`; `supportedLngs` comes from `LANGUAGES`) and adding one entry to `LANGUAGES`. `LanguageToggle` is a dropdown menu built from that list. Detection: querystring > localStorage > cookie > navigator.
 - **State**: Zustand for client state, React Query patterns for server state
-- **Linter**: oxlint (not ESLint) — run `npm run lint` in frontend/
+- **Linter**: oxlint (not ESLint) — run `npm run lint` in frontend/. `npm run build` = `tsc --noEmit && vite build` (type errors fail the build); `npm run typecheck`, `npm test` (Vitest).
+- **Code splitting**: every page in `routes/AppRoutes.tsx` is `lazy()` (helper `named()` for named exports); `MainLayout` / `AdminLayout` wrap `<Outlet/>` in `<Suspense fallback={<RouteFallback/>}>` so the chrome stays during chunk loads. Import pages only through the router (a static import elsewhere pulls the page back into the main chunk).
+- **Monorepo / Docker**: npm workspaces (`frontend`, `packages/*`, `apps/*`), one lockfile at the repo root. The frontend Docker images build from the **repo root** (`context: .`, `dockerfile: frontend/Dockerfile.{dev,prod}`, root `.dockerignore`) so `packages/shared` is available; `npm ci --workspace=frontend`.
 
 ### Database Schema (PostgreSQL)
 - **Better Auth tables**: `user`, `session`, `account`, `verification` (managed by Better Auth CLI, never manually alter)
-- **App tables**: `media`, `albums`, `album_media`, `album_members`, `share_links`, `friendships`, `moments`, `moment_reactions`
+- **App tables**: `media`, `albums`, `album_media`, `album_members`, `share_links`, `friendships`, `moments`, `moment_reactions`, `transfers` (+ `transfer_files`, `transfer_relay_parts`, `transfer_recipients`, `user_device_keys`)
 - **AI tables**: `media_embeddings` (1 row/image — 512-dim CLIP vector, pgvector), `media_dino_embeddings` (1 row/image — 384-dim DINOv3 vector), `media_detections` (many rows/image — YOLO26 class + confidence + bbox) + the `media.yolo_processed_at` column.
 - **User FK**: All app tables reference `"user".id` (TEXT type, not UUID) via `user_id`
 - **UUID primary keys**: All app tables use `gen_random_uuid()` for IDs
 - **AI columns**: AI results live in their own tables (`media_embeddings`, `media_detections`); the only AI column on `media` is `yolo_processed_at` (backfill flag). Prefer new tables over adding more AI columns to `media`.
-- **DBML**: `database/pipeline/schema.dbml` can be pasted into https://dbdiagram.io for ERD visualization
+- **DBML**: `database/pipeline/schema.dbml` (generated from the DB by `npm run db:dbml`, notes = `schema.sql` COMMENTs) can be pasted into https://dbdiagram.io for ERD visualization
 
 ### Environment Variables
 Key env vars used across the stack (all defined in root `.env`):
@@ -481,10 +442,11 @@ Key env vars used across the stack (all defined in root `.env`):
 - `AI_OBJECT_PROVIDER` (`stub` | `yolo`), `AI_YOLO_WEIGHTS` (`models/yolo26n.pt` local, relative to `ai-service/` — download with `scripts/download_yolo_weight.py` / `/opt/yolo-cache/yolo26n.pt` Docker), `AI_YOLO_DEVICE` (`auto` → mps on Apple Silicon; Docker on macOS is CPU-only), `AI_YOLO_IMGSZ` (`640`). ai-service requires `ultralytics>=8.4.183,<8.5` and Python 3.12, `AI_YOLO_CONF` (`0.25`), `AI_YOLO_MIN_CONF` (backend search, `0.4`)
 - `AI_SIMILARITY_PROVIDER` (`stub` | `dinov3`), `AI_DINO_MODEL` (`models/dinov3-vits16-pretrain-lvd1689m`), `AI_DINO_DEVICE` (`auto`), `AI_DINO_MIN_SIM` (backend, `0.35`); ai-service needs `transformers>=4.56`
 - `AI_SEARCH_MIN_SCORE` (backend, hybrid search threshold, `0.5`)
-- `AI_TAG_MODELS_DIR` (`bench/runs/cls`, relative to `ai-service/`), `AI_TAG_CONFIG` (`lp_clip` | `zs_clip` — CLIP-only models)
+- `AI_TAG_MODELS_DIR` (`app/tagging/probes`, relative to `ai-service/`), `AI_TAG_CONFIG` (`lp_clip` | `zs_clip` — CLIP-only models)
 - `AI_SERVICE_URL` (backend → ai-service, dev `http://localhost:8000`, compose `http://ai-service:8000`), `AI_TIMEOUT_MS` (backend → ai-service request timeout; legacy `AI_EMBED_TIMEOUT_MS` still read)
 - `MEDIA_URL_TTL_HOURS` (backend, signed media URL bucket, `24`), `MEDIA_URL_SECRET` (optional, defaults to `BETTER_AUTH_SECRET`)
 - `FFMPEG_PATH` (backend, optional — defaults to the `ffmpeg-static` binary)
+- `STUN_URLS`, `TURN_URLS`, `TURN_SECRET`, `TURN_TTL_SECONDS` (backend, Quick send ICE), `TURN_EXTERNAL_IP` (coturn, prod)
 - `AI_PORT` (ai-service)
 - `VITE_API_URL` / `VITE_API_BASE_URL` (frontend, defaults to `http://localhost:3000/api`)
 
@@ -504,15 +466,19 @@ Key env vars used across the stack (all defined in root `.env`):
 ### Adding a new feature module (frontend)
 1. Create `src/features/<name>/` with `<Name>View.tsx` and `components/` subfolder
 2. Add route in `src/routes/AppRoutes.tsx`
-3. Add nav item in `src/hooks/useNavItems.ts` if needed — one list for both Sidebar (grouped by `section`: home · photos · ai · social, `system` = Trash pinned in the footer) and the mobile BottomBar (`bottomBar` = slot 0–4, slot 2 = round Camera button; only the active item shows its label). Active state = `isNavActive` (prefix match, so sub-pages stay highlighted).
-4. Add i18n keys in `src/locales/vi/translation.json` and `src/locales/en/translation.json`
-5. Add types in `src/types/index.ts`
+3. Add nav item in `src/features/navigation/useNavItems.ts` if needed — one list for both Sidebar (grouped by `section`: home · photos · ai · social, `system` = pinned in the footer — empty now, Trash lives in Albums) and the mobile BottomBar (`bottomBar` = slot 0–4; `BottomBarNav` = same as the mobile bar except Liquid Glass (web keeps the `glass` surface): icons only (label = aria-label/title), equal 58×46 slots, Camera like any other tab, one `bg-foreground/10` capsule sliding behind the active tab, drag along the bar = capsule follows the pointer and release opens that tab; bar is 54px tall → pages reserve ≥ 5rem + safe area). Active state = `isNavActive` (prefix match, so sub-pages stay highlighted).
+4. Add i18n keys in `packages/shared/src/i18n/locales/{vi,en,ja}/translation.json`
+5. Add shared types in `packages/shared/src/types/` (imported via `@tng/shared`)
 
 ### Adding a new API endpoint (backend)
 1. Add a route handler inside the relevant `modules/<name>/` folder (e.g. `<name>.routes.js`, with logic in `<name>.service.js`) — mount it in `modules/index.js`
 2. Use `requireAuth` or `requireAdmin` middleware (`middleware/auth.js`) and `validate` (`middleware/validate.js`) for protected/validated endpoints — every route that reads `body`/`params`/`query` gets a Zod schema in `<name>.schema.js`. User ids are TEXT (Better Auth), so validate them with `z.string().min(1).max(64)`, never `.uuid()`.
+   - Wrap handlers with `middleware/asyncHandler.js` — `respond((req) => service(req.user.id, …))` when the route just returns `{ success: true, data }`, `asyncHandler(async (req, res) => …)` for custom status / streams. No hand-written `try { … } catch (e) { next(e) }`.
    - Module file roles: `*.routes.js` (thin: validate → call service → respond), `*.service.js` (business logic + SQL), `*.mapper.js` (pure row → DTO, no DB), `*.schema.js` (Zod), `*.constants.js`, `*.notify.js` (WebSocket events). Ownership checks (`user_id = $n`) belong in the service query.
 3. Use `dbPool.query()` with PostgreSQL parameterized queries (`$1`, `$2`, etc.)
+   - Pure helpers (parsers, scoring, mappers, signing) get a `node:test` file next to them (`<file>.test.js`,
+     e.g. `ai/search.query.test.js`, `media/media.urls.test.js`); `npm test` runs every `*.test.js` and must not
+     need Postgres / MinIO / ai-service. Don't name scripts `test-*.js` (the runner picks them up).
 4. For MinIO operations, use the `minioClient` export from `config/minio.js`
 
 ### Adding a new shadcn/ui component
@@ -523,35 +489,16 @@ npx shadcn@latest add <component-name>
 Components are installed to `src/components/ui/`.
 
 
-## P2P Sharing Feature (WebRTC P2P Transfer)
+## Quick send (P2P file transfer)
 
-> 📄 **FULL SPEC**: `docs/features/share-p2p.md` — the whole protocol
-> (WebSocket messages, 16KB-chunk file transfer, LAN discovery, receiver save flow,
-> room lifecycle), file structures + per-task implementation spec with code snippets
-> and i18n keys. **Read this file before implementing any phase of this feature.**
+> 📄 **FULL SPEC**: `docs/features/share-p2p.md` — paths (P2P → TURN → encrypted relay, library copy/stream),
+> WS `xfer:*` + DataChannel protocol, E2E key distribution, REST, data model, ops (coturn). **Read it before
+> changing anything in `modules/transfers`, `ws/`, or `features/share`.**
 
-### Summary
-- P2P photo/video transfer: WebSocket signaling + WebRTC DataChannels
-- Modes: Internet (STUN/TURN), LAN (empty iceServers), WiFi Hotspot
-- Multi-file, multi-receiver, unlimited files; join via QR / room code / friends / LAN
-- The server holds NO file — bytes go direct P2P; S3 (MinIO) is only used when the receiver saves to Gallery
-- 6-char room code, expires in 1 hour; auth via the Better Auth session cookie on the upgrade request
-- FE dependency added when implementing: `qrcode.react`
-
-### Progress
-
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 1.1 | Backend WebSocket Signaling Server | ✅ DONE |
-| 1.2 | Frontend Types + Config | ✅ DONE |
-| 1.3 | Frontend Signaling Client | ✅ DONE |
-| 1.4 | Frontend WebRTC Manager | ✅ DONE |
-| 1.5 | Frontend Share UI | ✅ DONE |
-| 1.6 | Integration + i18n | ✅ DONE |
-| 1.7 | Gallery Selection UI + SendView (send files from device, no upload) | ✅ DONE |
-| 1.8 | Realtime WS invite (Friends tab) + real file size + online dot | ✅ DONE |
+- Constants shared FE ↔ BE: `features/share/engine/protocol.ts` ↔ `modules/transfers/transfers.constants.js` — change both.
+- Receivers need no account (`/r/:id#t=<token>&k=<key>`, `/r` code entry); friends get `xfer:incoming` toast + Sent/Received history in `/share`.
+- coturn: `docker compose … --profile turn` (dev ports / prod `network_mode: host`); without TURN only STUN + relay.
 
 ## Known Issues / Technical Debt
-- File `ProtecedRoutes.tsx` has a typo in the filename (should be "Protected").
 - Better Auth auto-generated tables use camelCase column names (e.g., `userId`) while app tables use snake_case — this is intentional and must be maintained.
 

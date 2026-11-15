@@ -1,7 +1,6 @@
 from fastapi import APIRouter, File, Request, UploadFile
-from fastapi.concurrency import run_in_threadpool
 
-from app.api.deps import read_image_or_400
+from app.api.deps import read_image_or_400, run_model
 from app.schemas.embed import EmbedInfoResponse, EmbedResponse
 
 router = APIRouter()
@@ -13,7 +12,9 @@ async def similarity_embed(request: Request, file: UploadFile = File(...)):
     image_bytes = await read_image_or_400(file)
 
     provider = request.app.state.similarity_provider
-    embedding = await run_in_threadpool(provider.encode_image, image_bytes)
+    embedding = await run_model(
+        request.app.state.similarity_lock, provider.encode_image, image_bytes
+    )
 
     return EmbedResponse(
         provider=provider.name,

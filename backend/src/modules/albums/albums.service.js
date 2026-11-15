@@ -4,7 +4,8 @@
 import { dbPool } from "../../config/db.js";
 import { MEDIA_COLUMNS } from "../media/media.mapper.js";
 import { getMediaItemsByIds } from "../media/media.list.service.js";
-import { assertManual, assertRole, getAlbumAccess, httpError } from "./albums.access.js";
+import { assertManual, assertRole, getAlbumAccess } from "./albums.access.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import { toAlbumMediaItem, toAlbumSummary } from "./albums.mapper.js";
 import { resolveSmartHits, smartSummary } from "./albums.smart.service.js";
 
@@ -101,7 +102,7 @@ export async function updateAlbum(userId, albumId, patch) {
   const access = await getAlbumAccess(userId, albumId);
   assertRole(access, ["owner"]);
   if (patch.smartRule && access.album.kind !== "smart") {
-    throw httpError(400, "Chỉ album thông minh mới có truy vấn", "ALBUM_NOT_SMART");
+    throw httpError(400, "ALBUM_NOT_SMART", "Chỉ album thông minh mới có truy vấn");
   }
   if (patch.coverMediaId) {
     // Bìa phải là ảnh đang hiển thị trong album.
@@ -115,7 +116,7 @@ export async function updateAlbum(userId, albumId, patch) {
             `SELECT 1 FROM album_media WHERE album_id = $1 AND media_id = $2`,
             [albumId, patch.coverMediaId],
           );
-    if (ok.rowCount === 0) throw httpError(400, "Ảnh bìa không nằm trong album");
+    if (ok.rowCount === 0) throw httpError(400, null, "Ảnh bìa không nằm trong album");
   }
 
   const sets = [];

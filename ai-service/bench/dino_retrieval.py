@@ -37,6 +37,7 @@ from pathlib import Path
 
 import numpy as np
 
+from app.providers.device import resolve_device
 from bench.common import (
     DEFAULT_DATA_ROOT,
     MODELS_DIR,
@@ -47,7 +48,7 @@ from bench.common import (
     utc_now,
 )
 from bench.published import DINO_RETRIEVAL, DINO_SOURCE
-from bench.revisitop import DATASETS, KAPPAS, PROTOCOLS, evaluate, load_revisitop
+from bench.revisitop import DATASETS, evaluate, load_revisitop
 
 RESULTS_CSV = RESULTS_DIR / "dino_retrieval.csv"
 PAPER_SIZE = 224
@@ -128,16 +129,6 @@ def load_image(path: Path, bbox=None):
 
 
 # ── Encoder ───────────────────────────────────────────────────────────────
-def resolve_device(device: str) -> str:
-    import torch
-
-    if device != "auto":
-        return device
-    if torch.cuda.is_available():
-        return "cuda"
-    if torch.backends.mps.is_available():
-        return "mps"
-    return "cpu"
 
 
 def _sync(device: str) -> None:

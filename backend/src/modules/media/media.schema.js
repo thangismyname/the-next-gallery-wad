@@ -1,3 +1,4 @@
+import { TAG_ID_RE } from "../ai/tagging.constants.js";
 import { z } from "zod";
 import { SCOPE_PATTERN } from "./media.scope.js";
 
@@ -74,7 +75,7 @@ export const tagBackfillSchema = z.object({
 });
 
 export const tagParamsSchema = z.object({
-  tag: z.string().regex(/^[a-z_]{1,40}$/),
+  tag: z.string().regex(TAG_ID_RE),
 });
 
 // minConfidence bỏ trống → dùng ngưỡng riêng của tag.
@@ -107,3 +108,39 @@ export const mediaSearchQuerySchema = z
     scope: z.string().regex(SCOPE_PATTERN).optional(),
   })
   .refine((v) => v.q.length > 0 || v.scope, { message: "Thiếu từ khoá" });
+
+// Basic edit — công thức chỉnh ảnh. Khớp FE `features/editor/recipe.ts` (đổi cả 2).
+// exposure theo EV (±3); các thông số còn lại −100…100, 0 = không chỉnh.
+const slider = z.number().min(-100).max(100).default(0);
+export const editRecipeSchema = z
+  .object({
+    v: z.literal(1),
+    exposure: z.number().min(-3).max(3).default(0),
+    contrast: slider,
+    highlights: slider,
+    shadows: slider,
+    whites: slider,
+    blacks: slider,
+    temperature: slider,
+    tint: slider,
+    vibrance: slider,
+    saturation: slider,
+    vignette: slider,
+  })
+  .strict();
+
+// multipart: field `recipe` là chuỗi JSON (+ file `image` = ảnh đã render).
+export const saveEditBodySchema = z.object({
+  recipe: z
+    .string()
+    .max(2000)
+    .transform((s, ctx) => {
+      try {
+        return JSON.parse(s);
+      } catch {
+        ctx.addIssue({ code: "custom", message: "recipe không phải JSON" });
+        return z.NEVER;
+      }
+    })
+    .pipe(editRecipeSchema),
+});

@@ -3,11 +3,10 @@ import io
 import json
 
 import numpy as np
+import pytest
 from PIL import Image
 
 from app.providers.embed_stub import StubEmbeddingProvider
-import pytest
-
 from pipeline.folder import (
     apply_query_template,
     classify_run,
@@ -33,7 +32,7 @@ class FakeYolo:
 
 
 def _make_folder(tmp_path):
-    folder = tmp_path / "photos"
+    folder = tmp_path / "Data" / "photos"
     (folder / "sub").mkdir(parents=True)
     Image.new("RGB", (2000, 1000), (200, 10, 10)).save(folder / "big.jpg")
     Image.new("RGB", (64, 64), (10, 200, 10)).save(folder / "sub" / "small.png")
@@ -86,9 +85,9 @@ def test_run_search_classify(tmp_path):
 
 
 def test_dataset_and_result_resolution(tmp_path):
-    folder = _make_folder(tmp_path)  # tmp_path/photos
-    out = result_dir_for(folder)
-    assert out == tmp_path / "result-photos"
+    folder = _make_folder(tmp_path)  # tmp_path/Data/photos
+    out = result_dir_for(folder, tmp_path)
+    assert out == tmp_path / "Results" / "pipeline" / "photos"
 
     assert resolve_dataset("photos", tmp_path) == folder.resolve()
     assert resolve_dataset(None, tmp_path) == folder.resolve()  # chỉ 1 dataset → tự chọn
@@ -96,7 +95,7 @@ def test_dataset_and_result_resolution(tmp_path):
         resolve_dataset("missing", tmp_path)
 
     run_folder(folder, out, clip=StubEmbeddingProvider(), yolo=FakeYolo())
-    assert list_datasets(tmp_path) == [folder]  # result-* không bị coi là dataset
+    assert list_datasets(tmp_path) == [folder]  # chỉ quét Data/
     for name in ("photos", "result-photos", None):
         assert resolve_result(name, tmp_path) == out.resolve()
 

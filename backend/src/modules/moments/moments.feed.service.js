@@ -4,11 +4,14 @@ import {
   COMPLETED_FILTER,
   DRAFT_TTL,
   MAX_REACTION_BUBBLES,
+  SINGLE_MEDIA_VISIBLE,
+  slotFilledSql,
 } from "./moments.constants.js";
 import { toMomentItem } from "./moments.mapper.js";
 import { attachSlots } from "./moments.query.service.js";
 
-// Xoá draft collab quá hạn (tạo > 24h mà vẫn còn slot trống).
+// Xoá draft collab quá hạn (tạo > 24h mà vẫn còn slot trống). Chạy trong job
+// định kỳ (moments.jobs.js) — KHÔNG chạy trên đường đọc feed nữa (P2.8).
 export async function cleanupExpiredDrafts() {
   const result = await dbPool.query(
     `DELETE FROM moments m
@@ -16,105 +19,75 @@ export async function cleanupExpiredDrafts() {
      WHERE m.template <> 'single'
        AND m.created_at < NOW() - ($1::interval)
        AND mc.moment_id = m.id
-       AND mc.filled_at IS NULL
+       AND NOT ${slotFilledSql("mc")}
      RETURNING m.id`,
     [DRAFT_TTL],
   );
   return result.rowCount ?? 0;
 }
 
-// ---- Reactions: gắn summary (reactions + myReaction) vào list items ----
-
-// Gắn reaction summary cho 1 danh sách moment. Chạy 3 query nhỏ:
-// (1) aggregate count theo emoji, (2) top-N reaction gần nhất kèm avatar user
-//     (dùng cho bubble chồng nhau), (3) reaction của chính user hiện tại.
+// ---- Reactions: gắn summary (reactions + recentReactions + myReaction) ----
+// 1 query duy nhất cho cả 3 phần (aggregate count, top-N gần nhất, reaction
+// của tôi) bằng CTE + json_agg — trước đây là 3 round-trip / trang (P2.8).
 async function attachReactions(items, userId) {
   const ids = items.map((item) => item.id);
   if (ids.length === 0) return items;
 
-  const aggResult = await dbPool.query(
-    `SELECT moment_id, reaction_emoji AS emoji, COUNT(*)::int AS count
-     FROM moment_reactions
-     WHERE moment_id = ANY($1::uuid[]) AND reaction_emoji IS NOT NULL
-     GROUP BY moment_id, reaction_emoji`,
-    [ids],
-  );
-
-  const reactionsByMoment = new Map();
-  for (const row of aggResult.rows) {
-    const list = reactionsByMoment.get(row.moment_id) ?? [];
-    list.push({ emoji: row.emoji, count: row.count });
-    reactionsByMoment.set(row.moment_id, list);
-  }
-
-  const recentResult = await dbPool.query(
-    `WITH recent AS (
-       SELECT mr.moment_id, mr.reaction_emoji AS emoji,
-              u.id AS user_id, u.name AS user_name, u.image AS user_avatar,
-              mr.created_at,
-              ROW_NUMBER() OVER (
-                PARTITION BY mr.moment_id ORDER BY mr.created_at DESC
-              ) AS rn
-       FROM moment_reactions mr
-       JOIN "user" u ON u.id = mr.user_id
-       WHERE mr.moment_id = ANY($1::uuid[]) AND mr.reaction_emoji IS NOT NULL
-     )
-     SELECT moment_id, emoji,
-            user_id, user_name, user_avatar
-     FROM recent WHERE rn <= $2
-     ORDER BY created_at DESC`,
-    [ids, MAX_REACTION_BUBBLES],
-  );
-
-  const recentByMoment = new Map();
-  for (const row of recentResult.rows) {
-    const list = recentByMoment.get(row.moment_id) ?? [];
-    list.push({
-      emoji: row.emoji ?? null,
-      userId: row.user_id,
-      userName: row.user_name,
-      userAvatarUrl: row.user_avatar || null,
-    });
-    recentByMoment.set(row.moment_id, list);
-  }
-
-  const mineResult = await dbPool.query(
-    `SELECT moment_id, reaction_emoji AS emoji
-     FROM moment_reactions
-     WHERE moment_id = ANY($1::uuid[]) AND user_id = $2
-       AND reaction_emoji IS NOT NULL`,
-    [ids, userId],
-  );
-  const myMap = new Map();
-  for (const row of mineResult.rows) {
-    if (row.emoji) {
-      myMap.set(row.moment_id, row.emoji);
-    }
-  }
-
-  for (const item of items) {
-    item.reactions = reactionsByMoment.get(item.id) ?? [];
-    item.recentReactions = recentByMoment.get(item.id) ?? [];
-    item.myReaction = myMap.get(item.id) ?? null;
-  }
-  return items;
-}
-
-// ---- Memes: gắn tổng số meme vào từng moment (hiện bên thẻ / nút flip) ----
-
-async function attachMemeCounts(items) {
-  const ids = items.map((item) => item.id);
-  if (ids.length === 0) return items;
   const result = await dbPool.query(
-    `SELECT moment_id, COUNT(*)::int AS cnt
-     FROM moment_memes
-     WHERE moment_id = ANY($1::uuid[])
-     GROUP BY moment_id`,
-    [ids],
+    `WITH agg AS (
+       SELECT moment_id,
+              json_agg(json_build_object('emoji', emoji, 'count', cnt)
+                       ORDER BY cnt DESC) AS reactions
+       FROM (
+         SELECT moment_id, reaction_emoji AS emoji, COUNT(*)::int AS cnt
+         FROM moment_reactions
+         WHERE moment_id = ANY($1::uuid[]) AND reaction_emoji IS NOT NULL
+         GROUP BY moment_id, reaction_emoji
+       ) x
+       GROUP BY moment_id
+     ),
+     recent AS (
+       SELECT moment_id,
+              json_agg(json_build_object(
+                'emoji', emoji,
+                'userId', user_id,
+                'userName', user_name,
+                'userAvatarUrl', user_avatar
+              ) ORDER BY created_at DESC) AS recent
+       FROM (
+         SELECT mr.moment_id, mr.reaction_emoji AS emoji, u.id AS user_id,
+                u.name AS user_name, u.image AS user_avatar, mr.created_at,
+                ROW_NUMBER() OVER (
+                  PARTITION BY mr.moment_id ORDER BY mr.created_at DESC
+                ) AS rn
+         FROM moment_reactions mr
+         JOIN "user" u ON u.id = mr.user_id
+         WHERE mr.moment_id = ANY($1::uuid[]) AND mr.reaction_emoji IS NOT NULL
+       ) y
+       WHERE rn <= $2
+       GROUP BY moment_id
+     ),
+     mine AS (
+       SELECT moment_id, MAX(reaction_emoji) AS emoji
+       FROM moment_reactions
+       WHERE moment_id = ANY($1::uuid[]) AND user_id = $3
+         AND reaction_emoji IS NOT NULL
+       GROUP BY moment_id
+     )
+     SELECT t.moment_id, agg.reactions, recent.recent, mine.emoji AS my_reaction
+     FROM unnest($1::uuid[]) AS t(moment_id)
+     LEFT JOIN agg ON agg.moment_id = t.moment_id
+     LEFT JOIN recent ON recent.moment_id = t.moment_id
+     LEFT JOIN mine ON mine.moment_id = t.moment_id`,
+    [ids, MAX_REACTION_BUBBLES, userId],
   );
-  const map = new Map(result.rows.map((r) => [r.moment_id, r.cnt]));
+
+  const byMoment = new Map(result.rows.map((row) => [row.moment_id, row]));
   for (const item of items) {
-    item.memeCount = map.get(item.id) ?? 0;
+    const row = byMoment.get(item.id);
+    item.reactions = row?.reactions ?? [];
+    item.recentReactions = row?.recent ?? [];
+    item.myReaction = row?.my_reaction ?? null;
   }
   return items;
 }
@@ -122,7 +95,8 @@ async function attachMemeCounts(items) {
 // ---- Feed: moments của mình (mọi visibility) + bạn bè (circle/public) ----
 
 export async function listMomentsFeed(userId, { limit = 40, offset = 0 }) {
-  await cleanupExpiredDrafts().catch(() => {});
+  // Fetch limit + 1 để kiểm tra hasMore.
+  const fetchLimit = limit + 1;
   const result = await dbPool.query(
     `
     WITH friend_ids AS (
@@ -143,19 +117,22 @@ export async function listMomentsFeed(userId, { limit = 40, offset = 0 }) {
           AND m.visibility IN ('circle', 'public')
         )
       )
+      AND ${SINGLE_MEDIA_VISIBLE}
       ${COMPLETED_FILTER}
     ORDER BY m.created_at DESC
     LIMIT $2 OFFSET $3`,
-    [userId, limit, offset],
+    [userId, fetchLimit, offset],
   );
 
-  await attachSlots(result.rows);
-  const items = result.rows.map((row) => toMomentItem(row, userId));
+  // Chỉ attach cho các row thực sự trả về (bỏ row limit + 1 dùng kiểm hasMore).
+  const rows = result.rows.slice(0, limit);
+  await attachSlots(rows);
+  const items = rows.map((row) => toMomentItem(row, userId));
   await attachReactions(items, userId);
-  await attachMemeCounts(items);
+
   return {
     items,
-    hasMore: result.rows.length === limit,
+    hasMore: result.rows.length > limit,
     limit,
     offset,
   };
@@ -165,8 +142,9 @@ export async function listMomentsFeed(userId, { limit = 40, offset = 0 }) {
 
 // Lấy draft collab (còn slot trống, chưa quá 24h) mà user liên quan:
 // (a) moment tôi được mời điền slot còn trống, (b) moment tôi tạo đang chờ bạn.
-export async function listMomentInvitations(userId) {
-  await cleanupExpiredDrafts().catch(() => {});
+// Phân trang như feed (limit + 1 → hasMore).
+export async function listMomentInvitations(userId, { limit = 20, offset = 0 } = {}) {
+  const fetchLimit = limit + 1;
   const result = await dbPool.query(
     `
     ${MOMENT_JOIN}
@@ -175,23 +153,25 @@ export async function listMomentInvitations(userId) {
       AND EXISTS (
         -- moment này vẫn còn slot trống (draft)
         SELECT 1 FROM moment_collab mc2
-        WHERE mc2.moment_id = m.id AND mc2.filled_at IS NULL
+        WHERE mc2.moment_id = m.id AND NOT ${slotFilledSql("mc2")}
       )
       AND (
         m.user_id = $1
         OR EXISTS (
-          SELECT 1 FROM moment_collab mc
-          WHERE mc.moment_id = m.id AND mc.user_id = $1 AND mc.filled_at IS NULL
+          SELECT 1 FROM moment_collab mc3
+          WHERE mc3.moment_id = m.id AND mc3.user_id = $1
+            AND NOT ${slotFilledSql("mc3")}
         )
       )
-    ORDER BY m.created_at DESC`,
-    [userId, DRAFT_TTL],
+    ORDER BY m.created_at DESC
+    LIMIT $3 OFFSET $4`,
+    [userId, DRAFT_TTL, fetchLimit, offset],
   );
 
-  await attachSlots(result.rows);
-  let items = result.rows.map((row) => toMomentItem(row, userId));
+  const rows = result.rows.slice(0, limit);
+  await attachSlots(rows);
+  let items = rows.map((row) => toMomentItem(row, userId));
   items = await attachReactions(items, userId);
-  items = await attachMemeCounts(items);
 
   // Gắn thông tin "tôi đang giữ slot trống nào / tôi là creator chờ ai"
   for (const item of items) {
@@ -200,5 +180,35 @@ export async function listMomentInvitations(userId) {
     item.myPendingSlot = item.myPendingSlots[0] ?? null;
     item.pendingCount = item.slots.filter((s) => !s.filled).length;
   }
-  return items;
+  return {
+    items,
+    hasMore: result.rows.length > limit,
+    limit,
+    offset,
+  };
+}
+
+// Số lời mời đang chờ — dùng cho badge sidebar (không cần tải cả list).
+export async function countMomentInvitations(userId) {
+  const result = await dbPool.query(
+    `
+    SELECT COUNT(*)::int AS cnt
+    FROM moments m
+    WHERE m.template <> 'single'
+      AND m.created_at > NOW() - ($2::interval)
+      AND EXISTS (
+        SELECT 1 FROM moment_collab mc2
+        WHERE mc2.moment_id = m.id AND NOT ${slotFilledSql("mc2")}
+      )
+      AND (
+        m.user_id = $1
+        OR EXISTS (
+          SELECT 1 FROM moment_collab mc3
+          WHERE mc3.moment_id = m.id AND mc3.user_id = $1
+            AND NOT ${slotFilledSql("mc3")}
+        )
+      )`,
+    [userId, DRAFT_TTL],
+  );
+  return result.rows[0]?.cnt ?? 0;
 }

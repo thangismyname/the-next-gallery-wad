@@ -1,3 +1,4 @@
+import { type Album, type AutoAlbumGroup, albumsQueryKey, autoAlbumsQueryKey } from "@tng/shared";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -16,18 +17,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  type Album,
-  type AutoAlbumGroup,
-  albumsQueryKey,
-  autoAlbumsQueryKey,
-  fetchAlbums,
-  fetchAutoAlbums,
-  respondAlbumInvitation,
-} from "@/services/albums";
+import { fetchAlbums, fetchAutoAlbums, respondAlbumInvitation } from "@/services/albums";
 import { AlbumCard } from "./components/AlbumCard";
 import { AlbumFormDialog } from "./components/AlbumFormDialog";
 import { AutoAlbumCard, AutoAlbumTile } from "./components/AutoAlbumCard";
+import { FavoriteCollections } from "@/features/favorites/components/FavoriteCollections";
 
 const AUTO_ICONS: Record<AutoAlbumGroup, LucideIcon> = {
   type: Images,
@@ -43,8 +37,8 @@ const GRID =
   "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
 
 /**
- * Trang Albums: lời mời · album thông minh (AI) · album của tôi · được chia sẻ
- * · album tự động (mọi ảnh trong thư viện đều nằm trong ít nhất 1 album).
+ * Trang Albums: lời mời · bộ sưu tập (Yêu thích + nhãn cá nhân) · album thông minh (AI)
+ * · album của tôi · được chia sẻ · album tự động (mọi ảnh đều nằm trong ít nhất 1 album).
  */
 export const AlbumsView: React.FC = () => {
   const { t } = useTranslation();
@@ -170,6 +164,7 @@ export const AlbumsView: React.FC = () => {
       ) : (
         <div className="space-y-8">
           {section(t("albums.invitations"), data.invitations)}
+          <FavoriteCollections gridClassName={GRID} />
           {section(
             t("albums.smartSection"),
             smart,

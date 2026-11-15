@@ -7,14 +7,13 @@ import { create } from "zustand";
 interface GalleryActionsState {
   shareDialogOpen: boolean;
   shareMediaIds: string[];
-  shareInitialFriendId: string | null;
   deleteDialogOpen: boolean;
   pendingDeleteIds: string[];
   deleteBusy: boolean;
   /** Ảnh đang chờ chọn album ("Thêm vào album"); null = hộp thoại đóng. */
   addToAlbumIds: string[] | null;
 
-  openShare: (ids: string[], opts?: { friendId?: string | null }) => void;
+  openShare: (ids: string[]) => void;
   setShareDialogOpen: (open: boolean) => void;
 
   openDelete: (ids: string[]) => void;
@@ -29,22 +28,13 @@ interface GalleryActionsState {
 export const useGalleryActionsStore = create<GalleryActionsState>((set) => ({
   shareDialogOpen: false,
   shareMediaIds: [],
-  shareInitialFriendId: null,
   deleteDialogOpen: false,
   pendingDeleteIds: [],
   deleteBusy: false,
   addToAlbumIds: null,
 
-  openShare: (ids, opts) =>
-    set({
-      shareMediaIds: ids,
-      shareInitialFriendId: opts?.friendId ?? null,
-      shareDialogOpen: true,
-    }),
-  setShareDialogOpen: (open) =>
-    set((s) =>
-      open ? s : { shareDialogOpen: open, shareInitialFriendId: null },
-    ),
+  openShare: (ids) => set({ shareMediaIds: ids, shareDialogOpen: true }),
+  setShareDialogOpen: (open) => set({ shareDialogOpen: open }),
 
   openDelete: (ids) => set({ pendingDeleteIds: ids, deleteDialogOpen: true }),
   setDeleteDialogOpen: (open) =>

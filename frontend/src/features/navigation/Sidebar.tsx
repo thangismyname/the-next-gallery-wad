@@ -14,12 +14,12 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavItems } from "@/hooks/useNavItems";
-import { useResizable } from "@/hooks/useResizable";
+import { useNavItems } from "@/features/navigation/useNavItems";
+import { useResizable } from "@/features/navigation/useResizable";
 import { SidebarNavItem } from "./components/SidebarNavItem";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
-import { NavMenuItem } from "@/types";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
+import type { NavMenuItem } from "./types";
 import { House } from "lucide-react";
 
 // Tiêu đề nhóm (Thùng rác ghim ở footer; Trang chủ = header của sidebar).
@@ -119,7 +119,7 @@ export const Sidebar: React.FC = () => {
       )}
 
       <SidebarFooter className="gap-3 border-t border-border/60 px-2 pt-3 pb-4">
-        {/* Thùng rác ghim dưới cùng, tách khỏi các nhóm chính */}
+        {/* Mục section "system" ghim dưới cùng (hiện trống — Thùng rác đã vào Albums) */}
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           {pinned.map((item) => (
             <SidebarNavItem key={item.to} item={item} />

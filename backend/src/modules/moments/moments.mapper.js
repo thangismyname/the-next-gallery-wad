@@ -18,7 +18,13 @@ export function toMomentItem(row, userId) {
     mediaType: row.media_type ?? cover?.mediaType ?? "photo",
     caption: row.caption || null,
     visibility: row.visibility,
-    thumbnailUrl: mediaId ? mediaThumbUrl(mediaId, "small") : null,
+    // Bản thumbnail cho card moment (400px "med") — thay vì "small" (200px)
+    // để card vừa khít theo thiết kế card bo cong 2xl.
+    thumbnailUrl: mediaId ? mediaThumbUrl(mediaId, "med") : null,
+    // Bản lớn cho màn retina (P3.8).
+    displayUrl: mediaId ? mediaThumbUrl(mediaId, "display") : null,
+    // Bản thumbnail nhỏ 200px dùng cho dropdown lời mời (MomentInviteButton).
+    thumbSmallUrl: mediaId ? mediaThumbUrl(mediaId, "small") : null,
     url: mediaId ? mediaFileUrl(mediaId) : null,
     width: row.width || cover?.width || 800,
     height: row.height || cover?.height || 600,
@@ -33,7 +39,10 @@ export function toMomentItem(row, userId) {
     reactions: row.reactions ?? [],
     recentReactions: row.recent_reactions ?? [],
     myReaction: row.my_reaction ?? null,
-    memeCount: 0,
+    // Ảnh của moment single đã bị xoá vĩnh viễn → card hiện placeholder
+    // "Ảnh đã bị xoá" thay vì <img src=""> (P2.6).
+    missingMedia: template === "single" && !mediaId,
+    memeCount: Number(row.meme_count) || 0,
   };
 }
 
@@ -47,13 +56,18 @@ export function toSlotItem(row) {
     userAvatarUrl: row.user_avatar || null,
     mediaId,
     mediaType: row.media_type ?? "photo",
+    // Bản thumbnail nhỏ dùng cho slot card (200px "small") — khớp với
+    // thumbnailUrl trên moment item nhưng dùng cho ô slot thu hẹp.
     thumbnailUrl: mediaId ? mediaThumbUrl(mediaId, "small") : null,
     url: mediaId ? mediaFileUrl(mediaId) : null,
     width: row.width ?? 800,
     height: row.height ?? 600,
     durationSeconds:
       row.duration_seconds != null ? Number(row.duration_seconds) : null,
-    filled: Boolean(row.filled_at),
+    // Slot chỉ "đã điền" khi có ảnh còn tồn tại. filled_at còn nhưng ảnh mất
+    // (xoá vĩnh viễn / thùng rác) → missing = true để FE hiện placeholder.
+    filled: Boolean(row.filled_at && mediaId),
+    missing: Boolean(row.filled_at && !mediaId),
     filledAt: row.filled_at ?? null,
   };
 }

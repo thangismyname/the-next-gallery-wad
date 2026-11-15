@@ -1,3 +1,4 @@
+import { type Album } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -7,7 +8,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Album } from "@/services/albums";
 import { AlbumLinksPanel } from "./AlbumLinksPanel";
 import { AlbumMembersPanel } from "./AlbumMembersPanel";
 

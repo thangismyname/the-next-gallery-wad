@@ -17,13 +17,13 @@ import { cn } from "@/lib/utils";
 import { AI_CHIP } from "@/lib/aiColors";
 import { useLandingCta } from "../useLandingCta";
 import { floatLoop } from "../landing.motion";
-import { usePointerTilt } from "@/hooks/usePointerTilt";
+import { usePointerTilt } from "@/features/landing/usePointerTilt";
 import { Reveal, RevealGroup, RevealItem } from "./Reveal";
-import image1 from "@/assets/images/image_1.jpg";
-import image2 from "@/assets/images/image_2.jpg";
-import image3 from "@/assets/images/image_3.jpg";
-import image4 from "@/assets/images/image_4.jpg";
-import image5 from "@/assets/images/image_5.jpg";
+import image1 from "@/assets/images/image_1.webp";
+import image2 from "@/assets/images/image_2.webp";
+import image3 from "@/assets/images/image_3.webp";
+import image4 from "@/assets/images/image_4.webp";
+import image5 from "@/assets/images/image_5.webp";
 
 const FEATURES = [
   { key: "backup", icon: CloudUpload },
@@ -51,7 +51,7 @@ export function AppDownload() {
   const reduce = useReducedMotion();
   const webUrl = typeof window !== "undefined" ? window.location.origin : "";
 
-  // Nghiêng 3D theo chuột (hooks/usePointerTilt).
+  // Nghiêng 3D theo chuột (usePointerTilt.ts).
   const tilt = usePointerTilt();
 
 

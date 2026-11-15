@@ -1,12 +1,16 @@
+# Build context = GỐC repo (npm workspaces) — xem Dockerfile.prod. docker-compose.dev.yml
+# mount frontend/ + packages/shared/ vào /repo để hot reload.
 FROM node:20-alpine
+WORKDIR /repo
 
-WORKDIR /app
+COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/
+COPY packages/shared/package.json packages/shared/
+COPY apps/mobile/package.json apps/mobile/
+RUN npm ci --workspace=frontend --include-workspace-root=false --ignore-scripts --no-audit --no-fund
 
-COPY package*.json ./
-RUN npm install
-
-COPY . .
+COPY packages/shared packages/shared
+COPY frontend frontend
 
 EXPOSE 5173
-
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "dev", "--workspace=frontend", "--", "--host", "0.0.0.0"]

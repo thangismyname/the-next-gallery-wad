@@ -23,9 +23,14 @@ RESULTS_DIR = BENCH_ROOT / "results"
 RUNS_DIR = BENCH_ROOT / "runs"  # output thô của ultralytics (git-ignored)
 MODELS_DIR = SERVICE_ROOT / "models"
 
+PROJECT_ROOT = SERVICE_ROOT.parent
+DEFAULT_DATASETS_DIR = PROJECT_ROOT / "database" / "datasets"  # nằm trong repo, Data/ + Classes/ gitignored
+
+
 def _data_root() -> Path:
-    """Dataset nằm NGOÀI repo (nặng). Thứ tự: env TNG_DATASETS → dòng TNG_DATASETS
-    trong ai-service/.env hoặc .env gốc dự án → ~/datasets. Mỗi script còn có --data-root."""
+    """Thư mục dataset. Mặc định <repo>/database/datasets. Ghi đè: env TNG_DATASETS → dòng
+    TNG_DATASETS trong ai-service/.env hoặc .env gốc. Path tương đối tính từ gốc repo.
+    Mỗi script còn có --data-root."""
     value = os.environ.get("TNG_DATASETS")
     if not value:
         from dotenv import dotenv_values
@@ -33,10 +38,47 @@ def _data_root() -> Path:
         for env_file in (SERVICE_ROOT / ".env", SERVICE_ROOT.parent / ".env"):
             if env_file.exists() and (value := dotenv_values(env_file).get("TNG_DATASETS")):
                 break
-    return Path(value or Path.home() / "datasets").expanduser()
+    if not value:
+        return DEFAULT_DATASETS_DIR
+    path = Path(value).expanduser()
+    return path if path.is_absolute() else (PROJECT_ROOT / path).resolve()
 
 
 DEFAULT_DATA_ROOT = _data_root()
+
+
+# ── Bố cục thư mục Datasets (1 chỗ duy nhất — bench, pipeline, experiments cùng dùng) ──
+#   Data/<dataset>/      ảnh + thứ model đọc ngay cạnh ảnh (YOLO labels/*.txt, yaml, list,
+#                        webdataset .tar của clip_benchmark, ImageFolder đã dựng)
+#   Classes/<dataset>/   danh sách lớp + annotation (CSV / JSON / PKL), subset đã chọn
+#   Results/<nhóm>/      kết quả chạy hiện tại (run, ảnh vẽ box, cache feature ở Results/cache)
+#   History/<exp>/       bản lưu theo version (vNNN) của mọi lần đo — không bao giờ ghi đè
+DATA, CLASSES, RESULTS, HISTORY = "Data", "Classes", "Results", "History"
+
+
+def _root(data_root: Path | str | None) -> Path:
+    return Path(data_root or DEFAULT_DATA_ROOT).expanduser().resolve()
+
+
+def data_dir(data_root: Path | str | None, name: str = "") -> Path:
+    return _root(data_root) / DATA / name if name else _root(data_root) / DATA
+
+
+def classes_dir(data_root: Path | str | None, name: str = "") -> Path:
+    return _root(data_root) / CLASSES / name if name else _root(data_root) / CLASSES
+
+
+def results_dir(data_root: Path | str | None, name: str = "") -> Path:
+    return _root(data_root) / RESULTS / name if name else _root(data_root) / RESULTS
+
+
+def cache_dir_root(data_root: Path | str | None, name: str) -> Path:
+    """Cache feature (tính lại được): Results/cache/<name>."""
+    return _root(data_root) / RESULTS / "cache" / name
+
+
+def history_dir(data_root: Path | str | None, name: str = "") -> Path:
+    return _root(data_root) / HISTORY / name if name else _root(data_root) / HISTORY
 
 
 def sha256_of(path: Path) -> str:

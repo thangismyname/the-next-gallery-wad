@@ -2,9 +2,9 @@ import React, { memo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Media } from "../../../types";
+import { Media } from "@tng/shared";
 import { cn } from "@/lib/utils";
-import { formatDuration } from "@/utils/format";
+import { formatDuration } from "@tng/shared";
 import { Check, Video } from "lucide-react";
 
 /** Các trường card thực sự dùng — cả Media (gallery) lẫn TrashItem đều khớp. */

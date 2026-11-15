@@ -7,10 +7,13 @@ import {
 
 export async function getMediaById(id) {
   const result = await dbPool.query(
-    `SELECT id, user_id, media_type, minio_object, minio_bucket,
-            thumbnail_object, thumbnail_small_object, display_object, full_object,
-            mime_type, file_ext, original_filename, updated_at, created_at
-     FROM media WHERE id = $1`,
+    `SELECT m.id, m.user_id, m.media_type, m.minio_object, m.minio_bucket,
+            m.thumbnail_object, m.thumbnail_small_object, m.display_object, m.full_object,
+            m.mime_type, m.file_ext, m.original_filename, m.updated_at, m.created_at,
+            e.display_object AS edit_display, e.thumbnail_object AS edit_med,
+            e.thumbnail_small_object AS edit_small, e.updated_at AS edited_at
+     FROM media m LEFT JOIN media_edits e ON e.media_id = m.id
+     WHERE m.id = $1`,
     [id],
   );
 
@@ -28,17 +31,21 @@ export async function getThumbnailInfo(id, size) {
   // stream file gốc vài trăm MB (hay cả file video) ra grid/lightbox.
   // Không tạo được → 404 (file hỏng / định dạng không đọc được).
   // full: chỉ HEIC có (trình duyệt không hiển thị được file gốc).
+  // Ảnh đã chỉnh (media_edits) → small/med/display là bản đã chỉnh;
+  // base = bản display GỐC (editor chỉnh từ đây); full (HEIC) luôn là gốc.
   let objectToStream = null;
-  if (size === "full") {
+  if (item.edited_at && ["small", "med", "display"].includes(size)) {
+    objectToStream = { small: item.edit_small, med: item.edit_med, display: item.edit_display }[size];
+  } else if (size === "full") {
     objectToStream = await ensureFullObject(item);
   } else if (item.media_type === "photo" || item.media_type === "video") {
     const keys = await ensureDerivatives(item);
     objectToStream =
-      size === "display" ? keys.display : size === "small" ? keys.small : keys.med;
+      size === "display" || size === "base" ? keys.display : size === "small" ? keys.small : keys.med;
   }
   if (!objectToStream) return null;
 
-  const timestamp = new Date(item.updated_at || item.created_at).getTime();
+  const timestamp = new Date(item.edited_at || item.updated_at || item.created_at).getTime();
   const etag = `W/"thumb-${size}-${id}-${timestamp}"`;
 
   return { bucket, objectToStream, etag };

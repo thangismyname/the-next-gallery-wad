@@ -2,8 +2,8 @@
 
 Model chạy trước, người duyệt sau: ground-truth nhanh hơn nhiều so với gán từ đầu.
 
-    $TNG_DATASETS/gallery-gt/images/**      ← chép ảnh của bạn vào đây (thư mục con tuỳ ý)
-    $TNG_DATASETS/gallery-gt/labels.json    ← script tạo / cập nhật
+    $TNG_DATASETS/Data/gallery-gt/images/**  ← chép ảnh của bạn vào đây (thư mục con tuỳ ý)
+    $TNG_DATASETS/Classes/gallery-gt/labels.json  ← script tạo / cập nhật (ảnh: Data/gallery-gt/images/)
 
 Mỗi ảnh trong labels.json:
     predicted   xác suất của cả 17 tag (từ hệ thống tốt nhất đã train; chưa train → zero-shot)
@@ -28,10 +28,10 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.cls_data import ClsDataset, gallery_root
+from app.tagging.taxonomy import TAG_IDS, TAGS, TAXONOMY_VERSION
+from bench.cls_data import ClsDataset, gallery_labels_file, gallery_root
 from bench.cls_eval import SYSTEM_CONFIG, TagSystem
 from bench.cls_features import cache_dir, load_features
-from bench.cls_taxonomy import TAG_IDS, TAGS, TAXONOMY_VERSION
 from bench.common import DEFAULT_DATA_ROOT, utc_now
 
 SCHEMA = 1
@@ -97,7 +97,8 @@ def main() -> int:
     det_file = cache_dir(args.data_root, "gallery") / f"yolo-{args.image_preprocess}-detections.json"
     detections = json.loads(det_file.read_text()) if det_file.exists() else {}
 
-    labels_file = root / "labels.json"
+    labels_file = gallery_labels_file(args.data_root)
+    labels_file.parent.mkdir(parents=True, exist_ok=True)
     old_doc = json.loads(labels_file.read_text()) if labels_file.exists() else {"images": []}
     old_by_file = {e["file"]: e for e in old_doc.get("images", [])}
     if old_doc.get("taxonomy_version") not in (None, TAXONOMY_VERSION):

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import type { AdminSystem } from "@/types";
+import type { AdminSystem } from "@tng/shared";
 import { AiCoverageBars } from "./AiCoverageBars";
 
 /** ai-service online? + model / provider đang chạy + tiến độ AI toàn hệ thống. */

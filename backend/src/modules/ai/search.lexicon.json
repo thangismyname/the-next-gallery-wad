@@ -1,5 +1,5 @@
 {
-  "_comment": "Từ điển hiểu truy vấn cho search kết hợp (CLIP + tag + YOLO). Dùng chung: backend search.query.js và ai-service bench/search_eval.py. tags = 17 tag (bench/cls_taxonomy.py), objects = 80 class COCO (tên YOLO). Mỗi mục: vi/en/ja là các cách gọi; vi_unit = lượng từ đứng giữa số và tên (\"2 con chó\"). stopwords = từ không mang nội dung (bỏ khi tính độ phủ của từ điển).",
+  "_comment": "Từ điển hiểu truy vấn cho search kết hợp (CLIP + tag + YOLO). Dùng chung: backend search.query.js và ai-service bench/search_eval.py. tags = 17 tag (ai-service app/tagging/taxonomy.py), objects = 80 class COCO (tên YOLO), labels = 174 nhãn chi tiết \"oi.*\" — SINH TỰ ĐỘNG bằng ai-service scripts/sync_search_lexicon.py từ app/tagging/labels.csv, đừng sửa tay. Mỗi mục: vi/en/ja là các cách gọi; vi_unit = lượng từ đứng giữa số và tên (\"2 con chó\"). stopwords = từ không mang nội dung (bỏ khi tính độ phủ của từ điển).",
   "negatives": [
     "a photo.",
     "a random everyday photo.",
@@ -1570,6 +1570,2087 @@
         "歯ブラシ"
       ],
       "vi_unit": "cái"
+    }
+  },
+  "labels": {
+    "oi.person": {
+      "vi": [
+        "người",
+        "con người"
+      ],
+      "en": [
+        "person",
+        "people",
+        "man",
+        "woman",
+        "men",
+        "women",
+        "kid",
+        "child",
+        "children"
+      ],
+      "ja": [
+        "人物",
+        "人",
+        "男性",
+        "女性",
+        "子供"
+      ]
+    },
+    "oi.bicycle": {
+      "vi": [
+        "xe đạp"
+      ],
+      "en": [
+        "bicycle",
+        "bike"
+      ],
+      "ja": [
+        "自転車"
+      ]
+    },
+    "oi.car": {
+      "vi": [
+        "ô tô",
+        "xe hơi",
+        "xe ô tô"
+      ],
+      "en": [
+        "car"
+      ],
+      "ja": [
+        "車",
+        "自動車"
+      ]
+    },
+    "oi.motorcycle": {
+      "vi": [
+        "xe máy",
+        "mô tô",
+        "xe mô tô"
+      ],
+      "en": [
+        "motorcycle",
+        "motorbike",
+        "scooter"
+      ],
+      "ja": [
+        "バイク",
+        "オートバイ"
+      ]
+    },
+    "oi.airplane": {
+      "vi": [
+        "máy bay"
+      ],
+      "en": [
+        "airplane",
+        "fixed-wing aircraft",
+        "plane",
+        "aircraft"
+      ],
+      "ja": [
+        "飛行機"
+      ]
+    },
+    "oi.bus": {
+      "vi": [
+        "xe buýt",
+        "xe bus"
+      ],
+      "en": [
+        "bus"
+      ],
+      "ja": [
+        "バス"
+      ]
+    },
+    "oi.train": {
+      "vi": [
+        "tàu hoả",
+        "tàu hỏa",
+        "xe lửa",
+        "tàu điện"
+      ],
+      "en": [
+        "train"
+      ],
+      "ja": [
+        "電車",
+        "列車"
+      ]
+    },
+    "oi.truck": {
+      "vi": [
+        "xe tải"
+      ],
+      "en": [
+        "truck"
+      ],
+      "ja": [
+        "トラック"
+      ]
+    },
+    "oi.boat": {
+      "vi": [
+        "thuyền",
+        "tàu thuyền",
+        "ca nô"
+      ],
+      "en": [
+        "boat",
+        "ship"
+      ],
+      "ja": [
+        "ボート",
+        "船"
+      ]
+    },
+    "oi.traffic_light": {
+      "vi": [
+        "đèn giao thông",
+        "đèn đỏ"
+      ],
+      "en": [
+        "traffic light"
+      ],
+      "ja": [
+        "信号機",
+        "信号"
+      ]
+    },
+    "oi.fire_hydrant": {
+      "vi": [
+        "trụ cứu hoả",
+        "trụ cứu hỏa",
+        "vòi cứu hỏa"
+      ],
+      "en": [
+        "fire hydrant",
+        "hydrant"
+      ],
+      "ja": [
+        "消火栓"
+      ]
+    },
+    "oi.stop_sign": {
+      "vi": [
+        "biển dừng",
+        "biển stop"
+      ],
+      "en": [
+        "stop sign"
+      ],
+      "ja": [
+        "一時停止標識"
+      ]
+    },
+    "oi.parking_meter": {
+      "vi": [
+        "đồng hồ đỗ xe"
+      ],
+      "en": [
+        "parking meter"
+      ],
+      "ja": [
+        "パーキングメーター"
+      ]
+    },
+    "oi.bench": {
+      "vi": [
+        "ghế băng",
+        "ghế đá",
+        "ghế dài"
+      ],
+      "en": [
+        "bench"
+      ],
+      "ja": [
+        "ベンチ"
+      ]
+    },
+    "oi.bird": {
+      "vi": [
+        "chim"
+      ],
+      "en": [
+        "bird"
+      ],
+      "ja": [
+        "鳥"
+      ]
+    },
+    "oi.cat": {
+      "vi": [
+        "mèo"
+      ],
+      "en": [
+        "cat",
+        "kitten"
+      ],
+      "ja": [
+        "猫",
+        "ネコ"
+      ]
+    },
+    "oi.dog": {
+      "vi": [
+        "chó",
+        "cún"
+      ],
+      "en": [
+        "dog",
+        "puppy"
+      ],
+      "ja": [
+        "犬",
+        "イヌ"
+      ]
+    },
+    "oi.horse": {
+      "vi": [
+        "ngựa"
+      ],
+      "en": [
+        "horse"
+      ],
+      "ja": [
+        "馬"
+      ]
+    },
+    "oi.sheep": {
+      "vi": [
+        "cừu"
+      ],
+      "en": [
+        "sheep"
+      ],
+      "ja": [
+        "羊"
+      ]
+    },
+    "oi.cow": {
+      "vi": [
+        "bò"
+      ],
+      "en": [
+        "cow",
+        "cattle"
+      ],
+      "ja": [
+        "牛"
+      ]
+    },
+    "oi.elephant": {
+      "vi": [
+        "voi"
+      ],
+      "en": [
+        "elephant"
+      ],
+      "ja": [
+        "象",
+        "ゾウ",
+        "ぞう"
+      ]
+    },
+    "oi.bear": {
+      "vi": [
+        "gấu"
+      ],
+      "en": [
+        "bear"
+      ],
+      "ja": [
+        "クマ",
+        "熊"
+      ]
+    },
+    "oi.zebra": {
+      "vi": [
+        "ngựa vằn"
+      ],
+      "en": [
+        "zebra"
+      ],
+      "ja": [
+        "シマウマ"
+      ]
+    },
+    "oi.giraffe": {
+      "vi": [
+        "hươu cao cổ"
+      ],
+      "en": [
+        "giraffe"
+      ],
+      "ja": [
+        "キリン"
+      ]
+    },
+    "oi.backpack": {
+      "vi": [
+        "ba lô",
+        "balo"
+      ],
+      "en": [
+        "backpack"
+      ],
+      "ja": [
+        "リュック",
+        "バックパック"
+      ]
+    },
+    "oi.umbrella": {
+      "vi": [
+        "ô",
+        "dù",
+        "cái ô"
+      ],
+      "en": [
+        "umbrella"
+      ],
+      "ja": [
+        "傘"
+      ]
+    },
+    "oi.handbag": {
+      "vi": [
+        "túi xách"
+      ],
+      "en": [
+        "handbag",
+        "purse"
+      ],
+      "ja": [
+        "ハンドバッグ"
+      ]
+    },
+    "oi.tie": {
+      "vi": [
+        "cà vạt"
+      ],
+      "en": [
+        "tie",
+        "necktie"
+      ],
+      "ja": [
+        "ネクタイ"
+      ]
+    },
+    "oi.suitcase": {
+      "vi": [
+        "vali",
+        "va li"
+      ],
+      "en": [
+        "suitcase",
+        "luggage"
+      ],
+      "ja": [
+        "スーツケース"
+      ]
+    },
+    "oi.frisbee": {
+      "vi": [
+        "đĩa bay"
+      ],
+      "en": [
+        "frisbee",
+        "flying disc"
+      ],
+      "ja": [
+        "フリスビー"
+      ]
+    },
+    "oi.ski": {
+      "vi": [
+        "ván trượt tuyết",
+        "trượt tuyết"
+      ],
+      "en": [
+        "ski",
+        "skis"
+      ],
+      "ja": [
+        "スキー"
+      ]
+    },
+    "oi.snowboard": {
+      "vi": [
+        "ván trượt tuyết đơn"
+      ],
+      "en": [
+        "snowboard"
+      ],
+      "ja": [
+        "スノーボード"
+      ]
+    },
+    "oi.ball": {
+      "vi": [
+        "quả bóng",
+        "bóng đá",
+        "bóng"
+      ],
+      "en": [
+        "ball",
+        "football",
+        "soccer ball",
+        "basketball"
+      ],
+      "ja": [
+        "ボール",
+        "サッカーボール"
+      ]
+    },
+    "oi.kite": {
+      "vi": [
+        "diều",
+        "con diều"
+      ],
+      "en": [
+        "kite"
+      ],
+      "ja": [
+        "凧"
+      ]
+    },
+    "oi.baseball_bat": {
+      "vi": [
+        "gậy bóng chày"
+      ],
+      "en": [
+        "baseball bat"
+      ],
+      "ja": [
+        "野球バット",
+        "バット"
+      ]
+    },
+    "oi.baseball_glove": {
+      "vi": [
+        "găng bóng chày"
+      ],
+      "en": [
+        "baseball glove"
+      ],
+      "ja": [
+        "野球グローブ",
+        "グローブ"
+      ]
+    },
+    "oi.skateboard": {
+      "vi": [
+        "ván trượt"
+      ],
+      "en": [
+        "skateboard"
+      ],
+      "ja": [
+        "スケートボード",
+        "スケボー"
+      ]
+    },
+    "oi.surfboard": {
+      "vi": [
+        "ván lướt sóng",
+        "lướt sóng"
+      ],
+      "en": [
+        "surfboard",
+        "surfing"
+      ],
+      "ja": [
+        "サーフボード",
+        "サーフィン"
+      ]
+    },
+    "oi.tennis_racket": {
+      "vi": [
+        "vợt tennis",
+        "vợt"
+      ],
+      "en": [
+        "tennis racket",
+        "racket"
+      ],
+      "ja": [
+        "テニスラケット",
+        "ラケット"
+      ]
+    },
+    "oi.bottle": {
+      "vi": [
+        "chai",
+        "chai nước"
+      ],
+      "en": [
+        "bottle"
+      ],
+      "ja": [
+        "ボトル",
+        "瓶"
+      ]
+    },
+    "oi.wine_glass": {
+      "vi": [
+        "ly rượu vang",
+        "ly rượu",
+        "cốc rượu"
+      ],
+      "en": [
+        "wine glass"
+      ],
+      "ja": [
+        "ワイングラス"
+      ]
+    },
+    "oi.mug": {
+      "vi": [
+        "cốc",
+        "tách",
+        "ly"
+      ],
+      "en": [
+        "mug",
+        "cup"
+      ],
+      "ja": [
+        "マグカップ",
+        "カップ",
+        "コップ"
+      ]
+    },
+    "oi.coffee_cup": {
+      "vi": [
+        "tách cà phê",
+        "cốc",
+        "tách",
+        "ly"
+      ],
+      "en": [
+        "coffee cup",
+        "cup",
+        "mug"
+      ],
+      "ja": [
+        "コーヒーカップ",
+        "カップ",
+        "コップ",
+        "マグカップ"
+      ]
+    },
+    "oi.fork": {
+      "vi": [
+        "nĩa",
+        "dĩa"
+      ],
+      "en": [
+        "fork"
+      ],
+      "ja": [
+        "フォーク"
+      ]
+    },
+    "oi.knife": {
+      "vi": [
+        "dao"
+      ],
+      "en": [
+        "knife"
+      ],
+      "ja": [
+        "ナイフ",
+        "包丁"
+      ]
+    },
+    "oi.spoon": {
+      "vi": [
+        "thìa",
+        "muỗng"
+      ],
+      "en": [
+        "spoon"
+      ],
+      "ja": [
+        "スプーン"
+      ]
+    },
+    "oi.bowl": {
+      "vi": [
+        "bát",
+        "tô",
+        "chén"
+      ],
+      "en": [
+        "bowl"
+      ],
+      "ja": [
+        "ボウル",
+        "お椀"
+      ]
+    },
+    "oi.banana": {
+      "vi": [
+        "chuối"
+      ],
+      "en": [
+        "banana"
+      ],
+      "ja": [
+        "バナナ"
+      ]
+    },
+    "oi.apple": {
+      "vi": [
+        "táo"
+      ],
+      "en": [
+        "apple"
+      ],
+      "ja": [
+        "りんご",
+        "リンゴ"
+      ]
+    },
+    "oi.sandwich": {
+      "vi": [
+        "bánh mì kẹp",
+        "bánh sandwich"
+      ],
+      "en": [
+        "sandwich",
+        "burger"
+      ],
+      "ja": [
+        "サンドイッチ"
+      ]
+    },
+    "oi.orange": {
+      "vi": [
+        "cam",
+        "quả cam"
+      ],
+      "en": [
+        "orange"
+      ],
+      "ja": [
+        "オレンジ",
+        "みかん"
+      ]
+    },
+    "oi.broccoli": {
+      "vi": [
+        "bông cải xanh",
+        "súp lơ xanh"
+      ],
+      "en": [
+        "broccoli"
+      ],
+      "ja": [
+        "ブロッコリー"
+      ]
+    },
+    "oi.carrot": {
+      "vi": [
+        "cà rốt"
+      ],
+      "en": [
+        "carrot"
+      ],
+      "ja": [
+        "にんじん",
+        "人参"
+      ]
+    },
+    "oi.hot_dog": {
+      "vi": [
+        "xúc xích kẹp",
+        "xúc xích",
+        "hot dog"
+      ],
+      "en": [
+        "hot dog",
+        "hotdog"
+      ],
+      "ja": [
+        "ホットドッグ"
+      ]
+    },
+    "oi.pizza": {
+      "vi": [
+        "pizza",
+        "bánh pizza"
+      ],
+      "en": [
+        "pizza"
+      ],
+      "ja": [
+        "ピザ"
+      ]
+    },
+    "oi.donut": {
+      "vi": [
+        "bánh donut",
+        "bánh vòng"
+      ],
+      "en": [
+        "donut",
+        "doughnut"
+      ],
+      "ja": [
+        "ドーナツ"
+      ]
+    },
+    "oi.cake": {
+      "vi": [
+        "bánh ngọt",
+        "bánh kem",
+        "bánh sinh nhật"
+      ],
+      "en": [
+        "cake"
+      ],
+      "ja": [
+        "ケーキ"
+      ]
+    },
+    "oi.chair": {
+      "vi": [
+        "ghế"
+      ],
+      "en": [
+        "chair"
+      ],
+      "ja": [
+        "椅子",
+        "イス"
+      ]
+    },
+    "oi.couch": {
+      "vi": [
+        "ghế sofa",
+        "sofa",
+        "ghế sô pha"
+      ],
+      "en": [
+        "sofa",
+        "couch"
+      ],
+      "ja": [
+        "ソファ",
+        "ソファー"
+      ]
+    },
+    "oi.houseplant": {
+      "vi": [
+        "cây cảnh",
+        "chậu cây"
+      ],
+      "en": [
+        "houseplant",
+        "potted plant",
+        "plant"
+      ],
+      "ja": [
+        "観葉植物",
+        "植木鉢"
+      ]
+    },
+    "oi.bed": {
+      "vi": [
+        "giường"
+      ],
+      "en": [
+        "bed"
+      ],
+      "ja": [
+        "ベッド"
+      ]
+    },
+    "oi.dining_table": {
+      "vi": [
+        "bàn ăn",
+        "bàn"
+      ],
+      "en": [
+        "dining table",
+        "table"
+      ],
+      "ja": [
+        "ダイニングテーブル",
+        "テーブル",
+        "食卓"
+      ]
+    },
+    "oi.toilet": {
+      "vi": [
+        "bồn cầu",
+        "toilet"
+      ],
+      "en": [
+        "toilet"
+      ],
+      "ja": [
+        "トイレ",
+        "便器"
+      ]
+    },
+    "oi.television": {
+      "vi": [
+        "tivi",
+        "ti vi",
+        "truyền hình"
+      ],
+      "en": [
+        "tv",
+        "television"
+      ],
+      "ja": [
+        "テレビ"
+      ]
+    },
+    "oi.laptop": {
+      "vi": [
+        "laptop",
+        "máy tính xách tay"
+      ],
+      "en": [
+        "laptop",
+        "notebook computer"
+      ],
+      "ja": [
+        "ノートパソコン",
+        "パソコン"
+      ]
+    },
+    "oi.computer_mouse": {
+      "vi": [
+        "chuột máy tính"
+      ],
+      "en": [
+        "mouse",
+        "computer mouse"
+      ],
+      "ja": [
+        "マウス"
+      ]
+    },
+    "oi.remote_control": {
+      "vi": [
+        "điều khiển",
+        "remote"
+      ],
+      "en": [
+        "remote control",
+        "remote"
+      ],
+      "ja": [
+        "リモコン"
+      ]
+    },
+    "oi.keyboard": {
+      "vi": [
+        "bàn phím"
+      ],
+      "en": [
+        "keyboard",
+        "computer keyboard"
+      ],
+      "ja": [
+        "キーボード"
+      ]
+    },
+    "oi.mobile_phone": {
+      "vi": [
+        "điện thoại",
+        "điện thoại di động"
+      ],
+      "en": [
+        "phone",
+        "mobile phone",
+        "cell phone",
+        "smartphone"
+      ],
+      "ja": [
+        "スマートフォン",
+        "スマホ",
+        "携帯",
+        "携帯電話"
+      ]
+    },
+    "oi.microwave": {
+      "vi": [
+        "lò vi sóng"
+      ],
+      "en": [
+        "microwave",
+        "microwave oven"
+      ],
+      "ja": [
+        "電子レンジ"
+      ]
+    },
+    "oi.oven": {
+      "vi": [
+        "lò nướng"
+      ],
+      "en": [
+        "oven"
+      ],
+      "ja": [
+        "オーブン"
+      ]
+    },
+    "oi.toaster": {
+      "vi": [
+        "máy nướng bánh mì"
+      ],
+      "en": [
+        "toaster"
+      ],
+      "ja": [
+        "トースター"
+      ]
+    },
+    "oi.sink": {
+      "vi": [
+        "bồn rửa",
+        "chậu rửa"
+      ],
+      "en": [
+        "sink"
+      ],
+      "ja": [
+        "シンク",
+        "流し台"
+      ]
+    },
+    "oi.refrigerator": {
+      "vi": [
+        "tủ lạnh"
+      ],
+      "en": [
+        "fridge",
+        "refrigerator"
+      ],
+      "ja": [
+        "冷蔵庫"
+      ]
+    },
+    "oi.book": {
+      "vi": [
+        "sách",
+        "cuốn sách",
+        "quyển sách"
+      ],
+      "en": [
+        "book"
+      ],
+      "ja": [
+        "本",
+        "書籍",
+        "読書"
+      ]
+    },
+    "oi.clock": {
+      "vi": [
+        "đồng hồ"
+      ],
+      "en": [
+        "clock"
+      ],
+      "ja": [
+        "時計"
+      ]
+    },
+    "oi.vase": {
+      "vi": [
+        "bình hoa",
+        "lọ hoa"
+      ],
+      "en": [
+        "vase"
+      ],
+      "ja": [
+        "花瓶"
+      ]
+    },
+    "oi.scissors": {
+      "vi": [
+        "kéo"
+      ],
+      "en": [
+        "scissors"
+      ],
+      "ja": [
+        "はさみ",
+        "ハサミ"
+      ]
+    },
+    "oi.teddy_bear": {
+      "vi": [
+        "gấu bông"
+      ],
+      "en": [
+        "teddy bear",
+        "teddy",
+        "stuffed animal"
+      ],
+      "ja": [
+        "テディベア",
+        "ぬいぐるみ"
+      ]
+    },
+    "oi.hair_dryer": {
+      "vi": [
+        "máy sấy tóc"
+      ],
+      "en": [
+        "hair dryer",
+        "hair drier"
+      ],
+      "ja": [
+        "ドライヤー"
+      ]
+    },
+    "oi.toothbrush": {
+      "vi": [
+        "bàn chải đánh răng"
+      ],
+      "en": [
+        "toothbrush"
+      ],
+      "ja": [
+        "歯ブラシ"
+      ]
+    },
+    "oi.face": {
+      "vi": [
+        "khuôn mặt"
+      ],
+      "en": [
+        "face",
+        "human face"
+      ],
+      "ja": [
+        "顔"
+      ]
+    },
+    "oi.tree": {
+      "vi": [
+        "cây"
+      ],
+      "en": [
+        "tree"
+      ],
+      "ja": [
+        "木"
+      ]
+    },
+    "oi.flower": {
+      "vi": [
+        "hoa"
+      ],
+      "en": [
+        "flower"
+      ],
+      "ja": [
+        "花"
+      ]
+    },
+    "oi.building": {
+      "vi": [
+        "toà nhà"
+      ],
+      "en": [
+        "building"
+      ],
+      "ja": [
+        "建物"
+      ]
+    },
+    "oi.house": {
+      "vi": [
+        "nhà"
+      ],
+      "en": [
+        "house"
+      ],
+      "ja": [
+        "家"
+      ]
+    },
+    "oi.skyscraper": {
+      "vi": [
+        "nhà chọc trời"
+      ],
+      "en": [
+        "skyscraper"
+      ],
+      "ja": [
+        "高層ビル"
+      ]
+    },
+    "oi.tower": {
+      "vi": [
+        "tháp"
+      ],
+      "en": [
+        "tower"
+      ],
+      "ja": [
+        "塔"
+      ]
+    },
+    "oi.castle": {
+      "vi": [
+        "lâu đài"
+      ],
+      "en": [
+        "castle"
+      ],
+      "ja": [
+        "城"
+      ]
+    },
+    "oi.lighthouse": {
+      "vi": [
+        "hải đăng"
+      ],
+      "en": [
+        "lighthouse"
+      ],
+      "ja": [
+        "灯台"
+      ]
+    },
+    "oi.fountain": {
+      "vi": [
+        "đài phun nước"
+      ],
+      "en": [
+        "fountain"
+      ],
+      "ja": [
+        "噴水"
+      ]
+    },
+    "oi.sunglasses": {
+      "vi": [
+        "kính râm"
+      ],
+      "en": [
+        "sunglasses"
+      ],
+      "ja": [
+        "サングラス"
+      ]
+    },
+    "oi.hat": {
+      "vi": [
+        "mũ"
+      ],
+      "en": [
+        "hat"
+      ],
+      "ja": [
+        "帽子"
+      ]
+    },
+    "oi.footwear": {
+      "vi": [
+        "giày dép"
+      ],
+      "en": [
+        "shoes",
+        "footwear"
+      ],
+      "ja": [
+        "靴"
+      ]
+    },
+    "oi.dress": {
+      "vi": [
+        "váy"
+      ],
+      "en": [
+        "dress"
+      ],
+      "ja": [
+        "ドレス"
+      ]
+    },
+    "oi.guitar": {
+      "vi": [
+        "đàn guitar"
+      ],
+      "en": [
+        "guitar"
+      ],
+      "ja": [
+        "ギター"
+      ]
+    },
+    "oi.camera": {
+      "vi": [
+        "máy ảnh"
+      ],
+      "en": [
+        "camera"
+      ],
+      "ja": [
+        "カメラ"
+      ]
+    },
+    "oi.balloon": {
+      "vi": [
+        "bóng bay"
+      ],
+      "en": [
+        "balloon"
+      ],
+      "ja": [
+        "風船"
+      ]
+    },
+    "oi.christmas_tree": {
+      "vi": [
+        "cây thông noel"
+      ],
+      "en": [
+        "christmas tree"
+      ],
+      "ja": [
+        "クリスマスツリー"
+      ]
+    },
+    "oi.swimming_pool": {
+      "vi": [
+        "hồ bơi"
+      ],
+      "en": [
+        "swimming pool"
+      ],
+      "ja": [
+        "プール"
+      ]
+    },
+    "oi.tent": {
+      "vi": [
+        "lều"
+      ],
+      "en": [
+        "tent"
+      ],
+      "ja": [
+        "テント"
+      ]
+    },
+    "oi.flag": {
+      "vi": [
+        "lá cờ"
+      ],
+      "en": [
+        "flag"
+      ],
+      "ja": [
+        "旗"
+      ]
+    },
+    "oi.street_light": {
+      "vi": [
+        "đèn đường"
+      ],
+      "en": [
+        "street light"
+      ],
+      "ja": [
+        "街灯"
+      ]
+    },
+    "oi.traffic_sign": {
+      "vi": [
+        "biển báo"
+      ],
+      "en": [
+        "traffic sign"
+      ],
+      "ja": [
+        "交通標識"
+      ]
+    },
+    "oi.taxi": {
+      "vi": [
+        "taxi"
+      ],
+      "en": [
+        "taxi"
+      ],
+      "ja": [
+        "タクシー"
+      ]
+    },
+    "oi.van": {
+      "vi": [
+        "xe van"
+      ],
+      "en": [
+        "van"
+      ],
+      "ja": [
+        "バン"
+      ]
+    },
+    "oi.helicopter": {
+      "vi": [
+        "trực thăng"
+      ],
+      "en": [
+        "helicopter"
+      ],
+      "ja": [
+        "ヘリコプター"
+      ]
+    },
+    "oi.monkey": {
+      "vi": [
+        "khỉ"
+      ],
+      "en": [
+        "monkey"
+      ],
+      "ja": [
+        "猿"
+      ]
+    },
+    "oi.duck": {
+      "vi": [
+        "vịt"
+      ],
+      "en": [
+        "duck"
+      ],
+      "ja": [
+        "アヒル"
+      ]
+    },
+    "oi.fish": {
+      "vi": [
+        "cá"
+      ],
+      "en": [
+        "fish"
+      ],
+      "ja": [
+        "魚"
+      ]
+    },
+    "oi.butterfly": {
+      "vi": [
+        "bướm"
+      ],
+      "en": [
+        "butterfly"
+      ],
+      "ja": [
+        "蝶"
+      ]
+    },
+    "oi.tiger": {
+      "vi": [
+        "hổ"
+      ],
+      "en": [
+        "tiger"
+      ],
+      "ja": [
+        "トラ"
+      ]
+    },
+    "oi.lion": {
+      "vi": [
+        "sư tử"
+      ],
+      "en": [
+        "lion"
+      ],
+      "ja": [
+        "ライオン"
+      ]
+    },
+    "oi.goat": {
+      "vi": [
+        "dê"
+      ],
+      "en": [
+        "goat"
+      ],
+      "ja": [
+        "ヤギ"
+      ]
+    },
+    "oi.pig": {
+      "vi": [
+        "lợn"
+      ],
+      "en": [
+        "pig"
+      ],
+      "ja": [
+        "豚"
+      ]
+    },
+    "oi.deer": {
+      "vi": [
+        "hươu"
+      ],
+      "en": [
+        "deer"
+      ],
+      "ja": [
+        "鹿"
+      ]
+    },
+    "oi.ice_cream": {
+      "vi": [
+        "kem"
+      ],
+      "en": [
+        "ice cream"
+      ],
+      "ja": [
+        "アイスクリーム"
+      ]
+    },
+    "oi.coffee": {
+      "vi": [
+        "cà phê"
+      ],
+      "en": [
+        "coffee"
+      ],
+      "ja": [
+        "コーヒー"
+      ]
+    },
+    "oi.wine": {
+      "vi": [
+        "rượu vang"
+      ],
+      "en": [
+        "wine"
+      ],
+      "ja": [
+        "ワイン"
+      ]
+    },
+    "oi.beer": {
+      "vi": [
+        "bia"
+      ],
+      "en": [
+        "beer"
+      ],
+      "ja": [
+        "ビール"
+      ]
+    },
+    "oi.cocktail": {
+      "vi": [
+        "cocktail"
+      ],
+      "en": [
+        "cocktail"
+      ],
+      "ja": [
+        "カクテル"
+      ]
+    },
+    "oi.salad": {
+      "vi": [
+        "salad"
+      ],
+      "en": [
+        "salad"
+      ],
+      "ja": [
+        "サラダ"
+      ]
+    },
+    "oi.sushi": {
+      "vi": [
+        "sushi"
+      ],
+      "en": [
+        "sushi"
+      ],
+      "ja": [
+        "寿司"
+      ]
+    },
+    "oi.bread": {
+      "vi": [
+        "bánh mì"
+      ],
+      "en": [
+        "bread"
+      ],
+      "ja": [
+        "パン"
+      ]
+    },
+    "oi.cookie": {
+      "vi": [
+        "bánh quy"
+      ],
+      "en": [
+        "cookie"
+      ],
+      "ja": [
+        "クッキー"
+      ]
+    },
+    "oi.hamburger": {
+      "vi": [
+        "hamburger"
+      ],
+      "en": [
+        "hamburger"
+      ],
+      "ja": [
+        "ハンバーガー"
+      ]
+    },
+    "oi.french_fries": {
+      "vi": [
+        "khoai tây chiên"
+      ],
+      "en": [
+        "french fries"
+      ],
+      "ja": [
+        "フライドポテト"
+      ]
+    },
+    "oi.pasta": {
+      "vi": [
+        "mì ý"
+      ],
+      "en": [
+        "pasta"
+      ],
+      "ja": [
+        "パスタ"
+      ]
+    },
+    "oi.beach": {
+      "vi": [
+        "bãi biển"
+      ],
+      "en": [
+        "beach"
+      ],
+      "ja": [
+        "ビーチ"
+      ]
+    },
+    "oi.sea": {
+      "vi": [
+        "biển"
+      ],
+      "en": [
+        "sea"
+      ],
+      "ja": [
+        "海"
+      ]
+    },
+    "oi.coast": {
+      "vi": [
+        "bờ biển"
+      ],
+      "en": [
+        "coast"
+      ],
+      "ja": [
+        "海岸"
+      ]
+    },
+    "oi.island": {
+      "vi": [
+        "đảo"
+      ],
+      "en": [
+        "island"
+      ],
+      "ja": [
+        "島"
+      ]
+    },
+    "oi.mountain": {
+      "vi": [
+        "núi"
+      ],
+      "en": [
+        "mountain"
+      ],
+      "ja": [
+        "山"
+      ]
+    },
+    "oi.mountain_range": {
+      "vi": [
+        "dãy núi"
+      ],
+      "en": [
+        "mountain range"
+      ],
+      "ja": [
+        "山脈"
+      ]
+    },
+    "oi.valley": {
+      "vi": [
+        "thung lũng"
+      ],
+      "en": [
+        "valley"
+      ],
+      "ja": [
+        "谷"
+      ]
+    },
+    "oi.forest": {
+      "vi": [
+        "rừng"
+      ],
+      "en": [
+        "forest"
+      ],
+      "ja": [
+        "森"
+      ]
+    },
+    "oi.lake": {
+      "vi": [
+        "hồ"
+      ],
+      "en": [
+        "lake"
+      ],
+      "ja": [
+        "湖"
+      ]
+    },
+    "oi.river": {
+      "vi": [
+        "sông"
+      ],
+      "en": [
+        "river"
+      ],
+      "ja": [
+        "川"
+      ]
+    },
+    "oi.waterfall": {
+      "vi": [
+        "thác nước"
+      ],
+      "en": [
+        "waterfall"
+      ],
+      "ja": [
+        "滝"
+      ]
+    },
+    "oi.field": {
+      "vi": [
+        "cánh đồng"
+      ],
+      "en": [
+        "field"
+      ],
+      "ja": [
+        "野原"
+      ]
+    },
+    "oi.garden": {
+      "vi": [
+        "khu vườn"
+      ],
+      "en": [
+        "garden"
+      ],
+      "ja": [
+        "庭"
+      ]
+    },
+    "oi.park": {
+      "vi": [
+        "công viên"
+      ],
+      "en": [
+        "park"
+      ],
+      "ja": [
+        "公園"
+      ]
+    },
+    "oi.desert": {
+      "vi": [
+        "sa mạc"
+      ],
+      "en": [
+        "desert"
+      ],
+      "ja": [
+        "砂漠"
+      ]
+    },
+    "oi.snow": {
+      "vi": [
+        "tuyết"
+      ],
+      "en": [
+        "snow"
+      ],
+      "ja": [
+        "雪"
+      ]
+    },
+    "oi.sky": {
+      "vi": [
+        "bầu trời"
+      ],
+      "en": [
+        "sky"
+      ],
+      "ja": [
+        "空"
+      ]
+    },
+    "oi.cloud": {
+      "vi": [
+        "mây"
+      ],
+      "en": [
+        "clouds",
+        "cloud"
+      ],
+      "ja": [
+        "雲"
+      ]
+    },
+    "oi.sunset": {
+      "vi": [
+        "hoàng hôn"
+      ],
+      "en": [
+        "sunset"
+      ],
+      "ja": [
+        "夕焼け"
+      ]
+    },
+    "oi.sunrise": {
+      "vi": [
+        "bình minh"
+      ],
+      "en": [
+        "sunrise"
+      ],
+      "ja": [
+        "日の出"
+      ]
+    },
+    "oi.night": {
+      "vi": [
+        "ban đêm"
+      ],
+      "en": [
+        "night"
+      ],
+      "ja": [
+        "夜"
+      ]
+    },
+    "oi.road": {
+      "vi": [
+        "con đường"
+      ],
+      "en": [
+        "road"
+      ],
+      "ja": [
+        "道路"
+      ]
+    },
+    "oi.street": {
+      "vi": [
+        "đường phố"
+      ],
+      "en": [
+        "street"
+      ],
+      "ja": [
+        "通り"
+      ]
+    },
+    "oi.city": {
+      "vi": [
+        "thành phố"
+      ],
+      "en": [
+        "city"
+      ],
+      "ja": [
+        "都市"
+      ]
+    },
+    "oi.town": {
+      "vi": [
+        "thị trấn"
+      ],
+      "en": [
+        "town"
+      ],
+      "ja": [
+        "町"
+      ]
+    },
+    "oi.skyline": {
+      "vi": [
+        "đường chân trời thành phố"
+      ],
+      "en": [
+        "skyline"
+      ],
+      "ja": [
+        "スカイライン"
+      ]
+    },
+    "oi.bridge": {
+      "vi": [
+        "cây cầu"
+      ],
+      "en": [
+        "bridge"
+      ],
+      "ja": [
+        "橋"
+      ]
+    },
+    "oi.temple": {
+      "vi": [
+        "đền chùa"
+      ],
+      "en": [
+        "temple"
+      ],
+      "ja": [
+        "寺院"
+      ]
+    },
+    "oi.church": {
+      "vi": [
+        "nhà thờ"
+      ],
+      "en": [
+        "church"
+      ],
+      "ja": [
+        "教会"
+      ]
+    },
+    "oi.room": {
+      "vi": [
+        "căn phòng"
+      ],
+      "en": [
+        "room"
+      ],
+      "ja": [
+        "部屋"
+      ]
+    },
+    "oi.kitchen": {
+      "vi": [
+        "nhà bếp"
+      ],
+      "en": [
+        "kitchen"
+      ],
+      "ja": [
+        "キッチン"
+      ]
+    },
+    "oi.bedroom": {
+      "vi": [
+        "phòng ngủ"
+      ],
+      "en": [
+        "bedroom"
+      ],
+      "ja": [
+        "寝室"
+      ]
+    },
+    "oi.living_room": {
+      "vi": [
+        "phòng khách"
+      ],
+      "en": [
+        "living room"
+      ],
+      "ja": [
+        "リビング"
+      ]
+    },
+    "oi.restaurant": {
+      "vi": [
+        "nhà hàng"
+      ],
+      "en": [
+        "restaurant"
+      ],
+      "ja": [
+        "レストラン"
+      ]
+    },
+    "oi.stadium": {
+      "vi": [
+        "sân vận động"
+      ],
+      "en": [
+        "stadium"
+      ],
+      "ja": [
+        "スタジアム"
+      ]
+    },
+    "oi.wedding": {
+      "vi": [
+        "đám cưới"
+      ],
+      "en": [
+        "wedding"
+      ],
+      "ja": [
+        "結婚式"
+      ]
+    },
+    "oi.party": {
+      "vi": [
+        "bữa tiệc"
+      ],
+      "en": [
+        "party"
+      ],
+      "ja": [
+        "パーティー"
+      ]
+    },
+    "oi.concert": {
+      "vi": [
+        "buổi hoà nhạc"
+      ],
+      "en": [
+        "concert"
+      ],
+      "ja": [
+        "コンサート"
+      ]
+    },
+    "oi.festival": {
+      "vi": [
+        "lễ hội"
+      ],
+      "en": [
+        "festival"
+      ],
+      "ja": [
+        "祭り"
+      ]
+    },
+    "oi.crowd": {
+      "vi": [
+        "đám đông"
+      ],
+      "en": [
+        "crowd"
+      ],
+      "ja": [
+        "群衆"
+      ]
+    },
+    "oi.selfie": {
+      "vi": [
+        "ảnh tự sướng"
+      ],
+      "en": [
+        "selfie"
+      ],
+      "ja": [
+        "自撮り"
+      ]
+    },
+    "oi.portrait": {
+      "vi": [
+        "chân dung"
+      ],
+      "en": [
+        "portrait"
+      ],
+      "ja": [
+        "ポートレート"
+      ]
+    },
+    "oi.smile": {
+      "vi": [
+        "nụ cười"
+      ],
+      "en": [
+        "smile"
+      ],
+      "ja": [
+        "笑顔"
+      ]
+    },
+    "oi.text": {
+      "vi": [
+        "chữ viết"
+      ],
+      "en": [
+        "text"
+      ],
+      "ja": [
+        "文字"
+      ]
+    },
+    "oi.document": {
+      "vi": [
+        "tài liệu"
+      ],
+      "en": [
+        "document"
+      ],
+      "ja": [
+        "書類"
+      ]
+    },
+    "oi.landscape": {
+      "vi": [
+        "phong cảnh"
+      ],
+      "en": [
+        "landscape"
+      ],
+      "ja": [
+        "風景"
+      ]
     }
   }
 }

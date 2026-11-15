@@ -10,6 +10,7 @@ import { dbPool } from "../../config/db.js";
 import { readAiSourceBuffer } from "../media/media.derivatives.service.js";
 import { detectObjects } from "./ai.client.js";
 import sharp from "sharp";
+import { logger } from "../../lib/logger.js";
 
 // Cạnh dài tối đa khi gửi ảnh cho YOLO — bbox chuẩn hoá 0–1 nên scale đều
 // (giữ aspect ratio) không làm sai toạ độ; payload nhỏ hơn, nhanh hơn.
@@ -91,7 +92,7 @@ export async function detectMediaBuffer({ mediaId, userId, buffer }) {
 /** Fire-and-forget — chạy nền, mọi lỗi chỉ log. */
 export function detectMediaInBackground(args) {
   detectMediaBuffer(args).catch((err) => {
-    console.warn(`⚠️  Detect media ${args.mediaId} lỗi: ${err.message}`);
+    logger.warn({ err }, `Detect media ${args.mediaId} lỗi`);
   });
 }
 
@@ -140,7 +141,7 @@ export async function backfillDetections(userId, { limit = 25 } = {}) {
       else failed += 1;
     } catch (err) {
       failed += 1;
-      console.warn(`⚠️  Backfill detect ${row.id} lỗi: ${err.message}`);
+      logger.warn({ err }, `Backfill detect ${row.id} lỗi`);
     }
   }
 

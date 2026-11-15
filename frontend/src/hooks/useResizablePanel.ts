@@ -64,7 +64,8 @@ function readStoredSize(storageKey?: string): PanelSize | null {
 
 /**
  * Kích thước panel nổi có thể kéo resize từ góc dưới-phải, lưu vào localStorage.
- * `shiftX` dùng để giữ cạnh trái cố định trong lúc kéo (panel đang canh giữa).
+ * `shiftX` / `shiftY` giữ cạnh trái / cạnh trên cố định trong lúc kéo (panel đang
+ * canh giữa ngang / dọc — panel neo cạnh trên như Spotlight chỉ cần `shiftX`).
  */
 export function useResizablePanel({
   storageKey,
@@ -82,6 +83,7 @@ export function useResizablePanel({
     return clampSize(stored, minWidth, minHeight, maxWidth, maxHeight);
   });
   const [shiftX, setShiftX] = useState(0);
+  const [shiftY, setShiftY] = useState(0);
   const [isResizing, setIsResizing] = useState(false);
 
   const sizeRef = useRef(size);
@@ -149,6 +151,7 @@ export function useResizablePanel({
         latest = next;
         setSize(next);
         setShiftX((next.width - startW) / 2);
+        setShiftY((next.height - startH) / 2);
       };
 
       const onUp = () => {
@@ -156,6 +159,7 @@ export function useResizablePanel({
         window.removeEventListener("pointerup", onUp);
         window.removeEventListener("pointercancel", onUp);
         setShiftX(0);
+        setShiftY(0);
         setIsResizing(false);
         persist(latest);
       };
@@ -179,8 +183,9 @@ export function useResizablePanel({
     );
     setSize(base);
     setShiftX(0);
+    setShiftY(0);
     persist(base);
   }, [defaultWidth, defaultHeight, minWidth, minHeight, persist]);
 
-  return { size, shiftX, isResizing, startResize, reset };
+  return { size, shiftX, shiftY, isResizing, startResize, reset };
 }

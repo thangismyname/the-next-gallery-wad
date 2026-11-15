@@ -1,5 +1,6 @@
+import { GallerySort, MediaPage } from "@tng/shared";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchMedia, GallerySort, MediaPage } from "@/services/media";
+import { fetchMedia } from "@/services/media";
 
 export const PAGE_SIZE = 36;
 

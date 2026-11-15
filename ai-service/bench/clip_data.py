@@ -18,6 +18,8 @@ import tarfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from bench.common import data_dir
+
 # Tên dùng trong script → repo HuggingFace (repo-type dataset)
 DATASETS = {
     "mscoco_captions": {"repo": "clip-benchmark/wds_mscoco_captions", "task": "retrieval"},
@@ -30,7 +32,7 @@ IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
 
 
 def dataset_dir(data_root: Path, name: str) -> Path:
-    return data_root.expanduser().resolve() / "clip_benchmark" / name
+    return data_dir(data_root, "clip_benchmark") / name
 
 
 @dataclass

@@ -1,3 +1,4 @@
+import { type ShareLink, albumLinksQueryKey } from "@tng/shared";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,14 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  type ShareLink,
-  albumLinksQueryKey,
-  createAlbumLink,
-  deleteAlbumLink,
-  fetchAlbumLinks,
-  publicAlbumUrl,
-} from "@/services/albums";
+import { createAlbumLink, deleteAlbumLink, fetchAlbumLinks, publicAlbumUrl } from "@/services/albums";
 import { SettingOptionGroup } from "@/features/settings/components/SettingOptionGroup";
 
 const EXPIRY_OPTIONS = ["never", "1", "7", "30"] as const;

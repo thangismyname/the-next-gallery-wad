@@ -1,0 +1,10 @@
+a,b,metric,queries,a_mean,b_mean,diff,diff_ci_lo,diff_ci_hi
+boost_prob:fused_learned,boost_prob:yolo,P@10,40,0.5625,0.5625,0.0,-0.02381,0.025
+boost_prob:lp_clip,boost_prob:clip,P@10,40,0.5625,0.53,0.0325,0.0125,0.0525
+boost_prob:lp_dino,boost_prob:lp_clip,P@10,40,0.5625,0.5625,0.0,-0.015,0.015
+boost_prob:fused_learned,boost_prob:lp_clip,P@10,40,0.5625,0.5625,0.0,-0.02,0.0225
+boost_prob:fused_learned,boost:fused_learned,P@10,40,0.5625,0.5625,-0.0,-0.01,0.01
+filter:fused_learned,boost_prob:fused_learned,P@10,40,0.5875,0.5625,0.025,-0.01,0.0675
+boost_prob:yolo_ft,boost_prob:yolo,P@10,40,0.56,0.5625,-0.0025,-0.0225,0.0175
+boost_prob:fused_ft,boost_prob:fused,P@10,40,0.55,0.55,-0.0,-0.01,0.01
+boost_prob:fused_learned_ft,boost_prob:fused_learned,P@10,40,0.5675,0.5625,0.005,-0.0125,0.0225

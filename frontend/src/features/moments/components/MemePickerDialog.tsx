@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2, Search, Sticker, X } from "lucide-react";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,9 +13,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createMomentMeme, fetchMemeTemplates } from "@/services/moments";
-import { MomentMeme } from "@/types";
+import { MomentMeme } from "@tng/shared";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -127,7 +129,7 @@ export const MemePickerDialog: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sticker className="size-4" />
@@ -136,8 +138,8 @@ export const MemePickerDialog: React.FC<Props> = ({
           <DialogDescription>{t("moments.memePickDesc")}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
-          {error && <p className="text-xs text-destructive">{error}</p>}
+        <DialogBody className="space-y-3">
+          {error && <p className="rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive">{error}</p>}
 
           {/* Preview meme đang chọn */}
           {selected && (
@@ -190,7 +192,7 @@ export const MemePickerDialog: React.FC<Props> = ({
                 />
               </div>
 
-              <div className="grid max-h-72 grid-cols-3 gap-2 overflow-y-auto pr-1 sm:grid-cols-4">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {isPending ? (
                   Array.from({ length: 12 }).map((_, i) => (
                     <Skeleton
@@ -266,22 +268,22 @@ export const MemePickerDialog: React.FC<Props> = ({
                   className="font-semibold uppercase"
                 />
               ))}
-              <textarea
+              <Textarea
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 maxLength={280}
                 rows={2}
                 placeholder={t("moments.memeCaptionPlaceholder")}
-                className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/40"
+                className="min-h-0 rounded-md border-border px-3 py-2"
               />
               <p className="text-[11px] text-muted-foreground">
                 {t("moments.memeTextOptional")}
               </p>
             </div>
           )}
-        </div>
+        </DialogBody>
 
-        <DialogFooter>
+        <DialogFooter className="border-t border-border/50 pt-4">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

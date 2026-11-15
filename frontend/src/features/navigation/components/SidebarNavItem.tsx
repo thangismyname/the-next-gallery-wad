@@ -2,8 +2,8 @@ import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
-import { NavMenuItem } from "@/types";
-import { isNavActive } from "@/hooks/useNavItems";
+import type { NavMenuItem } from "../types";
+import { isNavActive } from "@/features/navigation/useNavItems";
 
 interface SidebarNavItemProps {
   item: NavMenuItem;

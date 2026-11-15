@@ -5,19 +5,30 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ChevronLeft, Heart, Plus, Sticker, Trash2 } from "lucide-react";
+import {
+  ChevronLeft,
+  Heart,
+  ImageOff,
+  Loader2,
+  Plus,
+  Sticker,
+  Trash2,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  deleteMomentMeme,
-  fetchMomentMemes,
-  momentMemesQueryKey,
-  MomentMemePage,
-  toggleMemeReaction,
-} from "@/services/moments";
-import { Moment, MomentMeme } from "@/types";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { deleteMomentMeme, fetchMomentMemes, toggleMemeReaction } from "@/services/moments";
+import { Moment, MomentMeme, momentMemesQueryKey, MomentMemePage } from "@tng/shared";
 import { cn } from "@/lib/utils";
-import { getInitials } from "@/utils/string";
+import { getInitials } from "@tng/shared";
 import { timeAgo } from "../participants";
 import { MemePickerDialog } from "./MemePickerDialog";
 import { bumpFeedMemeCount } from "../momentsCache";
@@ -30,15 +41,46 @@ type Props = {
 
 const PAGE_SIZE = 20;
 
+/** Ảnh meme lỗi (memegen.link chết / offline) → placeholder thay vì ẩn img. */
+function MemeImage({ src, alt }: { src: string; alt: string }) {
+  const { t } = useTranslation();
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <span className="flex size-full flex-col items-center justify-center gap-1 text-muted-foreground">
+        <ImageOff className="size-5" />
+        <span className="text-[11px]">{t("moments.memeLoadFailed")}</span>
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="size-full object-cover"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 /**
  * MẶT SAU thẻ moment (khi lật) — danh sách meme về bức ảnh, scroll liên tục
  * như bình luận. Mỗi meme: avatar + tên + thời gian, ảnh meme, caption tùy
  * chọn. Dưới cùng là nút "Thả meme" mở MemePickerDialog (template memegen.link).
+ *
+ * Màu theo design token (bg-card / text-foreground / border / bg-muted) nên
+ * đổi đúng khi chuyển theme; chỉ scrim trên ảnh là cố định.
  */
 export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<MomentMeme | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -63,6 +105,13 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
     () => data?.pages.flatMap((p) => p.items) ?? [],
     [data],
   );
+
+  // Thông báo lỗi tự tắt — không chặn UI như window.alert.
+  useEffect(() => {
+    if (!notice) return;
+    const id = setTimeout(() => setNotice(null), 4000);
+    return () => clearTimeout(id);
+  }, [notice]);
 
   // Infinite scroll như bình luận: khi thấy sentinel đáy → load thêm.
   useEffect(() => {
@@ -101,14 +150,18 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
     setPickerOpen(false);
   };
 
-  const handleDelete = async (meme: MomentMeme) => {
-    if (!window.confirm(t("moments.memeDeleteConfirm"))) return;
+  const handleDelete = async () => {
+    if (!deleteTarget || deleting) return;
+    setDeleting(true);
     try {
-      await deleteMomentMeme(moment.id, meme.id);
-      updateMemePages((items) => items.filter((x) => x.id !== meme.id));
+      await deleteMomentMeme(moment.id, deleteTarget.id);
+      updateMemePages((items) => items.filter((x) => x.id !== deleteTarget.id));
       bumpFeedMemeCount(queryClient, moment.id, -1);
     } catch {
-      window.alert(t("moments.memeDeleteFailed"));
+      setNotice(t("moments.memeDeleteFailed"));
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -140,13 +193,13 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
 
   return (
     <>
-      <div className="absolute inset-0 flex flex-col bg-zinc-950 text-zinc-100">
+      <div className="absolute inset-0 flex flex-col bg-card text-foreground">
         {/* ── Header: quay lại + tiêu đề + count ── */}
-        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-white/10 px-2">
+        <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border px-2">
           <button
             type="button"
             onClick={onBack}
-            className="grid size-8 shrink-0 place-items-center rounded-full text-zinc-300 transition hover:bg-white/10 hover:text-white"
+            className="grid size-8 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
             aria-label={t("moments.memeBack")}
             title={t("moments.memeBack")}
           >
@@ -155,35 +208,45 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
           <span className="flex min-w-0 items-center gap-1.5 text-sm font-semibold">
             <Sticker className="size-4 shrink-0" />
             <span className="truncate">{t("moments.memeTitle")}</span>
-            <span className="shrink-0 text-xs font-normal text-zinc-400">
+            <span className="shrink-0 text-xs font-normal text-muted-foreground">
               ({moment.memeCount ?? 0})
             </span>
           </span>
         </div>
 
+        {/* ── Thông báo lỗi xoá meme ── */}
+        {notice && (
+          <div
+            role="alert"
+            className="mx-3 mt-2 shrink-0 rounded-md border border-destructive/30 bg-destructive/5 px-2.5 py-1.5 text-xs text-destructive"
+          >
+            {notice}
+          </div>
+        )}
+
         {/* ── Danh sách meme — scroll vô hạn ── */}
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 scrollbar-thin [scrollbar-color:rgba(255,255,255,0.25)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 scrollbar-thin [scrollbar-color:var(--border)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border">
           {isPending && (
             <div className="space-y-4">
               {[0, 1].map((i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Skeleton className="size-6 shrink-0 rounded-full bg-white/10" />
-                    <Skeleton className="h-3 w-24 bg-white/10" />
+                    <Skeleton className="size-6 shrink-0 rounded-full bg-muted" />
+                    <Skeleton className="h-3 w-24 bg-muted" />
                   </div>
-                  <Skeleton className="h-24 w-full rounded-xl bg-white/10" />
+                  <Skeleton className="h-24 w-full rounded-xl bg-muted" />
                 </div>
               ))}
             </div>
           )}
 
           {!isPending && isError && (
-            <div className="flex flex-col items-center gap-2 py-8 text-center text-xs text-zinc-400">
+            <div className="flex flex-col items-center gap-2 py-8 text-center text-xs text-muted-foreground">
               <p>{t("moments.memeLoadFailed")}</p>
               <button
                 type="button"
                 onClick={() => refetch()}
-                className="rounded-full bg-white/10 px-3 py-1 transition hover:bg-white/20"
+                className="rounded-full bg-muted px-3 py-1 transition hover:bg-muted/70"
               >
                 {t("moments.retry")}
               </button>
@@ -192,11 +255,11 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
 
           {!isPending && !isError && memes.length === 0 && (
             <div className="flex flex-col items-center gap-2 py-10 text-center">
-              <span className="grid size-11 place-items-center rounded-full bg-white/10">
-                <Sticker className="size-5 text-zinc-400" />
+              <span className="grid size-11 place-items-center rounded-full bg-muted">
+                <Sticker className="size-5 text-muted-foreground" />
               </span>
-              <p className="text-sm text-zinc-200">{t("moments.memeEmpty")}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-sm text-foreground">{t("moments.memeEmpty")}</p>
+              <p className="text-xs text-muted-foreground">
                 {t("moments.memeEmptyHint")}
               </p>
             </div>
@@ -235,16 +298,16 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
                     className={cn(
                       "grid size-8 place-items-center rounded-full transition active:scale-90",
                       meme.myReact
-                        ? "bg-red-500/15"
-                        : "bg-white/5 hover:bg-white/10",
+                        ? "bg-destructive/15"
+                        : "bg-muted hover:bg-muted/70",
                     )}
                   >
                     <Heart
                       className={cn(
                         "size-4 transition",
                         meme.myReact
-                          ? "fill-red-500 text-red-500"
-                          : "text-zinc-400 hover:text-red-400",
+                          ? "fill-destructive text-destructive"
+                          : "text-muted-foreground hover:text-destructive",
                       )}
                     />
                   </button>
@@ -252,7 +315,9 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
                     <span
                       className={cn(
                         "text-[10px] leading-none",
-                        meme.myReact ? "text-red-400" : "text-zinc-400",
+                        meme.myReact
+                          ? "text-destructive"
+                          : "text-muted-foreground",
                       )}
                     >
                       {meme.reactCount}
@@ -276,21 +341,16 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
                         className="block w-full"
                         title={t("moments.memeBack")}
                       >
-                        <span className="grid size-full h-44 w-full place-items-center overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10">
-                          <img
+                        <span className="grid size-full h-44 w-full place-items-center overflow-hidden rounded-xl bg-muted ring-1 ring-border">
+                          <MemeImage
                             src={meme.imageUrl}
                             alt={meme.caption ?? meme.userName}
-                            loading="lazy"
-                            className="size-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                            }}
                           />
                         </span>
                       </button>
 
                       {meme.caption && (
-                        <p className="text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-zinc-300">
+                        <p className="text-xs leading-relaxed whitespace-pre-wrap wrap-break-word text-muted-foreground">
                           {meme.caption}
                         </p>
                       )}
@@ -309,17 +369,17 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
                       isMomentAuthor && "flex-row-reverse",
                     )}
                   >
-                    <p className="max-w-full truncate text-[11px] font-medium text-zinc-100">
+                    <p className="max-w-full truncate text-[11px] font-medium text-foreground">
                       {meme.userName}
                     </p>
-                    <span className="shrink-0 text-[10px] text-zinc-500">
+                    <span className="shrink-0 text-[10px] text-muted-foreground/70">
                       {timeAgo(meme.createdAt, t)}
                     </span>
                     {meme.isOwn && (
                       <button
                         type="button"
-                        onClick={() => handleDelete(meme)}
-                        className="grid size-6 shrink-0 place-items-center rounded-full text-zinc-400 transition hover:bg-white/10 hover:text-red-400"
+                        onClick={() => setDeleteTarget(meme)}
+                        className="grid size-6 shrink-0 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-destructive"
                         aria-label={t("moments.memeDelete")}
                         title={t("moments.memeDelete")}
                       >
@@ -334,17 +394,17 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
 
           <div ref={loadMoreRef} className="py-2">
             {isFetchingNextPage && (
-              <Skeleton className="h-20 w-full rounded-xl bg-white/5" />
+              <Skeleton className="h-20 w-full rounded-xl bg-muted" />
             )}
           </div>
         </div>
 
         {/* ── Composer: nút thả meme ── */}
-        <div className="shrink-0 border-t border-white/10 p-2.5">
+        <div className="shrink-0 border-t border-border p-2.5">
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white/10 py-2.5 text-sm font-medium text-zinc-100 transition hover:bg-white/15 active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-1.5 rounded-full bg-muted py-2.5 text-sm font-medium text-foreground transition hover:bg-muted/70 active:scale-[0.98]"
           >
             <Plus className="size-4" />
             {t("moments.memeAdd")}
@@ -358,6 +418,39 @@ export const MomentMemePanel: React.FC<Props> = ({ moment, onBack }) => {
         momentId={moment.id}
         onCreated={handleCreated}
       />
+
+      {/* Xác nhận xoá meme — thay cho window.confirm */}
+      <AlertDialog
+        open={Boolean(deleteTarget)}
+        onOpenChange={(next) => {
+          if (!next) setDeleteTarget(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("moments.memeDeleteConfirm")}</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>
+              {t("moments.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={deleting}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleDelete();
+              }}
+            >
+              {deleting ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                t("moments.memeDelete")
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

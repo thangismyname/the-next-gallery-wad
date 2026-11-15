@@ -1,0 +1,157 @@
+{"t": "2026-11-07T19:14:32Z", "type": "log", "message": "run yolo_ft/20261108-021431 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/yolo_ft/20261108-021431"}
+{"t": "2026-11-07T19:14:32Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-07T19:14:32Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-07T19:14:32Z", "type": "log", "message": "  128 lớp vật thể có box (81 có trong COCO · 47 ngoài COCO)"}
+{"t": "2026-11-07T19:14:32Z", "type": "log", "message": "── xuất dataset Ultralytics"}
+{"t": "2026-11-07T19:14:32Z", "type": "stage", "stage": "xuất dataset Ultralytics"}
+{"t": "2026-11-07T19:14:38Z", "type": "log", "message": "  /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Data/open-images-yolo/data.yaml · train: 14116 ảnh / 76899 box · val: 2744 ảnh / 11753 box · test: 4490 ảnh / 19933 box"}
+{"t": "2026-11-07T19:14:38Z", "type": "log", "message": "── train 30 epoch trên mps"}
+{"t": "2026-11-07T19:14:38Z", "type": "stage", "stage": "train 30 epoch trên mps"}
+{"t": "2026-11-08T10:43:45Z", "type": "log", "message": "  → best.pt chép thành models/yolo26n-oi-20261108-021431.pt (train 658 phút)"}
+{"t": "2026-11-08T10:43:45Z", "type": "log", "message": "── Ultralytics val trên test (mAP@50, mAP@50-95)"}
+{"t": "2026-11-08T10:43:45Z", "type": "stage", "stage": "Ultralytics val trên test (mAP@50, mAP@50-95)"}
+{"t": "2026-11-08T10:44:59Z", "type": "log", "message": "  test mAP@50 0.4557 · mAP@50-95 0.3508 (COCO 0.4135 · ngoài COCO 0.2428)"}
+{"t": "2026-11-08T10:44:59Z", "type": "log", "message": "── detect val/test (gốc + fine-tune, pipeline app)"}
+{"t": "2026-11-08T10:44:59Z", "type": "stage", "stage": "detect val/test (gốc + fine-tune, pipeline app)"}
+{"t": "2026-11-08T10:45:13Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 64, "total": 3000}
+{"t": "2026-11-08T10:45:23Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 128, "total": 3000}
+{"t": "2026-11-08T10:45:30Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 192, "total": 3000}
+{"t": "2026-11-08T10:45:42Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 256, "total": 3000}
+{"t": "2026-11-08T10:45:50Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 320, "total": 3000}
+{"t": "2026-11-08T10:45:58Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 384, "total": 3000}
+{"t": "2026-11-08T10:46:05Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 448, "total": 3000}
+{"t": "2026-11-08T10:46:11Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 512, "total": 3000}
+{"t": "2026-11-08T10:46:19Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 576, "total": 3000}
+{"t": "2026-11-08T10:46:28Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 640, "total": 3000}
+{"t": "2026-11-08T10:46:36Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 704, "total": 3000}
+{"t": "2026-11-08T10:46:43Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 768, "total": 3000}
+{"t": "2026-11-08T10:46:51Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 832, "total": 3000}
+{"t": "2026-11-08T10:46:58Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 896, "total": 3000}
+{"t": "2026-11-08T10:47:07Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 960, "total": 3000}
+{"t": "2026-11-08T10:47:15Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1024, "total": 3000}
+{"t": "2026-11-08T10:47:21Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1088, "total": 3000}
+{"t": "2026-11-08T10:47:27Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1152, "total": 3000}
+{"t": "2026-11-08T10:47:34Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1216, "total": 3000}
+{"t": "2026-11-08T10:47:41Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1280, "total": 3000}
+{"t": "2026-11-08T10:47:49Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1344, "total": 3000}
+{"t": "2026-11-08T10:47:55Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1408, "total": 3000}
+{"t": "2026-11-08T10:48:02Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1472, "total": 3000}
+{"t": "2026-11-08T10:48:09Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1536, "total": 3000}
+{"t": "2026-11-08T10:48:15Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1600, "total": 3000}
+{"t": "2026-11-08T10:48:21Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1664, "total": 3000}
+{"t": "2026-11-08T10:48:27Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1728, "total": 3000}
+{"t": "2026-11-08T10:48:34Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1792, "total": 3000}
+{"t": "2026-11-08T10:48:41Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1856, "total": 3000}
+{"t": "2026-11-08T10:48:48Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1920, "total": 3000}
+{"t": "2026-11-08T10:48:54Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 1984, "total": 3000}
+{"t": "2026-11-08T10:49:02Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2048, "total": 3000}
+{"t": "2026-11-08T10:49:09Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2112, "total": 3000}
+{"t": "2026-11-08T10:49:16Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2176, "total": 3000}
+{"t": "2026-11-08T10:49:23Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2240, "total": 3000}
+{"t": "2026-11-08T10:49:29Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2304, "total": 3000}
+{"t": "2026-11-08T10:49:36Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2368, "total": 3000}
+{"t": "2026-11-08T10:49:42Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2432, "total": 3000}
+{"t": "2026-11-08T10:49:50Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2496, "total": 3000}
+{"t": "2026-11-08T10:49:58Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2560, "total": 3000}
+{"t": "2026-11-08T10:50:04Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2624, "total": 3000}
+{"t": "2026-11-08T10:50:13Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2688, "total": 3000}
+{"t": "2026-11-08T10:50:20Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2752, "total": 3000}
+{"t": "2026-11-08T10:50:26Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2816, "total": 3000}
+{"t": "2026-11-08T10:50:32Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2880, "total": 3000}
+{"t": "2026-11-08T10:50:39Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 2944, "total": 3000}
+{"t": "2026-11-08T10:50:45Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-validation", "done": 3000, "total": 3000}
+{"t": "2026-11-08T10:50:52Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 64, "total": 5000}
+{"t": "2026-11-08T10:50:59Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 128, "total": 5000}
+{"t": "2026-11-08T10:51:06Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 192, "total": 5000}
+{"t": "2026-11-08T10:51:12Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 256, "total": 5000}
+{"t": "2026-11-08T10:51:17Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 320, "total": 5000}
+{"t": "2026-11-08T10:51:23Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 384, "total": 5000}
+{"t": "2026-11-08T10:51:29Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 448, "total": 5000}
+{"t": "2026-11-08T10:51:36Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 512, "total": 5000}
+{"t": "2026-11-08T10:51:42Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 576, "total": 5000}
+{"t": "2026-11-08T10:51:48Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 640, "total": 5000}
+{"t": "2026-11-08T10:51:54Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 704, "total": 5000}
+{"t": "2026-11-08T10:52:00Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 768, "total": 5000}
+{"t": "2026-11-08T10:52:07Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 832, "total": 5000}
+{"t": "2026-11-08T10:52:13Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 896, "total": 5000}
+{"t": "2026-11-08T10:52:19Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 960, "total": 5000}
+{"t": "2026-11-08T10:52:25Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1024, "total": 5000}
+{"t": "2026-11-08T10:52:31Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1088, "total": 5000}
+{"t": "2026-11-08T10:52:38Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1152, "total": 5000}
+{"t": "2026-11-08T10:52:45Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1216, "total": 5000}
+{"t": "2026-11-08T10:52:51Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1280, "total": 5000}
+{"t": "2026-11-08T10:52:57Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1344, "total": 5000}
+{"t": "2026-11-08T10:53:03Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1408, "total": 5000}
+{"t": "2026-11-08T10:53:10Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1472, "total": 5000}
+{"t": "2026-11-08T10:53:16Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1536, "total": 5000}
+{"t": "2026-11-08T10:53:22Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1600, "total": 5000}
+{"t": "2026-11-08T10:53:29Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1664, "total": 5000}
+{"t": "2026-11-08T10:53:35Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1728, "total": 5000}
+{"t": "2026-11-08T10:53:41Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1792, "total": 5000}
+{"t": "2026-11-08T10:53:47Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1856, "total": 5000}
+{"t": "2026-11-08T10:53:53Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1920, "total": 5000}
+{"t": "2026-11-08T10:53:59Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 1984, "total": 5000}
+{"t": "2026-11-08T10:54:05Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2048, "total": 5000}
+{"t": "2026-11-08T10:54:11Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2112, "total": 5000}
+{"t": "2026-11-08T10:54:18Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2176, "total": 5000}
+{"t": "2026-11-08T10:54:24Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2240, "total": 5000}
+{"t": "2026-11-08T10:54:31Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2304, "total": 5000}
+{"t": "2026-11-08T10:54:38Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2368, "total": 5000}
+{"t": "2026-11-08T10:54:45Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2432, "total": 5000}
+{"t": "2026-11-08T10:54:53Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2496, "total": 5000}
+{"t": "2026-11-08T10:55:00Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2560, "total": 5000}
+{"t": "2026-11-08T10:55:09Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2624, "total": 5000}
+{"t": "2026-11-08T10:55:19Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2688, "total": 5000}
+{"t": "2026-11-08T10:55:27Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2752, "total": 5000}
+{"t": "2026-11-08T10:55:33Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2816, "total": 5000}
+{"t": "2026-11-08T10:55:39Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2880, "total": 5000}
+{"t": "2026-11-08T10:55:46Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 2944, "total": 5000}
+{"t": "2026-11-08T10:55:53Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3008, "total": 5000}
+{"t": "2026-11-08T10:56:00Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3072, "total": 5000}
+{"t": "2026-11-08T10:56:07Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3136, "total": 5000}
+{"t": "2026-11-08T10:56:14Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3200, "total": 5000}
+{"t": "2026-11-08T10:56:20Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3264, "total": 5000}
+{"t": "2026-11-08T10:56:28Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3328, "total": 5000}
+{"t": "2026-11-08T10:56:34Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3392, "total": 5000}
+{"t": "2026-11-08T10:56:41Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3456, "total": 5000}
+{"t": "2026-11-08T10:56:48Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3520, "total": 5000}
+{"t": "2026-11-08T10:56:56Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3584, "total": 5000}
+{"t": "2026-11-08T10:57:03Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3648, "total": 5000}
+{"t": "2026-11-08T10:57:11Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3712, "total": 5000}
+{"t": "2026-11-08T10:57:17Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3776, "total": 5000}
+{"t": "2026-11-08T10:57:25Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3840, "total": 5000}
+{"t": "2026-11-08T10:57:31Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3904, "total": 5000}
+{"t": "2026-11-08T10:57:38Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 3968, "total": 5000}
+{"t": "2026-11-08T10:57:44Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4032, "total": 5000}
+{"t": "2026-11-08T10:57:50Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4096, "total": 5000}
+{"t": "2026-11-08T10:57:56Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4160, "total": 5000}
+{"t": "2026-11-08T10:58:02Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4224, "total": 5000}
+{"t": "2026-11-08T10:58:08Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4288, "total": 5000}
+{"t": "2026-11-08T10:58:13Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4352, "total": 5000}
+{"t": "2026-11-08T10:58:18Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4416, "total": 5000}
+{"t": "2026-11-08T10:58:25Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4480, "total": 5000}
+{"t": "2026-11-08T10:58:30Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4544, "total": 5000}
+{"t": "2026-11-08T10:58:37Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4608, "total": 5000}
+{"t": "2026-11-08T10:58:43Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4672, "total": 5000}
+{"t": "2026-11-08T10:58:49Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4736, "total": 5000}
+{"t": "2026-11-08T10:58:55Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4800, "total": 5000}
+{"t": "2026-11-08T10:59:02Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4864, "total": 5000}
+{"t": "2026-11-08T10:59:09Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4928, "total": 5000}
+{"t": "2026-11-08T10:59:15Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 4992, "total": 5000}
+{"t": "2026-11-08T10:59:16Z", "type": "progress", "stage": "detect val/test (gốc + fine-tune, pipeline app)", "label": "YOLO oi-test", "done": 5000, "total": 5000}
+{"t": "2026-11-08T10:59:17Z", "type": "log", "message": "── detection AP@IoU (giao thức OI)"}
+{"t": "2026-11-08T10:59:17Z", "type": "stage", "stage": "detection AP@IoU (giao thức OI)"}
+{"t": "2026-11-08T10:59:23Z", "type": "log", "message": "── tag image-level"}
+{"t": "2026-11-08T10:59:23Z", "type": "stage", "stage": "tag image-level"}
+{"t": "2026-11-08T10:59:24Z", "type": "log", "message": "── bootstrap ghép cặp 300×"}
+{"t": "2026-11-08T10:59:24Z", "type": "stage", "stage": "bootstrap ghép cặp 300×"}
+{"t": "2026-11-08T10:59:31Z", "type": "log", "message": "── latency (200 ảnh test, pipeline app)"}
+{"t": "2026-11-08T10:59:31Z", "type": "stage", "stage": "latency (200 ảnh test, pipeline app)"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  base: 26.2 ms/ảnh · 2.57M tham số · 5.5 MB"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  ft: 27.8 ms/ảnh · 2.60M tham số · 5.6 MB"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  tag base coco    mAP 0.8973 · macro-F1 0.8293 · F1@P 0.7613"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  tag base objects mAP 0.8973 · macro-F1 0.8293 · F1@P 0.7613"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  tag ft   coco    mAP 0.8831 · macro-F1 0.8087 · F1@P 0.7338"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  tag ft   gap     mAP 0.7963 · macro-F1 0.7584 · F1@P 0.5729"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "  tag ft   objects mAP 0.8505 · macro-F1 0.7898 · F1@P 0.6733"}
+{"t": "2026-11-08T10:59:45Z", "type": "log", "message": "xong sau 40463s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/yolo_ft/20261108-021431"}

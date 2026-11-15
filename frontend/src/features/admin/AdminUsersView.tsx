@@ -11,7 +11,6 @@ import {
   Search,
   Users,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,15 +31,17 @@ import {
 } from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
-import { adminQueryKeys, fetchAdminUsers } from "@/services/admin";
+import { fetchAdminUsers } from "@/services/admin";
 import { authClient } from "@/services/authClient";
-import type { AdminUser, AdminUserQuery, AdminUserSort } from "@/types";
-import { formatBytes } from "@/utils/format";
+import { type AdminUser, type AdminUserQuery, type AdminUserSort, adminQueryKeys } from "@tng/shared";
+import { formatBytes, userKind } from "@tng/shared";
+import { BannedBadge, KindBadge } from "@/components/KindBadge";
+import { KIND_STYLE } from "@/lib/userKind";
 import { AdminPageHeader } from "./components/AdminPageHeader";
 import { AdminUserActions } from "./components/AdminUserActions";
 import { AdminUserSheet } from "./components/AdminUserSheet";
 import { UserCell } from "./components/UserCell";
-import { formatDate, formatRelative } from "@/utils/format";
+import { formatDate, formatRelative } from "@tng/shared";
 
 const PAGE_SIZE = 20;
 const ALL = "all";
@@ -140,20 +141,13 @@ export function AdminUsersView() {
     );
   };
 
-  const roleBadge = (user: AdminUser) =>
-    user.role === "admin" ? (
-      <Badge>{t("admin.role.admin")}</Badge>
+  // "Active" is the normal case → plain text; only "banned" gets a (soft) badge.
+  const statusBadge = (user: AdminUser) =>
+    user.banned ? (
+      <BannedBadge reason={user.banReason} />
     ) : (
-      <Badge variant="outline">{t("admin.role.user")}</Badge>
+      <span className="text-xs text-muted-foreground">{t("admin.status.active")}</span>
     );
-  const statusBadge = (user: AdminUser) => (
-    <Badge
-      variant={user.banned ? "destructive" : "secondary"}
-      title={user.banReason ?? undefined}
-    >
-      {user.banned ? t("admin.status.banned") : t("admin.status.active")}
-    </Badge>
-  );
 
   return (
     <div className="space-y-4 p-4 md:p-6">
@@ -244,10 +238,12 @@ export function AdminUsersView() {
                     className="cursor-pointer"
                     onClick={() => openUser(user.id)}
                   >
-                    <TableCell className="max-w-64">
+                    <TableCell className={cn("max-w-64 border-l-[3px]", KIND_STYLE[userKind(user)].accent)}>
                       <UserCell name={user.name} email={user.email} image={user.image} />
                     </TableCell>
-                    <TableCell>{roleBadge(user)}</TableCell>
+                    <TableCell>
+                      <KindBadge kind={userKind(user)} />
+                    </TableCell>
                     <TableCell>{statusBadge(user)}</TableCell>
                     <TableCell className="text-right tabular-nums">{user.mediaCount}</TableCell>
                     <TableCell className="hidden text-right tabular-nums lg:table-cell">
@@ -273,7 +269,7 @@ export function AdminUsersView() {
             {data.items.map((user) => (
               <li
                 key={user.id}
-                className="rounded-xl border border-border/60 bg-card p-3"
+                className={cn("rounded-xl border bg-card p-3", KIND_STYLE[userKind(user)].border)}
                 onClick={() => openUser(user.id)}
               >
                 <div className="flex items-start gap-2">
@@ -288,8 +284,8 @@ export function AdminUsersView() {
                   </div>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-                  {roleBadge(user)}
-                  {statusBadge(user)}
+                  <KindBadge kind={userKind(user)} />
+                  {user.banned && statusBadge(user)}
                   <span className="ml-auto tabular-nums">
                     {t("albums.photoCount", { n: user.mediaCount })} ·{" "}
                     {formatBytes(user.storageBytes)}

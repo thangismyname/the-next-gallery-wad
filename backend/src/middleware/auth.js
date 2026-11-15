@@ -16,6 +16,18 @@ export async function requireAuth(req, res, next) {
   }
 }
 
+// Có phiên thì gắn req.user, không thì cho qua (route tự kiểm quyền — vd khách
+// có token link gửi file).
+export async function optionalAuth(req, _res, next) {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers });
+    if (session) req.user = session.user;
+    next();
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function requireAdmin(req, res, next) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });

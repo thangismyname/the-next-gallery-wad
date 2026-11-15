@@ -38,6 +38,7 @@ from pathlib import Path
 
 import numpy as np
 
+from app.tagging.taxonomy import ATTRIBUTE_TAGS, OBJECT_TAGS, SCENE_TAGS, TAG_IDS, TAXONOMY_VERSION
 from bench.cls_data import LOADERS, ClsDataset
 from bench.cls_features import (
     CLIP_MODEL,
@@ -60,7 +61,6 @@ from bench.cls_models import (
     single_label_metrics,
     tune_thresholds,
 )
-from bench.cls_taxonomy import ATTRIBUTE_TAGS, OBJECT_TAGS, SCENE_TAGS, TAG_IDS, TAXONOMY_VERSION
 from bench.common import DEFAULT_DATA_ROOT, RESULTS_DIR, RUNS_DIR, append_csv, environment_info, utc_now
 
 RESULTS_CSV = RESULTS_DIR / "cls_eval.csv"

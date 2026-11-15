@@ -9,7 +9,7 @@ Ba loại feature (app đã tính sẵn lúc upload → classification gần nh�
 `--image-preprocess backend` (mặc định) giả lập backend: CLIP/DINO nhận WebP cạnh
 ≤512, YOLO nhận JPEG cạnh ≤1280 (pipeline/folder.py::reencode).
 
-Cache: $TNG_DATASETS/cls_cache/<dataset>/<feature>-<preprocess>.npz (CLIP khác mặc
+Cache: $TNG_DATASETS/Results/cache/cls/<dataset>/<feature>-<preprocess>.npz (CLIP khác mặc
 định: clip@<model>-<preprocess>.npz), kèm danh sách
 file → dataset đổi thì tự tính lại. Xoá thư mục cache để ép tính lại.
 """
@@ -23,7 +23,7 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.common import MODELS_DIR, utc_now
+from bench.common import MODELS_DIR, cache_dir_root, utc_now
 
 FEATURES = ("clip", "dino", "yolo")
 DEFAULT_CLIP = ("ViT-B-32", "laion2b_s34b_b79k")  # = AI_CLIP_MODEL / AI_CLIP_PRETRAINED mặc định
@@ -58,7 +58,7 @@ YOLO_CONF, YOLO_IMGSZ = 0.25, 640                # = AI_YOLO_CONF / AI_YOLO_IMGS
 
 
 def cache_dir(data_root: Path, dataset: str) -> Path:
-    return data_root.expanduser().resolve() / "cls_cache" / dataset
+    return cache_dir_root(data_root, "cls") / dataset
 
 
 # ── Providers (load lười, dùng chung trong 1 lần chạy) ────────────────────

@@ -1,0 +1,24 @@
+{"t": "2026-11-06T20:49:23Z", "type": "log", "message": "run e1/20261107-034923 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e1/20261107-034923"}
+{"t": "2026-11-06T20:49:23Z", "type": "log", "message": "── load ViT-L-14-336:openai"}
+{"t": "2026-11-06T20:49:23Z", "type": "stage", "stage": "load ViT-L-14-336:openai"}
+{"t": "2026-11-06T20:51:15Z", "type": "log", "message": "── ViT-L-14-336:openai · flickr30k: đọc dữ liệu"}
+{"t": "2026-11-06T20:51:15Z", "type": "stage", "stage": "ViT-L-14-336:openai · flickr30k: đọc dữ liệu"}
+{"t": "2026-11-06T20:51:15Z", "type": "log", "message": "── ViT-L-14-336:openai · flickr30k · raw: 1000 ảnh, 5000 caption"}
+{"t": "2026-11-06T20:51:15Z", "type": "stage", "stage": "ViT-L-14-336:openai · flickr30k · raw: 1000 ảnh, 5000 caption"}
+{"t": "2026-11-06T20:53:30Z", "type": "log", "message": "  t2i R@1/5/10 65.16/88.14/92.98 · i2t 88.3/98.4/99.5 · Δ -3.54/0.3 → LỆCH"}
+{"t": "2026-11-06T20:53:49Z", "type": "log", "message": "  t2i R@1/5/10 65.68/88.22/92.8 · i2t 87.9/98.0/99.2"}
+{"t": "2026-11-06T20:53:49Z", "type": "log", "message": "── ViT-L-14-336:openai · flickr30k · backend: 1000 ảnh, 5000 caption"}
+{"t": "2026-11-06T20:53:49Z", "type": "stage", "stage": "ViT-L-14-336:openai · flickr30k · backend: 1000 ảnh, 5000 caption"}
+{"t": "2026-11-06T20:56:25Z", "type": "log", "message": "  t2i R@1/5/10 65.46/87.4/92.52 · i2t 86.6/97.3/99.0"}
+{"t": "2026-11-06T20:56:44Z", "type": "log", "message": "  t2i R@1/5/10 65.84/87.38/92.54 · i2t 86.8/97.6/98.7"}
+{"t": "2026-11-06T20:56:44Z", "type": "log", "message": "── ViT-L-14-336:openai · mscoco_captions: đọc dữ liệu"}
+{"t": "2026-11-06T20:56:44Z", "type": "stage", "stage": "ViT-L-14-336:openai · mscoco_captions: đọc dữ liệu"}
+{"t": "2026-11-06T20:56:45Z", "type": "log", "message": "── ViT-L-14-336:openai · mscoco_captions · raw: 5000 ảnh, 25010 caption"}
+{"t": "2026-11-06T20:56:45Z", "type": "stage", "stage": "ViT-L-14-336:openai · mscoco_captions · raw: 5000 ảnh, 25010 caption"}
+{"t": "2026-11-06T21:08:16Z", "type": "log", "message": "  t2i R@1/5/10 35.67/60.35/70.53 · i2t 59.08/81.8/88.6 · Δ -2.13/0.68 → LỆCH"}
+{"t": "2026-11-06T21:10:00Z", "type": "log", "message": "  t2i R@1/5/10 36.33/61.1/71.44 · i2t 58.82/80.84/88.5"}
+{"t": "2026-11-06T21:10:00Z", "type": "log", "message": "── ViT-L-14-336:openai · mscoco_captions · backend: 5000 ảnh, 25010 caption"}
+{"t": "2026-11-06T21:10:00Z", "type": "stage", "stage": "ViT-L-14-336:openai · mscoco_captions · backend: 5000 ảnh, 25010 caption"}
+{"t": "2026-11-06T21:23:09Z", "type": "log", "message": "  t2i R@1/5/10 36.72/61.18/71.3 · i2t 57.56/79.86/87.48"}
+{"t": "2026-11-06T21:24:53Z", "type": "log", "message": "  t2i R@1/5/10 36.69/61.25/71.35 · i2t 57.24/79.44/86.52"}
+{"t": "2026-11-06T21:24:53Z", "type": "log", "message": "xong sau 2130s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e1/20261107-034923"}

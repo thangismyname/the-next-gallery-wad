@@ -17,6 +17,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
+from app.providers.device import resolve_device
 from app.providers.similarity_base import SimilarityProvider
 
 # Thư mục ai-service/ — gốc cho path weights tương đối (vd models/dinov3-...).
@@ -38,7 +39,7 @@ class Dinov3SimilarityProvider(SimilarityProvider):
 
         source = self._resolve_source(model)
         self._model_name = source.rstrip("/").rsplit("/", 1)[-1]
-        self._device = self._resolve_device(device)
+        self._device = resolve_device(device)
 
         self._processor = AutoImageProcessor.from_pretrained(source)
         self._model = AutoModel.from_pretrained(source).to(self._device).eval()
@@ -78,12 +79,3 @@ class Dinov3SimilarityProvider(SimilarityProvider):
             path = SERVICE_ROOT / path
         return str(path) if (path / "config.json").exists() else model
 
-    @staticmethod
-    def _resolve_device(device: str) -> str:
-        if device and device != "auto":
-            return device
-        if torch.cuda.is_available():
-            return "cuda"
-        if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
-            return "mps"
-        return "cpu"

@@ -3,6 +3,8 @@
 import archiver from "archiver";
 import { dbPool } from "../../config/db.js";
 import { BUCKET_NAME, minioClient } from "../../config/minio.js";
+import { httpError } from "../../middleware/errorHandler.js";
+import { logger } from "../../lib/logger.js";
 
 /** Tên file an toàn khi giải nén: bỏ thư mục / ký tự điều khiển / dấu chấm đầu. */
 export function safeFilename(name, fallback = "file") {
@@ -52,7 +54,7 @@ export async function streamMediaZip(userId, ids, res) {
   const byId = new Map(result.rows.map((row) => [String(row.id), row]));
   const rows = ids.map((id) => byId.get(id)).filter(Boolean);
   if (rows.length === 0) {
-    throw Object.assign(new Error("Không có ảnh nào để tải"), { status: 404, code: "NOT_FOUND" });
+    throw httpError(404, "NOT_FOUND", "Không có ảnh nào để tải");
   }
 
   const stamp = new Date().toISOString().slice(0, 10);
@@ -67,9 +69,9 @@ export async function streamMediaZip(userId, ids, res) {
       archive.abort();
     }
   });
-  archive.on("warning", (err) => console.warn("⚠️  zip:", err.message));
+  archive.on("warning", (err) => logger.warn({ err }, "zip"));
   archive.on("error", (err) => {
-    console.error("❌ zip:", err.message);
+    logger.error({ err }, "zip");
     res.destroy(err);
   });
   archive.pipe(res);

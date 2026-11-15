@@ -1,6 +1,11 @@
 // Hiểu truy vấn search (pure, không DB): tìm tên tag nội dung + tên vật thể
-// COCO (kèm số lượng: "2 con chó", "two dogs", "犬2匹") trong câu, theo từ điển
-// search.lexicon.json (vi / en / ja). Phần còn lại vẫn để CLIP hiểu.
+// COCO (kèm số lượng: "2 con chó", "two dogs", "犬2匹") + tên nhãn chi tiết
+// ("oi.*", 174 nhãn Open Images) trong câu, theo từ điển search.lexicon.json
+// (vi / en / ja). Phần còn lại vẫn để CLIP hiểu.
+//
+// Nhãn chi tiết khớp ở lượt riêng (không tranh chỗ với tag / vật thể): nhãn nằm
+// trùng chỗ 1 tag / vật thể đã khớp ("chó" = vật thể dog = nhãn oi.dog) được
+// GẮN vào đó (`link`) — là bằng chứng thay thế, không phải điều kiện thêm.
 //
 // GIỮ KHỚP với ai-service bench/search_eval.py::parse_query (cùng từ điển,
 // cùng thuật toán) — bench đo đúng cái app chạy.
@@ -38,6 +43,21 @@ for (const [kind, table] of [
   }
 }
 ENTRIES.sort((a, b) => b.term.length - a.term.length);
+
+const LABEL_ENTRIES = Object.entries(LEXICON.labels ?? {})
+  .flatMap(([id, names]) =>
+    ["vi", "en", "ja"].flatMap((lang) =>
+      (names[lang] ?? []).map((raw) => {
+        const term = normalizeQuery(raw);
+        const cjk = CJK.test(term);
+        const pattern = cjk
+          ? escape(term)
+          : `(?<![\\p{L}\\p{N}_])${escape(term)}(?:s|es)?(?![\\p{L}\\p{N}_])`;
+        return { kind: "label", id, term, cjk, regex: new RegExp(pattern, "gu") };
+      }),
+    ),
+  )
+  .sort((a, b) => b.term.length - a.term.length);
 
 const NUMBER_WORDS = Object.assign(
   {},
@@ -109,13 +129,15 @@ function coverage(text, taken) {
 }
 
 /**
- * @returns {{ text: string, tags: string[], objects: { cls: string, count: number | null }[], coverage: number }}
+ * `labels: false` = bỏ nhãn chi tiết (bench đo trên dữ liệu không có nhãn).
+ * @returns {{ text: string, tags: string[], objects: { cls: string, count: number | null }[], labels: { id: string, link: { kind: "tag" | "object", id: string } | null }[], coverage: number }}
  */
-export function parseQuery(query) {
+export function parseQuery(query, { labels: withLabels = true } = {}) {
   const text = normalizeQuery(query);
   const taken = new Array(text.length).fill(false);
   const tags = [];
   const objects = new Map();
+  const spans = []; // chỗ đã khớp tag / vật thể — để gắn nhãn chi tiết vào
 
   for (const entry of ENTRIES) {
     for (const match of text.matchAll(entry.regex)) {
@@ -123,6 +145,7 @@ export function parseQuery(query) {
       const end = start + match[0].length;
       if (taken.slice(start, end).some(Boolean)) continue;
       taken.fill(true, start, end);
+      spans.push({ kind: entry.kind, id: entry.id, start, end });
       if (entry.kind === "tag") {
         if (!tags.includes(entry.id)) tags.push(entry.id);
       } else {
@@ -132,10 +155,32 @@ export function parseQuery(query) {
       }
     }
   }
+
+  const labels = [];
+  if (withLabels) {
+    const labelTaken = new Array(text.length).fill(false);
+    for (const entry of LABEL_ENTRIES) {
+      for (const match of text.matchAll(entry.regex)) {
+        const start = match.index;
+        const end = start + match[0].length;
+        if (labelTaken.slice(start, end).some(Boolean)) continue;
+        labelTaken.fill(true, start, end);
+        if (labels.some((l) => l.id === entry.id)) continue;
+        const hit = spans.find((sp) => sp.start < end && start < sp.end);
+        labels.push({ id: entry.id, link: hit ? { kind: hit.kind, id: hit.id } : null });
+      }
+    }
+    labelTaken.forEach((v, i) => {
+      if (v) taken[i] = true;
+    });
+  }
+
+  const found = tags.length || objects.size || labels.length;
   return {
     text,
     tags,
     objects: [...objects.values()],
-    coverage: tags.length || objects.size ? coverage(text, taken) : 0,
+    labels,
+    coverage: found ? coverage(text, taken) : 0,
   };
 }

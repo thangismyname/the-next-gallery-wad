@@ -24,15 +24,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import { parseUserAgent } from "@/features/settings/userAgent";
-import {
-  adminQueryKeys,
-  fetchAdminUserDetail,
-  fetchAdminUserSessions,
-  revokeAdminUserSession,
-} from "@/services/admin";
-import { formatBytes } from "@/utils/format";
-import { formatDate, formatRelative } from "@/utils/format";
+import { fetchAdminUserDetail, fetchAdminUserSessions, revokeAdminUserSession } from "@/services/admin";
+import { formatBytes, adminQueryKeys, parseUserAgent, userKind } from "@tng/shared";
+import { BannedBadge, KindBadge } from "@/components/KindBadge";
+import { formatDate, formatRelative } from "@tng/shared";
 import { AdminUserActions } from "./AdminUserActions";
 import { AiCoverageBars } from "./AiCoverageBars";
 import { UserCell } from "./UserCell";
@@ -96,12 +91,8 @@ export function AdminUserSheet({
             <div className="space-y-3 pr-8">
               <UserCell name={user.name} email={user.email} image={user.image} />
               <div className="flex flex-wrap items-center gap-1.5">
-                <Badge variant={user.role === "admin" ? "default" : "outline"}>
-                  {t(`admin.role.${user.role}`)}
-                </Badge>
-                <Badge variant={user.banned ? "destructive" : "secondary"}>
-                  {user.banned ? t("admin.status.banned") : t("admin.status.active")}
-                </Badge>
+                <KindBadge kind={userKind(user)} />
+                {user.banned && <BannedBadge />}
                 <Badge variant="outline">
                   {user.emailVerified ? t("profile.verified") : t("profile.unverified")}
                 </Badge>

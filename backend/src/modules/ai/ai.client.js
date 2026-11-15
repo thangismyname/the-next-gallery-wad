@@ -108,8 +108,9 @@ export async function embedImageDino(buffer, mimeType, filename = "image") {
 }
 
 /**
- * Chấm 17 tag nội dung từ vector CLIP đã lưu (không gửi ảnh) — tối đa 500 / lần.
- * @returns {Promise<{ model: string, taxonomy_version: string, tags: string[], thresholds: number[], scores: number[][] }>}
+ * Chấm 17 tag danh mục + 174 nhãn chi tiết ("oi.*", rỗng khi ai-service chưa có
+ * probe) từ vector CLIP đã lưu (không gửi ảnh) — tối đa 500 / lần.
+ * @returns {Promise<{ model: string, taxonomy_version: string, tags: string[], thresholds: number[], scores: number[][], labels?: string[], label_thresholds?: number[], label_scores?: number[][] }>}
  */
 export async function predictTags(embeddings) {
   const response = await fetchWithTimeout(`${AI_SERVICE_URL}/api/v1/tags/predict`, {
@@ -145,7 +146,7 @@ async function getInfo(path) {
 /** @returns {Promise<{ provider: string, model: string, dimension: number, logit_scale: number }>} */
 export const getClipInfo = () => getInfo("/api/v1/embed/info");
 
-/** @returns {Promise<{ model: string, taxonomy_version: string, tags: { id: string, threshold: number }[] }>} */
+/** @returns {Promise<{ model: string, taxonomy_version: string, tags: { id: string, threshold: number }[], sections?: string[], labels?: { id: string, section: string, en: string, vi: string, ja: string, threshold: number }[], label_model?: object | null }>} */
 export const getTaggerInfo = () => getInfo("/api/v1/tags/info");
 
 /** GET /health của ai-service (provider đang chạy); không phản hồi → null. */

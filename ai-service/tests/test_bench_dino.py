@@ -59,13 +59,15 @@ def tiny_dino(tmp_path):
 
 
 def test_encoder_end_to_end_on_fake_revisitop(tmp_path, tiny_dino):
-    root = tmp_path / "revisitop" / "roxford5k"
+    root = tmp_path / "Data" / "revisitop" / "roxford5k"
+    gnd_dir = tmp_path / "Classes" / "revisitop" / "roxford5k"
     (root / "jpg").mkdir(parents=True)
+    gnd_dir.mkdir(parents=True)
     names = ["a", "b", "c"]
     for i, (name, size) in enumerate(zip(names, [(320, 240), (240, 320), (300, 300)])):
         Image.new("RGB", size, (60 * i, 100, 200)).save(root / "jpg" / f"{name}.jpg")
     gnd = [{"bbx": [10, 10, 200, 150], "easy": [0], "hard": [1], "junk": []}]
-    with open(root / "gnd_roxford5k.pkl", "wb") as fh:
+    with open(gnd_dir / "gnd_roxford5k.pkl", "wb") as fh:
         pickle.dump({"imlist": names, "qimlist": ["a"], "gnd": gnd}, fh)
 
     data = load_revisitop(tmp_path, "roxford5k")

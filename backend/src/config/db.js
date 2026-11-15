@@ -7,5 +7,5 @@ export const dbPool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  max: Number(process.env.DB_POOL_SIZE),
+  max: Number(process.env.DB_POOL_SIZE) || 10,
 });

@@ -13,6 +13,7 @@ import math
 import numpy as np
 from PIL import Image
 
+from app.providers.device import resolve_device
 from app.providers.embed_base import EmbeddingProvider
 
 try:
@@ -38,7 +39,7 @@ class OpenClipEmbeddingProvider(EmbeddingProvider):
 
         self._model_name = model_name
         self._pretrained = pretrained
-        self._device = self._resolve_device(device)
+        self._device = resolve_device(device)
 
         model, _, preprocess = open_clip.create_model_and_transforms(
             model_name,
@@ -165,12 +166,3 @@ class OpenClipEmbeddingProvider(EmbeddingProvider):
             tokens = self._tokenizer(["x"]).to(self._device)
             return int(self._model.encode_text(tokens).shape[-1])
 
-    @staticmethod
-    def _resolve_device(device: str) -> str:
-        if device and device != "auto":
-            return device
-        if torch.cuda.is_available():
-            return "cuda"
-        if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
-            return "mps"
-        return "cpu"

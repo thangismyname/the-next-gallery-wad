@@ -15,7 +15,8 @@ export const MAX_MEDIA_PER_REQUEST = 500;
 
 // ── Album tự động (albums.auto.service.js) ────────────────────────────
 export const AUTO_GROUPS = ["type", "content", "time", "objects"];
-export const AUTO_TYPE_ORDER = ["type-photos", "type-videos", "type-screenshots", "type-favorites"];
+// Không có "type-favorites": Yêu thích (thả tim HOẶC có nhãn) là bộ sưu tập riêng ở /api/labels/saved.
+export const AUTO_TYPE_ORDER = ["type-photos", "type-videos", "type-screenshots"];
 // Sự kiện = chuỗi ảnh có ngày chụp cách nhau ≤ bấy nhiêu giờ, đủ bấy nhiêu ảnh.
 export const AUTO_EVENT_GAP_HOURS = 3;
 export const AUTO_EVENT_MIN_ITEMS = 5;

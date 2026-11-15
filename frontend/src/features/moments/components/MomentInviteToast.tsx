@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SIGNAL } from "@/services/signaling";
 import { useSignaling } from "@/hooks/useSignaling";
-import { useMomentInviteStore } from "@/hooks/useMomentInviteStore";
-import { momentInvitationsQueryKey } from "@/services/moments";
-import { MomentTemplate } from "@/types";
+import { useMomentInviteStore } from "@/features/moments/useMomentInviteStore";
+import { MomentTemplate, momentInvitationsQueryKey } from "@tng/shared";
 
 interface MomentCollabInvite {
   momentId?: string;
@@ -26,6 +25,8 @@ interface MomentCollabInvite {
 interface Toast {
   key: string;
   invite: MomentCollabInvite;
+  /** Mốc hết hạn tuyệt đối — toast mới KHÔNG reset timer của toast cũ. */
+  expiresAt: number;
 }
 
 const TOAST_TTL_MS = 15_000;
@@ -50,7 +51,14 @@ export const MomentInviteToast: React.FC = () => {
       if (!invite.momentId) return;
       setToasts((prev) => {
         if (prev.some((t) => t.key === invite.momentId)) return prev;
-        return [...prev, { key: invite.momentId as string, invite }];
+        return [
+          ...prev,
+          {
+            key: invite.momentId as string,
+            invite,
+            expiresAt: Date.now() + TOAST_TTL_MS,
+          },
+        ];
       });
       void queryClient.invalidateQueries({
         queryKey: momentInvitationsQueryKey,
@@ -58,15 +66,19 @@ export const MomentInviteToast: React.FC = () => {
     });
   }, [signaling, queryClient]);
 
+  // Dọn theo hạn RIÊNG của từng toast (1 interval chung), không đặt lại timer
+  // của toast cũ mỗi khi có toast mới.
   useEffect(() => {
     if (toasts.length === 0) return;
-    const timers = toasts.map((toast) =>
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((x) => x.key !== toast.key));
-      }, TOAST_TTL_MS),
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [toasts]);
+    const id = setInterval(() => {
+      const now = Date.now();
+      setToasts((prev) => {
+        const next = prev.filter((toast) => toast.expiresAt > now);
+        return next.length === prev.length ? prev : next;
+      });
+    }, 500);
+    return () => clearInterval(id);
+  }, [toasts.length]);
 
   if (toasts.length === 0) return null;
 

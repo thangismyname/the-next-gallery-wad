@@ -1,0 +1,142 @@
+{"t": "2026-11-06T20:37:26Z", "type": "log", "message": "run e4/20261107-033725 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e4/20261107-033725"}
+{"t": "2026-11-06T20:37:26Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-06T20:37:26Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-06T20:37:26Z", "type": "log", "message": "  81 / 174 lớp có trong YOLO (COCO)"}
+{"t": "2026-11-06T20:37:26Z", "type": "log", "message": "── YOLO detect"}
+{"t": "2026-11-06T20:37:26Z", "type": "stage", "stage": "YOLO detect"}
+{"t": "2026-11-06T20:37:26Z", "type": "log", "message": "  ! cache yolo@yolo26n.pt-c0.001-i640-backend.json thiếu ảnh — tính lại"}
+{"t": "2026-11-06T20:37:35Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 64, "total": 3000}
+{"t": "2026-11-06T20:37:41Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 128, "total": 3000}
+{"t": "2026-11-06T20:37:47Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 192, "total": 3000}
+{"t": "2026-11-06T20:37:54Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 256, "total": 3000}
+{"t": "2026-11-06T20:38:00Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 320, "total": 3000}
+{"t": "2026-11-06T20:38:05Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 384, "total": 3000}
+{"t": "2026-11-06T20:38:11Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 448, "total": 3000}
+{"t": "2026-11-06T20:38:16Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 512, "total": 3000}
+{"t": "2026-11-06T20:38:21Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 576, "total": 3000}
+{"t": "2026-11-06T20:38:27Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 640, "total": 3000}
+{"t": "2026-11-06T20:38:32Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 704, "total": 3000}
+{"t": "2026-11-06T20:38:36Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 768, "total": 3000}
+{"t": "2026-11-06T20:38:41Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 832, "total": 3000}
+{"t": "2026-11-06T20:38:46Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 896, "total": 3000}
+{"t": "2026-11-06T20:38:52Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 960, "total": 3000}
+{"t": "2026-11-06T20:38:58Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1024, "total": 3000}
+{"t": "2026-11-06T20:39:03Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1088, "total": 3000}
+{"t": "2026-11-06T20:39:07Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1152, "total": 3000}
+{"t": "2026-11-06T20:39:13Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1216, "total": 3000}
+{"t": "2026-11-06T20:39:17Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1280, "total": 3000}
+{"t": "2026-11-06T20:39:23Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1344, "total": 3000}
+{"t": "2026-11-06T20:39:29Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1408, "total": 3000}
+{"t": "2026-11-06T20:39:33Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1472, "total": 3000}
+{"t": "2026-11-06T20:39:39Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1536, "total": 3000}
+{"t": "2026-11-06T20:39:44Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1600, "total": 3000}
+{"t": "2026-11-06T20:39:49Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1664, "total": 3000}
+{"t": "2026-11-06T20:39:55Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1728, "total": 3000}
+{"t": "2026-11-06T20:40:01Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1792, "total": 3000}
+{"t": "2026-11-06T20:40:07Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1856, "total": 3000}
+{"t": "2026-11-06T20:40:12Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1920, "total": 3000}
+{"t": "2026-11-06T20:40:17Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 1984, "total": 3000}
+{"t": "2026-11-06T20:40:23Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2048, "total": 3000}
+{"t": "2026-11-06T20:40:28Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2112, "total": 3000}
+{"t": "2026-11-06T20:40:33Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2176, "total": 3000}
+{"t": "2026-11-06T20:40:39Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2240, "total": 3000}
+{"t": "2026-11-06T20:40:43Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2304, "total": 3000}
+{"t": "2026-11-06T20:40:49Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2368, "total": 3000}
+{"t": "2026-11-06T20:40:53Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2432, "total": 3000}
+{"t": "2026-11-06T20:40:59Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2496, "total": 3000}
+{"t": "2026-11-06T20:41:04Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2560, "total": 3000}
+{"t": "2026-11-06T20:41:10Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2624, "total": 3000}
+{"t": "2026-11-06T20:41:16Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2688, "total": 3000}
+{"t": "2026-11-06T20:41:20Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2752, "total": 3000}
+{"t": "2026-11-06T20:41:25Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2816, "total": 3000}
+{"t": "2026-11-06T20:41:30Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2880, "total": 3000}
+{"t": "2026-11-06T20:41:35Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 2944, "total": 3000}
+{"t": "2026-11-06T20:41:40Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-validation", "done": 3000, "total": 3000}
+{"t": "2026-11-06T20:41:41Z", "type": "log", "message": "  ! cache yolo@yolo26n.pt-c0.001-i640-backend.json thiếu ảnh — tính lại"}
+{"t": "2026-11-06T20:41:46Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 64, "total": 5000}
+{"t": "2026-11-06T20:41:52Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 128, "total": 5000}
+{"t": "2026-11-06T20:41:57Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 192, "total": 5000}
+{"t": "2026-11-06T20:42:02Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 256, "total": 5000}
+{"t": "2026-11-06T20:42:07Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 320, "total": 5000}
+{"t": "2026-11-06T20:42:13Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 384, "total": 5000}
+{"t": "2026-11-06T20:42:19Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 448, "total": 5000}
+{"t": "2026-11-06T20:42:24Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 512, "total": 5000}
+{"t": "2026-11-06T20:42:29Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 576, "total": 5000}
+{"t": "2026-11-06T20:42:35Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 640, "total": 5000}
+{"t": "2026-11-06T20:42:39Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 704, "total": 5000}
+{"t": "2026-11-06T20:42:44Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 768, "total": 5000}
+{"t": "2026-11-06T20:42:49Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 832, "total": 5000}
+{"t": "2026-11-06T20:42:55Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 896, "total": 5000}
+{"t": "2026-11-06T20:43:00Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 960, "total": 5000}
+{"t": "2026-11-06T20:43:05Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1024, "total": 5000}
+{"t": "2026-11-06T20:43:10Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1088, "total": 5000}
+{"t": "2026-11-06T20:43:16Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1152, "total": 5000}
+{"t": "2026-11-06T20:43:22Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1216, "total": 5000}
+{"t": "2026-11-06T20:43:26Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1280, "total": 5000}
+{"t": "2026-11-06T20:43:31Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1344, "total": 5000}
+{"t": "2026-11-06T20:43:36Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1408, "total": 5000}
+{"t": "2026-11-06T20:43:42Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1472, "total": 5000}
+{"t": "2026-11-06T20:43:47Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1536, "total": 5000}
+{"t": "2026-11-06T20:43:52Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1600, "total": 5000}
+{"t": "2026-11-06T20:43:57Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1664, "total": 5000}
+{"t": "2026-11-06T20:44:02Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1728, "total": 5000}
+{"t": "2026-11-06T20:44:06Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1792, "total": 5000}
+{"t": "2026-11-06T20:44:12Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1856, "total": 5000}
+{"t": "2026-11-06T20:44:17Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1920, "total": 5000}
+{"t": "2026-11-06T20:44:22Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 1984, "total": 5000}
+{"t": "2026-11-06T20:44:28Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2048, "total": 5000}
+{"t": "2026-11-06T20:44:33Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2112, "total": 5000}
+{"t": "2026-11-06T20:44:39Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2176, "total": 5000}
+{"t": "2026-11-06T20:44:44Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2240, "total": 5000}
+{"t": "2026-11-06T20:44:49Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2304, "total": 5000}
+{"t": "2026-11-06T20:44:54Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2368, "total": 5000}
+{"t": "2026-11-06T20:45:00Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2432, "total": 5000}
+{"t": "2026-11-06T20:45:05Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2496, "total": 5000}
+{"t": "2026-11-06T20:45:11Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2560, "total": 5000}
+{"t": "2026-11-06T20:45:16Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2624, "total": 5000}
+{"t": "2026-11-06T20:45:21Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2688, "total": 5000}
+{"t": "2026-11-06T20:45:27Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2752, "total": 5000}
+{"t": "2026-11-06T20:45:32Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2816, "total": 5000}
+{"t": "2026-11-06T20:45:37Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2880, "total": 5000}
+{"t": "2026-11-06T20:45:42Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 2944, "total": 5000}
+{"t": "2026-11-06T20:45:48Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3008, "total": 5000}
+{"t": "2026-11-06T20:45:52Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3072, "total": 5000}
+{"t": "2026-11-06T20:45:58Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3136, "total": 5000}
+{"t": "2026-11-06T20:46:03Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3200, "total": 5000}
+{"t": "2026-11-06T20:46:08Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3264, "total": 5000}
+{"t": "2026-11-06T20:46:13Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3328, "total": 5000}
+{"t": "2026-11-06T20:46:19Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3392, "total": 5000}
+{"t": "2026-11-06T20:46:24Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3456, "total": 5000}
+{"t": "2026-11-06T20:46:29Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3520, "total": 5000}
+{"t": "2026-11-06T20:46:34Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3584, "total": 5000}
+{"t": "2026-11-06T20:46:40Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3648, "total": 5000}
+{"t": "2026-11-06T20:46:46Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3712, "total": 5000}
+{"t": "2026-11-06T20:46:50Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3776, "total": 5000}
+{"t": "2026-11-06T20:46:56Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3840, "total": 5000}
+{"t": "2026-11-06T20:47:02Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3904, "total": 5000}
+{"t": "2026-11-06T20:47:07Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 3968, "total": 5000}
+{"t": "2026-11-06T20:47:13Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4032, "total": 5000}
+{"t": "2026-11-06T20:47:18Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4096, "total": 5000}
+{"t": "2026-11-06T20:47:23Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4160, "total": 5000}
+{"t": "2026-11-06T20:47:29Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4224, "total": 5000}
+{"t": "2026-11-06T20:47:34Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4288, "total": 5000}
+{"t": "2026-11-06T20:47:39Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4352, "total": 5000}
+{"t": "2026-11-06T20:47:44Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4416, "total": 5000}
+{"t": "2026-11-06T20:47:49Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4480, "total": 5000}
+{"t": "2026-11-06T20:47:54Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4544, "total": 5000}
+{"t": "2026-11-06T20:48:00Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4608, "total": 5000}
+{"t": "2026-11-06T20:48:06Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4672, "total": 5000}
+{"t": "2026-11-06T20:48:10Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4736, "total": 5000}
+{"t": "2026-11-06T20:48:15Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4800, "total": 5000}
+{"t": "2026-11-06T20:48:20Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4864, "total": 5000}
+{"t": "2026-11-06T20:48:25Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4928, "total": 5000}
+{"t": "2026-11-06T20:48:31Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 4992, "total": 5000}
+{"t": "2026-11-06T20:48:32Z", "type": "progress", "stage": "YOLO detect", "label": "YOLO oi-test", "done": 5000, "total": 5000}
+{"t": "2026-11-06T20:48:33Z", "type": "log", "message": "── detection mAP@IoU (giao thức OI)"}
+{"t": "2026-11-06T20:48:33Z", "type": "stage", "stage": "detection mAP@IoU (giao thức OI)"}
+{"t": "2026-11-06T20:48:36Z", "type": "log", "message": "── tag image-level"}
+{"t": "2026-11-06T20:48:36Z", "type": "stage", "stage": "tag image-level"}
+{"t": "2026-11-06T20:48:36Z", "type": "log", "message": "── bootstrap 200×"}
+{"t": "2026-11-06T20:48:36Z", "type": "stage", "stage": "bootstrap 200×"}
+{"t": "2026-11-06T20:48:37Z", "type": "log", "message": "  test detection mAP@0.5: 0.6382 · tag mAP 0.8973 · macro-F1 0.8293"}
+{"t": "2026-11-06T20:48:37Z", "type": "log", "message": "xong sau 672s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e4/20261107-033725"}

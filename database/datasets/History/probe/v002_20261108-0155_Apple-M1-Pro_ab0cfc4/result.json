@@ -1,0 +1,370 @@
+{
+  "train_images": 15000,
+  "baselines": {
+    "zs_clip": "20261107-033218",
+    "e5_per_tag": "20261108-004427"
+  },
+  "precision_target": 0.9,
+  "selected": {
+    "lp_clip": {
+      "l2": 0.3,
+      "unknown_weight": 0.0,
+      "val_mAP": 0.9409575721445014,
+      "grid_edge": [
+        "unknown_weight"
+      ]
+    },
+    "lp_dino": {
+      "l2": 0.3,
+      "unknown_weight": 0.0,
+      "val_mAP": 0.9298010980243716,
+      "grid_edge": [
+        "unknown_weight"
+      ]
+    },
+    "lp_clip_dino": {
+      "l2": 0.3,
+      "unknown_weight": 0.0,
+      "val_mAP": 0.9473367463747251,
+      "grid_edge": [
+        "unknown_weight"
+      ]
+    },
+    "fused_learned": {
+      "l2": 0.01,
+      "unknown_weight": 0.1,
+      "val_mAP": 0.9490943056886811,
+      "grid_edge": []
+    }
+  },
+  "test_all_classes": {
+    "zs_clip": {
+      "mAP": 0.8840618838881236,
+      "macro_f1": 0.8257278158076521,
+      "macro_f1_at_precision": 0.7003411652310679,
+      "ece": 0.030928270116943154
+    },
+    "e5_per_tag": {
+      "mAP": 0.8879528986809355,
+      "macro_f1": 0.8484113128834125,
+      "macro_f1_at_precision": 0.7636636391115225,
+      "ece": 0.02618468104350078
+    },
+    "lp_clip": {
+      "mAP": 0.9395772391842553,
+      "macro_f1": 0.8741952749581563,
+      "macro_f1_at_precision": 0.8043591166594889,
+      "ece": 0.019440403893821137
+    },
+    "lp_dino": {
+      "mAP": 0.927404090306744,
+      "macro_f1": 0.8574211085956939,
+      "macro_f1_at_precision": 0.7730216467315005,
+      "ece": 0.02128719114094164
+    },
+    "lp_clip_dino": {
+      "mAP": 0.9448358663795733,
+      "macro_f1": 0.8784983756925616,
+      "macro_f1_at_precision": 0.8190209312305512,
+      "ece": 0.018231321279653937
+    },
+    "fused_learned": {
+      "mAP": 0.9496892675026947,
+      "macro_f1": 0.8769558257903001,
+      "macro_f1_at_precision": 0.8288404163621217,
+      "ece": 0.020578023040919095
+    }
+  },
+  "paired_ci95": {
+    "lp_clip_minus_zs_clip_mAP_lo": 0.051100060685907375,
+    "lp_clip_minus_zs_clip_mAP_hi": 0.06270760310484244,
+    "lp_clip_minus_zs_clip_macro_f1_lo": 0.04165568448875164,
+    "lp_clip_minus_zs_clip_macro_f1_hi": 0.05795226852866405,
+    "lp_clip_minus_zs_clip_macro_f1_at_precision_lo": 0.09833754005987666,
+    "lp_clip_minus_zs_clip_macro_f1_at_precision_hi": 0.11608985700758526,
+    "lp_dino_minus_lp_clip_mAP_lo": -0.01658269866792596,
+    "lp_dino_minus_lp_clip_mAP_hi": -0.006998576833624879,
+    "lp_dino_minus_lp_clip_macro_f1_lo": -0.023429321722897224,
+    "lp_dino_minus_lp_clip_macro_f1_hi": -0.011329302478990106,
+    "lp_dino_minus_lp_clip_macro_f1_at_precision_lo": -0.040037652357989034,
+    "lp_dino_minus_lp_clip_macro_f1_at_precision_hi": -0.02533478999464611,
+    "fused_learned_minus_lp_clip_mAP_lo": 0.006547467508094371,
+    "fused_learned_minus_lp_clip_mAP_hi": 0.014418731561180308,
+    "fused_learned_minus_lp_clip_macro_f1_lo": -0.003788714404781576,
+    "fused_learned_minus_lp_clip_macro_f1_hi": 0.009877475691322921,
+    "fused_learned_minus_lp_clip_macro_f1_at_precision_lo": 0.0166051967960688,
+    "fused_learned_minus_lp_clip_macro_f1_at_precision_hi": 0.0348704351413017,
+    "fused_learned_minus_e5_per_tag_mAP_lo": 0.05425562783944104,
+    "fused_learned_minus_e5_per_tag_mAP_hi": 0.06801387474454931,
+    "fused_learned_minus_e5_per_tag_macro_f1_lo": 0.023071723278414606,
+    "fused_learned_minus_e5_per_tag_macro_f1_hi": 0.03573984330755175,
+    "fused_learned_minus_e5_per_tag_macro_f1_at_precision_lo": 0.0590841157682363,
+    "fused_learned_minus_e5_per_tag_macro_f1_at_precision_hi": 0.07532298630935237
+  },
+  "groups": [
+    {
+      "config": "zs_clip",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.86301335205674,
+      "macro_f1": 0.7927577358641827,
+      "micro_f1": 0.7704332291201429,
+      "ece": 0.022892249370185344,
+      "macro_f1_at_precision": 0.6568870773783313,
+      "micro_precision_at_precision": 0.8959248901318418
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9425300278641878,
+      "macro_f1": 0.9173113712061768,
+      "micro_f1": 0.944659255679072,
+      "ece": 0.11870914889704827,
+      "macro_f1_at_precision": 0.8210469648220023,
+      "micro_precision_at_precision": 0.9541643376187814
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.8654151630755171,
+      "macro_f1": 0.7880909603297459,
+      "micro_f1": 0.8040439560439561,
+      "ece": 0.02289160633413762,
+      "macro_f1_at_precision": 0.6430502109310916,
+      "micro_precision_at_precision": 0.8951638065522621
+    },
+    {
+      "config": "zs_clip",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.8998710602292462,
+      "macro_f1": 0.8576373237128333,
+      "micro_f1": 0.8253589756881448,
+      "ece": 0.04046728221449826,
+      "macro_f1_at_precision": 0.7489139308332217,
+      "micro_precision_at_precision": 0.9351180516824689
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.8690149405008757,
+      "macro_f1": 0.8235982215924326,
+      "micro_f1": 0.8108431516936672,
+      "ece": 0.021684570464725165,
+      "macro_f1_at_precision": 0.7503068627738176,
+      "micro_precision_at_precision": 0.9160085054678008
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9405583380699912,
+      "macro_f1": 0.9173365664694673,
+      "micro_f1": 0.9446726262382218,
+      "ece": 0.08643777263152205,
+      "macro_f1_at_precision": 0.8007657956051462,
+      "micro_precision_at_precision": 0.9578313253012049
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.8898059935487259,
+      "macro_f1": 0.8375134356772148,
+      "micro_f1": 0.8880590047614602,
+      "ece": 0.021185789208978213,
+      "macro_f1_at_precision": 0.7990124090291307,
+      "micro_precision_at_precision": 0.9202302631578947
+    },
+    {
+      "config": "e5_per_tag",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.8863817965104177,
+      "macro_f1": 0.8576508174712759,
+      "micro_f1": 0.8253951800984711,
+      "ece": 0.03197003160098664,
+      "macro_f1_at_precision": 0.7336940298335499,
+      "micro_precision_at_precision": 0.9400691509796388
+    },
+    {
+      "config": "lp_clip",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.9343823837266332,
+      "macro_f1": 0.8557699082143109,
+      "micro_f1": 0.8672710701779632,
+      "ece": 0.01776874428867195,
+      "macro_f1_at_precision": 0.7937977396507185,
+      "micro_precision_at_precision": 0.9230189627024991
+    },
+    {
+      "config": "lp_clip",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.954007393233206,
+      "macro_f1": 0.9253768492466161,
+      "micro_f1": 0.9493717213614737,
+      "ece": 0.04811926893645518,
+      "macro_f1_at_precision": 0.8336962750171845,
+      "micro_precision_at_precision": 0.9550163576881134
+    },
+    {
+      "config": "lp_clip",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.9335683354295773,
+      "macro_f1": 0.846856037196047,
+      "micro_f1": 0.8675285741053026,
+      "ece": 0.01728594000020767,
+      "macro_f1_at_precision": 0.7907906366865642,
+      "micro_precision_at_precision": 0.9207357127216992
+    },
+    {
+      "config": "lp_clip",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.9446717445414824,
+      "macro_f1": 0.8973741939303793,
+      "micro_f1": 0.9037561241154055,
+      "ece": 0.022955792964416074,
+      "macro_f1_at_precision": 0.8158628279408815,
+      "micro_precision_at_precision": 0.9411098527746319
+    },
+    {
+      "config": "lp_dino",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.9171034430250119,
+      "macro_f1": 0.8319233351610276,
+      "micro_f1": 0.8488675751388823,
+      "ece": 0.019661886268008626,
+      "macro_f1_at_precision": 0.7513690340877267,
+      "micro_precision_at_precision": 0.9153290529695024
+    },
+    {
+      "config": "lp_dino",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9560169994226665,
+      "macro_f1": 0.9282482570253227,
+      "micro_f1": 0.9523693507126325,
+      "ece": 0.05850029680615418,
+      "macro_f1_at_precision": 0.833167792964206,
+      "micro_precision_at_precision": 0.9593964334705075
+    },
+    {
+      "config": "lp_dino",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.9125017009811529,
+      "macro_f1": 0.8188408314740647,
+      "micro_f1": 0.8416041018128548,
+      "ece": 0.02179860757834282,
+      "macro_f1_at_precision": 0.7341731942300299,
+      "micro_precision_at_precision": 0.9085453672587614
+    },
+    {
+      "config": "lp_dino",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.9400387247349625,
+      "macro_f1": 0.8901304739814231,
+      "micro_f1": 0.8994985829518204,
+      "ece": 0.02449088120323969,
+      "macro_f1_at_precision": 0.8059583782001387,
+      "micro_precision_at_precision": 0.9424874191229331
+    },
+    {
+      "config": "lp_clip_dino",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.9396816116004925,
+      "macro_f1": 0.8590676676150037,
+      "micro_f1": 0.8738988893144389,
+      "ece": 0.01807987699851734,
+      "macro_f1_at_precision": 0.8054270539340043,
+      "micro_precision_at_precision": 0.918983414866961
+    },
+    {
+      "config": "lp_clip_dino",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9591532407659086,
+      "macro_f1": 0.9324725647968889,
+      "micro_f1": 0.9526591213338201,
+      "ece": 0.04271655652536782,
+      "macro_f1_at_precision": 0.8567817014987376,
+      "micro_precision_at_precision": 0.9564171122994652
+    },
+    {
+      "config": "lp_clip_dino",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.9380633928138747,
+      "macro_f1": 0.8489575953940355,
+      "micro_f1": 0.8733123728500093,
+      "ece": 0.0193375581845895,
+      "macro_f1_at_precision": 0.7911750035312143,
+      "micro_precision_at_precision": 0.9144018831585705
+    },
+    {
+      "config": "lp_clip_dino",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.9505777461417957,
+      "macro_f1": 0.903543819858703,
+      "micro_f1": 0.9096276857470887,
+      "ece": 0.020309578414609328,
+      "macro_f1_at_precision": 0.8426294351495542,
+      "micro_precision_at_precision": 0.9406552094522019
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "object",
+      "classes": 125,
+      "mAP": 0.9449799949202156,
+      "macro_f1": 0.8594937933976499,
+      "micro_f1": 0.8779078309417699,
+      "ece": 0.019627961664081525,
+      "macro_f1_at_precision": 0.8170243318092506,
+      "micro_precision_at_precision": 0.929384164222874
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "scene",
+      "classes": 45,
+      "mAP": 0.9627705802318043,
+      "macro_f1": 0.92546147132544,
+      "micro_f1": 0.9494505494505494,
+      "ece": 0.03948584989487242,
+      "macro_f1_at_precision": 0.8616628734534304,
+      "micro_precision_at_precision": 0.9568307449328771
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "yolo_covered",
+      "classes": 78,
+      "mAP": 0.9498243606754938,
+      "macro_f1": 0.856912568416804,
+      "micro_f1": 0.8928807790488796,
+      "ece": 0.01906053766689289,
+      "macro_f1_at_precision": 0.8227316068601158,
+      "micro_precision_at_precision": 0.936285773971172
+    },
+    {
+      "config": "fused_learned",
+      "classes_set": "yolo_gap",
+      "classes": 92,
+      "mAP": 0.949574731986626,
+      "macro_f1": 0.893949022259134,
+      "micro_f1": 0.9016193433895298,
+      "ece": 0.023116629368058125,
+      "macro_f1_at_precision": 0.8340196244181703,
+      "micro_precision_at_precision": 0.9388350802706648
+    }
+  ]
+}

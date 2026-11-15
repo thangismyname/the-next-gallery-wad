@@ -1,3 +1,4 @@
+import { type AlbumMediaItem } from "@tng/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -22,11 +23,7 @@ import { GripVertical, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import {
-  type AlbumMediaItem,
-  fetchAlbumMedia,
-  reorderAlbumMedia,
-} from "@/services/albums";
+import { fetchAlbumMedia, reorderAlbumMedia } from "@/services/albums";
 
 const PAGE_SIZE = 200;
 

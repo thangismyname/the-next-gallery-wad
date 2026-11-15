@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageCard } from "@/features/gallery/components/ImageCard";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
 import { fetchPublicAlbum } from "@/services/albums";
-import { toMedia, downloadUrl } from "@/services/media";
-import { getInitials } from "@/utils/string";
+import { downloadUrl } from "@/services/media";
+import { getInitials, toMedia } from "@tng/shared";
 
 const PAGE_SIZE = 60;
 

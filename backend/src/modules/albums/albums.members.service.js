@@ -1,6 +1,7 @@
 // Album chung: mời bạn bè (editor / viewer), nhận / từ chối lời mời, rời album.
 import { dbPool } from "../../config/db.js";
-import { assertRole, getAlbumAccess, httpError } from "./albums.access.js";
+import { assertRole, getAlbumAccess } from "./albums.access.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import { toMember } from "./albums.mapper.js";
 
 // is_shared = còn ai khác ngoài owner (kể cả lời mời đang chờ).
@@ -51,7 +52,7 @@ export async function inviteMembers(userId, albumId, { userIds, role }) {
   const targets = [...new Set(userIds)].filter((id) => id !== userId);
   const notFriends = targets.filter((id) => !friendIds.has(id));
   if (notFriends.length) {
-    throw httpError(400, "Chỉ mời được bạn bè vào album", "NOT_FRIENDS");
+    throw httpError(400, "NOT_FRIENDS", "Chỉ mời được bạn bè vào album");
   }
   const result = await dbPool.query(
     `INSERT INTO album_members (album_id, user_id, role)
@@ -74,7 +75,7 @@ export async function updateMemberRole(userId, albumId, memberId, role) {
     `UPDATE album_members SET role = $3 WHERE album_id = $1 AND user_id = $2`,
     [albumId, memberId, role],
   );
-  if (result.rowCount === 0) throw httpError(404, "Không có thành viên này");
+  if (result.rowCount === 0) throw httpError(404, null, "Không có thành viên này");
 }
 
 /** Owner gỡ thành viên, hoặc thành viên tự rời album (memberId = chính mình). */
@@ -82,7 +83,7 @@ export async function removeMember(userId, albumId, memberId) {
   const access = await getAlbumAccess(userId, albumId, { allowPending: true });
   if (memberId !== userId) assertRole(access, ["owner"]);
   if (memberId === access.album.user_id) {
-    throw httpError(400, "Chủ album không thể rời album — hãy xoá album");
+    throw httpError(400, null, "Chủ album không thể rời album — hãy xoá album");
   }
   await dbPool.query(`DELETE FROM album_members WHERE album_id = $1 AND user_id = $2`, [
     albumId,
@@ -95,7 +96,7 @@ export async function removeMember(userId, albumId, memberId) {
 export async function respondInvitation(userId, albumId, accept) {
   const access = await getAlbumAccess(userId, albumId, { allowPending: true });
   if (access.role === "owner" || !access.pending) {
-    throw httpError(400, "Không có lời mời nào đang chờ");
+    throw httpError(400, null, "Không có lời mời nào đang chờ");
   }
   if (accept) {
     await dbPool.query(

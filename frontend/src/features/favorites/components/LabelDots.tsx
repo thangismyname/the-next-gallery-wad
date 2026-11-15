@@ -1,5 +1,5 @@
+import { type UserLabel } from "@tng/shared";
 import { Heart } from "lucide-react";
-import type { UserLabel } from "@/services/labels";
 import { cn } from "@/lib/utils";
 import { LABEL_DOT } from "../labelColors";
 

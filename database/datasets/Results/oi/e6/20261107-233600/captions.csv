@@ -1,0 +1,4 @@
+mode,source,ceiling,R@1,R@5,R@10,MRR,median_rank,named_R@1,named_R@5,named_R@10,named_MRR,named_median_rank,dMRR_ci_lo,dMRR_ci_hi
+clip,-,False,0.2466,0.486,0.593,0.36069,6.0,0.25185,0.50079,0.60975,0.3696,5.0,,
+filter,oracle,True,0.2424,0.4708,0.5758,0.35288,6.0,0.24714,0.48371,0.59043,0.36083,6.0,-0.01563,0.00027
+boost,oracle,True,0.2666,0.509,0.6182,0.38183,5.0,0.27432,0.52662,0.63806,0.39335,5.0,0.01846,0.02427

@@ -1,0 +1,21 @@
+{"t": "2026-11-06T20:49:43Z", "type": "log", "message": "run e6/20261107-034942 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e6/20261107-034942"}
+{"t": "2026-11-06T20:49:43Z", "type": "log", "message": "── load"}
+{"t": "2026-11-06T20:49:43Z", "type": "stage", "stage": "load"}
+{"t": "2026-11-06T20:49:43Z", "type": "log", "message": "── chọn λ trên caption val"}
+{"t": "2026-11-06T20:49:43Z", "type": "stage", "stage": "chọn λ trên caption val"}
+{"t": "2026-11-06T20:49:55Z", "type": "log", "message": "  yolo: λ = 0.05 (val MRR 0.4390)"}
+{"t": "2026-11-06T20:49:55Z", "type": "log", "message": "  clip: λ = 0.02 (val MRR 0.4264)"}
+{"t": "2026-11-06T20:49:55Z", "type": "log", "message": "  fused: λ = 0.02 (val MRR 0.4346)"}
+{"t": "2026-11-06T20:49:55Z", "type": "log", "message": "── captions test"}
+{"t": "2026-11-06T20:49:55Z", "type": "stage", "stage": "captions test"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  clip   -     R@1 0.247 · MRR 0.3607"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  filter yolo  R@1 0.234 · MRR 0.3460"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  boost  yolo  R@1 0.254 · MRR 0.3699"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  filter clip  R@1 0.173 · MRR 0.2751"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  boost  clip  R@1 0.243 · MRR 0.3564"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  filter fused R@1 0.184 · MRR 0.2910"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  boost  fused R@1 0.249 · MRR 0.3641"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "── query ghép"}
+{"t": "2026-11-06T20:50:07Z", "type": "stage", "stage": "query ghép"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "  → 1087 cặp chưa chấm (219 mới): /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e6/20261107-034942/judge.html · điền /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Classes/open-images/judgments.csv rồi chạy lại e6"}
+{"t": "2026-11-06T20:50:07Z", "type": "log", "message": "xong sau 26s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e6/20261107-034942"}

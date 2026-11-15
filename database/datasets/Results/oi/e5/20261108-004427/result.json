@@ -1,0 +1,79 @@
+{
+  "e2_run": "20261107-033218",
+  "e4_run": "20261107-033725",
+  "precision_target": 0.9,
+  "test_all_classes": {
+    "clip_only": {
+      "macro_f1": 0.6907551552267795,
+      "mAP": 0.8632937061777076,
+      "micro_precision": 0.925494901019796
+    },
+    "yolo_only": {
+      "macro_f1": 0.34603616672221255,
+      "mAP": 0.7334568308688838,
+      "micro_precision": 0.9352678571428571
+    },
+    "or": {
+      "macro_f1": 0.7645080046775955,
+      "mAP": 0.8894352686290297,
+      "micro_precision": 0.9326091329712332
+    },
+    "and": {
+      "macro_f1": 0.739221795724512,
+      "mAP": 0.8837604044014747,
+      "micro_precision": 0.9314315352697096
+    },
+    "group_baseline": {
+      "macro_f1": 0.7430941122791926,
+      "mAP": 0.8814609156848545,
+      "micro_precision": 0.9378484410489366
+    },
+    "per_tag": {
+      "macro_f1": 0.7636636391115225,
+      "mAP": 0.8879528986809355,
+      "micro_precision": 0.9304865938430983
+    }
+  },
+  "paired_ci95": {
+    "per_tag_minus_clip_macro_f1_lo": 0.06929417123157569,
+    "per_tag_minus_clip_macro_f1_hi": 0.08206223274101222,
+    "per_tag_minus_clip_mAP_lo": 0.019862610205161453,
+    "per_tag_minus_clip_mAP_hi": 0.030242784793415353,
+    "per_tag_minus_yolo_macro_f1_covered_lo": 0.03664806236206257,
+    "per_tag_minus_yolo_macro_f1_covered_hi": 0.05771524762496301,
+    "per_tag_minus_yolo_mAP_covered_lo": 0.006576233866059145,
+    "per_tag_minus_yolo_mAP_covered_hi": 0.02287856762741936
+  },
+  "rule_choice": [
+    {
+      "group": "object",
+      "yolo_covered": true,
+      "classes": 81,
+      "clip": 19,
+      "yolo": 16,
+      "or": 34,
+      "and": 12,
+      "target_reached": 80
+    },
+    {
+      "group": "object",
+      "yolo_covered": false,
+      "classes": 47,
+      "clip": 47,
+      "yolo": 0,
+      "or": 0,
+      "and": 0,
+      "target_reached": 47
+    },
+    {
+      "group": "scene",
+      "yolo_covered": false,
+      "classes": 46,
+      "clip": 46,
+      "yolo": 0,
+      "or": 0,
+      "and": 0,
+      "target_reached": 46
+    }
+  ]
+}

@@ -8,16 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { fetchFriends } from "@/services/friends";
-import {
-  type MemberRole,
-  albumMembersQueryKey,
-  albumQueryKey,
-  fetchAlbumMembers,
-  inviteAlbumMembers,
-  removeAlbumMember,
-  updateAlbumMember,
-} from "@/services/albums";
-import { getInitials } from "@/utils/string";
+import { fetchAlbumMembers, inviteAlbumMembers, removeAlbumMember, updateAlbumMember } from "@/services/albums";
+import { getInitials, type MemberRole, albumMembersQueryKey, albumQueryKey } from "@tng/shared";
 import { SettingOptionGroup } from "@/features/settings/components/SettingOptionGroup";
 
 type Props = { albumId: string; canManage: boolean };

@@ -11,8 +11,8 @@
 
 [project]
 name = "tng-ai-service"
-version = "0.4.0"
-description = "The Next Gallery AI service — OpenCLIP embeddings + YOLO26 object detection"
+version = "0.5.0"
+description = "The Next Gallery AI service — OpenCLIP embeddings, YOLO26 detection, DINOv3 similarity, content tagging"
 # Same Python as the Docker images (python:3.12-slim) so benchmarks match.
 requires-python = ">=3.12,<3.13"
 dependencies = [
@@ -46,6 +46,7 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "httpx>=0.27",  # FastAPI TestClient
+    "ruff>=0.14",
 ]
 # Offline benchmarks in bench/ — `uv sync --group bench`.
 bench = [
@@ -75,3 +76,17 @@ explicit = true  # only torch/torchvision come from this index
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+# `uv run ruff check .` (dev group). Cùng cấu hình cho cả nhóm — chạy trước khi commit.
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I"]
+ignore = [
+    "E501",  # dòng dài: bảng / log tiếng Việt, không ép xuống dòng
+    "B008",  # FastAPI: File(...) / Form(...) làm default là cách dùng chuẩn
+    "B023",  # lambda trong vòng lặp được gọi ngay (bootstrap_ci) — không bị bắt muộn biến
+    "B905",  # zip(): độ dài các dãy đã khớp do cách dựng (id ↔ path ↔ vector)
+]

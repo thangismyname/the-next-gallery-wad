@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import { Moment } from "@/types";
+import { Moment } from "@tng/shared";
 
 export interface MomentParticipant {
   userId: string;
@@ -12,11 +12,13 @@ export function timeAgo(iso: string, t: TFunction): string {
   const diffMs = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diffMs / 60000);
   if (mins < 1) return t("moments.timeJustNow");
-  if (mins < 60) return t("moments.timeMin", { n: mins });
+  const lang = (typeof navigator !== "undefined" ? navigator.language : "vi") || "vi";
+  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+  if (mins < 60) return rtf.format(-mins, "minute");
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return t("moments.timeHour", { n: hours });
+  if (hours < 24) return rtf.format(-hours, "hour");
   const days = Math.floor(hours / 24);
-  return t("moments.timeDay", { n: days });
+  return rtf.format(-days, "day");
 }
 
 /**

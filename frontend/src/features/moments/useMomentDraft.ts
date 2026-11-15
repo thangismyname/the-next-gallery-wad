@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createMoment, updateDraftMoment } from "@/services/moments";
-import { Moment, MomentTemplate, MomentVisibility } from "@/types";
+import { Moment, MomentTemplate, MomentVisibility } from "@tng/shared";
 import type { MomentCreateMode } from "./components/MomentTemplatePicker";
 
 const SLOT_COUNT: Record<MomentTemplate, number> = {

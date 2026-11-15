@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { ArrowLeft, FolderPlus, Loader2 } from "lucide-react";
+import { ArrowLeft, FolderPlus, Loader2, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AlbumFormDialog } from "@/features/albums/components/AlbumFormDialog";
 import { Button } from "@/components/ui/button";
@@ -15,16 +15,10 @@ import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { GRID_DENSITY_CLASS, useGridDensity, tagMediaQueryKey, tagSummaryQueryKey, toMedia } from "@tng/shared";
 import { cn } from "@/lib/utils";
-import {
-  fetchTagMedia,
-  fetchTagSummary,
-  tagMediaQueryKey,
-  tagSummaryQueryKey,
-  toMedia,
-} from "@/services/media";
-import { TAG_ICONS } from "../tagCatalog";
+import { fetchTagMedia, fetchTagSummary } from "@/services/media";
+import { useTagCatalog } from "../useTagCatalog";
 import { ConfidenceThreshold } from "./ConfidenceThreshold";
 
 const PAGE_SIZE = 60;
@@ -36,9 +30,12 @@ export const TagMediaGrid: React.FC<Props> = ({ tag, onBack }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const density = useGridDensity((s) => s.density);
-  const Icon = TAG_ICONS[tag];
+  const { describe } = useTagCatalog();
+  const display = describe(tag);
+  const Icon = display?.Icon ?? Tag;
+  const name = display?.name ?? tag;
 
-  // null = ngưỡng tự động (tối ưu F1 khi train) của tag.
+  // null = ngưỡng tự động của tag (chọn trên val khi train).
   const [threshold, setThreshold] = useState<number | null>(null);
   const minConfidence = useDebounce(threshold, 250);
 
@@ -47,7 +44,8 @@ export const TagMediaGrid: React.FC<Props> = ({ tag, onBack }) => {
     queryFn: fetchTagSummary,
     staleTime: 30_000,
   });
-  const autoThreshold = summary?.find((s) => s.tag === tag)?.threshold ?? 0.5;
+  const autoThreshold =
+    summary?.find((s) => s.tag === tag)?.threshold ?? display?.label?.threshold ?? 0.5;
 
   const query = useInfiniteQuery({
     queryKey: tagMediaQueryKey(tag, minConfidence),
@@ -96,7 +94,7 @@ export const TagMediaGrid: React.FC<Props> = ({ tag, onBack }) => {
           <Icon className="size-5 text-primary" />
           <div>
             <h2 className="font-semibold leading-tight">
-              {t(`studio.tags.${tag}`)}
+              {name}
             </h2>
             <p className="text-xs text-muted-foreground">
               {t("studio.photoCount", { n: total })}
@@ -129,7 +127,7 @@ export const TagMediaGrid: React.FC<Props> = ({ tag, onBack }) => {
         open={creatingAlbum}
         onOpenChange={setCreatingAlbum}
         initial={{
-          name: t(`studio.tags.${tag}`),
+          name,
           smartRule: { type: "tags", tags: [tag], minConfidence: threshold },
         }}
         onSaved={(album) => navigate(`/albums/${album.id}`)}

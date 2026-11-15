@@ -1,8 +1,8 @@
+import { type UserLabel } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { Check, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import type { UserLabel } from "@/services/labels";
 import { cn } from "@/lib/utils";
 import { LABEL_DOT } from "../labelColors";
 import { useLabelManager } from "../useLabelManager";

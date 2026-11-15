@@ -9,78 +9,50 @@ import {
   reviewParamsSchema,
   reviewDeveloperRequestSchema,
 } from "../developer/developer.schema.js";
+import { respond } from "../../middleware/asyncHandler.js";
 
 const router = Router();
 
-// Bọc handler async: lỗi → errorHandler.
-const handle = (fn) => async (req, res, next) => {
-  try {
-    res.json({ success: true, data: await fn(req) });
-  } catch (error) {
-    next(error);
-  }
-};
-
 // Tổng quan: số liệu nhanh + hoạt động 30 ngày + người dùng mới.
-router.get("/overview", requireAdmin, handle(() => adminService.getOverview()));
+router.get("/overview", requireAdmin, respond(() => adminService.getOverview()));
 
 // ai-service online? + tiến độ AI toàn hệ thống.
-router.get("/system", requireAdmin, handle(() => adminService.getSystem()));
+router.get("/system", requireAdmin, respond(() => adminService.getSystem()));
 
 router.get(
   "/users",
   requireAdmin,
   validate(listUsersQuerySchema, "query"),
-  handle((req) => adminService.listUsers(req.query)),
+  respond((req) => adminService.listUsers(req.query)),
 );
 
 router.get(
   "/users/:userId",
   requireAdmin,
   validate(userParamsSchema, "params"),
-  handle((req) => adminService.getUserDetail(req.params.userId)),
+  respond((req) => adminService.getUserDetail(req.params.userId)),
 );
 
-router.delete("/users/:userId", requireAdmin, validate(userParamsSchema, "params"), async (req, res, next) => {
-  try {
-    const data = await adminService.deleteUser(
-      req.params.userId,
-      req.user?.id
-    );
-    res.json({ success: true, data });
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete(
+  "/users/:userId",
+  requireAdmin,
+  validate(userParamsSchema, "params"),
+  respond((req) => adminService.deleteUser(req.params.userId, req.user?.id )),
+);
 
-router.get("/developer-requests", requireAdmin, validate(listDeveloperRequestsQuerySchema, "query"), async (req, res, next) => {
-  try {
-    const data = await developerService.listDeveloperRequests(
-      req.query.status ?? null
-    );
-    res.json({ success: true, data });
-  } catch (error) {
-    next(error);
-  }
-});
+router.get(
+  "/developer-requests",
+  requireAdmin,
+  validate(listDeveloperRequestsQuerySchema, "query"),
+  respond((req) => developerService.listDeveloperRequests(req.query.status ?? null )),
+);
 
 router.post(
   "/developer-requests/:id/review",
   requireAdmin,
   validate(reviewParamsSchema, "params"),
   validate(reviewDeveloperRequestSchema),
-  async (req, res, next) => {
-    try {
-      const data = await developerService.reviewDeveloperRequest(
-        req.params.id,
-        req.user.id,
-        req.body.approve
-      );
-      res.json({ success: true, data });
-    } catch (error) {
-      next(error);
-    }
-  }
+  respond((req) => developerService.reviewDeveloperRequest(req.params.id, req.user.id, req.body.approve ))
 );
 
 export default router;

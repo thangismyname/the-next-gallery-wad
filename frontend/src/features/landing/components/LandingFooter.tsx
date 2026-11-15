@@ -26,8 +26,7 @@ const FOOTER_LINKS = [
   {
     titleKey: "footer.sections.account",
     links: [
-      { key: "header.profile", to: "/profile" },
-      { key: "header.settings", to: "/settings" },
+      { key: "header.accountSettings", to: "/settings" },
     ],
   },
 ];

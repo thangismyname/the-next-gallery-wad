@@ -26,14 +26,6 @@ export const popIn = (index: number, reduce: boolean | null, step = 0.05): Motio
   transition: { ...POP_SPRING, delay: index * step },
 });
 
-/** Thanh nổi đổi nội dung (BottomBar: điều hướng ↔ thao tác chọn ảnh). */
-export const floatingSwap: MotionPreset = {
-  initial: { opacity: 0, y: 8, scale: 0.95 },
-  animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: 8, scale: 0.95 },
-  transition: { duration: 0.18 },
-};
-
 /** Đổi trang: chỉ opacity (xem components/motion/PageTransition.tsx). */
 export const pageFade: MotionPreset = {
   initial: { opacity: 0 },

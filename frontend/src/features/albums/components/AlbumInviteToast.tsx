@@ -1,3 +1,4 @@
+import { albumsQueryKey } from "@tng/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +8,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useSignaling } from "@/hooks/useSignaling";
 import { SIGNAL } from "@/services/signaling";
-import { albumsQueryKey } from "@/services/albums";
 
 interface AlbumInvite {
   albumId?: string;

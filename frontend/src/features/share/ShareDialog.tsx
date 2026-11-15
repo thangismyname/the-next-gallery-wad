@@ -1,6 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+// Chia sẻ ảnh đang chọn trong thư viện (Gallery / Favorites / Lightbox):
+//   - Bạn bè: server copy thẳng vào thư viện của họ (ngay lập tức, kể cả offline).
+//   - Link / QR / mã: ai cũng mở được (không cần đăng nhập), tải từ server.
+// File trên máy (P2P) gửi ở trang /share.
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2, Send } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { CheckCircle2, Link2, Loader2, Send, Users } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,21 +15,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { useShareContext } from "./ShareProvider";
-import { TransferSource } from "@/hooks/useFileTransfer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fetchMediaByIds } from "@/services/media";
-import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { QRTab } from "./components/QRTab";
-import { FriendsTab } from "./components/FriendsTab";
-import { LanTab } from "./components/LanTab";
-import { buildMediaSource } from "./mediaSource";
+import { TransferHttpError, transfersQueryKey } from "@/services/transfers";
+import { FriendPicker } from "./components/FriendPicker";
+import { HostPanel } from "./components/HostPanel";
+import { libraryEntry } from "./sendEntry";
+import { startTransfer } from "./startTransfer";
 
 interface ShareDialogProps {
   open: boolean;
@@ -32,172 +29,101 @@ interface ShareDialogProps {
   mediaIds: string[];
 }
 
-export const ShareDialog: React.FC<ShareDialogProps> = ({
-  open,
-  onOpenChange,
-  mediaIds,
-}) => {
+type Result = { kind: "direct"; count: number } | { kind: "link"; id: string; link: string | null };
+
+export const ShareDialog: React.FC<ShareDialogProps> = ({ open, onOpenChange, mediaIds }) => {
   const { t } = useTranslation();
-  const share = useShareContext();
-  const shareInitialFriendId = useGalleryActionsStore(
-    (s) => s.shareInitialFriendId,
-  );
-
-  const prevOpen = useRef(false);
-  const sources = useRef<TransferSource[]>([]);
-  const sending = useRef(false);
-  const [tab, setTab] = useState<string>(
-    shareInitialFriendId ? "friends" : "qr",
-  );
+  const queryClient = useQueryClient();
+  const [tab, setTab] = useState<"friends" | "link">("friends");
+  const [friendIds, setFriendIds] = useState<Set<string>>(new Set());
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
-    if (open && !prevOpen.current) {
-      share.leaveRoom();
-      share.createSession(mediaIds);
-      if (mediaIds.length > 0) {
-        // Lấy đúng các media đã chọn theo id (kể cả ảnh cũ ngoài trang đầu).
-        fetchMediaByIds(mediaIds)
-          .then((items) => {
-            sources.current = items.map(buildMediaSource);
-          })
-          .catch(() => {
-            sources.current = [];
-          });
-      }
-    }
-    prevOpen.current = open;
-  }, [open, mediaIds, share]);
+    if (!open) return;
+    setFriendIds(new Set());
+    setError(null);
+    setResult(null);
+  }, [open]);
 
-  // Khi mở từ luồng "gửi cho bạn bè" → mặc định tab friends
-  useEffect(() => {
-    if (open) setTab(shareInitialFriendId ? "friends" : "qr");
-  }, [open, shareInitialFriendId]);
-
-  const closeDialog = (next: boolean) => {
-    if (!next) {
-      if (shareInitialFriendId) {
-        share.leaveRoom();
-      }
-      sources.current = [];
-    }
-    onOpenChange(next);
-  };
-
-  const connectedCount = useMemo(
-    () =>
-      Object.values(share.connStates).filter((state) => state === "connected")
-        .length,
-    [share.connStates],
-  );
-
-  const sendToConnected = async () => {
-    if (
-      sending.current ||
-      sources.current.length === 0 ||
-      connectedCount === 0
-    )
-      return;
-    sending.current = true;
-    const targets = Object.entries(share.connStates)
-      .filter(([, state]) => state === "connected")
-      .map(([peerId]) => peerId);
+  const run = async (kind: "direct" | "link") => {
+    setBusy(true);
+    setError(null);
     try {
-      await Promise.all(
-        targets.map((peerId) =>
-          share.sendToPeer(peerId, sources.current).catch(() => undefined),
-        ),
-      );
+      const items = await fetchMediaByIds(mediaIds);
+      const { detail, link } = await startTransfer({
+        kind,
+        entries: items.map(libraryEntry),
+        friendIds: [...friendIds],
+      });
+      void queryClient.invalidateQueries({ queryKey: transfersQueryKey });
+      setResult(kind === "direct" ? { kind, count: friendIds.size } : { kind, id: detail.id, link });
+    } catch (err) {
+      setError(err instanceof TransferHttpError ? err.message : t("transfer.sendFailed"));
     } finally {
-      sending.current = false;
+      setBusy(false);
     }
   };
-
-  const sessionReady = share.session || shareInitialFriendId;
 
   return (
-    <Dialog open={open} onOpenChange={closeDialog}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{t("share.title")}</DialogTitle>
-          <DialogDescription>
-            {shareInitialFriendId
-              ? t("share.friendSendTitle")
-              : t("share.filesCount", {
-                  done: String(mediaIds.length),
-                  total: String(mediaIds.length),
-                })}
-          </DialogDescription>
+          <DialogTitle>{t("transfer.shareTitle")}</DialogTitle>
+          <DialogDescription>{t("transfer.filesCount", { count: mediaIds.length })}</DialogDescription>
         </DialogHeader>
 
-        {!sessionReady ? (
-          <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
-            <Loader2 className="size-4 animate-spin" />
-            {t("share.creating")}
+        {result?.kind === "link" ? (
+          <HostPanel transferId={result.id} initialLink={result.link} onClosed={() => onOpenChange(false)} />
+        ) : result?.kind === "direct" ? (
+          <div className="flex flex-col items-center gap-3 py-8 text-center">
+            <CheckCircle2 className="size-10 text-emerald-500" />
+            <p className="text-sm">{t("transfer.sentToLibraries", { count: result.count })}</p>
+            <Button size="sm" onClick={() => onOpenChange(false)}>
+              {t("transfer.done")}
+            </Button>
           </div>
         ) : (
-          <>
-            <Separator />
-            <Tabs
-              value={tab}
-              onValueChange={setTab}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="qr">{t("share.qrTab")}</TabsTrigger>
-                <TabsTrigger value="friends">{t("share.friendsTab")}</TabsTrigger>
-                <TabsTrigger value="lan">{t("share.lanTab")}</TabsTrigger>
-              </TabsList>
-              <TabsContent value="qr">
-                {share.session ? (
-                  <QRTab session={share.session} />
-                ) : (
-                  <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
-                    <Loader2 className="size-4 animate-spin" />
-                    {t("share.creating")}
-                  </div>
-                )}
-              </TabsContent>
-              <TabsContent value="friends">
-                <FriendsTab
-                  mediaIds={mediaIds}
-                  initialFriendId={shareInitialFriendId}
-                />
-              </TabsContent>
-              <TabsContent value="lan">
-                <LanTab
-                  peers={share.peers}
-                  connStates={share.connStates}
-                  onConnect={(peerId) => {
-                    void share.connectToPeer(peerId).catch(() => undefined);
-                  }}
-                />
-              </TabsContent>
-            </Tabs>
-
-            {!shareInitialFriendId && (
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <p className="text-xs text-muted-foreground">
-                  {t("share.filesCount", {
-                    done: String(mediaIds.length),
-                    total: String(mediaIds.length),
-                  })}
-                </p>
-                <Button
-                  size="sm"
-                  className="gap-1.5"
-                  disabled={
-                    connectedCount === 0 ||
-                    sources.current.length === 0 ||
-                    sending.current
-                  }
-                  onClick={sendToConnected}
-                >
-                  <Send className="size-3.5" />
-                  {t("share.sendToFriends", { count: connectedCount })}
-                </Button>
-              </div>
-            )}
-          </>
+          <Tabs value={tab} onValueChange={(v) => setTab(v as "friends" | "link")}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="friends" className="gap-1.5">
+                <Users className="size-3.5" />
+                {t("transfer.toFriends")}
+              </TabsTrigger>
+              <TabsTrigger value="link" className="gap-1.5">
+                <Link2 className="size-3.5" />
+                {t("transfer.toAnyone")}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="friends" className="space-y-3 pt-3">
+              <FriendPicker
+                className="max-h-72"
+                selected={friendIds}
+                onToggle={(id) =>
+                  setFriendIds((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(id)) next.delete(id);
+                    else next.add(id);
+                    return next;
+                  })
+                }
+              />
+              <p className="text-xs text-muted-foreground">{t("transfer.libraryCopyHint")}</p>
+              <Button className="w-full gap-1.5" disabled={busy || friendIds.size === 0} onClick={() => run("direct")}>
+                {busy ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                {t("transfer.sendToFriends", { count: friendIds.size })}
+              </Button>
+            </TabsContent>
+            <TabsContent value="link" className="space-y-3 pt-3">
+              <p className="text-sm text-muted-foreground">{t("transfer.linkExplainLibrary")}</p>
+              <Button className="w-full gap-1.5" disabled={busy} onClick={() => run("link")}>
+                {busy ? <Loader2 className="size-4 animate-spin" /> : <Link2 className="size-4" />}
+                {t("transfer.createLink")}
+              </Button>
+            </TabsContent>
+            {error && <p className="pt-2 text-sm text-destructive">{error}</p>}
+          </Tabs>
         )}
       </DialogContent>
     </Dialog>

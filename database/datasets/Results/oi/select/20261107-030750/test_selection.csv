@@ -1,0 +1,175 @@
+class,group,pos,neg,unknown
+Person,object,1584,807,2609
+Bicycle,object,50,366,4584
+Car,object,281,445,4274
+Motorcycle,object,42,322,4636
+Fixed-wing aircraft,object,50,320,4630
+Bus,object,44,331,4625
+Train,object,39,323,4638
+Truck,object,52,333,4615
+Boat,object,61,313,4626
+Traffic light,object,41,12,4947
+Fire hydrant,object,37,1,4962
+Stop sign,object,33,19,4948
+Parking meter,object,6,0,4994
+Bench,object,45,57,4898
+Bird,object,74,36,4890
+Cat,object,48,655,4297
+Dog,object,55,661,4284
+Horse,object,46,653,4301
+Sheep,object,37,659,4304
+Cattle,object,47,664,4289
+Elephant,object,37,638,4325
+Bear,object,62,647,4291
+Zebra,object,41,636,4323
+Giraffe,object,37,644,4319
+Backpack,object,39,461,4500
+Umbrella,object,38,548,4414
+Handbag,object,42,549,4409
+Tie,object,40,550,4410
+Suitcase,object,38,458,4504
+Flying disc,object,5,91,4904
+Ski,object,54,50,4896
+Snowboard,object,37,52,4911
+Ball (Object),object,61,74,4865
+Kite,object,37,44,4919
+Baseball bat,object,37,56,4907
+Baseball glove,object,51,601,4348
+Skateboard,object,39,46,4915
+Surfboard,object,39,51,4910
+Tennis racket,object,36,46,4918
+Bottle,object,93,65,4842
+Wine glass,object,47,42,4911
+Mug,object,41,29,4930
+Coffee cup,object,72,32,4896
+Fork,object,42,46,4912
+Knife,object,46,26,4928
+Spoon,object,55,48,4897
+Bowl,object,87,29,4884
+Banana,object,36,189,4775
+Apple,object,40,190,4770
+Sandwich,object,82,162,4756
+Orange (fruit),object,50,194,4756
+Broccoli,object,43,213,4744
+Carrot,object,36,210,4754
+Hot dog,object,37,182,4781
+Pizza,object,39,155,4806
+Doughnut,object,36,198,4766
+Cake,object,58,263,4679
+Chair,object,148,101,4751
+Couch,object,74,76,4850
+Houseplant,object,58,900,4042
+Bed,object,89,75,4836
+Kitchen & dining room table,object,40,140,4820
+Toilet,object,37,16,4947
+Television,object,46,10,4944
+Laptop,object,57,15,4928
+Computer mouse,object,38,0,4962
+Remote control,object,37,0,4963
+Computer keyboard,object,42,7,4951
+Mobile phone,object,42,7,4951
+Microwave oven,object,50,13,4937
+Oven,object,57,17,4926
+Toaster,object,4,9,4987
+Sink,object,56,35,4909
+Refrigerator,object,51,20,4929
+Book,object,53,1,4946
+Clock,object,41,4,4955
+Vase,object,44,12,4944
+Scissors,object,26,24,4950
+Teddy bear,object,37,690,4273
+Hair dryer,object,3,5,4992
+Toothbrush,object,12,17,4971
+Human face,object,382,284,4334
+Tree,object,1065,1148,2787
+Flower,object,140,998,3862
+Building,object,841,188,3971
+House,object,204,290,4506
+Skyscraper,object,56,206,4738
+Tower,object,84,245,4671
+Castle,object,45,195,4760
+Lighthouse,object,37,197,4766
+Fountain,object,36,4,4960
+Sunglasses,object,51,564,4385
+Hat,object,56,553,4391
+Footwear,object,293,626,4081
+Dress,object,126,475,4399
+Guitar,object,48,50,4902
+Camera,object,39,19,4942
+Balloon,object,42,47,4911
+Christmas tree,object,37,1173,3790
+Swimming pool,object,41,32,4927
+Tent,object,51,10,4939
+Flag,object,47,7,4946
+Street light,object,47,15,4938
+Traffic sign,object,61,10,4929
+Taxi,object,37,323,4640
+Van,object,46,448,4506
+Helicopter,object,37,302,4661
+Monkey,object,36,640,4324
+Duck,object,37,38,4925
+Fish,object,42,42,4916
+Butterfly,object,37,44,4919
+Tiger,object,37,648,4315
+Lion,object,38,652,4310
+Goat,object,46,648,4306
+Pig,object,36,638,4326
+Deer,object,42,647,4311
+Ice cream,object,42,260,4698
+Coffee (drink),object,51,72,4877
+Wine,object,58,75,4867
+Beer,object,50,77,4873
+Cocktail,object,52,90,4858
+Salad,object,56,216,4728
+Sushi,object,36,155,4809
+Bread,object,73,197,4730
+Cookie,object,39,288,4673
+Hamburger,object,51,169,4780
+French fries,object,47,186,4767
+Pasta,object,48,156,4796
+Beach,scene,53,44,4903
+Sea,scene,147,26,4827
+Coast,scene,88,22,4890
+Island,scene,40,1,4959
+Mountain,scene,131,4,4865
+Mountain range,scene,61,7,4932
+Valley,scene,42,17,4941
+Forest,scene,52,2,4946
+Lake,scene,52,9,4939
+River,scene,72,11,4917
+Waterfall,scene,38,4,4958
+Field,scene,59,17,4924
+Garden,scene,54,15,4931
+Park,scene,38,16,4946
+Desert,scene,38,4,4958
+Snow,scene,115,18,4867
+Sky,scene,923,2,4075
+Cloud,scene,229,6,4765
+Sunset,scene,58,4,4938
+Sunrise,scene,50,1,4949
+Night,scene,58,2,4940
+Road,scene,250,7,4743
+Street,scene,65,4,4931
+City,scene,98,20,4882
+Town,scene,51,1,4948
+Skyline,scene,37,2,4961
+Bridge (structure),scene,54,2,4944
+Temple,scene,36,3,4961
+Church,scene,37,7,4956
+Room,scene,224,12,4764
+Kitchen,scene,54,1,4945
+Bedroom,scene,37,1,4962
+Living room,scene,39,36,4925
+Restaurant,scene,58,15,4927
+Stadium,scene,48,23,4929
+Wedding,scene,36,5,4959
+Party,scene,39,13,4948
+Concert,scene,37,1,4962
+Festival,scene,37,19,4944
+Crowd,scene,51,6,4943
+Selfie,scene,36,4,4960
+Portrait,scene,56,10,4934
+Smile,scene,45,8,4947
+Text,scene,176,1,4823
+Document,scene,37,2,4961
+Landscape,scene,94,0,4906

@@ -1,3 +1,4 @@
+import { type Album } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -22,7 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Album } from "@/services/albums";
+import { useTagCatalog } from "@/features/studio/useTagCatalog";
 
 export type AlbumAction =
   "add" | "share" | "edit" | "convert" | "leave" | "delete";
@@ -32,6 +33,7 @@ type Props = { album: Album; onAction: (action: AlbumAction) => void };
 /** Đầu trang album: bìa, tên, mô tả, truy vấn (album thông minh), thao tác. */
 export const AlbumHeader: React.FC<Props> = ({ album, onAction }) => {
   const { t } = useTranslation();
+  const { describe } = useTagCatalog();
   const isOwner = album.role === "owner";
   const canAdd =
     album.kind === "manual" && (isOwner || album.role === "editor");
@@ -90,7 +92,7 @@ export const AlbumHeader: React.FC<Props> = ({ album, onAction }) => {
               {rule.type === "tags" ? (
                 rule.tags.map((tag) => (
                   <Badge key={tag} variant="outline" className="text-[11px]">
-                    {t(`studio.tags.${tag}`)}
+                    {describe(tag)?.name ?? tag}
                   </Badge>
                 ))
               ) : (

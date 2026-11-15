@@ -4,10 +4,10 @@ import { useTranslation } from "react-i18next";
 import { Code2, LayoutDashboard, Users, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
-import { useAdminDeveloperRequests } from "@/hooks/useAdminDeveloperRequests";
-import type { AdminNavItem } from "@/types";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
+import { useAdminDeveloperRequests } from "@/features/admin/useAdminDeveloperRequests";
+import type { AdminNavItem } from "../types";
 
 const navItems: AdminNavItem[] = [
   { key: "dashboard", to: "/admin", icon: LayoutDashboard, end: true },

@@ -1,8 +1,7 @@
 // Quyền truy cập album — mọi route album đi qua đây trước khi đọc/ghi.
 import { dbPool } from "../../config/db.js";
+import { httpError } from "../../middleware/errorHandler.js";
 
-export const httpError = (status, message, code) =>
-  Object.assign(new Error(message), { status, ...(code ? { code } : {}) });
 
 /**
  * Vai trò của `userId` trong album: owner | editor | viewer. Không có quyền →
@@ -18,26 +17,22 @@ export async function getAlbumAccess(userId, albumId, { allowPending = false } =
     [userId, albumId],
   );
   const row = result.rows[0];
-  if (!row) throw httpError(404, "Không tìm thấy album", "ALBUM_NOT_FOUND");
+  if (!row) throw httpError(404, "ALBUM_NOT_FOUND", "Không tìm thấy album");
   if (row.user_id === userId) return { album: row, role: "owner", pending: false };
   if (row.member_role && (row.accepted_at || allowPending)) {
     return { album: row, role: row.member_role, pending: !row.accepted_at };
   }
-  throw httpError(404, "Không tìm thấy album", "ALBUM_NOT_FOUND");
+  throw httpError(404, "ALBUM_NOT_FOUND", "Không tìm thấy album");
 }
 
 export function assertRole(access, roles, message = "Bạn không có quyền với album này") {
   if (!roles.includes(access.role) || access.pending) {
-    throw httpError(403, message, "ALBUM_FORBIDDEN");
+    throw httpError(403, "ALBUM_FORBIDDEN", message);
   }
 }
 
 export function assertManual(access) {
   if (access.album.kind === "smart") {
-    throw httpError(
-      400,
-      "Album thông minh tự cập nhật theo truy vấn — chuyển thành album thường để sửa danh sách ảnh",
-      "ALBUM_IS_SMART",
-    );
+    throw httpError(400, "ALBUM_IS_SMART", "Album thông minh tự cập nhật theo truy vấn — chuyển thành album thường để sửa danh sách ảnh");
   }
 }

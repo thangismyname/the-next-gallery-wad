@@ -1,0 +1,528 @@
+image,yolo_conf,candidates,clip_class,clip_prob,accepted
+00109cf87e21b25d,0.71506,Mug;Coffee cup,Mug,0.84474,True
+00109cf87e21b25d,0.56794,Mug;Coffee cup,Mug,0.77993,True
+001ac70b6184abed,0.81546,Mug;Coffee cup,Mug,0.90739,True
+004073aa3465a0b6,0.68443,Mug;Coffee cup,Mug,0.93893,True
+004a4b5c915dec78,0.67683,Mug;Coffee cup,Mug,0.63643,False
+004fb5638a750882,0.59817,Mug;Coffee cup,Mug,0.77721,True
+005949b2719c70e2,0.68912,Mug;Coffee cup,Mug,0.91136,True
+00688addcaa39113,0.67044,Mug;Coffee cup,Mug,0.71043,True
+00843be967aab6eb,0.89176,Mug;Coffee cup,Mug,0.87368,True
+00843be967aab6eb,0.81455,Mug;Coffee cup,Mug,0.75982,True
+00bd54e6e5229b8a,0.689,Mug;Coffee cup,Mug,0.74782,True
+00bd54e6e5229b8a,0.63597,Mug;Coffee cup,Coffee cup,0.72523,True
+00be737d7ed9f5ef,0.81134,Mug;Coffee cup,Mug,0.98094,True
+00be737d7ed9f5ef,0.6814,Mug;Coffee cup,Mug,0.87679,True
+00d12edd1967fb27,0.71135,Mug;Coffee cup,Mug,0.79294,True
+00ef774cadd70767,0.70056,Mug;Coffee cup,Mug,0.50167,False
+0107f68755c7ffca,0.61797,Mug;Coffee cup,Mug,0.74272,True
+0109f0a637906e44,0.92738,Mug;Coffee cup,Mug,0.72048,True
+0109f0a637906e44,0.72579,Mug;Coffee cup,Mug,0.83797,True
+0180e4ce24a20fc7,0.5754,Mug;Coffee cup,Mug,0.60026,False
+018383ce05a40814,0.82053,Mug;Coffee cup,Mug,0.76209,True
+01929d26f0125bb0,0.79037,Mug;Coffee cup,Coffee cup,0.9279,True
+0199217cc5cf6aff,0.89665,Mug;Coffee cup,Mug,0.88541,True
+01be77b9cb26415c,0.64387,Mug;Coffee cup,Coffee cup,0.98438,True
+01d6b8bae74791aa,0.65023,Mug;Coffee cup,Mug,0.50366,False
+01e137dcfd6a0e0e,0.78568,Mug;Coffee cup,Mug,0.95249,True
+0253cf6119891ec0,0.75928,Mug;Coffee cup,Coffee cup,0.52289,False
+02d1857f35481495,0.67366,Mug;Coffee cup,Mug,0.72462,True
+034a2c715925c555,0.65055,Mug;Coffee cup,Mug,0.90215,True
+047769588be1aea9,0.84399,Mug;Coffee cup,Mug,0.51371,False
+04dae861dd161a15,0.66234,Mug;Coffee cup,Coffee cup,0.77625,True
+0581c686c74b81f1,0.61632,Mug;Coffee cup,Coffee cup,0.56652,False
+05942b9c335c17e5,0.87515,Mug;Coffee cup,Mug,0.86789,True
+05942b9c335c17e5,0.7013,Mug;Coffee cup,Mug,0.67019,False
+05942b9c335c17e5,0.62932,Mug;Coffee cup,Coffee cup,0.63488,False
+05e11491eba224fd,0.69663,Mug;Coffee cup,Mug,0.83348,True
+05e11491eba224fd,0.57537,Mug;Coffee cup,Mug,0.90003,True
+06196898fd94906e,0.77401,Mug;Coffee cup,Coffee cup,0.85767,True
+0776313a09e3ab15,0.61085,Mug;Coffee cup,Mug,0.78646,True
+08b491cca0f29b41,0.81951,Mug;Coffee cup,Coffee cup,0.73944,True
+08b491cca0f29b41,0.81492,Mug;Coffee cup,Coffee cup,0.71815,True
+08c3c397a24c4c90,0.82365,Mug;Coffee cup,Mug,0.82685,True
+09656d2fab924e6c,0.84718,Mug;Coffee cup,Coffee cup,0.54429,False
+09656d2fab924e6c,0.81104,Mug;Coffee cup,Mug,0.72546,True
+09656d2fab924e6c,0.78503,Mug;Coffee cup,Mug,0.97145,True
+098d6c98f6627791,0.87314,Mug;Coffee cup,Coffee cup,0.58705,False
+09b8d071eb805afd,0.67915,Mug;Coffee cup,Mug,0.71196,True
+0abe205a38a38be1,0.68695,Mug;Coffee cup,Mug,0.89494,True
+0ae998226acc6875,0.60751,Mug;Coffee cup,Mug,0.57059,False
+0b6a3c85ed7bc786,0.57845,Mug;Coffee cup,Coffee cup,0.66255,False
+0bb7e224751519e3,0.95565,Mug;Coffee cup,Coffee cup,0.99054,True
+0c31a33f00d3a106,0.93043,Mug;Coffee cup,Coffee cup,0.73777,True
+0c4f417974b96213,0.85889,Mug;Coffee cup,Mug,0.8163,True
+0d1f879c74c1c495,0.75347,Mug;Coffee cup,Mug,0.57648,False
+0d82a587df2dfa8e,0.85003,Mug;Coffee cup,Mug,0.86383,True
+0d9e5a92dd61224c,0.85699,Mug;Coffee cup,Coffee cup,0.78873,True
+0d9e5a92dd61224c,0.70298,Mug;Coffee cup,Mug,0.64409,False
+0d9e5a92dd61224c,0.69339,Mug;Coffee cup,Mug,0.82399,True
+0da80a2aeaddea80,0.592,Mug;Coffee cup,Mug,0.81234,True
+0e4199e6b02e3a98,0.63088,Mug;Coffee cup,Coffee cup,0.95739,True
+0e4bf084d6b8b360,0.81198,Mug;Coffee cup,Coffee cup,0.9803,True
+0e4bf084d6b8b360,0.80049,Mug;Coffee cup,Coffee cup,0.97254,True
+0eed3e6425cde86f,0.84074,Mug;Coffee cup,Coffee cup,0.94882,True
+100f164cb0e4154c,0.86551,Mug;Coffee cup,Mug,0.82498,True
+1084e428986874d6,0.81706,Mug;Coffee cup,Mug,0.70363,True
+10cc15039b0c82f6,0.70279,Mug;Coffee cup,Mug,0.94291,True
+113b47aed92fa29c,0.85072,Mug;Coffee cup,Mug,0.97352,True
+11ab051731f2f3a9,0.78694,Mug;Coffee cup,Mug,0.80439,True
+11abc2d073513d47,0.94224,Mug;Coffee cup,Coffee cup,0.81878,True
+124ddb7395ccae0e,0.78937,Mug;Coffee cup,Mug,0.93545,True
+12a46e69b36252cb,0.80995,Mug;Coffee cup,Mug,0.80859,True
+13a3d013a39edeaa,0.76179,Mug;Coffee cup,Mug,0.66901,False
+13bf5d9d30eeac90,0.61904,Mug;Coffee cup,Mug,0.64463,False
+1430514fd8937cd0,0.60693,Mug;Coffee cup,Mug,0.51277,False
+154434b332957384,0.66962,Mug;Coffee cup,Coffee cup,0.92589,True
+154535e8d12d1113,0.71423,Mug;Coffee cup,Mug,0.87115,True
+154535e8d12d1113,0.57586,Mug;Coffee cup,Mug,0.79519,True
+156f80777ab24fe1,0.7021,Mug;Coffee cup,Mug,0.58391,False
+15a6bf8dd1fd6e15,0.70665,Mug;Coffee cup,Mug,0.60611,False
+15a6bf8dd1fd6e15,0.58115,Mug;Coffee cup,Mug,0.90282,True
+17bca84b16f23bb1,0.5848,Mug;Coffee cup,Mug,0.73426,True
+17c2d1df4b81e090,0.72385,Mug;Coffee cup,Mug,0.6787,False
+17cdb667349ba8af,0.67741,Mug;Coffee cup,Mug,0.95943,True
+17df8bb3a7a978f9,0.78753,Mug;Coffee cup,Mug,0.88619,True
+1886cf6632c9101c,0.87077,Mug;Coffee cup,Mug,0.91986,True
+1890345cd898ecd3,0.88754,Mug;Coffee cup,Coffee cup,0.99421,True
+18aa1f9133d584e7,0.5858,Mug;Coffee cup,Mug,0.55704,False
+19486d94aeb1e490,0.86799,Mug;Coffee cup,Mug,0.6302,False
+19543b2f97dbdf97,0.91351,Mug;Coffee cup,Mug,0.9383,True
+19543b2f97dbdf97,0.86031,Mug;Coffee cup,Mug,0.90011,True
+19c11c91ff324384,0.76603,Mug;Coffee cup,Mug,0.79995,True
+1a637146c29f33cc,0.90242,Mug;Coffee cup,Mug,0.98176,True
+1a788f0e96edd7e6,0.66851,Mug;Coffee cup,Coffee cup,0.89531,True
+1b3b383781c95599,0.80089,Mug;Coffee cup,Mug,0.60623,False
+1b59a17315567e96,0.60795,Mug;Coffee cup,Mug,0.96904,True
+1b5e99aab58e2dbd,0.58098,Mug;Coffee cup,Mug,0.76155,True
+1b5ee4ddb2ee5424,0.73102,Mug;Coffee cup,Mug,0.84147,True
+1c20ed9878fc805d,0.90859,Mug;Coffee cup,Mug,0.96758,True
+1c20ed9878fc805d,0.84838,Mug;Coffee cup,Mug,0.91803,True
+1c51db56cd2587ec,0.68456,Mug;Coffee cup,Mug,0.6675,False
+1cfc85d78f2506df,0.713,Mug;Coffee cup,Mug,0.87094,True
+1d5243ef65ac4927,0.85439,Mug;Coffee cup,Coffee cup,0.89487,True
+1dc757665f8d3be1,0.7592,Mug;Coffee cup,Mug,0.83767,True
+1e01cafe9eef821d,0.85033,Mug;Coffee cup,Mug,0.51901,False
+1e01cafe9eef821d,0.84237,Mug;Coffee cup,Mug,0.53475,False
+1e01cafe9eef821d,0.73677,Mug;Coffee cup,Mug,0.92519,True
+1e5f16b2689579d4,0.61021,Mug;Coffee cup,Mug,0.73073,True
+1ec424cb90cdddbb,0.91588,Mug;Coffee cup,Coffee cup,0.97784,True
+1fa53a4ea9fde8b7,0.7572,Mug;Coffee cup,Mug,0.61528,False
+20186cb62310ed71,0.75152,Mug;Coffee cup,Coffee cup,0.7187,True
+202de647bbe0e1f2,0.5984,Mug;Coffee cup,Coffee cup,0.626,False
+21a3f2147fb5f027,0.79223,Mug;Coffee cup,Mug,0.59809,False
+230364f759e4686e,0.87832,Mug;Coffee cup,Coffee cup,0.67681,False
+230364f759e4686e,0.75222,Mug;Coffee cup,Mug,0.81421,True
+23267ef712b4815f,0.88774,Mug;Coffee cup,Coffee cup,0.84103,True
+233409fe9f8bbf76,0.72366,Mug;Coffee cup,Mug,0.65587,False
+248f443b0994419a,0.7645,Mug;Coffee cup,Mug,0.64133,False
+248f443b0994419a,0.69043,Mug;Coffee cup,Mug,0.70444,True
+248f443b0994419a,0.61579,Mug;Coffee cup,Mug,0.70565,True
+248f443b0994419a,0.57249,Mug;Coffee cup,Coffee cup,0.51268,False
+266184acd6d0c59b,0.64608,Mug;Coffee cup,Mug,0.50447,False
+26c9137a5afa4b95,0.76626,Mug;Coffee cup,Mug,0.60213,False
+274a7f921f606910,0.76513,Mug;Coffee cup,Mug,0.64301,False
+27b18be88e1ef2f6,0.70275,Mug;Coffee cup,Mug,0.71139,True
+284901d8278643fa,0.75682,Mug;Coffee cup,Mug,0.81121,True
+286268dcc72a9616,0.79617,Mug;Coffee cup,Coffee cup,0.70854,True
+28c0f5ceef31db17,0.62851,Mug;Coffee cup,Mug,0.77156,True
+28de2c7d15d4a90b,0.90087,Mug;Coffee cup,Coffee cup,0.50421,False
+28de2c7d15d4a90b,0.66111,Mug;Coffee cup,Mug,0.52382,False
+2988c3a55df5363d,0.80798,Mug;Coffee cup,Mug,0.69683,False
+29b0be54f439667d,0.78722,Mug;Coffee cup,Coffee cup,0.90686,True
+29b0be54f439667d,0.76269,Mug;Coffee cup,Mug,0.60412,False
+29b0be54f439667d,0.74983,Mug;Coffee cup,Coffee cup,0.71056,True
+29b0be54f439667d,0.72815,Mug;Coffee cup,Mug,0.59762,False
+2ada8c5a68fc9e57,0.79393,Mug;Coffee cup,Coffee cup,0.51234,False
+2ada8c5a68fc9e57,0.74807,Mug;Coffee cup,Coffee cup,0.90707,True
+2d38f38f8a0d9ef0,0.83038,Mug;Coffee cup,Mug,0.90308,True
+2d38f38f8a0d9ef0,0.66492,Mug;Coffee cup,Mug,0.67707,False
+2eab851887960022,0.88836,Mug;Coffee cup,Mug,0.68181,False
+2eab851887960022,0.88831,Mug;Coffee cup,Mug,0.72902,True
+2eab851887960022,0.68156,Mug;Coffee cup,Coffee cup,0.73612,True
+2edf5873b15d7bc3,0.85076,Mug;Coffee cup,Mug,0.90715,True
+2edf5873b15d7bc3,0.56915,Mug;Coffee cup,Coffee cup,0.56897,False
+2f301a314741856d,0.66058,Mug;Coffee cup,Coffee cup,0.86852,True
+30408205fa27ab5e,0.86633,Mug;Coffee cup,Mug,0.87168,True
+30408205fa27ab5e,0.86335,Mug;Coffee cup,Mug,0.8659,True
+30408205fa27ab5e,0.73754,Mug;Coffee cup,Mug,0.60617,False
+30408205fa27ab5e,0.68871,Mug;Coffee cup,Mug,0.83795,True
+30408205fa27ab5e,0.68259,Mug;Coffee cup,Coffee cup,0.78236,True
+30408205fa27ab5e,0.66375,Mug;Coffee cup,Mug,0.76253,True
+30fabf1323daf475,0.70994,Mug;Coffee cup,Mug,0.58877,False
+31988881d4dc2975,0.85006,Mug;Coffee cup,Mug,0.57966,False
+31988881d4dc2975,0.65537,Mug;Coffee cup,Coffee cup,0.63318,False
+31da90896151a923,0.7587,Mug;Coffee cup,Mug,0.89279,True
+31da90896151a923,0.70688,Mug;Coffee cup,Mug,0.67552,False
+322c434aca1c44de,0.58718,Mug;Coffee cup,Mug,0.62803,False
+3234670f4ba0f301,0.89917,Mug;Coffee cup,Coffee cup,0.96299,True
+3234670f4ba0f301,0.72921,Mug;Coffee cup,Mug,0.73842,True
+3241fdad575a2398,0.89349,Mug;Coffee cup,Mug,0.8679,True
+326024db81fe0449,0.71961,Mug;Coffee cup,Mug,0.98151,True
+326024db81fe0449,0.66232,Mug;Coffee cup,Mug,0.83718,True
+326024db81fe0449,0.61284,Mug;Coffee cup,Mug,0.94062,True
+32c7e475e51ccab5,0.77058,Mug;Coffee cup,Mug,0.8139,True
+32fbb6a77192dafb,0.77461,Mug;Coffee cup,Coffee cup,0.58835,False
+32fbb6a77192dafb,0.70469,Mug;Coffee cup,Coffee cup,0.95135,True
+32fbb6a77192dafb,0.58346,Mug;Coffee cup,Mug,0.58489,False
+330d72c544df3759,0.70823,Mug;Coffee cup,Mug,0.67841,False
+33158dbee82687df,0.6777,Mug;Coffee cup,Mug,0.81853,True
+337d5c8f755ef815,0.77869,Mug;Coffee cup,Coffee cup,0.72646,True
+33e7c6c8d6ede088,0.72233,Mug;Coffee cup,Mug,0.9292,True
+342734040f1235b1,0.89698,Mug;Coffee cup,Mug,0.90461,True
+350550cee4f60b0b,0.75428,Mug;Coffee cup,Mug,0.84888,True
+355ee1ebee55e86e,0.69771,Mug;Coffee cup,Mug,0.77769,True
+35edcc350d24b9d8,0.88275,Mug;Coffee cup,Coffee cup,0.84574,True
+39b905539844da11,0.85817,Mug;Coffee cup,Mug,0.95372,True
+39b905539844da11,0.69797,Mug;Coffee cup,Mug,0.75835,True
+39b905539844da11,0.66765,Mug;Coffee cup,Mug,0.77453,True
+39b905539844da11,0.64622,Mug;Coffee cup,Mug,0.63252,False
+39b905539844da11,0.61859,Mug;Coffee cup,Mug,0.67767,False
+39e63f009c2c7233,0.82213,Mug;Coffee cup,Coffee cup,0.87459,True
+39e63f009c2c7233,0.69161,Mug;Coffee cup,Coffee cup,0.57155,False
+39e63f009c2c7233,0.66238,Mug;Coffee cup,Coffee cup,0.84034,True
+39e63f009c2c7233,0.60446,Mug;Coffee cup,Coffee cup,0.87098,True
+3a4c5bb0113093be,0.74667,Mug;Coffee cup,Coffee cup,0.59598,False
+3a4c5bb0113093be,0.57567,Mug;Coffee cup,Mug,0.74885,True
+3a85d9cbb0a8c022,0.733,Mug;Coffee cup,Mug,0.87581,True
+3abe314d4563a880,0.83175,Mug;Coffee cup,Coffee cup,0.98324,True
+3b23522727d9a0a3,0.82201,Mug;Coffee cup,Coffee cup,0.85428,True
+3bd5f4f570c45a6d,0.81107,Mug;Coffee cup,Mug,0.59971,False
+3c3258c257539985,0.8395,Mug;Coffee cup,Coffee cup,0.50011,False
+3c57f2c760548bba,0.74569,Mug;Coffee cup,Mug,0.53708,False
+3c57f2c760548bba,0.67089,Mug;Coffee cup,Coffee cup,0.83717,True
+3c57f2c760548bba,0.58564,Mug;Coffee cup,Mug,0.60066,False
+3cf49941dff4140c,0.74194,Mug;Coffee cup,Mug,0.75692,True
+3d116baf8ce4f398,0.60306,Mug;Coffee cup,Mug,0.87957,True
+3f9c7ea91058ea1f,0.66507,Mug;Coffee cup,Mug,0.68085,False
+3f9c7ea91058ea1f,0.59596,Mug;Coffee cup,Coffee cup,0.68066,False
+404d92e51549f991,0.80962,Mug;Coffee cup,Coffee cup,0.87618,True
+4176bcdb4649cb1a,0.67398,Mug;Coffee cup,Mug,0.62342,False
+4192f6289a0d8528,0.87204,Mug;Coffee cup,Mug,0.95736,True
+420c9819ec8c8e45,0.77704,Mug;Coffee cup,Coffee cup,0.57619,False
+420c9819ec8c8e45,0.7616,Mug;Coffee cup,Mug,0.68371,False
+432da73b3e096af8,0.88891,Mug;Coffee cup,Coffee cup,0.64988,False
+432da73b3e096af8,0.81314,Mug;Coffee cup,Coffee cup,0.50545,False
+446ac18a6a266276,0.79977,Mug;Coffee cup,Mug,0.71439,True
+44eba81f97a08f8b,0.61444,Mug;Coffee cup,Mug,0.94247,True
+471e9bc0af6eeaa9,0.7847,Mug;Coffee cup,Mug,0.95938,True
+480dd586656430fe,0.73966,Mug;Coffee cup,Coffee cup,0.92745,True
+480dd586656430fe,0.67739,Mug;Coffee cup,Mug,0.82793,True
+480dd586656430fe,0.56694,Mug;Coffee cup,Mug,0.79821,True
+48e82c983786200f,0.89317,Mug;Coffee cup,Mug,0.63261,False
+491961ab9ba37e67,0.64019,Mug;Coffee cup,Mug,0.53693,False
+493f30f7771817b1,0.81296,Mug;Coffee cup,Mug,0.92707,True
+493f30f7771817b1,0.69746,Mug;Coffee cup,Mug,0.86563,True
+493f30f7771817b1,0.69452,Mug;Coffee cup,Mug,0.57814,False
+49eb5054ec4c6dcc,0.78929,Mug;Coffee cup,Coffee cup,0.68572,False
+4a125d4ab7bb8d4b,0.67446,Mug;Coffee cup,Mug,0.74502,True
+4a125d4ab7bb8d4b,0.62922,Mug;Coffee cup,Mug,0.98695,True
+4a125d4ab7bb8d4b,0.57,Mug;Coffee cup,Mug,0.96354,True
+4a31482f35a288bd,0.81031,Mug;Coffee cup,Coffee cup,0.93873,True
+4a673e9e63fe1fff,0.69831,Mug;Coffee cup,Mug,0.77149,True
+4bc935db3aff15ed,0.67556,Mug;Coffee cup,Mug,0.71942,True
+4bc935db3aff15ed,0.58532,Mug;Coffee cup,Mug,0.88273,True
+4c26a06bcbb23a54,0.60678,Mug;Coffee cup,Mug,0.8314,True
+4de55e6c7c2fb5a0,0.7895,Mug;Coffee cup,Mug,0.92884,True
+4e2757dba645e154,0.81903,Mug;Coffee cup,Mug,0.92751,True
+4e2757dba645e154,0.59867,Mug;Coffee cup,Coffee cup,0.67525,False
+4edb37ea036cfeb5,0.87578,Mug;Coffee cup,Mug,0.83897,True
+4f35d26b68a16e12,0.60145,Mug;Coffee cup,Mug,0.84388,True
+4f43c4eb82d4ad3b,0.62512,Mug;Coffee cup,Mug,0.84994,True
+4f8d226c4d6047de,0.61819,Mug;Coffee cup,Mug,0.58181,False
+4faa7e9a9e9f773e,0.83718,Mug;Coffee cup,Coffee cup,0.87982,True
+4faa7e9a9e9f773e,0.79487,Mug;Coffee cup,Mug,0.87312,True
+508b7028ac2803fd,0.57257,Mug;Coffee cup,Mug,0.8487,True
+50fa1a94ecf65104,0.83997,Mug;Coffee cup,Mug,0.5697,False
+526a7212a5c9fc40,0.82899,Mug;Coffee cup,Mug,0.52548,False
+530901a43be7f7ba,0.88755,Mug;Coffee cup,Mug,0.86724,True
+530901a43be7f7ba,0.84755,Mug;Coffee cup,Mug,0.85195,True
+53a58ce859b6cce0,0.68797,Mug;Coffee cup,Mug,0.80136,True
+54a7c48f245ee15c,0.91988,Mug;Coffee cup,Coffee cup,0.56402,False
+55e8b0474bf9acb6,0.79935,Mug;Coffee cup,Mug,0.95848,True
+55e8b0474bf9acb6,0.75782,Mug;Coffee cup,Mug,0.85298,True
+55e8b0474bf9acb6,0.66007,Mug;Coffee cup,Mug,0.57725,False
+55e8b0474bf9acb6,0.57826,Mug;Coffee cup,Coffee cup,0.82837,True
+5607391b20e6fa79,0.64268,Mug;Coffee cup,Mug,0.82799,True
+56beb167fe448d68,0.67208,Mug;Coffee cup,Mug,0.98909,True
+575bfb326862bfe0,0.85256,Mug;Coffee cup,Mug,0.72263,True
+57ad561f578beecb,0.84553,Mug;Coffee cup,Mug,0.89887,True
+57ad561f578beecb,0.65775,Mug;Coffee cup,Mug,0.84637,True
+57ad561f578beecb,0.60971,Mug;Coffee cup,Mug,0.75577,True
+5851108c43a68103,0.59502,Mug;Coffee cup,Mug,0.96277,True
+58fe74d211c1ee36,0.61626,Mug;Coffee cup,Mug,0.90789,True
+5a8d382fd9555961,0.67681,Mug;Coffee cup,Mug,0.95269,True
+5b203aa05f21c786,0.82677,Mug;Coffee cup,Mug,0.86646,True
+5b203aa05f21c786,0.69577,Mug;Coffee cup,Coffee cup,0.51878,False
+5b79866c25003b4f,0.66363,Mug;Coffee cup,Coffee cup,0.81311,True
+5b79866c25003b4f,0.64923,Mug;Coffee cup,Coffee cup,0.94289,True
+5be9cfe12344174f,0.75229,Mug;Coffee cup,Coffee cup,0.538,False
+5be9cfe12344174f,0.59933,Mug;Coffee cup,Coffee cup,0.57313,False
+5c1a33d03c386c8c,0.75387,Mug;Coffee cup,Mug,0.96245,True
+5c1a33d03c386c8c,0.63056,Mug;Coffee cup,Mug,0.79916,True
+5c5bdd0c41681e9c,0.87982,Mug;Coffee cup,Coffee cup,0.97217,True
+5c5bdd0c41681e9c,0.84279,Mug;Coffee cup,Coffee cup,0.81586,True
+5c5bdd0c41681e9c,0.59441,Mug;Coffee cup,Coffee cup,0.89059,True
+5d51c84d12f8dd73,0.76434,Mug;Coffee cup,Mug,0.80553,True
+600e869fb5799eca,0.83815,Mug;Coffee cup,Coffee cup,0.62873,False
+600e869fb5799eca,0.83528,Mug;Coffee cup,Coffee cup,0.94095,True
+600e869fb5799eca,0.76027,Mug;Coffee cup,Coffee cup,0.81514,True
+600e869fb5799eca,0.69937,Mug;Coffee cup,Coffee cup,0.83111,True
+600e869fb5799eca,0.6417,Mug;Coffee cup,Coffee cup,0.74338,True
+601562cef1c19bbf,0.66115,Mug;Coffee cup,Coffee cup,0.72397,True
+61098194cda7ac32,0.67732,Mug;Coffee cup,Mug,0.64523,False
+61cc763b366ac148,0.75339,Mug;Coffee cup,Mug,0.64441,False
+6246e37b5cd5f891,0.67206,Mug;Coffee cup,Mug,0.76543,True
+63bec879b78ca166,0.67732,Mug;Coffee cup,Mug,0.93597,True
+65218dec66bb5e5b,0.62597,Mug;Coffee cup,Coffee cup,0.53834,False
+664f20cf266bcf47,0.66045,Mug;Coffee cup,Mug,0.8924,True
+66bdfd0cebf44ad4,0.67007,Mug;Coffee cup,Mug,0.96996,True
+66bdfd0cebf44ad4,0.6672,Mug;Coffee cup,Mug,0.77113,True
+6a57bb1dddf5471f,0.79347,Mug;Coffee cup,Mug,0.836,True
+6aa0882d975c4789,0.69331,Mug;Coffee cup,Mug,0.76185,True
+6aa0882d975c4789,0.58197,Mug;Coffee cup,Mug,0.59516,False
+6ca2fd5432e30449,0.90229,Mug;Coffee cup,Mug,0.92896,True
+6cf0b667725051ab,0.88612,Mug;Coffee cup,Mug,0.95046,True
+6cf0b667725051ab,0.86133,Mug;Coffee cup,Mug,0.96156,True
+6d0c96591ce37341,0.6477,Mug;Coffee cup,Coffee cup,0.52612,False
+6db554bb80ee8c00,0.78736,Mug;Coffee cup,Mug,0.88279,True
+6dd790ff5bd37f4a,0.66724,Mug;Coffee cup,Mug,0.89809,True
+6ea47cbd506340b2,0.897,Mug;Coffee cup,Mug,0.88342,True
+6ea47cbd506340b2,0.65681,Mug;Coffee cup,Mug,0.77952,True
+702525c20821c5ad,0.75465,Mug;Coffee cup,Coffee cup,0.87862,True
+713109168a1afbce,0.85945,Mug;Coffee cup,Mug,0.92056,True
+72690d10394c2f85,0.69212,Mug;Coffee cup,Mug,0.53943,False
+7390ad73ab2456e8,0.85023,Mug;Coffee cup,Mug,0.8002,True
+74dd41fda0884fc9,0.75521,Mug;Coffee cup,Mug,0.81316,True
+771d3cc2489975b6,0.69068,Mug;Coffee cup,Mug,0.89296,True
+78037d3ac0023a0c,0.73563,Mug;Coffee cup,Mug,0.99769,True
+78037d3ac0023a0c,0.71172,Mug;Coffee cup,Mug,0.91217,True
+78037d3ac0023a0c,0.57417,Mug;Coffee cup,Mug,0.91545,True
+7954310d37170d3b,0.68517,Mug;Coffee cup,Mug,0.76567,True
+7999cd5b48dec9d6,0.61245,Mug;Coffee cup,Coffee cup,0.81403,True
+7a306a2d9c42c78f,0.79244,Mug;Coffee cup,Mug,0.78243,True
+7a306a2d9c42c78f,0.63448,Mug;Coffee cup,Mug,0.76741,True
+7a7a7b5863c329a6,0.57002,Mug;Coffee cup,Coffee cup,0.77117,True
+7bb82152deba4bfc,0.66313,Mug;Coffee cup,Mug,0.82684,True
+7bd6397dd2476839,0.65923,Mug;Coffee cup,Mug,0.91434,True
+7cb3e4cc2dabc2a6,0.60775,Mug;Coffee cup,Mug,0.50029,False
+7d275b2c8687df36,0.88535,Mug;Coffee cup,Coffee cup,0.6596,False
+7d88344d275bbaff,0.82511,Mug;Coffee cup,Mug,0.96683,True
+7d88344d275bbaff,0.72188,Mug;Coffee cup,Mug,0.62157,False
+7d88344d275bbaff,0.6132,Mug;Coffee cup,Mug,0.87084,True
+7ec75a8b251bf032,0.64233,Mug;Coffee cup,Mug,0.94926,True
+7ffe7745336cce9d,0.57664,Mug;Coffee cup,Coffee cup,0.76516,True
+80df803c986d509a,0.79324,Mug;Coffee cup,Coffee cup,0.53566,False
+8180e15d5a0ae10c,0.93972,Mug;Coffee cup,Mug,0.90833,True
+81ea97240025d53e,0.80623,Mug;Coffee cup,Mug,0.87638,True
+82312933f9bcc3fb,0.59718,Mug;Coffee cup,Mug,0.76744,True
+82389401d18e001e,0.62922,Mug;Coffee cup,Mug,0.87893,True
+8279cb121e901896,0.77131,Mug;Coffee cup,Mug,0.96111,True
+8324c3fffc90496c,0.8461,Mug;Coffee cup,Mug,0.6009,False
+83257ad69333e6d2,0.60225,Mug;Coffee cup,Coffee cup,0.60547,False
+837cff46bba671ac,0.79392,Mug;Coffee cup,Mug,0.99327,True
+837cff46bba671ac,0.72948,Mug;Coffee cup,Mug,0.85917,True
+85e947cb499f9c21,0.81344,Mug;Coffee cup,Mug,0.50355,False
+86499ab68bac711c,0.67713,Mug;Coffee cup,Mug,0.50953,False
+86be2de15ddc5b83,0.59066,Mug;Coffee cup,Mug,0.84556,True
+8c00eeb0c6219aae,0.67787,Mug;Coffee cup,Mug,0.98955,True
+8d8d021216a87f04,0.63313,Mug;Coffee cup,Mug,0.92045,True
+8d975288abb40057,0.82073,Mug;Coffee cup,Coffee cup,0.60465,False
+8dc76b9ae9a1b195,0.67413,Mug;Coffee cup,Mug,0.87006,True
+8ea524c29875d525,0.65628,Mug;Coffee cup,Mug,0.71877,True
+8f0299346680d99f,0.71246,Mug;Coffee cup,Coffee cup,0.79074,True
+8fde7fe4cdd2adcc,0.69132,Mug;Coffee cup,Coffee cup,0.54074,False
+91013694fd334886,0.843,Mug;Coffee cup,Mug,0.9908,True
+91013694fd334886,0.82222,Mug;Coffee cup,Mug,0.96794,True
+91013694fd334886,0.56713,Mug;Coffee cup,Mug,0.92167,True
+93ea481d4190615e,0.92855,Mug;Coffee cup,Mug,0.91987,True
+93ea481d4190615e,0.64238,Mug;Coffee cup,Mug,0.9369,True
+948c1401aa551f14,0.87516,Mug;Coffee cup,Mug,0.6851,False
+94d6c45a5bbbbbd8,0.57608,Mug;Coffee cup,Mug,0.81777,True
+959467f12145559a,0.65078,Mug;Coffee cup,Coffee cup,0.83035,True
+97446cc2d89d0b30,0.73266,Mug;Coffee cup,Mug,0.92689,True
+97446cc2d89d0b30,0.67832,Mug;Coffee cup,Mug,0.90707,True
+97446cc2d89d0b30,0.61379,Mug;Coffee cup,Mug,0.84395,True
+9794fec31ad0b576,0.84957,Mug;Coffee cup,Mug,0.99574,True
+9943646e82478587,0.8019,Mug;Coffee cup,Mug,0.96502,True
+9a0b067b789d3b4f,0.87823,Mug;Coffee cup,Mug,0.86971,True
+9a0db710edbe9a8e,0.75174,Mug;Coffee cup,Mug,0.74321,True
+9a0db710edbe9a8e,0.69121,Mug;Coffee cup,Mug,0.62327,False
+9a44d123eb496c20,0.87064,Mug;Coffee cup,Coffee cup,0.75955,True
+9a44d123eb496c20,0.84265,Mug;Coffee cup,Mug,0.75123,True
+9a44d123eb496c20,0.62404,Mug;Coffee cup,Mug,0.65315,False
+9a44d123eb496c20,0.58476,Mug;Coffee cup,Mug,0.73835,True
+9cbac816f32e50b8,0.80399,Mug;Coffee cup,Coffee cup,0.78706,True
+9cbac816f32e50b8,0.78803,Mug;Coffee cup,Mug,0.56055,False
+9cff285129015506,0.90492,Mug;Coffee cup,Coffee cup,0.58548,False
+9d54be2fdb74e4ae,0.74643,Mug;Coffee cup,Mug,0.54131,False
+9d54be2fdb74e4ae,0.59215,Mug;Coffee cup,Mug,0.72375,True
+9e12415cb685eaca,0.79122,Mug;Coffee cup,Mug,0.96781,True
+9e2ccd2477383455,0.60509,Mug;Coffee cup,Mug,0.92538,True
+9ff7120cd0d9bb89,0.82293,Mug;Coffee cup,Mug,0.88733,True
+a1ec31ac61cac8c1,0.68157,Mug;Coffee cup,Mug,0.65498,False
+a28b96282c198433,0.57117,Mug;Coffee cup,Coffee cup,0.93368,True
+a2eef827eea32085,0.83355,Mug;Coffee cup,Mug,0.81729,True
+a4b037cca4145c9e,0.72949,Mug;Coffee cup,Mug,0.56311,False
+a51a7c9f6c1fcc67,0.76078,Mug;Coffee cup,Mug,0.81972,True
+a589d451fc9bcfb6,0.79706,Mug;Coffee cup,Mug,0.7877,True
+a66e2049fa04a957,0.84164,Mug;Coffee cup,Mug,0.8931,True
+a8a4fc69a2ca05fb,0.65745,Mug;Coffee cup,Mug,0.7604,True
+a8c7a4862b83c5a9,0.90198,Mug;Coffee cup,Mug,0.77832,True
+a93b254c84a65c5a,0.81664,Mug;Coffee cup,Mug,0.90091,True
+a96556aa2604a8ae,0.74167,Mug;Coffee cup,Mug,0.90912,True
+a9c2977560557578,0.8537,Mug;Coffee cup,Mug,0.82333,True
+a9c2977560557578,0.82707,Mug;Coffee cup,Mug,0.83091,True
+ac83612982d6999b,0.7907,Mug;Coffee cup,Coffee cup,0.57781,False
+ae4ef071be2ed7d8,0.59242,Mug;Coffee cup,Mug,0.75941,True
+ae6badc5a3947ab3,0.65567,Mug;Coffee cup,Coffee cup,0.73304,True
+ae6badc5a3947ab3,0.5947,Mug;Coffee cup,Coffee cup,0.51561,False
+aebeabbed504796a,0.82055,Mug;Coffee cup,Mug,0.76712,True
+aebec8af8387f4c2,0.91205,Mug;Coffee cup,Mug,0.80716,True
+aecaac50869c721e,0.68275,Mug;Coffee cup,Mug,0.88103,True
+aecaac50869c721e,0.58743,Mug;Coffee cup,Coffee cup,0.5416,False
+aecaac50869c721e,0.5686,Mug;Coffee cup,Mug,0.59178,False
+aecaac50869c721e,0.56707,Mug;Coffee cup,Mug,0.96599,True
+aee4ddcacb2293e0,0.87566,Mug;Coffee cup,Mug,0.63901,False
+aefbb698439f40c7,0.64461,Mug;Coffee cup,Mug,0.80919,True
+af6e46cd4549508b,0.86155,Mug;Coffee cup,Mug,0.92921,True
+b03fbec0c1aea33f,0.83467,Mug;Coffee cup,Coffee cup,0.89366,True
+b03fbec0c1aea33f,0.76581,Mug;Coffee cup,Coffee cup,0.92271,True
+b03fbec0c1aea33f,0.72279,Mug;Coffee cup,Coffee cup,0.80486,True
+b0702577de9f1041,0.84167,Mug;Coffee cup,Mug,0.6373,False
+b115f7bb40e6e1ef,0.76424,Mug;Coffee cup,Mug,0.72587,True
+b144b9a282d2bd1c,0.67049,Mug;Coffee cup,Mug,0.74071,True
+b1a5bd7857157fde,0.83305,Mug;Coffee cup,Mug,0.97598,True
+b1c92b135ad8d1a4,0.77852,Mug;Coffee cup,Coffee cup,0.95909,True
+b1e2eefafed63d15,0.89437,Mug;Coffee cup,Mug,0.95781,True
+b2de9e6b3c7a791f,0.78538,Mug;Coffee cup,Mug,0.68413,False
+b2de9e6b3c7a791f,0.71108,Mug;Coffee cup,Mug,0.86751,True
+b2fa23538f89f187,0.83227,Mug;Coffee cup,Coffee cup,0.68366,False
+b2fa23538f89f187,0.81159,Mug;Coffee cup,Coffee cup,0.50394,False
+b3c4043478b26864,0.81841,Mug;Coffee cup,Mug,0.77026,True
+b45e62abfe81228a,0.90444,Mug;Coffee cup,Mug,0.77611,True
+b45e62abfe81228a,0.57728,Mug;Coffee cup,Mug,0.92028,True
+b529a98e0424ede5,0.74295,Mug;Coffee cup,Mug,0.73398,True
+b54d41beabcfd900,0.78454,Mug;Coffee cup,Coffee cup,0.75038,True
+b54d41beabcfd900,0.66763,Mug;Coffee cup,Mug,0.6092,False
+b5f9ce43c599666a,0.67664,Mug;Coffee cup,Mug,0.80737,True
+b659d4e9d4c86828,0.72926,Mug;Coffee cup,Mug,0.65276,False
+b65ed728453621d5,0.76755,Mug;Coffee cup,Mug,0.85013,True
+b65ed728453621d5,0.70412,Mug;Coffee cup,Mug,0.83842,True
+b6717aa3a8960b8d,0.63312,Mug;Coffee cup,Mug,0.60579,False
+b752e66756ed48b4,0.79579,Mug;Coffee cup,Mug,0.8688,True
+b834861bb19ece4d,0.58891,Mug;Coffee cup,Mug,0.83637,True
+b85127028a13e0dd,0.86589,Mug;Coffee cup,Coffee cup,0.86245,True
+b858717354798312,0.80526,Mug;Coffee cup,Mug,0.87254,True
+b8afd3f954be065c,0.8879,Mug;Coffee cup,Coffee cup,0.6097,False
+b8e2f75014710ced,0.80083,Mug;Coffee cup,Mug,0.85437,True
+b9614b53f42405b4,0.81491,Mug;Coffee cup,Coffee cup,0.82793,True
+b9614b53f42405b4,0.70067,Mug;Coffee cup,Mug,0.75907,True
+b9738e52e54c6a40,0.61606,Mug;Coffee cup,Mug,0.56988,False
+baa51e7e4a5d05ed,0.75386,Mug;Coffee cup,Mug,0.8366,True
+bb36bf5b3a517708,0.57324,Mug;Coffee cup,Coffee cup,0.60824,False
+bc4120c1f80e2977,0.88548,Mug;Coffee cup,Mug,0.88111,True
+bd21b59c1295f8fd,0.79682,Mug;Coffee cup,Mug,0.95932,True
+bd31e6c27e262121,0.59468,Mug;Coffee cup,Mug,0.71852,True
+be96c8fe949328bf,0.71347,Mug;Coffee cup,Mug,0.62243,False
+befec81703824cbe,0.83728,Mug;Coffee cup,Mug,0.94918,True
+befec81703824cbe,0.65601,Mug;Coffee cup,Mug,0.9436,True
+bff9324d72a7b84c,0.59024,Mug;Coffee cup,Coffee cup,0.98437,True
+c359b0627fa37c37,0.79366,Mug;Coffee cup,Mug,0.60163,False
+c536dc9241a345fd,0.63371,Mug;Coffee cup,Coffee cup,0.68373,False
+c55368acd0f6cc08,0.64292,Mug;Coffee cup,Mug,0.75336,True
+c5bfee8ad04772f1,0.67306,Mug;Coffee cup,Coffee cup,0.92485,True
+c5bfee8ad04772f1,0.56951,Mug;Coffee cup,Mug,0.8308,True
+c5d3ce68064235c0,0.902,Mug;Coffee cup,Mug,0.88891,True
+c628662d03721e97,0.56572,Mug;Coffee cup,Mug,0.72257,True
+c64466a457cf2695,0.63275,Mug;Coffee cup,Coffee cup,0.57843,False
+c7fc5ce8874c62d4,0.59959,Mug;Coffee cup,Mug,0.60689,False
+c8d5660558977d8a,0.84494,Mug;Coffee cup,Mug,0.52548,False
+c98bcc9c4d55ecd2,0.75056,Mug;Coffee cup,Coffee cup,0.78618,True
+ca39c7a646766fcd,0.81232,Mug;Coffee cup,Mug,0.50507,False
+ca39c7a646766fcd,0.72346,Mug;Coffee cup,Mug,0.7827,True
+cc4d9682d6906a07,0.69135,Mug;Coffee cup,Mug,0.82744,True
+cd3ed7c42aa3e413,0.72699,Mug;Coffee cup,Coffee cup,0.97198,True
+ce306d50322bde09,0.87853,Mug;Coffee cup,Mug,0.52654,False
+ce306d50322bde09,0.81313,Mug;Coffee cup,Mug,0.71398,True
+ce9ea2c1f24c13f1,0.84811,Mug;Coffee cup,Mug,0.764,True
+cff56e8884840e75,0.81709,Mug;Coffee cup,Mug,0.56284,False
+cff56e8884840e75,0.77028,Mug;Coffee cup,Coffee cup,0.88252,True
+cff56e8884840e75,0.70805,Mug;Coffee cup,Mug,0.68769,False
+cff56e8884840e75,0.68765,Mug;Coffee cup,Mug,0.98176,True
+cff56e8884840e75,0.63749,Mug;Coffee cup,Mug,0.94695,True
+cff56e8884840e75,0.62596,Mug;Coffee cup,Mug,0.5591,False
+d0086b16d0d25491,0.7763,Mug;Coffee cup,Mug,0.50355,False
+d0723e5805672f64,0.73541,Mug;Coffee cup,Mug,0.94682,True
+d128ff1537568cfb,0.67193,Mug;Coffee cup,Mug,0.59397,False
+d27232ba45eaf9ae,0.79175,Mug;Coffee cup,Coffee cup,0.83883,True
+d2b120c85b788349,0.78869,Mug;Coffee cup,Mug,0.82214,True
+d2f1be7539a37e0e,0.61005,Mug;Coffee cup,Mug,0.90042,True
+d367e96234e005c9,0.59655,Mug;Coffee cup,Mug,0.81586,True
+d40fa5f759453e6e,0.61771,Mug;Coffee cup,Mug,0.98565,True
+d4cff4562fe3b6d7,0.63257,Mug;Coffee cup,Mug,0.55805,False
+d52488cae73f3dfd,0.79202,Mug;Coffee cup,Mug,0.76461,True
+d5b0816864688a64,0.64533,Mug;Coffee cup,Mug,0.71332,True
+d5de46a4c38da9e0,0.80766,Mug;Coffee cup,Mug,0.92043,True
+d617c68e843a7747,0.91779,Mug;Coffee cup,Mug,0.78877,True
+d6f1334b77aeea25,0.84407,Mug;Coffee cup,Mug,0.59414,False
+d8670d731a2cd836,0.74059,Mug;Coffee cup,Mug,0.64481,False
+d9f9226ae20fca32,0.80885,Mug;Coffee cup,Mug,0.55119,False
+db3057bb338d9f0a,0.7296,Mug;Coffee cup,Coffee cup,0.71041,True
+db78228d15083e77,0.7424,Mug;Coffee cup,Mug,0.73851,True
+db78228d15083e77,0.68596,Mug;Coffee cup,Coffee cup,0.70382,True
+db78228d15083e77,0.58656,Mug;Coffee cup,Coffee cup,0.60164,False
+db840e85f115c9e8,0.85556,Mug;Coffee cup,Coffee cup,0.60657,False
+dc2942e2646d7588,0.71394,Mug;Coffee cup,Coffee cup,0.85742,True
+dc3c79a4a1feca4a,0.87006,Mug;Coffee cup,Mug,0.88276,True
+dc3c79a4a1feca4a,0.57749,Mug;Coffee cup,Coffee cup,0.59494,False
+df085018f7630450,0.81558,Mug;Coffee cup,Mug,0.84741,True
+dffbcefc8cfb9586,0.77785,Mug;Coffee cup,Mug,0.96218,True
+dffbcefc8cfb9586,0.58237,Mug;Coffee cup,Mug,0.94839,True
+e166307bd794c6cf,0.75812,Mug;Coffee cup,Mug,0.68704,False
+e3277cb0a10f29ba,0.68942,Mug;Coffee cup,Mug,0.89556,True
+e40b599673277e99,0.73978,Mug;Coffee cup,Mug,0.92619,True
+e64363d21acaca0a,0.7308,Mug;Coffee cup,Coffee cup,0.7769,True
+e654d4bdfdc3d0c8,0.7841,Mug;Coffee cup,Mug,0.50144,False
+e654d4bdfdc3d0c8,0.66158,Mug;Coffee cup,Mug,0.59106,False
+e6a0b33f54e19fcd,0.7527,Mug;Coffee cup,Mug,0.59917,False
+e73add94bf6f1b17,0.85088,Mug;Coffee cup,Mug,0.77821,True
+e782e4ea843986c0,0.71003,Mug;Coffee cup,Mug,0.55731,False
+e927a5c94ed1da7c,0.57854,Mug;Coffee cup,Mug,0.62868,False
+e9c1e32de63b2967,0.84175,Mug;Coffee cup,Mug,0.83425,True
+eab2e3c1d60938d7,0.76007,Mug;Coffee cup,Coffee cup,0.66274,False
+eb3419fb989f4ef8,0.67683,Mug;Coffee cup,Coffee cup,0.96809,True
+ed01f66fb35eab09,0.82536,Mug;Coffee cup,Mug,0.53657,False
+ee67a7c57f64faa2,0.8237,Mug;Coffee cup,Mug,0.58569,False
+effc8e2ad2f63da5,0.79943,Mug;Coffee cup,Mug,0.79344,True
+effc8e2ad2f63da5,0.61066,Mug;Coffee cup,Mug,0.51608,False
+f1bb080069b1d58e,0.73196,Mug;Coffee cup,Mug,0.68664,False
+f27890a21cd7e8c6,0.70022,Mug;Coffee cup,Mug,0.55442,False
+f27890a21cd7e8c6,0.67167,Mug;Coffee cup,Mug,0.87963,True
+f27890a21cd7e8c6,0.65495,Mug;Coffee cup,Mug,0.73292,True
+f2a06f95c73e53f9,0.89548,Mug;Coffee cup,Coffee cup,0.81859,True
+f2c3004853e0f73a,0.76327,Mug;Coffee cup,Mug,0.59835,False
+f2c3004853e0f73a,0.61899,Mug;Coffee cup,Coffee cup,0.71303,True
+f2c643c4495d184f,0.88253,Mug;Coffee cup,Coffee cup,0.50932,False
+f2f0f5994cda298c,0.83233,Mug;Coffee cup,Coffee cup,0.63271,False
+f4e2ce9e65e28672,0.61068,Mug;Coffee cup,Coffee cup,0.76877,True
+f5ccf5aa91c76aa8,0.59229,Mug;Coffee cup,Mug,0.93601,True
+f69dfeb0a2284302,0.85864,Mug;Coffee cup,Mug,0.71827,True
+f69dfeb0a2284302,0.81121,Mug;Coffee cup,Coffee cup,0.72312,True
+f710611fdc0e477a,0.79277,Mug;Coffee cup,Coffee cup,0.70924,True
+f8eda75c792f0e85,0.71742,Mug;Coffee cup,Coffee cup,0.65475,False
+f95097de8b716999,0.88244,Mug;Coffee cup,Coffee cup,0.65236,False
+fa96aa9e4ec6fcf1,0.66671,Mug;Coffee cup,Mug,0.76758,True
+fa96aa9e4ec6fcf1,0.62472,Mug;Coffee cup,Mug,0.72672,True
+fb6688d7e85b31cb,0.87562,Mug;Coffee cup,Coffee cup,0.64505,False
+fb6688d7e85b31cb,0.72956,Mug;Coffee cup,Mug,0.88054,True
+fc003b650efec23e,0.82457,Mug;Coffee cup,Mug,0.82251,True
+fc8cb8e958531eec,0.83801,Mug;Coffee cup,Mug,0.92751,True
+fd27a5018d1d0c51,0.69939,Mug;Coffee cup,Mug,0.87108,True
+fd3ef2214e952d92,0.77713,Mug;Coffee cup,Coffee cup,0.87524,True
+fd3ef2214e952d92,0.75099,Mug;Coffee cup,Coffee cup,0.55093,False
+fe1ee53e7a004cc2,0.85786,Mug;Coffee cup,Mug,0.77628,True
+fe1ee53e7a004cc2,0.71172,Mug;Coffee cup,Mug,0.86105,True
+feb81a55dde046c6,0.67313,Mug;Coffee cup,Mug,0.72953,True
+ff63ab48e08226e0,0.63552,Mug;Coffee cup,Mug,0.76552,True
+ff63ab48e08226e0,0.62503,Mug;Coffee cup,Coffee cup,0.58094,False

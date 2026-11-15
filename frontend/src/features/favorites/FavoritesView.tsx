@@ -1,23 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
-import { Heart, Loader2, Settings2, Bookmark, ChevronDown } from "lucide-react";
+import { ArrowLeft, Heart, Loader2, Settings2, Bookmark, ChevronDown } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { toMedia } from "@/services/media";
-import { fetchSaved, savedQueryKey, type SavedFilter } from "@/services/labels";
+import { fetchSaved } from "@/services/labels";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { useSelectionStore } from "@/hooks/useSelectionStore";
+import { useSelectionStore, toMedia, savedQueryKey, type SavedFilter } from "@tng/shared";
 import { useRangeSelection } from "@/hooks/useRangeSelection";
 import { AnimatedGridItem } from "@/components/motion/AnimatedGridItem";
 import { ImageCard } from "@/features/gallery/components/ImageCard";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { SelectionActionBar } from "@/features/gallery/components/SelectionActionBar";
-import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { GRID_DENSITY_CLASS, useGridDensity } from "@tng/shared";
 import { cn } from "@/lib/utils";
 import { LABEL_DOT } from "./labelColors";
 import { useLabels } from "./useLabels";
@@ -51,7 +50,7 @@ const FilterChip: React.FC<{
 );
 
 /**
- * /favorites — ảnh có tim HOẶC có nhãn cá nhân ("Cần chỉnh sửa", "In ảnh"…).
+ * /albums/favorites — ảnh có tim HOẶC có nhãn cá nhân ("Cần chỉnh sửa", "In ảnh"…).
  * Lọc theo chip (?filter=favorites|<labelId>), nhấn giữ / chuột phải để chọn
  * nhiều rồi gắn nhãn, bỏ tim, thêm album, chia sẻ.
  */
@@ -108,6 +107,14 @@ export const FavoritesView: React.FC = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      {/* Về Albums — Yêu thích là 1 bộ sưu tập trong Albums (giống AutoAlbumView) */}
+      <Button variant="ghost" size="sm" asChild className="-ml-2 mb-3">
+        <Link to="/albums">
+          <ArrowLeft className="size-4" />
+          {t("albums.title")}
+        </Link>
+      </Button>
+
       {/* Header */}
       <div className="mb-4 flex items-center gap-3">
         <div className="flex aspect-square size-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-500">
@@ -249,12 +256,14 @@ export const FavoritesView: React.FC = () => {
             handleDelete([currentMedia.id]);
           }}
           onAddToAlbum={() => openAddToAlbum([currentMedia.id])}
+          editable
         />
       )}
 
-      {/* Toolbar chọn ảnh — desktop (mobile dùng BottomBar) */}
+      {/* Toolbar chọn ảnh — floating pill, trong view (giống web/desktop).
+          Mobile: nổi trên thanh điều hướng BottomBar; desktop: bottom-6. */}
       {isSelecting && (
-        <div className="fixed bottom-6 left-1/2 z-50 hidden -translate-x-1/2 sm:block">
+        <div className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2 sm:bottom-6">
           <SelectionActionBar
             onShare={handleShare}
             onDownload={handleDownload}

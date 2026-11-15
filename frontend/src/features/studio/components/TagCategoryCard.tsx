@@ -1,5 +1,5 @@
+import { type TagSummary } from "@tng/shared";
 import { useTranslation } from "react-i18next";
-import type { TagSummary } from "@/services/media";
 import { cn } from "@/lib/utils";
 import { TAG_ICONS } from "../tagCatalog";
 

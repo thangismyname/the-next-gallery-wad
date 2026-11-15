@@ -34,7 +34,7 @@ export function forgetLink(linkId) {
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * @param {string} kind "file" | small | med | display | full
+ * @param {string} kind "file" | small | med | display | full | base
  * @returns {Promise<{ cacheControl: string } | null>} null = không có quyền.
  */
 export async function authorizeMediaRequest(req, mediaId, kind) {
@@ -52,9 +52,12 @@ export async function authorizeMediaRequest(req, mediaId, kind) {
 
   const session = await auth.api.getSession({ headers: req.headers }).catch(() => null);
   if (!session) return null;
-  const owner = await dbPool.query(`SELECT 1 FROM media WHERE id = $1 AND user_id = $2`, [
-    mediaId,
-    session.user.id,
-  ]);
+  // Ảnh trong thùng rác: KHÔNG trả file cho chủ ảnh qua cookie. URL có chữ ký
+  // đã cấp trước đó vẫn dùng được tới khi hết hạn (mục đích: gallery ẩn ảnh,
+  // còn card moment cũ không vỡ) — xem P2.6.
+  const owner = await dbPool.query(
+    `SELECT 1 FROM media WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL`,
+    [mediaId, session.user.id],
+  );
   return owner.rowCount > 0 ? { cacheControl: "private, max-age=3600" } : null;
 }

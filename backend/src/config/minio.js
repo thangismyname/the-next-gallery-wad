@@ -1,4 +1,5 @@
 import { Client } from "minio";
+import { logger } from "../lib/logger.js";
 
 export const minioClient = new Client({
   endPoint: process.env.MINIO_ENDPOINT || "127.0.0.1",
@@ -16,14 +17,11 @@ export async function ensureBucketExists() {
     const exists = await minioClient.bucketExists(BUCKET_NAME);
     if (!exists) {
       await minioClient.makeBucket(BUCKET_NAME);
-      console.log(`✅ Đã tạo bucket MinIO "${BUCKET_NAME}"`);
+      logger.info(`Created MinIO bucket "${BUCKET_NAME}"`);
     } else {
-      console.log(`ℹ️  Bucket MinIO "${BUCKET_NAME}" đã tồn tại`);
+      logger.info(`MinIO bucket "${BUCKET_NAME}" already exists`);
     }
   } catch (err) {
-    console.error(
-      `❌ Không thể kết nối/kiểm tra bucket MinIO "${BUCKET_NAME}":`,
-      err.message,
-    );
+    logger.error({ err }, `Cannot connect/check MinIO bucket "${BUCKET_NAME}"`);
   }
 }

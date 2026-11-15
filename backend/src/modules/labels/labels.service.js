@@ -2,7 +2,7 @@
 // với ảnh. Độc lập với media.is_favorite — trang Yêu thích hiện cả hai.
 import { dbPool } from "../../config/db.js";
 import { MEDIA_COLUMNS, MEDIA_SORT_CLAUSES, mediaThumbUrl, toMediaItem } from "../media/media.mapper.js";
-import { httpError } from "../albums/albums.access.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import { LABEL_PRESETS, MAX_LABELS, SEED_PRESETS } from "./labels.constants.js";
 
 // name NULL + preset = nhãn gợi ý chưa đổi tên → FE dịch theo ngôn ngữ.
@@ -18,7 +18,7 @@ const toLabel = (row) => ({
 
 // Lỗi trùng tên (unique index user_id + lower(name)) → 409.
 const rethrowDuplicate = (err) => {
-  if (err.code === "23505") throw httpError(409, "Nhãn đã tồn tại", "LABEL_EXISTS");
+  if (err.code === "23505") throw httpError(409, "LABEL_EXISTS", "Nhãn đã tồn tại");
   throw err;
 };
 
@@ -38,7 +38,7 @@ async function assertNotPresetName(userId, name, exceptId = null) {
         AND ($3::uuid IS NULL OR id <> $3)`,
     [userId, keys, exceptId],
   );
-  if (clash.rowCount > 0) throw httpError(409, "Nhãn đã tồn tại", "LABEL_EXISTS");
+  if (clash.rowCount > 0) throw httpError(409, "LABEL_EXISTS", "Nhãn đã tồn tại");
 }
 
 async function assertOwnLabel(userId, labelId) {
@@ -46,7 +46,7 @@ async function assertOwnLabel(userId, labelId) {
     `SELECT 1 FROM user_labels WHERE id = $1 AND user_id = $2`,
     [labelId, userId],
   );
-  if (result.rowCount === 0) throw httpError(404, "Không tìm thấy nhãn", "LABEL_NOT_FOUND");
+  if (result.rowCount === 0) throw httpError(404, "LABEL_NOT_FOUND", "Không tìm thấy nhãn");
 }
 
 /** { seeded, totals: { all, favorites }, labels } — count / cover chỉ tính ảnh chưa vào thùng rác. */
@@ -117,7 +117,7 @@ export async function createLabel(userId, { name, color }) {
     [userId],
   );
   if (count.rows[0].n >= MAX_LABELS) {
-    throw httpError(400, `Tối đa ${MAX_LABELS} nhãn`, "LABEL_LIMIT");
+    throw httpError(400, "LABEL_LIMIT", `Tối đa ${MAX_LABELS} nhãn`);
   }
   await assertNotPresetName(userId, name);
   // Tạo thủ công cũng tính là đã có bộ nhãn → không tự thêm gợi ý nữa.
@@ -147,7 +147,7 @@ export async function updateLabel(userId, labelId, { name, color }) {
       [labelId, userId, name ?? null, color ?? null],
     )
     .catch(rethrowDuplicate);
-  if (result.rowCount === 0) throw httpError(404, "Không tìm thấy nhãn", "LABEL_NOT_FOUND");
+  if (result.rowCount === 0) throw httpError(404, "LABEL_NOT_FOUND", "Không tìm thấy nhãn");
   return toLabel(result.rows[0]);
 }
 
@@ -156,7 +156,7 @@ export async function deleteLabel(userId, labelId) {
     `DELETE FROM user_labels WHERE id = $1 AND user_id = $2`,
     [labelId, userId],
   );
-  if (result.rowCount === 0) throw httpError(404, "Không tìm thấy nhãn", "LABEL_NOT_FOUND");
+  if (result.rowCount === 0) throw httpError(404, "LABEL_NOT_FOUND", "Không tìm thấy nhãn");
 }
 
 /** Gắn nhãn cho ảnh của chính mình (ảnh lạ / đã xoá bị bỏ qua). */

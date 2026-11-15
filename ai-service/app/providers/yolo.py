@@ -11,13 +11,14 @@ from __future__ import annotations
 import io
 from pathlib import Path
 
+from app.providers.device import resolve_device
 from app.providers.object_base import ObjectDetectionProvider
 
 # Thư mục ai-service/ — gốc cho path weights tương đối (vd models/yolo26n.pt).
 SERVICE_ROOT = Path(__file__).resolve().parents[2]
 
 try:
-    import torch
+    import torch  # noqa: F401 — chỉ kiểm tra đã cài (ultralytics cần torch)
 except ImportError as exc:  # pragma: no cover
     raise RuntimeError(
         "Provider 'yolo' cần torch. Cài đặt: pip install ultralytics "
@@ -37,7 +38,7 @@ class YoloObjectDetectionProvider(ObjectDetectionProvider):
 
         self._weights = weights
         self._model_name = weights.rsplit("/", 1)[-1].removesuffix(".pt")
-        self._device = self._resolve_device(device)
+        self._device = resolve_device(device)
         self._conf = float(conf)
         self._imgsz = int(imgsz)
 
@@ -103,12 +104,3 @@ class YoloObjectDetectionProvider(ObjectDetectionProvider):
         # Chưa tải trước → để Ultralytics tự tải theo tên (vd 'yolo26n.pt') về cwd.
         return str(candidate) if candidate.exists() else path.name
 
-    @staticmethod
-    def _resolve_device(device: str) -> str:
-        if device and device != "auto":
-            return device
-        if torch.cuda.is_available():
-            return "cuda"
-        if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
-            return "mps"
-        return "cpu"

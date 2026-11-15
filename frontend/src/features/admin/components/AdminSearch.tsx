@@ -22,11 +22,11 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { SearchTrigger } from "@/features/search/components/SearchTrigger";
-import { useAdminDeveloperRequests } from "@/hooks/useAdminDeveloperRequests";
+import { useAdminDeveloperRequests } from "@/features/admin/useAdminDeveloperRequests";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
-import { adminQueryKeys, fetchAdminUsers } from "@/services/admin";
-import type { AdminUserQuery } from "@/types";
+import { fetchAdminUsers } from "@/services/admin";
+import { type AdminUserQuery, adminQueryKeys } from "@tng/shared";
 import { UserCell } from "./UserCell";
 
 const PAGES: { key: string; to: string; icon: LucideIcon }[] = [

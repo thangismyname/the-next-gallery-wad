@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { X, Share2, Download, Trash2, Heart, FolderPlus, Bookmark } from "lucide-react";
 
-import { useSelectionStore } from "@/hooks/useSelectionStore";
+import { useSelectionStore } from "@tng/shared";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { cn } from "@/lib/utils";
 import { LabelMenu } from "@/features/favorites/components/LabelMenu";

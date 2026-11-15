@@ -2,6 +2,7 @@ import * as React from "react"
 import { Avatar as AvatarPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
+import { resolveMediaUrl } from "@tng/shared"
 
 function Avatar({
   className,
@@ -23,8 +24,13 @@ function Avatar({
   )
 }
 
+/**
+ * `src` may be relative (`/api/profile/avatar/<id>` — what the mobile app stores
+ * so the same `user.image` works on every host) → resolved against the API origin.
+ */
 function AvatarImage({
   className,
+  src,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
   return (
@@ -34,6 +40,7 @@ function AvatarImage({
         "aspect-square size-full rounded-full object-cover",
         className
       )}
+      src={src ? resolveMediaUrl(src) : src}
       {...props}
     />
   )

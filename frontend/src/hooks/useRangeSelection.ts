@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useSelectionStore } from "./useSelectionStore";
+import { useSelectionStore } from "@tng/shared";
 
 /**
  * Chọn ảnh kiểu Google Photos trên store chọn ảnh dùng chung:

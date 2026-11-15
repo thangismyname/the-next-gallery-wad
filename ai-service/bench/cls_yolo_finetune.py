@@ -6,7 +6,7 @@ cùng results/cls_eval.csv (config = yolo26n_cls_ft) để so trực tiếp vớ
 
 Dùng đúng cách chia train/val/test của bench/cls_data.py (hash tên file). Ảnh
 được symlink thành layout ImageFolder mà Ultralytics cần:
-    $TNG_DATASETS/cls_places6_yolo/{train,val,test}/<tag>/*.jpg
+    $TNG_DATASETS/Data/cls_places6_yolo/{train,val,test}/<tag>/*.jpg
 
 Usage (từ ai-service/; weights: scripts/download_yolo_weight.py --model yolo26n-cls.pt):
     uv run python -m bench.cls_yolo_finetune                    # 30 epoch, 224 px, MPS
@@ -16,20 +16,22 @@ Usage (từ ai-service/; weights: scripts/download_yolo_weight.py --model yolo26
 from __future__ import annotations
 
 import argparse
+import os
 import time
 from pathlib import Path
 
 import numpy as np
 
+from app.tagging.taxonomy import TAXONOMY_VERSION
 from bench.cls_data import load_places6
 from bench.cls_eval import CONFUSION_CSV, PER_TAG_CSV, RESULTS_CSV
 from bench.cls_models import bootstrap_ci, confusion_rows, single_label_metrics
-from bench.cls_taxonomy import TAXONOMY_VERSION
 from bench.common import (
     DEFAULT_DATA_ROOT,
     MODELS_DIR,
     RUNS_DIR,
     append_csv,
+    data_dir,
     environment_info,
     sha256_of,
     utc_now,
@@ -42,7 +44,7 @@ def build_image_folder(ds, out: Path) -> Path:
         target = out / split / ds.tags[y] / path.name
         if not target.exists():
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.symlink_to(path)
+            target.symlink_to(os.path.relpath(path, target.parent))  # tương đối → repo di chuyển được
     return out
 
 
@@ -81,7 +83,7 @@ def main() -> int:
                          f"--model {args.model}")
 
     ds = load_places6(args.data_root)
-    folder = build_image_folder(ds, args.data_root.expanduser().resolve() / "cls_places6_yolo")
+    folder = build_image_folder(ds, data_dir(args.data_root, "cls_places6_yolo"))
     print(f"{ds.summary()}\n→ ImageFolder: {folder}", flush=True)
 
     run_name = f"{Path(args.model).stem}-places6-e{args.epochs}"

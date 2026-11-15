@@ -8,6 +8,7 @@ import { listMediaIdsByTag } from "../ai/tagging.service.js";
 import { MEDIA_COLUMNS, mediaThumbUrl, toMediaItem } from "./media.mapper.js";
 import { getMediaItemsByIds } from "./media.list.service.js";
 import { scopeMediaIds } from "./media.scope.js";
+import { logger } from "../../lib/logger.js";
 
 const SCOPE_LIST_LIMIT = 60;
 
@@ -46,7 +47,7 @@ export async function searchMedia(userId, query, { mode = "hybrid", scope } = {}
       }));
     }
   } catch (err) {
-    console.warn(`⚠️  Semantic search lỗi, fallback tên file: ${err.message}`);
+    logger.warn({ err }, `Semantic search lỗi, fallback tên file`);
   }
 
   const result = await dbPool.query(

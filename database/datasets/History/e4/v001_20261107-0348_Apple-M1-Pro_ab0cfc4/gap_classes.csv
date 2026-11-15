@@ -1,0 +1,94 @@
+class,group,old_tag,test_pos
+Human face,object,portrait,382
+Tree,object,nature,1065
+Flower,object,nature,140
+Building,object,architecture,841
+House,object,architecture,204
+Skyscraper,object,architecture,56
+Tower,object,architecture,84
+Castle,object,architecture,45
+Lighthouse,object,architecture,37
+Fountain,object,architecture,36
+Sunglasses,object,,51
+Hat,object,,56
+Footwear,object,,293
+Dress,object,,126
+Guitar,object,,48
+Camera,object,,39
+Balloon,object,event,42
+Christmas tree,object,event,37
+Swimming pool,object,,41
+Tent,object,,51
+Flag,object,,47
+Street light,object,street,47
+Traffic sign,object,street,61
+Taxi,object,vehicles,37
+Van,object,vehicles,46
+Helicopter,object,vehicles,37
+Monkey,object,animals,36
+Duck,object,animals,37
+Fish,object,animals,42
+Butterfly,object,animals,37
+Tiger,object,animals,37
+Lion,object,animals,38
+Goat,object,animals,46
+Pig,object,animals,36
+Deer,object,animals,42
+Ice cream,object,food,42
+Coffee (drink),object,food,51
+Wine,object,food,58
+Beer,object,food,50
+Cocktail,object,food,52
+Salad,object,food,56
+Sushi,object,food,36
+Bread,object,food,73
+Cookie,object,food,39
+Hamburger,object,food,51
+French fries,object,food,47
+Pasta,object,food,48
+Beach,scene,beach,53
+Sea,scene,beach,147
+Coast,scene,beach,88
+Island,scene,beach,40
+Mountain,scene,mountain,131
+Mountain range,scene,mountain,61
+Valley,scene,mountain,42
+Forest,scene,nature,52
+Lake,scene,nature,52
+River,scene,nature,72
+Waterfall,scene,nature,38
+Field,scene,nature,59
+Garden,scene,nature,54
+Park,scene,nature,38
+Desert,scene,nature,38
+Snow,scene,,115
+Sky,scene,,923
+Cloud,scene,,229
+Sunset,scene,sunset,58
+Sunrise,scene,sunset,50
+Night,scene,night,58
+Road,scene,street,250
+Street,scene,street,65
+City,scene,street,98
+Town,scene,street,51
+Skyline,scene,architecture,37
+Bridge (structure),scene,architecture,54
+Temple,scene,architecture,36
+Church,scene,architecture,37
+Room,scene,indoor,224
+Kitchen,scene,indoor,54
+Bedroom,scene,indoor,37
+Living room,scene,indoor,39
+Restaurant,scene,indoor,58
+Stadium,scene,sports,48
+Wedding,scene,event,36
+Party,scene,event,39
+Concert,scene,event,37
+Festival,scene,event,37
+Crowd,scene,group,51
+Selfie,scene,portrait,36
+Portrait,scene,portrait,56
+Smile,scene,portrait,45
+Text,scene,document,176
+Document,scene,document,37
+Landscape,scene,nature,94

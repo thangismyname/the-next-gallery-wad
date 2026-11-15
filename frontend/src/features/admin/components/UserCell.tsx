@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { getInitials } from "@/utils/string";
+import { getInitials } from "@tng/shared";
 
 /** Avatar + tên + email (1 dòng mỗi thứ, cắt khi dài). */
 export function UserCell({

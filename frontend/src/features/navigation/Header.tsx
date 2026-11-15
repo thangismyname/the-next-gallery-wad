@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/tooltip";
 import { SearchView } from "@/features/search/SearchView";
 import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
 import { SearchTrigger } from "@/features/search/components/SearchTrigger";
-import { UserMenu } from "@/features/users/UserMenu";
+import { UserMenu } from "@/features/navigation/UserMenu";
 
 export const Header: React.FC = () => {
   const { t } = useTranslation();

@@ -1,0 +1,129 @@
+class,coco,mAP50_95
+Person,person,0.37263
+Bicycle,bicycle,0.43731
+Car,car,0.41801
+Motorcycle,motorcycle,0.53807
+Fixed-wing aircraft,airplane,0.65916
+Bus,bus,0.66483
+Train,train,0.62406
+Truck,truck,0.28585
+Boat,boat,0.25999
+Traffic light,traffic light,0.34152
+Fire hydrant,fire hydrant,0.9177
+Stop sign,stop sign,0.9467
+Parking meter,parking meter,0.51122
+Bench,bench,0.00938
+Bird,bird,0.26542
+Cat,cat,0.7758
+Dog,dog,0.62207
+Horse,horse,0.35848
+Sheep,sheep,0.25667
+Cattle,cow,0.41958
+Elephant,elephant,0.54417
+Bear,bear,0.55924
+Zebra,zebra,0.54329
+Giraffe,giraffe,0.77873
+Backpack,backpack,0.39699
+Umbrella,umbrella,0.13822
+Handbag,handbag,0.35961
+Tie,tie,0.48109
+Suitcase,suitcase,0.39485
+Flying disc,frisbee,0.47943
+Ski,skis,0.12361
+Snowboard,snowboard,0.35181
+Ball (Object),sports ball,0.25598
+Kite,kite,0.42243
+Baseball bat,baseball bat,0.30169
+Baseball glove,baseball glove,0.39958
+Skateboard,skateboard,0.54741
+Surfboard,surfboard,0.33855
+Tennis racket,tennis racket,0.60376
+Bottle,bottle,0.30217
+Wine glass,wine glass,0.31039
+Mug,cup,0.13652
+Coffee cup,cup,0.70153
+Fork,fork,0.35997
+Knife,knife,0.45507
+Spoon,spoon,0.23115
+Bowl,bowl,0.15676
+Banana,banana,0.5039
+Apple,apple,0.3637
+Sandwich,sandwich,0.61193
+Orange (fruit),orange,0.34138
+Broccoli,broccoli,0.47134
+Carrot,carrot,0.21543
+Hot dog,hot dog,0.66354
+Pizza,pizza,0.90341
+Doughnut,donut,0.40085
+Cake,cake,0.40579
+Chair,chair,0.16906
+Couch,couch,0.43061
+Houseplant,potted plant,0.10626
+Bed,bed,0.44195
+Kitchen & dining room table,dining table,0.06647
+Toilet,toilet,0.61744
+Television,tv,0.16448
+Laptop,laptop,0.49197
+Computer mouse,mouse,0.58974
+Remote control,remote,0.67604
+Computer keyboard,keyboard,0.64726
+Mobile phone,cell phone,0.62132
+Microwave oven,microwave,0.44205
+Oven,oven,0.44436
+Toaster,toaster,0.22408
+Sink,sink,0.25914
+Refrigerator,refrigerator,0.69639
+Book,book,0.17006
+Clock,clock,0.40175
+Vase,vase,0.46779
+Scissors,scissors,0.22434
+Teddy bear,teddy bear,0.31356
+Hair dryer,hair drier,0.11542
+Toothbrush,toothbrush,0.41619
+Human face,,0.35051
+Tree,,0.13466
+Flower,,0.061
+Building,,0.30082
+House,,0.24403
+Skyscraper,,0.05848
+Tower,,0.13048
+Castle,,0.16083
+Lighthouse,,0.19722
+Fountain,,0.05608
+Sunglasses,,0.01489
+Hat,,0.14407
+Footwear,,0.13789
+Dress,,0.10901
+Guitar,,0.10183
+Camera,,0.39855
+Balloon,,0.12561
+Christmas tree,,0.00169
+Swimming pool,,0.37171
+Tent,,0.18708
+Flag,,0.0422
+Street light,,0.00975
+Traffic sign,,0.21934
+Taxi,,0.14699
+Van,,0.05004
+Helicopter,,0.64817
+Monkey,,0.43855
+Duck,,0.22831
+Fish,,0.17432
+Butterfly,,0.19326
+Tiger,,0.47159
+Lion,,0.28272
+Goat,,0.22888
+Pig,,0.3224
+Deer,,0.38318
+Ice cream,,0.04498
+Coffee (drink),,0.07465
+Wine,,0.027
+Beer,,0.25195
+Cocktail,,0.41935
+Salad,,0.49379
+Sushi,,0.12558
+Bread,,0.12397
+Cookie,,0.29913
+Hamburger,,0.54463
+French fries,,0.55594
+Pasta,,0.7398

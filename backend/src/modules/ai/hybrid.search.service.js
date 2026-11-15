@@ -8,6 +8,11 @@
 //           ảnh nào nổi bật → không trả bừa như ngưỡng cosine thô.
 //   tag     trung bình confidence các tag nội dung có tên trong câu (media_tags)
 //   object  vật thể YOLO có tên trong câu, khớp số lượng ("2 con chó")
+//   label   nhãn chi tiết ("oi.*", 174 nhãn Open Images) có tên trong câu mà KHÔNG
+//           trùng tag / vật thể nào ("thác nước", "cà phê"): trung bình confidence.
+//           Nhãn trùng tag / vật thể ("chó" = YOLO dog = oi.dog) là bằng chứng
+//           thay thế: phần đó lấy max(tag/YOLO, nhãn) — YOLO bỏ sót con chó nhỏ
+//           thì nhãn vẫn cứu được, không bắt ảnh phải có cả hai.
 //
 //   score = trung bình NHÂN có trọng số (Π part_i^w_i)^(1/Σw) — câu nhắc "đồ ăn"
 //   mà ảnh không có tag đồ ăn thì bị loại (AND), không được CLIP "cứu".
@@ -26,6 +31,7 @@ export const PARAMS = {
   clipRange: 0.5,
   tag: 0.25,
   object: 0.25,
+  label: 0.25,
   zCenter: 3,
   zSlope: 1.5,
   floor: 0.02, // điểm thành phần tối thiểu (tránh log 0)
@@ -51,27 +57,52 @@ export function countFactor(found, wanted) {
   return found > wanted ? 0.5 : (0.5 * found) / wanted;
 }
 
+/** Confidence cao nhất của các nhãn chi tiết gắn vào 1 tag / vật thể (0 nếu không có). */
+function linkedLabel(row, labels, kind, id) {
+  let best = 0;
+  for (const label of labels) {
+    if (label.link?.kind === kind && label.link.id === id) {
+      best = Math.max(best, row.tags[label.id] ?? 0);
+    }
+  }
+  return best;
+}
+
 /**
- * Điểm 1 ảnh. `parts.clip` luôn có; tag/object chỉ khi câu nhắc tới.
+ * Điểm 1 ảnh. `parts.clip` luôn có; tag/object/label chỉ khi câu nhắc tới.
+ * `row.tags` chứa confidence của cả tag danh mục lẫn nhãn chi tiết ("oi.*").
  * @param {{ clip: number, tags: Record<string, number>, objects: Record<string, { n: number, conf: number }> }} row
- * @param {{ tags: string[], objects: { cls: string, count: number | null }[], coverage: number }} parsed
+ * @param {{ tags: string[], objects: { cls: string, count: number | null }[], labels?: { id: string, link: { kind: string, id: string } | null }[], coverage: number }} parsed
  */
 export function scoreRow(row, parsed) {
   const parts = { clip: row.clip };
   const weights = {};
+  const labels = parsed.labels ?? [];
   if (parsed.tags.length) {
     parts.tag =
-      parsed.tags.reduce((sum, t) => sum + (row.tags[t] ?? 0), 0) /
-      parsed.tags.length;
+      parsed.tags.reduce(
+        (sum, t) =>
+          sum + Math.max(row.tags[t] ?? 0, linkedLabel(row, labels, "tag", t)),
+        0,
+      ) / parsed.tags.length;
     weights.tag = PARAMS.tag;
   }
   if (parsed.objects.length) {
     parts.object =
       parsed.objects.reduce((sum, { cls, count }) => {
         const hit = row.objects[cls];
-        return sum + (hit ? hit.conf * countFactor(hit.n, count) : 0);
+        const yolo = hit ? hit.conf * countFactor(hit.n, count) : 0;
+        // Nhãn không biết số lượng → câu có số chỉ tin một nửa.
+        const label = linkedLabel(row, labels, "object", cls) * (count === null ? 1 : 0.5);
+        return sum + Math.max(yolo, label);
       }, 0) / parsed.objects.length;
     weights.object = PARAMS.object;
+  }
+  const standalone = labels.filter((l) => !l.link);
+  if (standalone.length) {
+    parts.label =
+      standalone.reduce((sum, l) => sum + (row.tags[l.id] ?? 0), 0) / standalone.length;
+    weights.label = PARAMS.label;
   }
   const structured = Object.keys(weights).length > 0;
   const clipWeight = structured
@@ -135,6 +166,8 @@ export async function hybridSearch(userId, query, { limit = 20, onlyIds = null }
   const model = queryEmbedding.model;
   const negative = await negativeVector(model);
   const classes = parsed.objects.map((o) => o.cls);
+  // Tag danh mục + nhãn chi tiết đều nằm trong media_tags.
+  const tagIds = [...parsed.tags, ...parsed.labels.map((l) => l.id)];
 
   // Duyệt toàn bộ ảnh có vector (brute force — vài nghìn ảnh/user vẫn vài chục
   // ms); tag/vật thể chỉ tra khi câu có nhắc (mảng rỗng → subquery trả null).
@@ -161,7 +194,7 @@ export async function hybridSearch(userId, query, { limit = 20, onlyIds = null }
       toVectorLiteral(queryEmbedding.embedding),
       toVectorLiteral(negative),
       model,
-      parsed.tags,
+      tagIds,
       classes,
       OBJECT_MIN_CONF,
     ],
@@ -192,6 +225,7 @@ export async function hybridSearch(userId, query, { limit = 20, onlyIds = null }
     parsed: {
       tags: parsed.tags,
       objects: parsed.objects,
+      labels: parsed.labels,
       coverage: parsed.coverage,
     },
   };

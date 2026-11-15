@@ -1,0 +1,578 @@
+{"t": "2026-11-07T17:46:48Z", "type": "log", "message": "run probe/20261108-004647 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/probe/20261108-004647"}
+{"t": "2026-11-07T17:46:48Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-07T17:46:48Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-07T17:46:48Z", "type": "log", "message": "  train 15000 · val 3000 · test 5000 ảnh · 174 lớp · train: 91,393 cặp đã xác minh (41,066 positive)"}
+{"t": "2026-11-07T17:46:48Z", "type": "log", "message": "── CLIP train"}
+{"t": "2026-11-07T17:46:48Z", "type": "stage", "stage": "CLIP train"}
+{"t": "2026-11-07T17:46:48Z", "type": "log", "message": "  ! cache clip@ViT-B-32@laion2b_s34b_b79k-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-07T17:46:56Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 256, "total": 15000}
+{"t": "2026-11-07T17:46:59Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 512, "total": 15000}
+{"t": "2026-11-07T17:47:01Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 768, "total": 15000}
+{"t": "2026-11-07T17:47:04Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 1024, "total": 15000}
+{"t": "2026-11-07T17:47:06Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 1280, "total": 15000}
+{"t": "2026-11-07T17:47:09Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 1536, "total": 15000}
+{"t": "2026-11-07T17:47:12Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 1792, "total": 15000}
+{"t": "2026-11-07T17:47:14Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 2048, "total": 15000}
+{"t": "2026-11-07T17:47:17Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 2304, "total": 15000}
+{"t": "2026-11-07T17:47:19Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 2560, "total": 15000}
+{"t": "2026-11-07T17:47:22Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 2816, "total": 15000}
+{"t": "2026-11-07T17:47:24Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 3072, "total": 15000}
+{"t": "2026-11-07T17:47:27Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 3328, "total": 15000}
+{"t": "2026-11-07T17:47:29Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 3584, "total": 15000}
+{"t": "2026-11-07T17:47:32Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 3840, "total": 15000}
+{"t": "2026-11-07T17:47:35Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 4096, "total": 15000}
+{"t": "2026-11-07T17:47:37Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 4352, "total": 15000}
+{"t": "2026-11-07T17:47:40Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 4608, "total": 15000}
+{"t": "2026-11-07T17:47:42Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 4864, "total": 15000}
+{"t": "2026-11-07T17:47:45Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 5120, "total": 15000}
+{"t": "2026-11-07T17:47:47Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 5376, "total": 15000}
+{"t": "2026-11-07T17:47:50Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 5632, "total": 15000}
+{"t": "2026-11-07T17:47:52Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 5888, "total": 15000}
+{"t": "2026-11-07T17:47:55Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 6144, "total": 15000}
+{"t": "2026-11-07T17:47:57Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 6400, "total": 15000}
+{"t": "2026-11-07T17:48:00Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 6656, "total": 15000}
+{"t": "2026-11-07T17:48:02Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 6912, "total": 15000}
+{"t": "2026-11-07T17:48:05Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 7168, "total": 15000}
+{"t": "2026-11-07T17:48:08Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 7424, "total": 15000}
+{"t": "2026-11-07T17:48:10Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 7680, "total": 15000}
+{"t": "2026-11-07T17:48:13Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 7936, "total": 15000}
+{"t": "2026-11-07T17:48:15Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 8192, "total": 15000}
+{"t": "2026-11-07T17:48:18Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 8448, "total": 15000}
+{"t": "2026-11-07T17:48:20Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 8704, "total": 15000}
+{"t": "2026-11-07T17:48:23Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 8960, "total": 15000}
+{"t": "2026-11-07T17:48:26Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 9216, "total": 15000}
+{"t": "2026-11-07T17:48:28Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 9472, "total": 15000}
+{"t": "2026-11-07T17:48:31Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 9728, "total": 15000}
+{"t": "2026-11-07T17:48:33Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 9984, "total": 15000}
+{"t": "2026-11-07T17:48:36Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 10240, "total": 15000}
+{"t": "2026-11-07T17:48:38Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 10496, "total": 15000}
+{"t": "2026-11-07T17:48:41Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 10752, "total": 15000}
+{"t": "2026-11-07T17:48:44Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 11008, "total": 15000}
+{"t": "2026-11-07T17:48:46Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 11264, "total": 15000}
+{"t": "2026-11-07T17:48:49Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 11520, "total": 15000}
+{"t": "2026-11-07T17:48:51Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 11776, "total": 15000}
+{"t": "2026-11-07T17:48:54Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 12032, "total": 15000}
+{"t": "2026-11-07T17:48:56Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 12288, "total": 15000}
+{"t": "2026-11-07T17:48:59Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 12544, "total": 15000}
+{"t": "2026-11-07T17:49:01Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 12800, "total": 15000}
+{"t": "2026-11-07T17:49:04Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 13056, "total": 15000}
+{"t": "2026-11-07T17:49:07Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 13312, "total": 15000}
+{"t": "2026-11-07T17:49:09Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 13568, "total": 15000}
+{"t": "2026-11-07T17:49:12Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 13824, "total": 15000}
+{"t": "2026-11-07T17:49:14Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 14080, "total": 15000}
+{"t": "2026-11-07T17:49:17Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 14336, "total": 15000}
+{"t": "2026-11-07T17:49:19Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 14592, "total": 15000}
+{"t": "2026-11-07T17:49:22Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 14848, "total": 15000}
+{"t": "2026-11-07T17:49:23Z", "type": "progress", "stage": "CLIP train", "label": "CLIP oi-train", "done": 15000, "total": 15000}
+{"t": "2026-11-07T17:49:23Z", "type": "log", "message": "── DINOv3 train"}
+{"t": "2026-11-07T17:49:23Z", "type": "stage", "stage": "DINOv3 train"}
+{"t": "2026-11-07T17:49:24Z", "type": "log", "message": "  ! cache dino@dinov3-vits16-pretrain-lvd1689m-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-07T17:49:26Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 128, "total": 15000}
+{"t": "2026-11-07T17:49:27Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 256, "total": 15000}
+{"t": "2026-11-07T17:49:29Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 384, "total": 15000}
+{"t": "2026-11-07T17:49:31Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 512, "total": 15000}
+{"t": "2026-11-07T17:49:33Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 640, "total": 15000}
+{"t": "2026-11-07T17:49:34Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 768, "total": 15000}
+{"t": "2026-11-07T17:49:36Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 896, "total": 15000}
+{"t": "2026-11-07T17:49:38Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1024, "total": 15000}
+{"t": "2026-11-07T17:49:39Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1152, "total": 15000}
+{"t": "2026-11-07T17:49:41Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1280, "total": 15000}
+{"t": "2026-11-07T17:49:43Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1408, "total": 15000}
+{"t": "2026-11-07T17:49:44Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1536, "total": 15000}
+{"t": "2026-11-07T17:49:46Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1664, "total": 15000}
+{"t": "2026-11-07T17:49:48Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1792, "total": 15000}
+{"t": "2026-11-07T17:49:49Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 1920, "total": 15000}
+{"t": "2026-11-07T17:49:51Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2048, "total": 15000}
+{"t": "2026-11-07T17:49:53Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2176, "total": 15000}
+{"t": "2026-11-07T17:49:55Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2304, "total": 15000}
+{"t": "2026-11-07T17:49:56Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2432, "total": 15000}
+{"t": "2026-11-07T17:49:58Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2560, "total": 15000}
+{"t": "2026-11-07T17:50:00Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2688, "total": 15000}
+{"t": "2026-11-07T17:50:01Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2816, "total": 15000}
+{"t": "2026-11-07T17:50:03Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 2944, "total": 15000}
+{"t": "2026-11-07T17:50:05Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3072, "total": 15000}
+{"t": "2026-11-07T17:50:06Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3200, "total": 15000}
+{"t": "2026-11-07T17:50:08Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3328, "total": 15000}
+{"t": "2026-11-07T17:50:10Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3456, "total": 15000}
+{"t": "2026-11-07T17:50:11Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3584, "total": 15000}
+{"t": "2026-11-07T17:50:13Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3712, "total": 15000}
+{"t": "2026-11-07T17:50:14Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3840, "total": 15000}
+{"t": "2026-11-07T17:50:16Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 3968, "total": 15000}
+{"t": "2026-11-07T17:50:18Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4096, "total": 15000}
+{"t": "2026-11-07T17:50:19Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4224, "total": 15000}
+{"t": "2026-11-07T17:50:21Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4352, "total": 15000}
+{"t": "2026-11-07T17:50:23Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4480, "total": 15000}
+{"t": "2026-11-07T17:50:24Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4608, "total": 15000}
+{"t": "2026-11-07T17:50:26Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4736, "total": 15000}
+{"t": "2026-11-07T17:50:28Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4864, "total": 15000}
+{"t": "2026-11-07T17:50:29Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 4992, "total": 15000}
+{"t": "2026-11-07T17:50:31Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5120, "total": 15000}
+{"t": "2026-11-07T17:50:32Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5248, "total": 15000}
+{"t": "2026-11-07T17:50:34Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5376, "total": 15000}
+{"t": "2026-11-07T17:50:36Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5504, "total": 15000}
+{"t": "2026-11-07T17:50:37Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5632, "total": 15000}
+{"t": "2026-11-07T17:50:39Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5760, "total": 15000}
+{"t": "2026-11-07T17:50:41Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 5888, "total": 15000}
+{"t": "2026-11-07T17:50:42Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6016, "total": 15000}
+{"t": "2026-11-07T17:50:44Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6144, "total": 15000}
+{"t": "2026-11-07T17:50:46Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6272, "total": 15000}
+{"t": "2026-11-07T17:50:47Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6400, "total": 15000}
+{"t": "2026-11-07T17:50:49Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6528, "total": 15000}
+{"t": "2026-11-07T17:50:51Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6656, "total": 15000}
+{"t": "2026-11-07T17:50:52Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6784, "total": 15000}
+{"t": "2026-11-07T17:50:54Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 6912, "total": 15000}
+{"t": "2026-11-07T17:50:56Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7040, "total": 15000}
+{"t": "2026-11-07T17:50:57Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7168, "total": 15000}
+{"t": "2026-11-07T17:50:59Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7296, "total": 15000}
+{"t": "2026-11-07T17:51:01Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7424, "total": 15000}
+{"t": "2026-11-07T17:51:02Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7552, "total": 15000}
+{"t": "2026-11-07T17:51:04Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7680, "total": 15000}
+{"t": "2026-11-07T17:51:06Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7808, "total": 15000}
+{"t": "2026-11-07T17:51:07Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 7936, "total": 15000}
+{"t": "2026-11-07T17:51:09Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8064, "total": 15000}
+{"t": "2026-11-07T17:51:11Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8192, "total": 15000}
+{"t": "2026-11-07T17:51:12Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8320, "total": 15000}
+{"t": "2026-11-07T17:51:14Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8448, "total": 15000}
+{"t": "2026-11-07T17:51:16Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8576, "total": 15000}
+{"t": "2026-11-07T17:51:17Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8704, "total": 15000}
+{"t": "2026-11-07T17:51:19Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8832, "total": 15000}
+{"t": "2026-11-07T17:51:21Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 8960, "total": 15000}
+{"t": "2026-11-07T17:51:22Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9088, "total": 15000}
+{"t": "2026-11-07T17:51:24Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9216, "total": 15000}
+{"t": "2026-11-07T17:51:26Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9344, "total": 15000}
+{"t": "2026-11-07T17:51:27Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9472, "total": 15000}
+{"t": "2026-11-07T17:51:29Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9600, "total": 15000}
+{"t": "2026-11-07T17:51:31Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9728, "total": 15000}
+{"t": "2026-11-07T17:51:32Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9856, "total": 15000}
+{"t": "2026-11-07T17:51:34Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 9984, "total": 15000}
+{"t": "2026-11-07T17:51:35Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10112, "total": 15000}
+{"t": "2026-11-07T17:51:37Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10240, "total": 15000}
+{"t": "2026-11-07T17:51:39Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10368, "total": 15000}
+{"t": "2026-11-07T17:51:40Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10496, "total": 15000}
+{"t": "2026-11-07T17:51:42Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10624, "total": 15000}
+{"t": "2026-11-07T17:51:44Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10752, "total": 15000}
+{"t": "2026-11-07T17:51:45Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 10880, "total": 15000}
+{"t": "2026-11-07T17:51:47Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11008, "total": 15000}
+{"t": "2026-11-07T17:51:49Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11136, "total": 15000}
+{"t": "2026-11-07T17:51:50Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11264, "total": 15000}
+{"t": "2026-11-07T17:51:52Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11392, "total": 15000}
+{"t": "2026-11-07T17:51:54Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11520, "total": 15000}
+{"t": "2026-11-07T17:51:55Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11648, "total": 15000}
+{"t": "2026-11-07T17:51:57Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11776, "total": 15000}
+{"t": "2026-11-07T17:51:59Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 11904, "total": 15000}
+{"t": "2026-11-07T17:52:00Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12032, "total": 15000}
+{"t": "2026-11-07T17:52:02Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12160, "total": 15000}
+{"t": "2026-11-07T17:52:04Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12288, "total": 15000}
+{"t": "2026-11-07T17:52:05Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12416, "total": 15000}
+{"t": "2026-11-07T17:52:07Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12544, "total": 15000}
+{"t": "2026-11-07T17:52:09Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12672, "total": 15000}
+{"t": "2026-11-07T17:52:10Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12800, "total": 15000}
+{"t": "2026-11-07T17:52:12Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 12928, "total": 15000}
+{"t": "2026-11-07T17:52:14Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13056, "total": 15000}
+{"t": "2026-11-07T17:52:15Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13184, "total": 15000}
+{"t": "2026-11-07T17:52:17Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13312, "total": 15000}
+{"t": "2026-11-07T17:52:19Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13440, "total": 15000}
+{"t": "2026-11-07T17:52:20Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13568, "total": 15000}
+{"t": "2026-11-07T17:52:22Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13696, "total": 15000}
+{"t": "2026-11-07T17:52:23Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13824, "total": 15000}
+{"t": "2026-11-07T17:52:25Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 13952, "total": 15000}
+{"t": "2026-11-07T17:52:27Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14080, "total": 15000}
+{"t": "2026-11-07T17:52:28Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14208, "total": 15000}
+{"t": "2026-11-07T17:52:30Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14336, "total": 15000}
+{"t": "2026-11-07T17:52:32Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14464, "total": 15000}
+{"t": "2026-11-07T17:52:33Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14592, "total": 15000}
+{"t": "2026-11-07T17:52:35Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14720, "total": 15000}
+{"t": "2026-11-07T17:52:37Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14848, "total": 15000}
+{"t": "2026-11-07T17:52:38Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 14976, "total": 15000}
+{"t": "2026-11-07T17:52:39Z", "type": "progress", "stage": "DINOv3 train", "label": "DINO oi-train", "done": 15000, "total": 15000}
+{"t": "2026-11-07T17:52:39Z", "type": "log", "message": "── YOLO train"}
+{"t": "2026-11-07T17:52:39Z", "type": "stage", "stage": "YOLO train"}
+{"t": "2026-11-07T17:52:39Z", "type": "log", "message": "  ! cache yolo@yolo26n.pt-c0.001-i640-backend.json thiếu ảnh — tính lại"}
+{"t": "2026-11-07T17:52:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 64, "total": 15000}
+{"t": "2026-11-07T17:52:55Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 128, "total": 15000}
+{"t": "2026-11-07T17:53:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 192, "total": 15000}
+{"t": "2026-11-07T17:53:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 256, "total": 15000}
+{"t": "2026-11-07T17:53:17Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 320, "total": 15000}
+{"t": "2026-11-07T17:53:23Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 384, "total": 15000}
+{"t": "2026-11-07T17:53:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 448, "total": 15000}
+{"t": "2026-11-07T17:53:39Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 512, "total": 15000}
+{"t": "2026-11-07T17:53:46Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 576, "total": 15000}
+{"t": "2026-11-07T17:53:53Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 640, "total": 15000}
+{"t": "2026-11-07T17:53:59Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 704, "total": 15000}
+{"t": "2026-11-07T17:54:06Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 768, "total": 15000}
+{"t": "2026-11-07T17:54:12Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 832, "total": 15000}
+{"t": "2026-11-07T17:54:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 896, "total": 15000}
+{"t": "2026-11-07T17:54:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 960, "total": 15000}
+{"t": "2026-11-07T17:54:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1024, "total": 15000}
+{"t": "2026-11-07T17:54:39Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1088, "total": 15000}
+{"t": "2026-11-07T17:54:45Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1152, "total": 15000}
+{"t": "2026-11-07T17:54:51Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1216, "total": 15000}
+{"t": "2026-11-07T17:54:58Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1280, "total": 15000}
+{"t": "2026-11-07T17:55:04Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1344, "total": 15000}
+{"t": "2026-11-07T17:55:10Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1408, "total": 15000}
+{"t": "2026-11-07T17:55:15Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1472, "total": 15000}
+{"t": "2026-11-07T17:55:21Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1536, "total": 15000}
+{"t": "2026-11-07T17:55:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1600, "total": 15000}
+{"t": "2026-11-07T17:55:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1664, "total": 15000}
+{"t": "2026-11-07T17:55:40Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1728, "total": 15000}
+{"t": "2026-11-07T17:55:46Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1792, "total": 15000}
+{"t": "2026-11-07T17:55:52Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1856, "total": 15000}
+{"t": "2026-11-07T17:55:58Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1920, "total": 15000}
+{"t": "2026-11-07T17:56:04Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 1984, "total": 15000}
+{"t": "2026-11-07T17:56:11Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2048, "total": 15000}
+{"t": "2026-11-07T17:56:17Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2112, "total": 15000}
+{"t": "2026-11-07T17:56:22Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2176, "total": 15000}
+{"t": "2026-11-07T17:56:28Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2240, "total": 15000}
+{"t": "2026-11-07T17:56:34Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2304, "total": 15000}
+{"t": "2026-11-07T17:56:40Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2368, "total": 15000}
+{"t": "2026-11-07T17:56:46Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2432, "total": 15000}
+{"t": "2026-11-07T17:56:51Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2496, "total": 15000}
+{"t": "2026-11-07T17:56:57Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2560, "total": 15000}
+{"t": "2026-11-07T17:57:03Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2624, "total": 15000}
+{"t": "2026-11-07T17:57:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2688, "total": 15000}
+{"t": "2026-11-07T17:57:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2752, "total": 15000}
+{"t": "2026-11-07T17:57:19Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2816, "total": 15000}
+{"t": "2026-11-07T17:57:25Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2880, "total": 15000}
+{"t": "2026-11-07T17:57:31Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 2944, "total": 15000}
+{"t": "2026-11-07T17:57:37Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3008, "total": 15000}
+{"t": "2026-11-07T17:57:44Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3072, "total": 15000}
+{"t": "2026-11-07T17:57:51Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3136, "total": 15000}
+{"t": "2026-11-07T17:57:57Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3200, "total": 15000}
+{"t": "2026-11-07T17:58:04Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3264, "total": 15000}
+{"t": "2026-11-07T17:58:10Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3328, "total": 15000}
+{"t": "2026-11-07T17:58:15Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3392, "total": 15000}
+{"t": "2026-11-07T17:58:23Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3456, "total": 15000}
+{"t": "2026-11-07T17:58:30Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3520, "total": 15000}
+{"t": "2026-11-07T17:58:36Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3584, "total": 15000}
+{"t": "2026-11-07T17:58:42Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3648, "total": 15000}
+{"t": "2026-11-07T17:58:48Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3712, "total": 15000}
+{"t": "2026-11-07T17:58:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3776, "total": 15000}
+{"t": "2026-11-07T17:59:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3840, "total": 15000}
+{"t": "2026-11-07T17:59:07Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3904, "total": 15000}
+{"t": "2026-11-07T17:59:11Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 3968, "total": 15000}
+{"t": "2026-11-07T17:59:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4032, "total": 15000}
+{"t": "2026-11-07T17:59:24Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4096, "total": 15000}
+{"t": "2026-11-07T17:59:31Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4160, "total": 15000}
+{"t": "2026-11-07T17:59:37Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4224, "total": 15000}
+{"t": "2026-11-07T17:59:43Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4288, "total": 15000}
+{"t": "2026-11-07T17:59:49Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4352, "total": 15000}
+{"t": "2026-11-07T17:59:55Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4416, "total": 15000}
+{"t": "2026-11-07T18:00:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4480, "total": 15000}
+{"t": "2026-11-07T18:00:07Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4544, "total": 15000}
+{"t": "2026-11-07T18:00:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4608, "total": 15000}
+{"t": "2026-11-07T18:00:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4672, "total": 15000}
+{"t": "2026-11-07T18:00:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4736, "total": 15000}
+{"t": "2026-11-07T18:00:31Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4800, "total": 15000}
+{"t": "2026-11-07T18:00:37Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4864, "total": 15000}
+{"t": "2026-11-07T18:00:44Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4928, "total": 15000}
+{"t": "2026-11-07T18:00:50Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 4992, "total": 15000}
+{"t": "2026-11-07T18:00:56Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5056, "total": 15000}
+{"t": "2026-11-07T18:01:02Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5120, "total": 15000}
+{"t": "2026-11-07T18:01:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5184, "total": 15000}
+{"t": "2026-11-07T18:01:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5248, "total": 15000}
+{"t": "2026-11-07T18:01:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5312, "total": 15000}
+{"t": "2026-11-07T18:01:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5376, "total": 15000}
+{"t": "2026-11-07T18:01:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5440, "total": 15000}
+{"t": "2026-11-07T18:01:40Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5504, "total": 15000}
+{"t": "2026-11-07T18:01:48Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5568, "total": 15000}
+{"t": "2026-11-07T18:01:53Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5632, "total": 15000}
+{"t": "2026-11-07T18:01:59Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5696, "total": 15000}
+{"t": "2026-11-07T18:02:05Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5760, "total": 15000}
+{"t": "2026-11-07T18:02:12Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5824, "total": 15000}
+{"t": "2026-11-07T18:02:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5888, "total": 15000}
+{"t": "2026-11-07T18:02:25Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 5952, "total": 15000}
+{"t": "2026-11-07T18:02:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6016, "total": 15000}
+{"t": "2026-11-07T18:02:38Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6080, "total": 15000}
+{"t": "2026-11-07T18:02:44Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6144, "total": 15000}
+{"t": "2026-11-07T18:02:51Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6208, "total": 15000}
+{"t": "2026-11-07T18:02:58Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6272, "total": 15000}
+{"t": "2026-11-07T18:03:05Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6336, "total": 15000}
+{"t": "2026-11-07T18:03:11Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6400, "total": 15000}
+{"t": "2026-11-07T18:03:19Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6464, "total": 15000}
+{"t": "2026-11-07T18:03:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6528, "total": 15000}
+{"t": "2026-11-07T18:03:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6592, "total": 15000}
+{"t": "2026-11-07T18:03:38Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6656, "total": 15000}
+{"t": "2026-11-07T18:03:45Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6720, "total": 15000}
+{"t": "2026-11-07T18:03:51Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6784, "total": 15000}
+{"t": "2026-11-07T18:03:58Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6848, "total": 15000}
+{"t": "2026-11-07T18:04:04Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6912, "total": 15000}
+{"t": "2026-11-07T18:04:10Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 6976, "total": 15000}
+{"t": "2026-11-07T18:04:17Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7040, "total": 15000}
+{"t": "2026-11-07T18:04:24Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7104, "total": 15000}
+{"t": "2026-11-07T18:04:30Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7168, "total": 15000}
+{"t": "2026-11-07T18:04:36Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7232, "total": 15000}
+{"t": "2026-11-07T18:04:43Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7296, "total": 15000}
+{"t": "2026-11-07T18:04:49Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7360, "total": 15000}
+{"t": "2026-11-07T18:04:55Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7424, "total": 15000}
+{"t": "2026-11-07T18:05:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7488, "total": 15000}
+{"t": "2026-11-07T18:05:07Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7552, "total": 15000}
+{"t": "2026-11-07T18:05:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7616, "total": 15000}
+{"t": "2026-11-07T18:05:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7680, "total": 15000}
+{"t": "2026-11-07T18:05:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7744, "total": 15000}
+{"t": "2026-11-07T18:05:34Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7808, "total": 15000}
+{"t": "2026-11-07T18:05:41Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7872, "total": 15000}
+{"t": "2026-11-07T18:05:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 7936, "total": 15000}
+{"t": "2026-11-07T18:05:53Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8000, "total": 15000}
+{"t": "2026-11-07T18:05:59Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8064, "total": 15000}
+{"t": "2026-11-07T18:06:06Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8128, "total": 15000}
+{"t": "2026-11-07T18:06:12Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8192, "total": 15000}
+{"t": "2026-11-07T18:06:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8256, "total": 15000}
+{"t": "2026-11-07T18:06:25Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8320, "total": 15000}
+{"t": "2026-11-07T18:06:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8384, "total": 15000}
+{"t": "2026-11-07T18:06:38Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8448, "total": 15000}
+{"t": "2026-11-07T18:06:45Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8512, "total": 15000}
+{"t": "2026-11-07T18:06:52Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8576, "total": 15000}
+{"t": "2026-11-07T18:06:59Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8640, "total": 15000}
+{"t": "2026-11-07T18:07:05Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8704, "total": 15000}
+{"t": "2026-11-07T18:07:12Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8768, "total": 15000}
+{"t": "2026-11-07T18:07:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8832, "total": 15000}
+{"t": "2026-11-07T18:07:24Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8896, "total": 15000}
+{"t": "2026-11-07T18:07:30Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 8960, "total": 15000}
+{"t": "2026-11-07T18:07:36Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9024, "total": 15000}
+{"t": "2026-11-07T18:07:43Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9088, "total": 15000}
+{"t": "2026-11-07T18:07:49Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9152, "total": 15000}
+{"t": "2026-11-07T18:07:56Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9216, "total": 15000}
+{"t": "2026-11-07T18:08:03Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9280, "total": 15000}
+{"t": "2026-11-07T18:08:09Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9344, "total": 15000}
+{"t": "2026-11-07T18:08:15Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9408, "total": 15000}
+{"t": "2026-11-07T18:08:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9472, "total": 15000}
+{"t": "2026-11-07T18:08:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9536, "total": 15000}
+{"t": "2026-11-07T18:08:34Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9600, "total": 15000}
+{"t": "2026-11-07T18:08:40Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9664, "total": 15000}
+{"t": "2026-11-07T18:08:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9728, "total": 15000}
+{"t": "2026-11-07T18:08:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9792, "total": 15000}
+{"t": "2026-11-07T18:09:00Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9856, "total": 15000}
+{"t": "2026-11-07T18:09:07Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9920, "total": 15000}
+{"t": "2026-11-07T18:09:13Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 9984, "total": 15000}
+{"t": "2026-11-07T18:09:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10048, "total": 15000}
+{"t": "2026-11-07T18:09:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10112, "total": 15000}
+{"t": "2026-11-07T18:09:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10176, "total": 15000}
+{"t": "2026-11-07T18:09:40Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10240, "total": 15000}
+{"t": "2026-11-07T18:09:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10304, "total": 15000}
+{"t": "2026-11-07T18:09:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10368, "total": 15000}
+{"t": "2026-11-07T18:10:02Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10432, "total": 15000}
+{"t": "2026-11-07T18:10:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10496, "total": 15000}
+{"t": "2026-11-07T18:10:13Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10560, "total": 15000}
+{"t": "2026-11-07T18:10:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10624, "total": 15000}
+{"t": "2026-11-07T18:10:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10688, "total": 15000}
+{"t": "2026-11-07T18:10:32Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10752, "total": 15000}
+{"t": "2026-11-07T18:10:39Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10816, "total": 15000}
+{"t": "2026-11-07T18:10:46Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10880, "total": 15000}
+{"t": "2026-11-07T18:10:52Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 10944, "total": 15000}
+{"t": "2026-11-07T18:10:59Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11008, "total": 15000}
+{"t": "2026-11-07T18:11:06Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11072, "total": 15000}
+{"t": "2026-11-07T18:11:12Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11136, "total": 15000}
+{"t": "2026-11-07T18:11:19Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11200, "total": 15000}
+{"t": "2026-11-07T18:11:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11264, "total": 15000}
+{"t": "2026-11-07T18:11:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11328, "total": 15000}
+{"t": "2026-11-07T18:11:39Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11392, "total": 15000}
+{"t": "2026-11-07T18:11:46Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11456, "total": 15000}
+{"t": "2026-11-07T18:11:52Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11520, "total": 15000}
+{"t": "2026-11-07T18:11:58Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11584, "total": 15000}
+{"t": "2026-11-07T18:12:05Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11648, "total": 15000}
+{"t": "2026-11-07T18:12:11Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11712, "total": 15000}
+{"t": "2026-11-07T18:12:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11776, "total": 15000}
+{"t": "2026-11-07T18:12:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11840, "total": 15000}
+{"t": "2026-11-07T18:12:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11904, "total": 15000}
+{"t": "2026-11-07T18:12:41Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 11968, "total": 15000}
+{"t": "2026-11-07T18:12:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12032, "total": 15000}
+{"t": "2026-11-07T18:12:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12096, "total": 15000}
+{"t": "2026-11-07T18:13:00Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12160, "total": 15000}
+{"t": "2026-11-07T18:13:06Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12224, "total": 15000}
+{"t": "2026-11-07T18:13:13Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12288, "total": 15000}
+{"t": "2026-11-07T18:13:20Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12352, "total": 15000}
+{"t": "2026-11-07T18:13:26Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12416, "total": 15000}
+{"t": "2026-11-07T18:13:33Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12480, "total": 15000}
+{"t": "2026-11-07T18:13:39Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12544, "total": 15000}
+{"t": "2026-11-07T18:13:48Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12608, "total": 15000}
+{"t": "2026-11-07T18:13:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12672, "total": 15000}
+{"t": "2026-11-07T18:14:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12736, "total": 15000}
+{"t": "2026-11-07T18:14:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12800, "total": 15000}
+{"t": "2026-11-07T18:14:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12864, "total": 15000}
+{"t": "2026-11-07T18:14:21Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12928, "total": 15000}
+{"t": "2026-11-07T18:14:27Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 12992, "total": 15000}
+{"t": "2026-11-07T18:14:35Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13056, "total": 15000}
+{"t": "2026-11-07T18:14:41Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13120, "total": 15000}
+{"t": "2026-11-07T18:14:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13184, "total": 15000}
+{"t": "2026-11-07T18:14:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13248, "total": 15000}
+{"t": "2026-11-07T18:15:00Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13312, "total": 15000}
+{"t": "2026-11-07T18:15:07Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13376, "total": 15000}
+{"t": "2026-11-07T18:15:13Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13440, "total": 15000}
+{"t": "2026-11-07T18:15:18Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13504, "total": 15000}
+{"t": "2026-11-07T18:15:24Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13568, "total": 15000}
+{"t": "2026-11-07T18:15:30Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13632, "total": 15000}
+{"t": "2026-11-07T18:15:36Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13696, "total": 15000}
+{"t": "2026-11-07T18:15:42Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13760, "total": 15000}
+{"t": "2026-11-07T18:15:48Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13824, "total": 15000}
+{"t": "2026-11-07T18:15:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13888, "total": 15000}
+{"t": "2026-11-07T18:16:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 13952, "total": 15000}
+{"t": "2026-11-07T18:16:09Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14016, "total": 15000}
+{"t": "2026-11-07T18:16:17Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14080, "total": 15000}
+{"t": "2026-11-07T18:16:23Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14144, "total": 15000}
+{"t": "2026-11-07T18:16:29Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14208, "total": 15000}
+{"t": "2026-11-07T18:16:35Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14272, "total": 15000}
+{"t": "2026-11-07T18:16:42Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14336, "total": 15000}
+{"t": "2026-11-07T18:16:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14400, "total": 15000}
+{"t": "2026-11-07T18:16:54Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14464, "total": 15000}
+{"t": "2026-11-07T18:17:01Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14528, "total": 15000}
+{"t": "2026-11-07T18:17:08Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14592, "total": 15000}
+{"t": "2026-11-07T18:17:14Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14656, "total": 15000}
+{"t": "2026-11-07T18:17:21Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14720, "total": 15000}
+{"t": "2026-11-07T18:17:28Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14784, "total": 15000}
+{"t": "2026-11-07T18:17:35Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14848, "total": 15000}
+{"t": "2026-11-07T18:17:42Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14912, "total": 15000}
+{"t": "2026-11-07T18:17:47Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 14976, "total": 15000}
+{"t": "2026-11-07T18:17:50Z", "type": "progress", "stage": "YOLO train", "label": "YOLO oi-train", "done": 15000, "total": 15000}
+{"t": "2026-11-07T18:17:52Z", "type": "log", "message": "── CLIP val"}
+{"t": "2026-11-07T18:17:52Z", "type": "stage", "stage": "CLIP val"}
+{"t": "2026-11-07T18:17:52Z", "type": "log", "message": "── DINOv3 val"}
+{"t": "2026-11-07T18:17:52Z", "type": "stage", "stage": "DINOv3 val"}
+{"t": "2026-11-07T18:17:52Z", "type": "log", "message": "  ! cache dino@dinov3-vits16-pretrain-lvd1689m-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-07T18:17:54Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 128, "total": 3000}
+{"t": "2026-11-07T18:17:55Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 256, "total": 3000}
+{"t": "2026-11-07T18:17:57Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 384, "total": 3000}
+{"t": "2026-11-07T18:17:58Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 512, "total": 3000}
+{"t": "2026-11-07T18:18:00Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 640, "total": 3000}
+{"t": "2026-11-07T18:18:01Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 768, "total": 3000}
+{"t": "2026-11-07T18:18:03Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 896, "total": 3000}
+{"t": "2026-11-07T18:18:05Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1024, "total": 3000}
+{"t": "2026-11-07T18:18:06Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1152, "total": 3000}
+{"t": "2026-11-07T18:18:08Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1280, "total": 3000}
+{"t": "2026-11-07T18:18:09Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1408, "total": 3000}
+{"t": "2026-11-07T18:18:11Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1536, "total": 3000}
+{"t": "2026-11-07T18:18:12Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1664, "total": 3000}
+{"t": "2026-11-07T18:18:14Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1792, "total": 3000}
+{"t": "2026-11-07T18:18:15Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 1920, "total": 3000}
+{"t": "2026-11-07T18:18:17Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2048, "total": 3000}
+{"t": "2026-11-07T18:18:18Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2176, "total": 3000}
+{"t": "2026-11-07T18:18:20Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2304, "total": 3000}
+{"t": "2026-11-07T18:18:21Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2432, "total": 3000}
+{"t": "2026-11-07T18:18:23Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2560, "total": 3000}
+{"t": "2026-11-07T18:18:24Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2688, "total": 3000}
+{"t": "2026-11-07T18:18:26Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2816, "total": 3000}
+{"t": "2026-11-07T18:18:27Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 2944, "total": 3000}
+{"t": "2026-11-07T18:18:28Z", "type": "progress", "stage": "DINOv3 val", "label": "DINO oi-validation", "done": 3000, "total": 3000}
+{"t": "2026-11-07T18:18:28Z", "type": "log", "message": "── YOLO val"}
+{"t": "2026-11-07T18:18:28Z", "type": "stage", "stage": "YOLO val"}
+{"t": "2026-11-07T18:18:28Z", "type": "log", "message": "── CLIP test"}
+{"t": "2026-11-07T18:18:28Z", "type": "stage", "stage": "CLIP test"}
+{"t": "2026-11-07T18:18:29Z", "type": "log", "message": "── DINOv3 test"}
+{"t": "2026-11-07T18:18:29Z", "type": "stage", "stage": "DINOv3 test"}
+{"t": "2026-11-07T18:18:29Z", "type": "log", "message": "  ! cache dino@dinov3-vits16-pretrain-lvd1689m-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-07T18:18:30Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 128, "total": 5000}
+{"t": "2026-11-07T18:18:32Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 256, "total": 5000}
+{"t": "2026-11-07T18:18:33Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 384, "total": 5000}
+{"t": "2026-11-07T18:18:35Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 512, "total": 5000}
+{"t": "2026-11-07T18:18:37Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 640, "total": 5000}
+{"t": "2026-11-07T18:18:38Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 768, "total": 5000}
+{"t": "2026-11-07T18:18:40Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 896, "total": 5000}
+{"t": "2026-11-07T18:18:41Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1024, "total": 5000}
+{"t": "2026-11-07T18:18:43Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1152, "total": 5000}
+{"t": "2026-11-07T18:18:44Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1280, "total": 5000}
+{"t": "2026-11-07T18:18:46Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1408, "total": 5000}
+{"t": "2026-11-07T18:18:47Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1536, "total": 5000}
+{"t": "2026-11-07T18:18:49Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1664, "total": 5000}
+{"t": "2026-11-07T18:18:50Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1792, "total": 5000}
+{"t": "2026-11-07T18:18:52Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 1920, "total": 5000}
+{"t": "2026-11-07T18:18:53Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2048, "total": 5000}
+{"t": "2026-11-07T18:18:55Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2176, "total": 5000}
+{"t": "2026-11-07T18:18:57Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2304, "total": 5000}
+{"t": "2026-11-07T18:18:58Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2432, "total": 5000}
+{"t": "2026-11-07T18:19:00Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2560, "total": 5000}
+{"t": "2026-11-07T18:19:01Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2688, "total": 5000}
+{"t": "2026-11-07T18:19:03Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2816, "total": 5000}
+{"t": "2026-11-07T18:19:04Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 2944, "total": 5000}
+{"t": "2026-11-07T18:19:06Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3072, "total": 5000}
+{"t": "2026-11-07T18:19:07Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3200, "total": 5000}
+{"t": "2026-11-07T18:19:09Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3328, "total": 5000}
+{"t": "2026-11-07T18:19:10Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3456, "total": 5000}
+{"t": "2026-11-07T18:19:12Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3584, "total": 5000}
+{"t": "2026-11-07T18:19:13Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3712, "total": 5000}
+{"t": "2026-11-07T18:19:15Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3840, "total": 5000}
+{"t": "2026-11-07T18:19:17Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 3968, "total": 5000}
+{"t": "2026-11-07T18:19:18Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4096, "total": 5000}
+{"t": "2026-11-07T18:19:20Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4224, "total": 5000}
+{"t": "2026-11-07T18:19:21Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4352, "total": 5000}
+{"t": "2026-11-07T18:19:23Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4480, "total": 5000}
+{"t": "2026-11-07T18:19:24Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4608, "total": 5000}
+{"t": "2026-11-07T18:19:26Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4736, "total": 5000}
+{"t": "2026-11-07T18:19:27Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4864, "total": 5000}
+{"t": "2026-11-07T18:19:29Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 4992, "total": 5000}
+{"t": "2026-11-07T18:19:29Z", "type": "progress", "stage": "DINOv3 test", "label": "DINO oi-test", "done": 5000, "total": 5000}
+{"t": "2026-11-07T18:19:29Z", "type": "log", "message": "── YOLO test"}
+{"t": "2026-11-07T18:19:29Z", "type": "stage", "stage": "YOLO test"}
+{"t": "2026-11-07T18:19:30Z", "type": "log", "message": "── train lp_clip"}
+{"t": "2026-11-07T18:19:30Z", "type": "stage", "stage": "train lp_clip"}
+{"t": "2026-11-07T18:19:34Z", "type": "log", "message": "  lp_clip: l2 0.0001 · unknown_weight 0 → val mAP 0.9080"}
+{"t": "2026-11-07T18:19:38Z", "type": "log", "message": "  lp_clip: l2 0.0001 · unknown_weight 0.1 → val mAP 0.9195"}
+{"t": "2026-11-07T18:19:43Z", "type": "log", "message": "  lp_clip: l2 0.0001 · unknown_weight 1 → val mAP 0.9242"}
+{"t": "2026-11-07T18:19:47Z", "type": "log", "message": "  lp_clip: l2 0.001 · unknown_weight 0 → val mAP 0.9192"}
+{"t": "2026-11-07T18:19:51Z", "type": "log", "message": "  lp_clip: l2 0.001 · unknown_weight 0.1 → val mAP 0.9293"}
+{"t": "2026-11-07T18:19:54Z", "type": "log", "message": "  lp_clip: l2 0.001 · unknown_weight 1 → val mAP 0.9360"}
+{"t": "2026-11-07T18:19:59Z", "type": "log", "message": "  lp_clip: l2 0.01 · unknown_weight 0 → val mAP 0.9284"}
+{"t": "2026-11-07T18:20:01Z", "type": "log", "message": "  lp_clip: l2 0.01 · unknown_weight 0.1 → val mAP 0.9386"}
+{"t": "2026-11-07T18:20:03Z", "type": "log", "message": "  lp_clip: l2 0.01 · unknown_weight 1 → val mAP 0.9390"}
+{"t": "2026-11-07T18:20:05Z", "type": "log", "message": "  lp_clip: l2 0.1 · unknown_weight 0 → val mAP 0.9387"}
+{"t": "2026-11-07T18:20:07Z", "type": "log", "message": "  lp_clip: l2 0.1 · unknown_weight 0.1 → val mAP 0.9384"}
+{"t": "2026-11-07T18:20:07Z", "type": "log", "message": "  lp_clip: l2 0.1 · unknown_weight 1 → val mAP 0.9224"}
+{"t": "2026-11-07T18:20:07Z", "type": "log", "message": "  → lp_clip: l2 0.01, unknown_weight 1 (val mAP 0.9390) · ! nằm ở biên lưới ['unknown_weight'] — cân nhắc mở rộng lưới"}
+{"t": "2026-11-07T18:20:08Z", "type": "log", "message": "── train lp_dino"}
+{"t": "2026-11-07T18:20:08Z", "type": "stage", "stage": "train lp_dino"}
+{"t": "2026-11-07T18:20:12Z", "type": "log", "message": "  lp_dino: l2 0.0001 · unknown_weight 0 → val mAP 0.8960"}
+{"t": "2026-11-07T18:20:15Z", "type": "log", "message": "  lp_dino: l2 0.0001 · unknown_weight 0.1 → val mAP 0.9118"}
+{"t": "2026-11-07T18:20:19Z", "type": "log", "message": "  lp_dino: l2 0.0001 · unknown_weight 1 → val mAP 0.9160"}
+{"t": "2026-11-07T18:20:23Z", "type": "log", "message": "  lp_dino: l2 0.001 · unknown_weight 0 → val mAP 0.9036"}
+{"t": "2026-11-07T18:20:26Z", "type": "log", "message": "  lp_dino: l2 0.001 · unknown_weight 0.1 → val mAP 0.9205"}
+{"t": "2026-11-07T18:20:28Z", "type": "log", "message": "  lp_dino: l2 0.001 · unknown_weight 1 → val mAP 0.9267"}
+{"t": "2026-11-07T18:20:32Z", "type": "log", "message": "  lp_dino: l2 0.01 · unknown_weight 0 → val mAP 0.9164"}
+{"t": "2026-11-07T18:20:33Z", "type": "log", "message": "  lp_dino: l2 0.01 · unknown_weight 0.1 → val mAP 0.9293"}
+{"t": "2026-11-07T18:20:34Z", "type": "log", "message": "  lp_dino: l2 0.01 · unknown_weight 1 → val mAP 0.9245"}
+{"t": "2026-11-07T18:20:36Z", "type": "log", "message": "  lp_dino: l2 0.1 · unknown_weight 0 → val mAP 0.9283"}
+{"t": "2026-11-07T18:20:37Z", "type": "log", "message": "  lp_dino: l2 0.1 · unknown_weight 0.1 → val mAP 0.9258"}
+{"t": "2026-11-07T18:20:38Z", "type": "log", "message": "  lp_dino: l2 0.1 · unknown_weight 1 → val mAP 0.9072"}
+{"t": "2026-11-07T18:20:38Z", "type": "log", "message": "  → lp_dino: l2 0.01, unknown_weight 0.1 (val mAP 0.9293)"}
+{"t": "2026-11-07T18:20:38Z", "type": "log", "message": "── train lp_clip_dino"}
+{"t": "2026-11-07T18:20:38Z", "type": "stage", "stage": "train lp_clip_dino"}
+{"t": "2026-11-07T18:20:43Z", "type": "log", "message": "  lp_clip_dino: l2 0.0001 · unknown_weight 0 → val mAP 0.9288"}
+{"t": "2026-11-07T18:20:48Z", "type": "log", "message": "  lp_clip_dino: l2 0.0001 · unknown_weight 0.1 → val mAP 0.9326"}
+{"t": "2026-11-07T18:20:54Z", "type": "log", "message": "  lp_clip_dino: l2 0.0001 · unknown_weight 1 → val mAP 0.9336"}
+{"t": "2026-11-07T18:20:59Z", "type": "log", "message": "  lp_clip_dino: l2 0.001 · unknown_weight 0 → val mAP 0.9352"}
+{"t": "2026-11-07T18:21:04Z", "type": "log", "message": "  lp_clip_dino: l2 0.001 · unknown_weight 0.1 → val mAP 0.9378"}
+{"t": "2026-11-07T18:21:09Z", "type": "log", "message": "  lp_clip_dino: l2 0.001 · unknown_weight 1 → val mAP 0.9415"}
+{"t": "2026-11-07T18:21:15Z", "type": "log", "message": "  lp_clip_dino: l2 0.01 · unknown_weight 0 → val mAP 0.9399"}
+{"t": "2026-11-07T18:21:18Z", "type": "log", "message": "  lp_clip_dino: l2 0.01 · unknown_weight 0.1 → val mAP 0.9453"}
+{"t": "2026-11-07T18:21:21Z", "type": "log", "message": "  lp_clip_dino: l2 0.01 · unknown_weight 1 → val mAP 0.9441"}
+{"t": "2026-11-07T18:21:25Z", "type": "log", "message": "  lp_clip_dino: l2 0.1 · unknown_weight 0 → val mAP 0.9465"}
+{"t": "2026-11-07T18:21:27Z", "type": "log", "message": "  lp_clip_dino: l2 0.1 · unknown_weight 0.1 → val mAP 0.9440"}
+{"t": "2026-11-07T18:21:28Z", "type": "log", "message": "  lp_clip_dino: l2 0.1 · unknown_weight 1 → val mAP 0.9289"}
+{"t": "2026-11-07T18:21:28Z", "type": "log", "message": "  → lp_clip_dino: l2 0.1, unknown_weight 0 (val mAP 0.9465) · ! nằm ở biên lưới ['l2', 'unknown_weight'] — cân nhắc mở rộng lưới"}
+{"t": "2026-11-07T18:21:28Z", "type": "log", "message": "── train fused_learned"}
+{"t": "2026-11-07T18:21:28Z", "type": "stage", "stage": "train fused_learned"}
+{"t": "2026-11-07T18:21:34Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 0 → val mAP 0.9331"}
+{"t": "2026-11-07T18:21:40Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 0.1 → val mAP 0.9352"}
+{"t": "2026-11-07T18:21:45Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 1 → val mAP 0.9374"}
+{"t": "2026-11-07T18:21:51Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 0 → val mAP 0.9375"}
+{"t": "2026-11-07T18:21:57Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 0.1 → val mAP 0.9419"}
+{"t": "2026-11-07T18:22:02Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 1 → val mAP 0.9435"}
+{"t": "2026-11-07T18:22:08Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 0 → val mAP 0.9418"}
+{"t": "2026-11-07T18:22:12Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 0.1 → val mAP 0.9491"}
+{"t": "2026-11-07T18:22:15Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 1 → val mAP 0.9491"}
+{"t": "2026-11-07T18:22:21Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 0 → val mAP 0.9477"}
+{"t": "2026-11-07T18:22:24Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 0.1 → val mAP 0.9471"}
+{"t": "2026-11-07T18:22:26Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 1 → val mAP 0.9376"}
+{"t": "2026-11-07T18:22:26Z", "type": "log", "message": "  → fused_learned: l2 0.01, unknown_weight 1 (val mAP 0.9491) · ! nằm ở biên lưới ['unknown_weight'] — cân nhắc mở rộng lưới"}
+{"t": "2026-11-07T18:22:26Z", "type": "log", "message": "── mốc không train (E2 zero-shot, E5 quy tắc)"}
+{"t": "2026-11-07T18:22:26Z", "type": "stage", "stage": "mốc không train (E2 zero-shot, E5 quy tắc)"}
+{"t": "2026-11-07T18:22:26Z", "type": "log", "message": "── đánh giá test"}
+{"t": "2026-11-07T18:22:26Z", "type": "stage", "stage": "đánh giá test"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  zs_clip        mAP 0.8841 · macro-F1 0.8257 · macro-F1@P≥0.9 0.7003 · ECE 0.0309"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  e5_per_tag     mAP 0.8880 · macro-F1 0.8484 · macro-F1@P≥0.9 0.7637 · ECE 0.0262"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  lp_clip        mAP 0.9379 · macro-F1 0.8676 · macro-F1@P≥0.9 0.8031 · ECE 0.0230"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  lp_dino        mAP 0.9286 · macro-F1 0.8600 · macro-F1@P≥0.9 0.7828 · ECE 0.0206"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  lp_clip_dino   mAP 0.9431 · macro-F1 0.8758 · macro-F1@P≥0.9 0.8204 · ECE 0.0181"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "  fused_learned  mAP 0.9500 · macro-F1 0.8756 · macro-F1@P≥0.9 0.8197 · ECE 0.0211"}
+{"t": "2026-11-07T18:22:27Z", "type": "log", "message": "── bootstrap ghép cặp 300×"}
+{"t": "2026-11-07T18:22:27Z", "type": "stage", "stage": "bootstrap ghép cặp 300×"}
+{"t": "2026-11-07T18:23:05Z", "type": "log", "message": "── artifacts cho E6"}
+{"t": "2026-11-07T18:23:05Z", "type": "stage", "stage": "artifacts cho E6"}
+{"t": "2026-11-07T18:23:05Z", "type": "log", "message": "xong sau 2178s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/probe/20261108-004647"}

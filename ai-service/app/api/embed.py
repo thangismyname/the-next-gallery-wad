@@ -1,7 +1,6 @@
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
-from fastapi.concurrency import run_in_threadpool
 
-from app.api.deps import parse_json_field, read_image_or_400
+from app.api.deps import parse_json_field, read_image_or_400, run_model
 from app.schemas.embed import (
     ClassifyResponse,
     ClipInfoResponse,
@@ -18,9 +17,7 @@ async def embed_image(request: Request, file: UploadFile = File(...)):
     image_bytes = await read_image_or_400(file)
 
     provider = request.app.state.embed_provider
-    # Inference CPU-bound → chạy trong threadpool để không chặn event loop
-    # (không thì mọi request khác, kể cả /health, đều stall trong lúc encode).
-    embedding = await run_in_threadpool(provider.encode_image, image_bytes)
+    embedding = await run_model(request.app.state.embed_lock, provider.encode_image, image_bytes)
 
     return EmbedResponse(
         provider=provider.name,
@@ -34,7 +31,7 @@ async def embed_image(request: Request, file: UploadFile = File(...)):
 async def embed_text(request: Request, payload: TextEmbedRequest):
     """Mã hoá câu truy vấn text thành vector embedding (CLIP text encoder)."""
     provider = request.app.state.embed_provider
-    embedding = await run_in_threadpool(provider.encode_text, payload.text)
+    embedding = await run_model(request.app.state.embed_lock, provider.encode_text, payload.text)
 
     return EmbedResponse(
         provider=provider.name,
@@ -69,8 +66,8 @@ async def classify_image(
         )
 
     provider = request.app.state.embed_provider
-    predictions = await run_in_threadpool(
-        provider.classify, image_bytes, label_list, template_list
+    predictions = await run_model(
+        request.app.state.embed_lock, provider.classify, image_bytes, label_list, template_list
     )
 
     return ClassifyResponse(

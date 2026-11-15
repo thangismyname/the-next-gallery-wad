@@ -1,0 +1,7 @@
+thresholds,group,classes,mAP,macro_f1,micro_f1,micro_precision
+tuned_on_val,all,78,0.89731,0.82932,0.88205,0.89844
+tuned_on_val,object,78,0.89731,0.82932,0.88205,0.89844
+app_conf_0.25,all,78,0.89731,0.79942,0.85927,0.92154
+app_conf_0.25,object,78,0.89731,0.79942,0.85927,0.92154
+app_min_conf_0.4,all,78,0.89731,0.75319,0.8297,0.94083
+app_min_conf_0.4,object,78,0.89731,0.75319,0.8297,0.94083

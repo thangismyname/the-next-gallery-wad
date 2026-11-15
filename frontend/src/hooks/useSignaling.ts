@@ -13,16 +13,19 @@ type SignalHandler = (payload: SignalPayload) => void;
 let sharedClient: SignalingClient | null = null;
 let subscriberCount = 0;
 
+/** Client dùng chung (tạo + kết nối nếu chưa) — cho engine ngoài React (gửi file). */
+export function getSignalingClient(): SignalingClient {
+  if (!sharedClient) {
+    sharedClient = new SignalingClient(WS_URL);
+  }
+  if (!sharedClient.isConnected() && !sharedClient.isConnecting()) {
+    sharedClient.connect();
+  }
+  return sharedClient;
+}
+
 export function useSignaling() {
-  const getClient = useCallback(() => {
-    if (!sharedClient) {
-      sharedClient = new SignalingClient(WS_URL);
-    }
-    if (!sharedClient.isConnected() && !sharedClient.isConnecting()) {
-      sharedClient.connect();
-    }
-    return sharedClient;
-  }, []);
+  const getClient = useCallback(getSignalingClient, []);
 
   useEffect(() => {
     subscriberCount += 1;

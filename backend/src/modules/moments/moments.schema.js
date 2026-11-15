@@ -5,6 +5,12 @@ export const listFeedQuerySchema = z.object({
   offset: z.coerce.number().int().min(0).default(0),
 });
 
+// Lời mời điền slot (draft collab) — nhỏ hơn feed vì popover không cần nhiều.
+export const listInvitationsQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+  offset: z.coerce.number().int().min(0).default(0),
+});
+
 export const createMomentSchema = z
   .object({
     template: z.enum(["single", "duo_square", "trio_wide"]).default("single"),
@@ -28,6 +34,17 @@ export const updateMomentSchema = createMomentSchema.refine(
   },
 );
 
+// PATCH /:momentId — sửa caption/visibility của moment đã đăng (P3.1).
+export const patchMomentSchema = z
+  .object({
+    caption: z.string().trim().max(280).nullable().optional(),
+    visibility: z.enum(["circle", "public", "private"]).optional(),
+  })
+  .refine(
+    (d) => d.caption !== undefined || d.visibility !== undefined,
+    { message: "Cần ít nhất caption hoặc visibility" },
+  );
+
 export const fillSlotsSchema = z.object({
   mediaIds: z.array(z.string().uuid("mediaId không hợp lệ")).min(1).max(3),
 });
@@ -36,9 +53,12 @@ export const momentParamsSchema = z.object({
   momentId: z.string().uuid("momentId không hợp lệ"),
 });
 
-// React: bắt buộc có emoji.
+// React: bắt buộc có emoji (1 grapheme Extended_Pictographic, tuỳ chọn ZWJ).
 export const createReactionSchema = z.object({
-  emoji: z.string().min(1).max(10),
+  emoji: z.string().trim().min(1).max(10).regex(
+    /^\p{Extended_Pictographic}[\u{1F3FB}-\u{1F3FF}]?(\u200d\p{Extended_Pictographic}[\u{1F3FB}-\u{1F3FF}]?)*\uFE0F?$/u,
+    "Emoji không hợp lệ",
+  ),
 });
 
 // Meme: template + dòng chữ (memegen.link) + caption tùy chọn.

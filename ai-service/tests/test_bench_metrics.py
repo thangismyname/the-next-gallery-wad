@@ -66,7 +66,7 @@ def _add(tar, name, data):
 
 
 def test_wds_readers(tmp_path, tiny_png):
-    root = tmp_path / "clip_benchmark"
+    root = tmp_path / "Data" / "clip_benchmark"
     coco = root / "mscoco_captions" / "test"
     coco.mkdir(parents=True)
     with tarfile.open(coco / "0.tar", "w") as tar:

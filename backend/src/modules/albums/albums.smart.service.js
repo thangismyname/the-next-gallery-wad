@@ -3,7 +3,9 @@
 //   query  câu search kết hợp (CLIP + tag + YOLO — hybrid.search.service.js)
 import { dbPool } from "../../config/db.js";
 import { hybridSearch } from "../ai/hybrid.search.service.js";
+import { mediaThumbUrl } from "../media/media.mapper.js";
 import { SMART_QUERY_LIMIT } from "./albums.constants.js";
+import { logger } from "../../lib/logger.js";
 
 const TAG_LIMIT = 5000;
 
@@ -40,7 +42,16 @@ export async function smartSummary(ownerId, rule) {
     const hits = await resolveSmartHits(ownerId, rule);
     return { mediaCount: hits.length, coverId: hits[0]?.id ?? null };
   } catch (err) {
-    console.warn(`⚠️  Album thông minh lỗi: ${err.message}`);
+    logger.warn({ err }, `Album thông minh lỗi`);
     return { mediaCount: 0, coverId: null };
   }
+}
+
+/** Số ảnh khớp + vài ảnh đầu, trước khi lưu (form tạo / sửa). Lỗi ai-service → ném ra. */
+export async function previewSmartRule(userId, rule, { sample = 4 } = {}) {
+  const hits = await resolveSmartHits(userId, rule);
+  return {
+    total: hits.length,
+    thumbnails: hits.slice(0, sample).map((h) => ({ id: h.id, url: mediaThumbUrl(h.id, "small") })),
+  };
 }

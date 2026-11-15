@@ -19,6 +19,7 @@ import {
   isHeifItem,
   openImageSource,
 } from "./media.sources.js";
+import { logger } from "../../lib/logger.js";
 
 export const DISPLAY_MAX_EDGE = 2048;
 
@@ -190,7 +191,7 @@ export async function ensureDerivatives(item) {
       id,
       withSlot(() => generateMissing(item))
         .catch((err) => {
-          console.error(`Lỗi tạo thumbnail cho media ${id}:`, err.message);
+          logger.error({ err }, `Lỗi tạo thumbnail cho media ${id}`);
           failedAt.set(id, Date.now());
           return keys;
         })
@@ -238,7 +239,7 @@ export async function ensureFullObject(item) {
       id,
       withSlot(() => generateFull(item))
         .catch((err) => {
-          console.error(`Lỗi tạo bản full cho media ${item.id}:`, err.message);
+          logger.error({ err }, `Lỗi tạo bản full cho media ${item.id}`);
           failedAt.set(id, Date.now());
           return null;
         })

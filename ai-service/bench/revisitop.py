@@ -29,7 +29,7 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.common import DEFAULT_DATA_ROOT
+from bench.common import DEFAULT_DATA_ROOT, classes_dir, data_dir
 
 DATASETS = {
     # Số ảnh database của bản Revisited (Radenović et al., CVPR 2018, Table 1) —
@@ -42,7 +42,12 @@ KAPPAS = (1, 5, 10)
 
 
 def dataset_dir(data_root: Path, name: str) -> Path:
-    return data_root.expanduser().resolve() / "revisitop" / name
+    """Ảnh: Data/revisitop/<name>/jpg/ · ground truth: Classes/revisitop/<name>/gnd_<name>.pkl"""
+    return data_dir(data_root, "revisitop") / name
+
+
+def gnd_path(data_root: Path, name: str) -> Path:
+    return classes_dir(data_root, "revisitop") / name / f"gnd_{name}.pkl"
 
 
 @dataclass
@@ -59,7 +64,7 @@ class RevisitopData:
 
 def load_revisitop(data_root: Path, name: str) -> RevisitopData:
     root = dataset_dir(data_root, name)
-    gnd_file = root / f"gnd_{name}.pkl"
+    gnd_file = gnd_path(data_root, name)
     if not gnd_file.exists():
         raise SystemExit(f"Thiếu {gnd_file} — xem bench/README.md (mục DINOv3).")
     with open(gnd_file, "rb") as fh:
@@ -175,7 +180,7 @@ def check(data_root: Path) -> bool:
     for name, expected in DATASETS.items():
         root = dataset_dir(data_root, name)
         jpg_dir = root / "jpg"
-        gnd_file = root / f"gnd_{name}.pkl"
+        gnd_file = gnd_path(data_root, name)
         print(f"\n[{name}] {root}")
         if not jpg_dir.exists() or not gnd_file.exists():
             print(f"  ✗ thiếu {'jpg/' if not jpg_dir.exists() else gnd_file.name}")

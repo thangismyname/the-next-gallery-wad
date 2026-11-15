@@ -1,0 +1,69 @@
+{"t": "2026-11-08T15:55:36Z", "type": "log", "message": "run e6/20261108-225535 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261108-225535"}
+{"t": "2026-11-08T15:55:36Z", "type": "log", "message": "── load"}
+{"t": "2026-11-08T15:55:36Z", "type": "stage", "stage": "load"}
+{"t": "2026-11-08T15:55:36Z", "type": "log", "message": "── chọn λ trên caption val"}
+{"t": "2026-11-08T15:55:36Z", "type": "stage", "stage": "chọn λ trên caption val"}
+{"t": "2026-11-08T15:55:57Z", "type": "log", "message": "  boost      yolo          λ = 0.05 (val MRR 0.4390)"}
+{"t": "2026-11-08T15:55:57Z", "type": "log", "message": "  boost_prob yolo          λ = 0.1 (val MRR 0.4437)"}
+{"t": "2026-11-08T15:55:57Z", "type": "log", "message": "  boost      clip          λ = 0.005 (val MRR 0.4295)  ! biên lưới"}
+{"t": "2026-11-08T15:55:57Z", "type": "log", "message": "  boost_prob clip          λ = 0.005 (val MRR 0.4291)  ! biên lưới"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost      fused         λ = 0.02 (val MRR 0.4346)"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost_prob fused         λ = 0.05 (val MRR 0.4357)"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost      yolo_ft       λ = 0.02 (val MRR 0.4346)"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost_prob yolo_ft       λ = 0.05 (val MRR 0.4381)"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost      fused_ft      λ = 0.02 (val MRR 0.4332)"}
+{"t": "2026-11-08T15:55:58Z", "type": "log", "message": "  boost_prob fused_ft      λ = 0.05 (val MRR 0.4374)"}
+{"t": "2026-11-08T15:55:59Z", "type": "log", "message": "  boost      lp_clip       λ = 0.02 (val MRR 0.4335)"}
+{"t": "2026-11-08T15:55:59Z", "type": "log", "message": "  boost_prob lp_clip       λ = 0.05 (val MRR 0.4403)"}
+{"t": "2026-11-08T15:55:59Z", "type": "log", "message": "  boost      lp_dino       λ = 0.02 (val MRR 0.4330)"}
+{"t": "2026-11-08T15:55:59Z", "type": "log", "message": "  boost_prob lp_dino       λ = 0.05 (val MRR 0.4382)"}
+{"t": "2026-11-08T15:55:59Z", "type": "log", "message": "  boost      lp_clip_dino  λ = 0.02 (val MRR 0.4340)"}
+{"t": "2026-11-08T15:56:00Z", "type": "log", "message": "  boost_prob lp_clip_dino  λ = 0.05 (val MRR 0.4419)"}
+{"t": "2026-11-08T15:56:00Z", "type": "log", "message": "  boost      fused_learned λ = 0.05 (val MRR 0.4376)"}
+{"t": "2026-11-08T15:56:00Z", "type": "log", "message": "  boost_prob fused_learned λ = 0.05 (val MRR 0.4434)"}
+{"t": "2026-11-08T15:56:00Z", "type": "log", "message": "  boost      fused_learned_ft λ = 0.02 (val MRR 0.4344)"}
+{"t": "2026-11-08T15:56:00Z", "type": "log", "message": "  boost_prob fused_learned_ft λ = 0.05 (val MRR 0.4396)"}
+{"t": "2026-11-08T15:56:01Z", "type": "log", "message": "  boost      oracle        λ = 0.02 (val MRR 0.4431)"}
+{"t": "2026-11-08T15:56:01Z", "type": "log", "message": "  boost_prob oracle        λ = 0.02 (val MRR 0.4431)"}
+{"t": "2026-11-08T15:56:01Z", "type": "log", "message": "  ! λ nằm ở biên lưới cho ['boost:clip', 'boost_prob:clip'] — cân nhắc mở rộng --lambdas"}
+{"t": "2026-11-08T15:56:01Z", "type": "log", "message": "── captions test"}
+{"t": "2026-11-08T15:56:01Z", "type": "stage", "stage": "captions test"}
+{"t": "2026-11-08T15:56:21Z", "type": "log", "message": "  oracle: 12144 cặp (caption, lớp nhắc tới) — ảnh đích positive 66.4% · negative 1.7% · chưa xác minh 31.8%"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  clip       -             R@1 0.247 · MRR 0.3607"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     yolo          R@1 0.234 · MRR 0.3460"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      yolo          R@1 0.254 · MRR 0.3699"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob yolo          R@1 0.257 · MRR 0.3727"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     clip          R@1 0.173 · MRR 0.2751"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      clip          R@1 0.247 · MRR 0.3607"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob clip          R@1 0.246 · MRR 0.3601"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     fused         R@1 0.184 · MRR 0.2910"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      fused         R@1 0.249 · MRR 0.3641"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob fused         R@1 0.247 · MRR 0.3628"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     yolo_ft       R@1 0.216 · MRR 0.3228"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      yolo_ft       R@1 0.251 · MRR 0.3658"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob yolo_ft       R@1 0.255 · MRR 0.3694"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     fused_ft      R@1 0.189 · MRR 0.2915"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      fused_ft      R@1 0.248 · MRR 0.3632"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob fused_ft      R@1 0.251 · MRR 0.3658"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     lp_clip       R@1 0.183 · MRR 0.2844"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      lp_clip       R@1 0.247 · MRR 0.3629"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob lp_clip       R@1 0.252 · MRR 0.3665"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     lp_dino       R@1 0.177 · MRR 0.2726"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      lp_dino       R@1 0.249 · MRR 0.3636"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob lp_dino       R@1 0.254 · MRR 0.3675"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     lp_clip_dino  R@1 0.190 · MRR 0.2913"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      lp_clip_dino  R@1 0.249 · MRR 0.3644"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob lp_clip_dino  R@1 0.252 · MRR 0.3676"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     fused_learned R@1 0.201 · MRR 0.3056"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      fused_learned R@1 0.252 · MRR 0.3670"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob fused_learned R@1 0.259 · MRR 0.3727"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     fused_learned_ft R@1 0.199 · MRR 0.3028"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      fused_learned_ft R@1 0.251 · MRR 0.3660"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob fused_learned_ft R@1 0.255 · MRR 0.3696"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  filter     oracle        R@1 0.242 · MRR 0.3529"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost      oracle        R@1 0.267 · MRR 0.3818"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "  boost_prob oracle        R@1 0.267 · MRR 0.3818"}
+{"t": "2026-11-08T15:56:24Z", "type": "log", "message": "── query ghép"}
+{"t": "2026-11-08T15:56:24Z", "type": "stage", "stage": "query ghép"}
+{"t": "2026-11-08T15:56:25Z", "type": "log", "message": "  → 204 cặp chưa chấm (44 mới): /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261108-225535/judge.html · điền /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Classes/open-images/judgments.csv rồi chạy lại e6"}
+{"t": "2026-11-08T15:56:25Z", "type": "log", "message": "xong sau 50s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261108-225535"}

@@ -1,0 +1,4 @@
+group,yolo_covered,classes,clip,yolo,or,and,target_reached
+object,True,81,19,16,34,12,80
+object,False,47,47,0,0,0,47
+scene,False,46,46,0,0,0,46

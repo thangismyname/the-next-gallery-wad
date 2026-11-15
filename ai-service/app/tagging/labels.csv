@@ -1,0 +1,178 @@
+# Nhãn chi tiết (Open Images V7, 174 lớp) cho app — cùng thứ tự với experiments/data/oi_classes.csv
+# (= thứ tự cột của probe `experiments probe`). id trong DB = "oi.<id>".
+# section = nhóm hiển thị trong AI Studio (tên nhóm ở i18n FE `studio.sections.<section>`).
+id,oi_name,section,en,vi,ja
+person,Person,people,Person,Người,人物
+bicycle,Bicycle,vehicles,Bicycle,Xe đạp,自転車
+car,Car,vehicles,Car,Ô tô,車
+motorcycle,Motorcycle,vehicles,Motorcycle,Xe máy,バイク
+airplane,Fixed-wing aircraft,vehicles,Airplane,Máy bay,飛行機
+bus,Bus,vehicles,Bus,Xe buýt,バス
+train,Train,vehicles,Train,Tàu hoả,電車
+truck,Truck,vehicles,Truck,Xe tải,トラック
+boat,Boat,vehicles,Boat,Thuyền,ボート
+traffic_light,Traffic light,city,Traffic light,Đèn giao thông,信号機
+fire_hydrant,Fire hydrant,city,Fire hydrant,Trụ cứu hoả,消火栓
+stop_sign,Stop sign,city,Stop sign,Biển dừng,一時停止標識
+parking_meter,Parking meter,city,Parking meter,Đồng hồ đỗ xe,パーキングメーター
+bench,Bench,city,Bench,Ghế băng,ベンチ
+bird,Bird,animals,Bird,Chim,鳥
+cat,Cat,animals,Cat,Mèo,猫
+dog,Dog,animals,Dog,Chó,犬
+horse,Horse,animals,Horse,Ngựa,馬
+sheep,Sheep,animals,Sheep,Cừu,羊
+cow,Cattle,animals,Cow,Bò,牛
+elephant,Elephant,animals,Elephant,Voi,象
+bear,Bear,animals,Bear,Gấu,クマ
+zebra,Zebra,animals,Zebra,Ngựa vằn,シマウマ
+giraffe,Giraffe,animals,Giraffe,Hươu cao cổ,キリン
+backpack,Backpack,fashion,Backpack,Ba lô,リュック
+umbrella,Umbrella,fashion,Umbrella,Ô (dù),傘
+handbag,Handbag,fashion,Handbag,Túi xách,ハンドバッグ
+tie,Tie,fashion,Tie,Cà vạt,ネクタイ
+suitcase,Suitcase,fashion,Suitcase,Vali,スーツケース
+frisbee,Flying disc,sports,Frisbee,Đĩa bay,フリスビー
+ski,Ski,sports,Ski,Ván trượt tuyết,スキー
+snowboard,Snowboard,sports,Snowboard,Ván trượt tuyết đơn,スノーボード
+ball,Ball (Object),sports,Ball,Quả bóng,ボール
+kite,Kite,sports,Kite,Diều,凧
+baseball_bat,Baseball bat,sports,Baseball bat,Gậy bóng chày,野球バット
+baseball_glove,Baseball glove,sports,Baseball glove,Găng bóng chày,野球グローブ
+skateboard,Skateboard,sports,Skateboard,Ván trượt,スケートボード
+surfboard,Surfboard,sports,Surfboard,Ván lướt sóng,サーフボード
+tennis_racket,Tennis racket,sports,Tennis racket,Vợt tennis,テニスラケット
+bottle,Bottle,food,Bottle,Chai,ボトル
+wine_glass,Wine glass,food,Wine glass,Ly rượu vang,ワイングラス
+mug,Mug,food,Mug,Cốc,マグカップ
+coffee_cup,Coffee cup,food,Coffee cup,Tách cà phê,コーヒーカップ
+fork,Fork,food,Fork,Nĩa,フォーク
+knife,Knife,food,Knife,Dao,ナイフ
+spoon,Spoon,food,Spoon,Thìa,スプーン
+bowl,Bowl,food,Bowl,Bát,ボウル
+banana,Banana,food,Banana,Chuối,バナナ
+apple,Apple,food,Apple,Táo,りんご
+sandwich,Sandwich,food,Sandwich,Bánh mì kẹp,サンドイッチ
+orange,Orange (fruit),food,Orange,Cam,オレンジ
+broccoli,Broccoli,food,Broccoli,Bông cải xanh,ブロッコリー
+carrot,Carrot,food,Carrot,Cà rốt,にんじん
+hot_dog,Hot dog,food,Hot dog,Xúc xích kẹp,ホットドッグ
+pizza,Pizza,food,Pizza,Pizza,ピザ
+donut,Doughnut,food,Donut,Bánh donut,ドーナツ
+cake,Cake,food,Cake,Bánh ngọt,ケーキ
+chair,Chair,home,Chair,Ghế,椅子
+couch,Couch,home,Sofa,Ghế sofa,ソファ
+houseplant,Houseplant,home,Houseplant,Cây cảnh,観葉植物
+bed,Bed,home,Bed,Giường,ベッド
+dining_table,Kitchen & dining room table,home,Dining table,Bàn ăn,ダイニングテーブル
+toilet,Toilet,home,Toilet,Bồn cầu,トイレ
+television,Television,tech,TV,Tivi,テレビ
+laptop,Laptop,tech,Laptop,Laptop,ノートパソコン
+computer_mouse,Computer mouse,tech,Mouse,Chuột máy tính,マウス
+remote_control,Remote control,tech,Remote control,Điều khiển,リモコン
+keyboard,Computer keyboard,tech,Keyboard,Bàn phím,キーボード
+mobile_phone,Mobile phone,tech,Phone,Điện thoại,スマートフォン
+microwave,Microwave oven,home,Microwave,Lò vi sóng,電子レンジ
+oven,Oven,home,Oven,Lò nướng,オーブン
+toaster,Toaster,home,Toaster,Máy nướng bánh mì,トースター
+sink,Sink,home,Sink,Bồn rửa,シンク
+refrigerator,Refrigerator,home,Fridge,Tủ lạnh,冷蔵庫
+book,Book,documents,Book,Sách,本
+clock,Clock,home,Clock,Đồng hồ,時計
+vase,Vase,home,Vase,Bình hoa,花瓶
+scissors,Scissors,home,Scissors,Kéo,はさみ
+teddy_bear,Teddy bear,home,Teddy bear,Gấu bông,テディベア
+hair_dryer,Hair dryer,home,Hair dryer,Máy sấy tóc,ドライヤー
+toothbrush,Toothbrush,home,Toothbrush,Bàn chải đánh răng,歯ブラシ
+face,Human face,people,Face,Khuôn mặt,顔
+tree,Tree,nature,Tree,Cây,木
+flower,Flower,nature,Flower,Hoa,花
+building,Building,architecture,Building,Toà nhà,建物
+house,House,architecture,House,Nhà,家
+skyscraper,Skyscraper,architecture,Skyscraper,Nhà chọc trời,高層ビル
+tower,Tower,architecture,Tower,Tháp,塔
+castle,Castle,architecture,Castle,Lâu đài,城
+lighthouse,Lighthouse,architecture,Lighthouse,Hải đăng,灯台
+fountain,Fountain,architecture,Fountain,Đài phun nước,噴水
+sunglasses,Sunglasses,fashion,Sunglasses,Kính râm,サングラス
+hat,Hat,fashion,Hat,Mũ,帽子
+footwear,Footwear,fashion,Shoes,Giày dép,靴
+dress,Dress,fashion,Dress,Váy,ドレス
+guitar,Guitar,events,Guitar,Đàn guitar,ギター
+camera,Camera,tech,Camera,Máy ảnh,カメラ
+balloon,Balloon,events,Balloon,Bóng bay,風船
+christmas_tree,Christmas tree,events,Christmas tree,Cây thông Noel,クリスマスツリー
+swimming_pool,Swimming pool,sports,Swimming pool,Hồ bơi,プール
+tent,Tent,nature,Tent,Lều,テント
+flag,Flag,events,Flag,Lá cờ,旗
+street_light,Street light,city,Street light,Đèn đường,街灯
+traffic_sign,Traffic sign,city,Traffic sign,Biển báo,交通標識
+taxi,Taxi,vehicles,Taxi,Taxi,タクシー
+van,Van,vehicles,Van,Xe van,バン
+helicopter,Helicopter,vehicles,Helicopter,Trực thăng,ヘリコプター
+monkey,Monkey,animals,Monkey,Khỉ,猿
+duck,Duck,animals,Duck,Vịt,アヒル
+fish,Fish,animals,Fish,Cá,魚
+butterfly,Butterfly,animals,Butterfly,Bướm,蝶
+tiger,Tiger,animals,Tiger,Hổ,トラ
+lion,Lion,animals,Lion,Sư tử,ライオン
+goat,Goat,animals,Goat,Dê,ヤギ
+pig,Pig,animals,Pig,Lợn,豚
+deer,Deer,animals,Deer,Hươu,鹿
+ice_cream,Ice cream,food,Ice cream,Kem,アイスクリーム
+coffee,Coffee (drink),food,Coffee,Cà phê,コーヒー
+wine,Wine,food,Wine,Rượu vang,ワイン
+beer,Beer,food,Beer,Bia,ビール
+cocktail,Cocktail,food,Cocktail,Cocktail,カクテル
+salad,Salad,food,Salad,Salad,サラダ
+sushi,Sushi,food,Sushi,Sushi,寿司
+bread,Bread,food,Bread,Bánh mì,パン
+cookie,Cookie,food,Cookie,Bánh quy,クッキー
+hamburger,Hamburger,food,Hamburger,Hamburger,ハンバーガー
+french_fries,French fries,food,French fries,Khoai tây chiên,フライドポテト
+pasta,Pasta,food,Pasta,Mì Ý,パスタ
+beach,Beach,beach,Beach,Bãi biển,ビーチ
+sea,Sea,beach,Sea,Biển,海
+coast,Coast,beach,Coast,Bờ biển,海岸
+island,Island,beach,Island,Đảo,島
+mountain,Mountain,nature,Mountain,Núi,山
+mountain_range,Mountain range,nature,Mountain range,Dãy núi,山脈
+valley,Valley,nature,Valley,Thung lũng,谷
+forest,Forest,nature,Forest,Rừng,森
+lake,Lake,nature,Lake,Hồ,湖
+river,River,nature,River,Sông,川
+waterfall,Waterfall,nature,Waterfall,Thác nước,滝
+field,Field,nature,Field,Cánh đồng,野原
+garden,Garden,nature,Garden,Khu vườn,庭
+park,Park,nature,Park,Công viên,公園
+desert,Desert,nature,Desert,Sa mạc,砂漠
+snow,Snow,sky,Snow,Tuyết,雪
+sky,Sky,sky,Sky,Bầu trời,空
+cloud,Cloud,sky,Clouds,Mây,雲
+sunset,Sunset,sky,Sunset,Hoàng hôn,夕焼け
+sunrise,Sunrise,sky,Sunrise,Bình minh,日の出
+night,Night,sky,Night,Ban đêm,夜
+road,Road,city,Road,Con đường,道路
+street,Street,city,Street,Đường phố,通り
+city,City,city,City,Thành phố,都市
+town,Town,city,Town,Thị trấn,町
+skyline,Skyline,architecture,Skyline,Đường chân trời thành phố,スカイライン
+bridge,Bridge (structure),architecture,Bridge,Cây cầu,橋
+temple,Temple,architecture,Temple,Đền chùa,寺院
+church,Church,architecture,Church,Nhà thờ,教会
+room,Room,home,Room,Căn phòng,部屋
+kitchen,Kitchen,home,Kitchen,Nhà bếp,キッチン
+bedroom,Bedroom,home,Bedroom,Phòng ngủ,寝室
+living_room,Living room,home,Living room,Phòng khách,リビング
+restaurant,Restaurant,food,Restaurant,Nhà hàng,レストラン
+stadium,Stadium,sports,Stadium,Sân vận động,スタジアム
+wedding,Wedding,events,Wedding,Đám cưới,結婚式
+party,Party,events,Party,Bữa tiệc,パーティー
+concert,Concert,events,Concert,Buổi hoà nhạc,コンサート
+festival,Festival,events,Festival,Lễ hội,祭り
+crowd,Crowd,people,Crowd,Đám đông,群衆
+selfie,Selfie,people,Selfie,Ảnh tự sướng,自撮り
+portrait,Portrait,people,Portrait,Chân dung,ポートレート
+smile,Smile,people,Smile,Nụ cười,笑顔
+text,Text,documents,Text,Chữ viết,文字
+document,Document,documents,Document,Tài liệu,書類
+landscape,Landscape,nature,Landscape,Phong cảnh,風景

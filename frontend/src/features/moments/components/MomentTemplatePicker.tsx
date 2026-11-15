@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { MomentTemplate } from "@/types";
+import { MomentTemplate } from "@tng/shared";
 import { cn } from "@/lib/utils";
 
 export type MomentCreateMode = "self" | "collab";

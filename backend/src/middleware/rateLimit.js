@@ -1,9 +1,19 @@
 // Giới hạn tần suất cho các route tốn tài nguyên (gọi ai-service, ghi MinIO,
 // nén zip). Đếm theo user khi đã đăng nhập (đặt SAU requireAuth), không thì
 // theo IP (`trust proxy` bật ở production nên IP là IP thật sau Caddy).
-// Bộ đếm trong RAM — 1 instance backend là đủ; chạy nhiều instance thì cần
-// store chung (Redis). Better Auth tự giới hạn các route đăng nhập.
+// Store: Redis nếu REDIS_URL set + reachable, fallback in-memory.
 import { ipKeyGenerator, rateLimit } from "express-rate-limit";
+import { RedisStore } from "rate-limit-redis";
+import { getRedis } from "../config/redis.js";
+
+function makeStore(name) {
+  const redis = getRedis();
+  if (!redis) return undefined; // in-memory default
+  return new RedisStore({
+    sendCommand: (...args) => redis.call(...args),
+    prefix: `rl:${name}:`,
+  });
+}
 
 function limiter(name, { windowMs = 60_000, limit }) {
   return rateLimit({
@@ -11,6 +21,7 @@ function limiter(name, { windowMs = 60_000, limit }) {
     limit,
     standardHeaders: "draft-8",
     legacyHeaders: false,
+    store: makeStore(name),
     keyGenerator: (req) => (req.user?.id ? `u:${req.user.id}` : `ip:${ipKeyGenerator(req.ip)}`),
     handler: (_req, res) =>
       res.status(429).json({
@@ -32,3 +43,15 @@ export const backfillLimit = limiter("backfill", { limit: 120 });
 export const downloadLimit = limiter("download", { limit: 20 });
 /** Link album công khai (không đăng nhập) — theo IP. */
 export const publicLimit = limiter("public", { limit: 300 });
+/** Nhập mã 6 số nhận file — chống dò mã (32^6 ≈ 1 tỉ, mã sống 10 phút). */
+export const transferCodeLimit = limiter("transfer-code", { limit: 20 });
+/** Tạo phiên gửi / đổi mã / thu hồi. */
+export const transferWriteLimit = limiter("transfer-write", { limit: 60 });
+/** Part relay 4 MiB: 5 GB ≈ 1280 part — đủ cho ~100 MB/s. */
+export const relayLimit = limiter("transfer-relay", { limit: 3000 });
+/** Moments: đọc feed / lời mời (infinite scroll + badge). */
+export const momentsReadLimit = limiter("moments-read", { limit: 240 });
+/** Moments: tạo / sửa / điền slot / xoá / rời / reaction. */
+export const momentsWriteLimit = limiter("moments-write", { limit: 30 });
+/** Meme: mỗi lần tạo gọi memegen.link rồi tải ảnh về MinIO → chặn spam. */
+export const memeWriteLimit = limiter("meme-write", { limit: 10 });

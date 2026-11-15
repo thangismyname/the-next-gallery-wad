@@ -5,6 +5,14 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from app.tagging.taxonomy import (
+    OBJECT_TAGS,
+    SCENE_TAGS,
+    TAG_IDS,
+    TAGS,
+    coco_tags_for,
+    places_to_tag,
+)
 from bench import cls_features
 from bench.cls_data import ClsDataset, load_coco_tags, load_places6, stable_split
 from bench.cls_models import (
@@ -19,14 +27,6 @@ from bench.cls_models import (
     tune_thresholds,
 )
 from bench.cls_prelabel import merge_entry
-from bench.cls_taxonomy import (
-    OBJECT_TAGS,
-    SCENE_TAGS,
-    TAG_IDS,
-    TAGS,
-    coco_tags_for,
-    places_to_tag,
-)
 
 
 def test_taxonomy_is_consistent():
@@ -72,8 +72,9 @@ def test_places_mapping_matches_official_category_list():
 
 
 def test_places_and_coco_loaders(tmp_path):
-    places = tmp_path / "places365"
-    (places / "val_256").mkdir(parents=True)
+    places = tmp_path / "Classes" / "places365"              # danh sách lớp + file list
+    places.mkdir(parents=True)
+    (tmp_path / "Data" / "places365" / "val_256").mkdir(parents=True)
     names = OFFICIAL_PLACES.read_text().split()
     (places / "categories_places365.txt").write_text("".join(f"{n} {i}\n" for i, n in enumerate(names)))
     beach, airfield, mountain = (names.index(n) for n in ("/b/beach", "/a/airfield", "/m/mountain"))
@@ -83,7 +84,7 @@ def test_places_and_coco_loaders(tmp_path):
     assert ds.single_label and ds.Y.sum(1).tolist() == [1, 1]
     assert ds.Y[0, SCENE_TAGS.index("beach")] and ds.Y[1, SCENE_TAGS.index("mountain")]
 
-    coco = tmp_path / "coco" / "annotations"
+    coco = tmp_path / "Classes" / "coco" / "annotations"
     coco.mkdir(parents=True)
     coco.joinpath("instances_val2017.json").write_text(json.dumps({
         "categories": [{"id": 1, "name": "person"}, {"id": 18, "name": "dog"}],
@@ -259,13 +260,13 @@ def test_eval_runner_system_and_prelabel_end_to_end(tmp_path, monkeypatch):
     assert P.shape == (3, 17) and thr.shape == (17,) and ((P >= 0) & (P <= 1)).all()
 
     # pre-label: 2 ảnh, chạy 2 lần — lần 2 giữ nhãn đã duyệt.
-    images = tmp_path / "gallery-gt" / "images" / "trip"
+    images = tmp_path / "Data" / "gallery-gt" / "images" / "trip"
     images.mkdir(parents=True)
     for name in ("a.jpg", "b.jpg"):
         Image.new("RGB", (8, 8)).save(images / name)
     monkeypatch.setattr(sys, "argv", ["cls_prelabel", "--data-root", str(tmp_path)])
     assert cls_prelabel.main() == 0
-    labels_file = tmp_path / "gallery-gt" / "labels.json"
+    labels_file = tmp_path / "Classes" / "gallery-gt" / "labels.json"
     doc = json.loads(labels_file.read_text())
     assert [e["file"] for e in doc["images"]] == ["trip/a.jpg", "trip/b.jpg"]
     assert set(doc["images"][0]["predicted"]) == set(TAG_IDS)

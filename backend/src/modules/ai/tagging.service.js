@@ -1,15 +1,20 @@
-// Tagging service — gắn tag nội dung (classification, 17 tag) cho ảnh.
+// Tagging service — gắn tag nội dung (classification) cho ảnh: 17 tag danh mục
+// + 174 nhãn chi tiết Open Images ("oi.*", khi ai-service có probe) — xem
+// tagging.constants.js.
 //
 // Luồng:
 //  - ai-service chấm tag từ vector CLIP đã lưu trong media_embeddings → không
 //    cần đọc lại ảnh, 1 request chấm được cả lô.
 //  - Upload: embedding.service chạy `tagMediaIds` ngay sau khi lưu embedding.
 //  - Ảnh cũ: `backfillTags` (embed trước nếu ảnh chưa có embedding).
-//  - Lưu xác suất của MỌI tag (kể cả dưới ngưỡng) → UI đổi ngưỡng tự do.
+//  - Lưu xác suất của MỌI tag danh mục (kể cả dưới ngưỡng) → UI đổi ngưỡng tự
+//    do; nhãn chi tiết chỉ lưu khi ≥ LABEL_STORE_MIN (174 nhãn / ảnh là quá nhiều).
 import { dbPool } from "../../config/db.js";
-import { currentModels, predictTags } from "./ai.client.js";
+import { currentModels, getTaggerInfo, predictTags } from "./ai.client.js";
 import { embedMediaById } from "./embedding.service.js";
 import { mediaThumbUrl } from "../media/media.mapper.js";
+import { LABEL_STORE_MIN } from "./tagging.constants.js";
+import { logger } from "../../lib/logger.js";
 
 /** Chấm tag cho các ảnh đã có embedding và lưu (thay toàn bộ tag cũ). */
 export async function tagMediaIds(userId, mediaIds) {
@@ -27,12 +32,23 @@ export async function tagMediaIds(userId, mediaIds) {
 
   // Trải phẳng (ảnh × tag) để insert 1 câu bằng unnest.
   const values = { media: [], tag: [], confidence: [], threshold: [] };
+  const push = (mediaId, tag, confidence, threshold) => {
+    values.media.push(mediaId);
+    values.tag.push(tag);
+    values.confidence.push(confidence);
+    values.threshold.push(threshold);
+  };
   result.scores.forEach((scores, i) => {
     scores.forEach((confidence, j) => {
-      values.media.push(ids[i]);
-      values.tag.push(result.tags[j]);
-      values.confidence.push(confidence);
-      values.threshold.push(result.thresholds[j]);
+      push(ids[i], result.tags[j], confidence, result.thresholds[j]);
+    });
+  });
+  // Nhãn chi tiết (ai-service cũ / chưa có probe → không có trường này).
+  (result.label_scores ?? []).forEach((scores, i) => {
+    scores.forEach((confidence, j) => {
+      if (confidence >= LABEL_STORE_MIN) {
+        push(ids[i], result.labels[j], confidence, result.label_thresholds[j]);
+      }
     });
   });
 
@@ -111,7 +127,7 @@ export async function backfillTags(userId, { limit = 100 } = {}) {
       else failed += 1;
     } catch (err) {
       failed += 1;
-      console.warn(`⚠️  Backfill tag: embed ${id} lỗi: ${err.message}`);
+      logger.warn({ err }, `Backfill tag: embed ${id} lỗi`);
     }
   }
 
@@ -119,7 +135,7 @@ export async function backfillTags(userId, { limit = 100 } = {}) {
   try {
     ({ tagged } = await tagMediaIds(userId, ready));
   } catch (err) {
-    console.warn(`⚠️  Backfill tag lỗi: ${err.message}`);
+    logger.warn({ err }, `Backfill tag lỗi`);
   }
   failed += ready.length - tagged;
 
@@ -212,4 +228,57 @@ export async function listMediaIdsByTag(
     })),
     total: count.rows[0]?.total ?? 0,
   };
+}
+
+/**
+ * Danh mục nhãn chi tiết (tên vi/en/ja + nhóm + ngưỡng) từ ai-service — FE dựng
+ * lưới AI Studio từ đây (không lặp 174 tên trong file i18n). ai-service chưa có
+ * probe hoặc không phản hồi → `labels` rỗng (FE ẩn phần nhãn chi tiết).
+ */
+export async function getTagCatalog() {
+  const info = await getTaggerInfo().catch(() => null);
+  if (!info) return { model: null, sections: [], labels: [], labelModel: null };
+  const metrics = info.label_model?.test ?? null;
+  return {
+    model: info.model,
+    sections: info.sections ?? [],
+    labels: (info.labels ?? []).map((label) => ({
+      id: label.id,
+      section: label.section,
+      names: { en: label.en, vi: label.vi, ja: label.ja },
+      threshold: label.threshold,
+    })),
+    // Chỉ số đo trên tập test Open Images (thế giới mở) — hiện ở AI Studio.
+    labelModel: info.label_model
+      ? {
+          source: info.label_model.config,
+          clipModel: info.label_model.clip_model,
+          precisionTarget: info.label_model.precision_target,
+          precision: metrics?.precision_open_world ?? null,
+          mAP: metrics?.mAP_open_world ?? null,
+        }
+      : null,
+  };
+}
+
+/**
+ * Tag của 1 ảnh (của chính user): danh mục + nhãn chi tiết, xếp theo confidence.
+ * Trả cả nhãn dưới ngưỡng (≥ minConfidence) để UI hiện mờ — giống chip YOLO.
+ */
+export async function getMediaTags(userId, mediaId, { minConfidence = 0.15 } = {}) {
+  const result = await dbPool.query(
+    `SELECT t.tag, t.confidence, t.threshold
+     FROM media_tags t
+     JOIN media m ON m.id = t.media_id AND m.deleted_at IS NULL
+     WHERE t.user_id = $1 AND t.media_id = $2
+       AND (t.confidence >= t.threshold OR t.confidence >= $3)
+     ORDER BY (t.confidence >= t.threshold) DESC, t.confidence DESC
+     LIMIT 40`,
+    [userId, mediaId, minConfidence],
+  );
+  return result.rows.map((row) => ({
+    tag: row.tag,
+    confidence: Number(row.confidence),
+    threshold: Number(row.threshold),
+  }));
 }

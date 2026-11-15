@@ -1,7 +1,38 @@
 # ai-service — The Next Gallery AI Service
 
-A **Python FastAPI** microservice handling **CLIP (OpenCLIP) embeddings** for
-**semantic search** and **YOLO26 object detection**.
+A **Python FastAPI** microservice for the gallery's AI: **CLIP (OpenCLIP)
+embeddings** (semantic search), **YOLO26 object detection**, **DINOv3 image
+similarity** and **content tagging** (17 categories + 174 detailed Open Images
+labels, from stored CLIP vectors). Internal only — the backend is its only client
+(no auth, no CORS; not exposed by Caddy).
+
+## Layout
+
+| Folder | What | Shipped in the Docker image |
+|---|---|---|
+| `app/` | The service: `api/` routes · `providers/` models (+ `device.py`) · `schemas/` · `tagging/` (taxonomy, classifiers, label catalog, `probes/*.npz` models) | yes |
+| `scripts/` | Weight download / conversion, `clip_demo.py` | yes |
+| `bench/` | Thesis benchmarks on public datasets (COCO, Places, ROxford…) — imports `app`, never the other way round | no |
+| `experiments/` | Thesis experiments E1–E6 + `probe` / `yolo_ft` / `export_tags` on Open Images | no |
+| `pipeline/` | Offline YOLO + CLIP over a whole folder | no |
+| `tests/` | pytest (stub providers, no model download) | no |
+
+Two fine-tune scripts with similar names: `bench/cls_yolo_finetune.py` fine-tunes the
+**classification** model YOLO26n-cls on Places6 (scene tags, config C6), while
+`experiments/yolo_ft.py` fine-tunes the **detection** model YOLO26n on Open Images boxes.
+
+### Tag models used by the app (`app/tagging/probes/`, committed)
+
+| File | Produced by | Tags |
+|---|---|---|
+| `coco-<config>.npz`, `places6-<config>.npz` | `uv run python -m bench.cls_eval` → copy from `bench/runs/cls/` | 17 categories (object / scene groups) |
+| `oi-<config>.npz` | `uv run python -m experiments export_tags` (writes here directly) | 174 detailed labels (`app/tagging/labels.csv`) |
+
+`<config>` = `AI_TAG_CONFIG` (`lp_clip`). A model is used only if it was trained on the
+running CLIP (`AI_CLIP_MODEL`); otherwise that group falls back to zero-shot (categories)
+or is skipped (detailed labels). `GET /health` → `tagger` shows what is actually loaded.
+After retraining, copy the new 17-tag files, e.g.
+`cp bench/runs/cls/{coco,places6}-lp_clip.npz app/tagging/probes/`.
 
 ## Run locally
 
@@ -16,7 +47,8 @@ Python is **3.12** (same as Docker); uv downloads it automatically if missing.
 cd ai-service
 
 # 1. Create .venv (Python 3.12) with runtime + dev deps from uv.lock
-uv sync                          # + `--group bench` for the thesis benchmarks (bench/)
+uv sync                          # + `--group bench` for the thesis benchmarks (bench/) and experiments/
+uv run ruff check .              # lint (config in pyproject.toml) — run before committing
 
 # 2. Download YOLO26 weights → models/yolo26n.pt (prints SHA-256 + ultralytics version)
 uv run python scripts/download_yolo_weight.py           # or --model yolo26s.pt ...
@@ -69,6 +101,10 @@ API docs: http://localhost:8000/docs
 | POST   | `/api/v1/embed/text`  | `{ "text": "..." }` → embedding vector (CLIP text encoder) |
 | POST   | `/api/v1/classify`    | Image + labels → zero-shot softmax probabilities (CLIP) |
 | GET    | `/api/v1/embed/info`  | Embedding provider info (provider/model/dimension) |
+| POST   | `/api/v1/similarity/embed` | Image file → DINOv3 descriptor (384-d) |
+| GET    | `/api/v1/similarity/info`  | Similarity provider info |
+| POST   | `/api/v1/tags/predict` | `{ embeddings: number[][] }` (stored CLIP vectors, ≤500) → 17 category + 174 label probabilities and thresholds |
+| GET    | `/api/v1/tags/info`    | Categories, label catalog (vi/en/ja names, sections), thresholds, label model metrics |
 | GET    | `/`               | Service info                               |
 
 ### POST /api/v1/detect/objects
@@ -137,7 +173,10 @@ Prefix `AI_` (read from env or the project-root `.env` — same convention as th
 | `AI_YOLO_WEIGHTS`      | `yolo26n.pt`                | YOLO weights path          |
 | `AI_YOLO_DEVICE`       | `auto`                      | `auto` \| `cpu` \| `cuda` \| `mps` |
 | `AI_YOLO_CONF`         | `0.25`                      | YOLO confidence threshold  |
-| `AI_CORS_ORIGINS`      | `["http://localhost:5173"]` | CORS origins for the web FE |
+| `AI_SIMILARITY_PROVIDER` | `stub`                    | `stub` \| `dinov3`         |
+| `AI_DINO_MODEL`        | `models/dinov3-vits16-pretrain-lvd1689m` | Local dir or HF repo id (gated) |
+| `AI_TAG_MODELS_DIR`    | `app/tagging/probes`        | Tag models (.npz), relative to `ai-service/` |
+| `AI_TAG_CONFIG`        | `lp_clip`                   | `lp_clip` \| `zs_clip`     |
 
 ## Docker
 

@@ -1,0 +1,210 @@
+model,class,set,AP,gt,group_boxes
+base,Person,coco,0.70687,5173,488
+base,Bicycle,coco,0.68348,65,3
+base,Car,coco,0.66702,664,58
+base,Motorcycle,coco,0.83254,56,2
+base,Fixed-wing aircraft,coco,0.83886,59,2
+base,Bus,coco,0.77216,67,5
+base,Train,coco,0.85718,38,0
+base,Truck,coco,0.69161,54,0
+base,Boat,coco,0.46871,110,5
+base,Traffic light,coco,0.52551,58,0
+base,Fire hydrant,coco,0.99519,35,0
+base,Stop sign,coco,0.97054,33,1
+base,Parking meter,coco,0.68333,5,0
+base,Bench,coco,0.01878,3,0
+base,Bird,coco,0.49227,200,7
+base,Cat,coco,0.94972,49,0
+base,Dog,coco,0.8063,68,0
+base,Horse,coco,0.82959,72,14
+base,Sheep,coco,0.70494,76,27
+base,Cattle,coco,0.61609,76,7
+base,Elephant,coco,0.85151,66,5
+base,Bear,coco,0.23412,81,4
+base,Zebra,coco,0.81612,89,6
+base,Giraffe,coco,0.88865,58,0
+base,Backpack,coco,0.48158,36,1
+base,Umbrella,coco,0.29976,57,2
+base,Handbag,coco,0.31494,39,0
+base,Tie,coco,0.83658,41,0
+base,Suitcase,coco,0.81782,40,0
+base,Flying disc,coco,0.91667,3,0
+base,Ski,coco,0.33154,149,0
+base,Snowboard,coco,0.58303,50,2
+base,Ball (Object),coco,0.60208,77,8
+base,Kite,coco,0.78642,51,6
+base,Baseball bat,coco,0.67441,38,1
+base,Baseball glove,coco,0.76104,61,1
+base,Skateboard,coco,0.82376,45,0
+base,Surfboard,coco,0.69597,46,1
+base,Tennis racket,coco,0.87511,43,0
+base,Bottle,coco,0.53679,144,14
+base,Wine glass,coco,0.69818,75,17
+base,Mug,coco,0.63892,36,1
+base,Coffee cup,coco,0.78775,92,0
+base,Fork,coco,0.26965,12,0
+base,Knife,coco,0.19037,37,0
+base,Spoon,coco,0.54914,21,3
+base,Bowl,coco,0.10428,11,0
+base,Banana,coco,0.73199,75,33
+base,Apple,coco,0.57319,86,16
+base,Sandwich,coco,0.69957,119,3
+base,Orange (fruit),coco,0.53757,60,4
+base,Broccoli,coco,0.79232,74,22
+base,Carrot,coco,0.53477,75,19
+base,Hot dog,coco,0.6942,42,0
+base,Pizza,coco,0.9729,45,1
+base,Doughnut,coco,0.6725,66,15
+base,Cake,coco,0.67245,65,6
+base,Chair,coco,0.54121,360,39
+base,Couch,coco,0.52436,73,3
+base,Houseplant,coco,0.48875,112,11
+base,Bed,coco,0.56782,95,3
+base,Kitchen & dining room table,coco,0.29416,121,3
+base,Toilet,coco,0.68928,24,0
+base,Television,coco,0.52776,29,1
+base,Laptop,coco,0.72636,40,0
+base,Computer mouse,coco,0.78538,33,0
+base,Remote control,coco,0.77328,14,0
+base,Computer keyboard,coco,0.85028,35,1
+base,Mobile phone,coco,0.88753,49,0
+base,Microwave oven,coco,0.49522,46,0
+base,Oven,coco,0.33242,47,0
+base,Toaster,coco,0.75,4,0
+base,Sink,coco,0.474,44,0
+base,Refrigerator,coco,0.77609,35,1
+base,Book,coco,0.19304,218,87
+base,Clock,coco,0.45309,40,1
+base,Vase,coco,0.76318,48,2
+base,Scissors,coco,0.85238,6,1
+base,Teddy bear,coco,0.77076,51,4
+base,Hair dryer,coco,0.0,3,0
+base,Toothbrush,coco,0.82008,20,1
+ft,Person,coco,0.71602,5173,488
+ft,Bicycle,coco,0.62089,65,3
+ft,Car,coco,0.6474,664,58
+ft,Motorcycle,coco,0.79559,56,2
+ft,Fixed-wing aircraft,coco,0.79923,59,2
+ft,Bus,coco,0.76349,67,5
+ft,Train,coco,0.81843,38,0
+ft,Truck,coco,0.30612,54,0
+ft,Boat,coco,0.44753,110,5
+ft,Traffic light,coco,0.51012,58,0
+ft,Fire hydrant,coco,0.98131,35,0
+ft,Stop sign,coco,0.955,33,1
+ft,Parking meter,coco,0.79444,5,0
+ft,Bench,coco,0.02005,3,0
+ft,Bird,coco,0.5398,200,7
+ft,Cat,coco,0.90615,49,0
+ft,Dog,coco,0.76169,68,0
+ft,Horse,coco,0.80288,72,14
+ft,Sheep,coco,0.61866,76,27
+ft,Cattle,coco,0.58639,76,7
+ft,Elephant,coco,0.84166,66,5
+ft,Bear,coco,0.67782,81,4
+ft,Zebra,coco,0.78944,89,6
+ft,Giraffe,coco,0.90999,58,0
+ft,Backpack,coco,0.52916,36,1
+ft,Umbrella,coco,0.25519,57,2
+ft,Handbag,coco,0.51161,39,0
+ft,Tie,coco,0.77241,41,0
+ft,Suitcase,coco,0.61629,40,0
+ft,Flying disc,coco,0.70667,3,0
+ft,Ski,coco,0.25432,149,0
+ft,Snowboard,coco,0.53395,50,2
+ft,Ball (Object),coco,0.5112,77,8
+ft,Kite,coco,0.84047,51,6
+ft,Baseball bat,coco,0.65336,38,1
+ft,Baseball glove,coco,0.73923,61,1
+ft,Skateboard,coco,0.76058,45,0
+ft,Surfboard,coco,0.6117,46,1
+ft,Tennis racket,coco,0.79717,43,0
+ft,Bottle,coco,0.51123,144,14
+ft,Wine glass,coco,0.65267,75,17
+ft,Mug,coco,0.25494,36,1
+ft,Coffee cup,coco,0.89156,92,0
+ft,Fork,coco,0.44434,12,0
+ft,Knife,coco,0.52121,37,0
+ft,Spoon,coco,0.47204,21,3
+ft,Bowl,coco,0.22551,11,0
+ft,Banana,coco,0.73663,75,33
+ft,Apple,coco,0.50824,86,16
+ft,Sandwich,coco,0.69951,119,3
+ft,Orange (fruit),coco,0.50655,60,4
+ft,Broccoli,coco,0.7093,74,22
+ft,Carrot,coco,0.5183,75,19
+ft,Hot dog,coco,0.81252,42,0
+ft,Pizza,coco,0.95167,45,1
+ft,Doughnut,coco,0.63117,66,15
+ft,Cake,coco,0.53019,65,6
+ft,Chair,coco,0.54586,360,39
+ft,Couch,coco,0.51157,73,3
+ft,Houseplant,coco,0.35607,112,11
+ft,Bed,coco,0.61585,95,3
+ft,Kitchen & dining room table,coco,0.17738,121,3
+ft,Toilet,coco,0.66067,24,0
+ft,Television,coco,0.52881,29,1
+ft,Laptop,coco,0.59462,40,0
+ft,Computer mouse,coco,0.86467,33,0
+ft,Remote control,coco,0.54576,14,0
+ft,Computer keyboard,coco,0.81773,35,1
+ft,Mobile phone,coco,0.82829,49,0
+ft,Microwave oven,coco,0.52202,46,0
+ft,Oven,coco,0.56739,47,0
+ft,Toaster,coco,0.375,4,0
+ft,Sink,coco,0.45138,44,0
+ft,Refrigerator,coco,0.75274,35,1
+ft,Book,coco,0.37711,218,87
+ft,Clock,coco,0.55495,40,1
+ft,Vase,coco,0.66224,48,2
+ft,Scissors,coco,0.86174,6,1
+ft,Teddy bear,coco,0.21603,51,4
+ft,Hair dryer,coco,0.33333,3,0
+ft,Toothbrush,coco,0.76962,20,1
+ft,Human face,gap,0.74721,741,25
+ft,Tree,gap,0.36363,2186,832
+ft,Flower,gap,0.27775,499,150
+ft,Building,gap,0.50084,1339,145
+ft,House,gap,0.41007,226,15
+ft,Skyscraper,gap,0.22897,214,28
+ft,Tower,gap,0.23089,186,10
+ft,Castle,gap,0.59611,38,0
+ft,Lighthouse,gap,0.28542,36,0
+ft,Fountain,gap,0.30788,31,1
+ft,Sunglasses,gap,0.08574,66,2
+ft,Hat,gap,0.37311,98,1
+ft,Footwear,gap,0.44178,1245,6
+ft,Dress,gap,0.28523,211,7
+ft,Guitar,gap,0.21107,54,0
+ft,Camera,gap,0.59137,30,0
+ft,Balloon,gap,0.19688,116,5
+ft,Christmas tree,gap,0.01146,45,4
+ft,Swimming pool,gap,0.55224,42,0
+ft,Tent,gap,0.55893,22,5
+ft,Flag,gap,0.19229,43,1
+ft,Street light,gap,0.04641,107,0
+ft,Traffic sign,gap,0.3928,96,1
+ft,Taxi,gap,0.33536,49,5
+ft,Van,gap,0.26628,56,4
+ft,Helicopter,gap,0.81335,36,0
+ft,Monkey,gap,0.68856,42,0
+ft,Duck,gap,0.41376,72,3
+ft,Fish,gap,0.32391,72,7
+ft,Butterfly,gap,0.50014,41,0
+ft,Tiger,gap,0.49099,29,0
+ft,Lion,gap,0.3781,43,0
+ft,Goat,gap,0.36961,86,9
+ft,Pig,gap,0.77614,53,3
+ft,Deer,gap,0.65201,65,2
+ft,Ice cream,gap,0.19622,46,1
+ft,Coffee (drink),gap,0.20806,63,0
+ft,Wine,gap,0.08817,103,10
+ft,Beer,gap,0.32678,81,4
+ft,Cocktail,gap,0.56592,73,0
+ft,Salad,gap,0.72865,58,2
+ft,Sushi,gap,0.35798,76,17
+ft,Bread,gap,0.34804,119,19
+ft,Cookie,gap,0.60654,122,23
+ft,Hamburger,gap,0.74692,64,0
+ft,French fries,gap,0.80499,52,26
+ft,Pasta,gap,0.82639,48,1

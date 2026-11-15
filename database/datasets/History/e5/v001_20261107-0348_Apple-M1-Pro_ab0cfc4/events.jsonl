@@ -1,0 +1,21 @@
+{"t": "2026-11-06T20:48:39Z", "type": "log", "message": "run e5/20261107-034838 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e5/20261107-034838"}
+{"t": "2026-11-06T20:48:39Z", "type": "log", "message": "── load E2 + E4"}
+{"t": "2026-11-06T20:48:39Z", "type": "stage", "stage": "load E2 + E4"}
+{"t": "2026-11-06T20:48:39Z", "type": "log", "message": "  E2 = 20261107-033218 · E4 = 20261107-033725 · 81 lớp có YOLO"}
+{"t": "2026-11-06T20:48:39Z", "type": "log", "message": "── calibrate YOLO trên val"}
+{"t": "2026-11-06T20:48:39Z", "type": "stage", "stage": "calibrate YOLO trên val"}
+{"t": "2026-11-06T20:48:40Z", "type": "log", "message": "── chọn quy tắc từng tag trên val"}
+{"t": "2026-11-06T20:48:40Z", "type": "stage", "stage": "chọn quy tắc từng tag trên val"}
+{"t": "2026-11-06T20:48:40Z", "type": "log", "message": "── so chiến lược trên test"}
+{"t": "2026-11-06T20:48:40Z", "type": "stage", "stage": "so chiến lược trên test"}
+{"t": "2026-11-06T20:48:40Z", "type": "log", "message": "── bootstrap ghép cặp 500×"}
+{"t": "2026-11-06T20:48:40Z", "type": "stage", "stage": "bootstrap ghép cặp 500×"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "── artifacts cho E6"}
+{"t": "2026-11-06T20:48:57Z", "type": "stage", "stage": "artifacts cho E6"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  clip_only       macro-F1 0.6908 · mAP 0.8633"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  yolo_only       macro-F1 0.3460 · mAP 0.7335"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  or              macro-F1 0.7645 · mAP 0.8894"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  and             macro-F1 0.7392 · mAP 0.8838"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  group_baseline  macro-F1 0.7431 · mAP 0.8815"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "  per_tag         macro-F1 0.7637 · mAP 0.8880"}
+{"t": "2026-11-06T20:48:57Z", "type": "log", "message": "xong sau 20s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e5/20261107-034838"}

@@ -7,7 +7,7 @@
 Layout dưới $TNG_DATASETS:
     places365/{categories_places365.txt, places365_val.txt, val_256/*.jpg}
     coco/{annotations/instances_val2017.json, images/val2017/*.jpg}      (đã có)
-    gallery-gt/{images/**, labels.json}     ← labels.json do bench/cls_prelabel.py tạo
+    Data/gallery-gt/images/** + Classes/gallery-gt/labels.json  ← labels.json do bench/cls_prelabel.py tạo
 
 Chia train/val/test cố định theo hash tên file (60/20/20) → chạy lại luôn ra
 cùng một cách chia, không phụ thuộc thứ tự đọc file.
@@ -21,13 +21,14 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.cls_taxonomy import (
+from app.tagging.taxonomy import (
     OBJECT_TAGS,
     SCENE_TAGS,
     TAG_IDS,
     coco_tags_for,
     places_to_tag,
 )
+from bench.common import classes_dir, data_dir
 
 SPLITS = ("train", "val", "test")
 
@@ -62,9 +63,9 @@ def stable_split(key: str) -> str:
 
 # ── Places365 → 6 tag cảnh ────────────────────────────────────────────────
 def load_places6(data_root: Path) -> ClsDataset:
-    root = data_root.expanduser().resolve() / "places365"
-    categories = root / "categories_places365.txt"
-    file_list = root / "places365_val.txt"
+    root = data_dir(data_root, "places365")             # Data/places365/val_256/*.jpg
+    categories = classes_dir(data_root, "places365") / "categories_places365.txt"
+    file_list = classes_dir(data_root, "places365") / "places365_val.txt"
     images = root / "val_256"
     for path in (categories, file_list, images):
         if not path.exists():
@@ -77,7 +78,7 @@ def load_places6(data_root: Path) -> ClsDataset:
     mapping = places_to_tag()
     unknown = sorted(set(mapping) - set(idx_to_name.values()))
     if unknown:
-        raise SystemExit(f"Tên cảnh không có trong Places365: {unknown} — sửa bench/cls_taxonomy.py")
+        raise SystemExit(f"Tên cảnh không có trong Places365: {unknown} — sửa app/tagging/taxonomy.py")
 
     files, labels, places = [], [], []
     for line in file_list.read_text().splitlines():
@@ -96,8 +97,8 @@ def load_places6(data_root: Path) -> ClsDataset:
 
 # ── COCO val2017 → 7 tag đối tượng ────────────────────────────────────────
 def load_coco_tags(data_root: Path) -> ClsDataset:
-    root = data_root.expanduser().resolve() / "coco"
-    ann_file = root / "annotations" / "instances_val2017.json"
+    root = data_dir(data_root, "coco")                  # Data/coco/images/val2017
+    ann_file = coco_annotations_dir(data_root) / "instances_val2017.json"
     if not ann_file.exists():
         raise SystemExit(f"Thiếu {ann_file} — xem bench/README.md (mục COCO).")
     data = json.loads(ann_file.read_text())
@@ -124,13 +125,23 @@ def load_coco_tags(data_root: Path) -> ClsDataset:
 
 
 # ── Ảnh của bạn (nhãn đã duyệt) → 17 tag, chỉ dùng để test ────────────────
+def coco_annotations_dir(data_root: Path) -> Path:
+    return classes_dir(data_root, "coco") / "annotations"
+
+
 def gallery_root(data_root: Path) -> Path:
-    return data_root.expanduser().resolve() / "gallery-gt"
+    """Ảnh của bạn: Data/gallery-gt/images/…"""
+    return data_dir(data_root, "gallery-gt")
+
+
+def gallery_labels_file(data_root: Path) -> Path:
+    """Nhãn duyệt tay: Classes/gallery-gt/labels.json"""
+    return classes_dir(data_root, "gallery-gt") / "labels.json"
 
 
 def load_gallery(data_root: Path, reviewed_only: bool = True) -> ClsDataset:
     root = gallery_root(data_root)
-    labels_file = root / "labels.json"
+    labels_file = gallery_labels_file(data_root)
     if not labels_file.exists():
         raise SystemExit(
             f"Chưa có {labels_file} — chạy `uv run python -m bench.cls_prelabel` trước, "

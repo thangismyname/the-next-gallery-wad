@@ -11,19 +11,18 @@ import {
   Tags,
   Images,
   Loader2,
-  Sparkles,
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { popIn } from "@/lib/motion";
-import { Media } from "@/types";
-import { MediaListItem } from "@/services/media";
+import { Media, MediaListItem } from "@tng/shared";
 import { cn } from "@/lib/utils";
-import { AI_CHIP_ON_DARK } from "@/lib/aiColors";
-import { useMediaDetections } from "@/hooks/useMediaDetections";
-import { useSimilarMedia } from "@/hooks/useSimilarMedia";
-import { formatBytes, formatDateTime, formatDuration } from "@/utils/format";
+import { AI_CHIP } from "@/lib/aiColors";
+import { useMediaDetections } from "@/features/gallery/useMediaDetections";
+import { useSimilarMedia } from "@/features/gallery/useSimilarMedia";
+import { formatBytes, formatDateTime, formatDuration } from "@tng/shared";
 import { MediaAlbumsSection } from "@/features/albums/components/MediaAlbumsSection";
 import { MediaLabelsSection } from "@/features/favorites/components/MediaLabelsSection";
+import { MediaAiTagsSection } from "@/features/studio/components/MediaAiTagsSection";
 
 // = backend AI_YOLO_MIN_CONF (mặc định 0.4): YOLO lưu vật thể từ 0.25 nhưng
 // search chỉ tin từ ngưỡng này → chip dưới ngưỡng hiện mờ (tìm sẽ không ra).
@@ -43,12 +42,12 @@ const DetailRow: React.FC<{
   value: string;
 }> = ({ icon, label, value }) => (
   <div className="flex items-start gap-2.5">
-    <span className="mt-0.5 flex items-center text-white/40">{icon}</span>
+    <span className="mt-0.5 flex items-center text-foreground/40">{icon}</span>
     <div className="min-w-0">
-      <p className="text-[11px] uppercase tracking-wide text-white/40">
+      <p className="text-[11px] uppercase tracking-wide text-foreground/40">
         {label}
       </p>
-      <p className="text-sm text-white wrap-break-word">{value}</p>
+      <p className="text-sm text-foreground wrap-break-word">{value}</p>
     </div>
   </div>
 );
@@ -88,12 +87,12 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
 
   return (
     <div
-      className="h-full w-full md:w-80 shrink-0 flex flex-col md:border-l border-white/10 bg-white/3"
+      className="h-full w-full md:w-80 shrink-0 flex flex-col md:border-l border-foreground/10 bg-foreground/3"
       onClick={(e) => e.stopPropagation()}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-        <h3 className="text-sm font-semibold text-white">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-foreground/10">
+        <h3 className="text-sm font-semibold text-foreground">
           {t("lightbox.detail")}
         </h3>
       </div>
@@ -102,10 +101,10 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
       <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-4">
         {media.title && (
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-white/40 mb-1">
+            <p className="text-[11px] uppercase tracking-wide text-foreground/40 mb-1">
               {t("lightbox.detailTitle")}
             </p>
-            <p className="text-sm text-white wrap-break-word">{media.title}</p>
+            <p className="text-sm text-foreground wrap-break-word">{media.title}</p>
           </div>
         )}
 
@@ -152,37 +151,16 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
           )}
         </div>
 
-        {/* Tag nội dung (phân loại CLIP) — xám, như chip "Tag" ở landing */}
-        {(media.aiTags?.length ?? 0) > 0 && (
-          <div className="pt-3 border-t border-white/10">
-            <div className="flex items-center gap-1.5 mb-2">
-              <Sparkles size={13} className="text-white/40" />
-              <p className="text-[11px] uppercase tracking-wide text-white/40">
-                {t("lightbox.detailTags")}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {media.aiTags.map((tag, i) => (
-                <motion.span
-                  key={`${media.id}-${tag}`}
-                  {...popIn(i, reduce)}
-                  className={cn(
-                    "inline-flex items-center rounded-full px-2 py-0.5 text-xs",
-                    AI_CHIP_ON_DARK.tag,
-                  )}
-                >
-                  {t(`studio.tags.${tag}`, { defaultValue: tag })}
-                </motion.span>
-              ))}
-            </div>
-          </div>
+        {/* Tag nội dung (17 danh mục + nhãn chi tiết, % độ tin cậy) — xám như chip "Tag" ở landing */}
+        {!isVideo && (
+          <MediaAiTagsSection mediaId={media.id} fallback={media.aiTags ?? []} active={active} />
         )}
 
         {tags.length > 0 && (
-          <div className="pt-3 border-t border-white/10">
+          <div className="pt-3 border-t border-foreground/10">
             <div className="flex items-center gap-1.5 mb-2">
-              <Tags size={13} className="text-white/40" />
-              <p className="text-[11px] uppercase tracking-wide text-white/40">
+              <Tags size={13} className="text-foreground/40" />
+              <p className="text-[11px] uppercase tracking-wide text-foreground/40">
                 {t("lightbox.detailObjects")}
               </p>
             </div>
@@ -201,13 +179,13 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
                   className={cn(
                     "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs",
                     searchable
-                      ? AI_CHIP_ON_DARK.yolo
-                      : "border border-dashed border-white/15 text-white/40",
+                      ? AI_CHIP.yolo
+                      : "border border-dashed border-foreground/15 text-foreground/40",
                   )}
                 >
                   {name}
                   {info.count > 1 && (
-                    <span className={searchable ? "text-emerald-300/70" : undefined}>
+                    <span className={searchable ? "text-emerald-700/70 dark:text-emerald-300/70" : undefined}>
                       ×{info.count}
                     </span>
                   )}
@@ -216,7 +194,7 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
               })}
             </div>
             {tags.some(([, info]) => info.confidence < YOLO_SEARCH_MIN_CONF) && (
-              <p className="mt-2 text-[11px] text-white/35">
+              <p className="mt-2 text-[11px] text-foreground/35">
                 {t("lightbox.lowConfidenceNote", { pct: YOLO_SEARCH_MIN_CONF * 100 })}
               </p>
             )}
@@ -228,10 +206,10 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
         <MediaAlbumsSection mediaId={media.id} active={active} />
 
         {!isVideo && (
-          <div className="pt-3 border-t border-white/10">
+          <div className="pt-3 border-t border-foreground/10">
             <div className="flex items-center gap-1.5 mb-2">
-              <Images size={13} className="text-white/40" />
-              <p className="text-[11px] uppercase tracking-wide text-white/40">
+              <Images size={13} className="text-foreground/40" />
+              <p className="text-[11px] uppercase tracking-wide text-foreground/40">
                 {t("lightbox.similar")}
               </p>
               {similar.source && (
@@ -239,8 +217,8 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
                   className={cn(
                     "ml-auto rounded-full px-1.5 py-0.5 text-[10px]",
                     similar.source === "dinov3"
-                      ? AI_CHIP_ON_DARK.dino
-                      : AI_CHIP_ON_DARK.clip,
+                      ? AI_CHIP.dino
+                      : AI_CHIP.clip,
                   )}
                   title={similar.model ?? undefined}
                 >
@@ -249,12 +227,12 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
               )}
             </div>
             {similar.loading ? (
-              <div className="flex items-center gap-2 text-xs text-white/50">
+              <div className="flex items-center gap-2 text-xs text-foreground/50">
                 <Loader2 size={14} className="animate-spin" />
                 {t("lightbox.similarLoading")}
               </div>
             ) : similar.items.length === 0 ? (
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-foreground/40">
                 {t("lightbox.similarEmpty")}
               </p>
             ) : (
@@ -264,7 +242,7 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
                     key={item.id}
                     type="button"
                     onClick={() => onSelectSimilar?.(item)}
-                    className="group relative aspect-square overflow-hidden rounded-md bg-white/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+                    className="group relative aspect-square overflow-hidden rounded-md bg-foreground/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/60"
                     title={item.title ?? undefined}
                   >
                     <img
@@ -286,19 +264,19 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
           </div>
         )}
 
-        <div className="pt-3 border-t border-white/10">
-          <p className="text-[11px] uppercase tracking-wide text-white/40 mb-1">
+        <div className="pt-3 border-t border-foreground/10">
+          <p className="text-[11px] uppercase tracking-wide text-foreground/40 mb-1">
             {t("lightbox.detailFavorite")}
           </p>
           <p
             className={cn(
               "inline-flex items-center gap-1.5 text-sm",
-              media.isFavorite ? "text-rose-400" : "text-white/60",
+              media.isFavorite ? "text-rose-500 dark:text-rose-400" : "text-foreground/60",
             )}
           >
             <Heart
               size={14}
-              className={media.isFavorite ? "fill-rose-400" : ""}
+              className={media.isFavorite ? "fill-rose-500 dark:fill-rose-400" : ""}
             />
             {media.isFavorite
               ? t("lightbox.detailFavoriteYes")

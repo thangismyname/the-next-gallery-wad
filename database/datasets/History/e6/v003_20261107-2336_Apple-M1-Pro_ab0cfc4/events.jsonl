@@ -1,0 +1,13 @@
+{"t": "2026-11-07T16:36:01Z", "type": "log", "message": "run e6/20261107-233600 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261107-233600"}
+{"t": "2026-11-07T16:36:01Z", "type": "log", "message": "── load"}
+{"t": "2026-11-07T16:36:01Z", "type": "stage", "stage": "load"}
+{"t": "2026-11-07T16:36:01Z", "type": "log", "message": "── chọn λ trên caption val"}
+{"t": "2026-11-07T16:36:01Z", "type": "stage", "stage": "chọn λ trên caption val"}
+{"t": "2026-11-07T16:36:12Z", "type": "log", "message": "  oracle: λ = 0.02 (val MRR 0.4431)"}
+{"t": "2026-11-07T16:36:12Z", "type": "log", "message": "── captions test"}
+{"t": "2026-11-07T16:36:12Z", "type": "stage", "stage": "captions test"}
+{"t": "2026-11-07T16:36:23Z", "type": "log", "message": "  oracle: 12144 cặp (caption, lớp nhắc tới) — ảnh đích positive 66.4% · negative 1.7% · chưa xác minh 31.8%"}
+{"t": "2026-11-07T16:36:23Z", "type": "log", "message": "  clip   -      R@1 0.247 · MRR 0.3607"}
+{"t": "2026-11-07T16:36:23Z", "type": "log", "message": "  filter oracle R@1 0.242 · MRR 0.3529"}
+{"t": "2026-11-07T16:36:23Z", "type": "log", "message": "  boost  oracle R@1 0.267 · MRR 0.3818"}
+{"t": "2026-11-07T16:36:23Z", "type": "log", "message": "xong sau 23s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261107-233600"}

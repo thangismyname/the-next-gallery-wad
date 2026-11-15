@@ -1,16 +1,49 @@
-# React + Vite
+# frontend — The Next Gallery (web)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + Vite 8 + TypeScript (strict), Tailwind CSS v4 + shadcn/ui, TanStack Query,
+Zustand, react-router 7, i18next (vi · en · ja). Part of the npm-workspaces monorepo:
+types, API services, stores, utils and **translations** are shared with the mobile app
+through [`packages/shared`](../packages/shared) (`@tng/shared`).
 
-Currently, two official plugins are available:
+## Scripts (run from `frontend/`, or `npm run <script> --workspace=frontend` from the root)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Script | What |
+|---|---|
+| `npm run dev` | Vite dev server on :5173 (reads `../.env`) |
+| `npm run build` | `tsc --noEmit` **then** `vite build` — type errors fail the build |
+| `npm run typecheck` | type-check only |
+| `npm run lint` | oxlint |
+| `npm test` | Vitest unit tests (`src/**/*.test.ts`, pure helpers) |
+| `npm run preview` | serve the production build |
 
-## React Compiler
+Install once from the **repo root** (`npm install`) — the workspace links `@tng/shared`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Layout (`src/`)
 
-## Expanding the Oxlint configuration
+| Folder | What goes there |
+|---|---|
+| `features/<name>/` | One folder per screen / feature: `<Name>View.tsx`, `components/`, the feature's hooks (`useXxx.ts`) and pure helpers (`xxx.ts` + `xxx.test.ts`) next to it |
+| `components/ui/` | shadcn/ui primitives (`npx shadcn@latest add <name>`) — `cn` from `@/lib/utils` |
+| `components/layout/` | `MainLayout`, `AdminLayout`, `RouteFallback` |
+| `components/motion/`, `components/toggles/` | App-wide motion effects; theme / language toggles |
+| `hooks/` | Hooks used by **several** features (selection, gallery actions, signaling, presence, panels…) |
+| `services/` | Web-only API code (upload, signaling, transfers, auth client) + re-exports of `@tng/shared` services bound to the web HTTP client |
+| `lib/` | Config (`API_URL`…), `cn`, motion presets, AI colours, languages |
+| `routes/` | `AppRoutes` (every page is a lazy chunk) + `ProtectedRoute` / `AdminRoute` |
+| `utils/` | Web-only helpers (media grouping, theme transition); shared formatters come from `@tng/shared` |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Types, formatters (`formatBytes`…), the selection / grid-density stores and the i18n JSON
+live in `packages/shared` — import them from `@tng/shared`.
+
+## Docker
+
+The images are built from the **repo root** (they need `packages/shared`):
+
+```bash
+docker compose -f docker-compose.prod.yml --env-file .env build frontend   # context ".", frontend/Dockerfile.prod
+```
+
+## Fonts / assets
+
+Headings use DFVN Basteleur (WOFF2, committed); the body font Product Sans is proprietary
+and kept local — see `src/assets/fonts/README.md`. Landing images are WebP.

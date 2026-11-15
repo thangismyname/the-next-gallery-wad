@@ -1,5 +1,4 @@
-import type { Media } from "@/types";
-import type { GallerySort } from "@/services/media";
+import { type Media, type GallerySort } from "@tng/shared";
 
 export interface DisplayGridRow {
   type: "grid";

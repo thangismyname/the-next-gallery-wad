@@ -2,13 +2,12 @@
 import { useCallback } from "react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { downloadMedia, moveToTrash, setFavorite } from "@/services/media";
-import { useSelectionStore } from "./useSelectionStore";
+import { storageQueryKey, trashQueryKey, useSelectionStore, type MediaListItem, type MediaPage } from "@tng/shared";
 import {
   galleryQueryKey,
   galleryQueryPrefix,
 } from "./useGalleryMedia";
 import { useGalleryActionsStore } from "./useGalleryActionsStore";
-import type { MediaListItem, MediaPage } from "@/services/media";
 
 // Cập nhật cache của MỌI kiểu sort trong gallery (newest, oldest, name_asc...).
 function updateAllGalleryVariants(
@@ -105,6 +104,10 @@ export function useGalleryActions() {
         await queryClient.invalidateQueries({
           queryKey: ["home", "favorites"],
         });
+        // Bộ lọc "Yêu thích" của picker ảnh (features/media-picker).
+        await queryClient.invalidateQueries({
+          queryKey: [...galleryQueryPrefix, "picker", "favorites"],
+        });
         await queryClient.invalidateQueries({ queryKey: ["favorites"] });
       } catch (error) {
         console.error("Cập nhật yêu thích thất bại:", error);
@@ -144,6 +147,9 @@ export function useGalleryActions() {
       await queryClient.invalidateQueries({ queryKey: ["labels"] });
       // Album (cả album tự động) đếm / hiện ảnh vừa xoá → làm mới.
       await queryClient.invalidateQueries({ queryKey: ["albums"] });
+      // Thùng rác (trang + thẻ trong Albums) có thêm ảnh vừa xoá.
+      void queryClient.invalidateQueries({ queryKey: trashQueryKey });
+      void queryClient.invalidateQueries({ queryKey: storageQueryKey });
     } catch (err) {
       console.error("Xóa thất bại:", err);
     } finally {

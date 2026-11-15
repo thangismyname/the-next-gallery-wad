@@ -11,13 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { useSelectionStore } from "@/hooks/useSelectionStore";
-import {
-  type Album,
-  addAlbumMedia,
-  albumsQueryKey,
-  fetchAlbums,
-} from "@/services/albums";
+import { useSelectionStore, type Album, albumsQueryKey } from "@tng/shared";
+import { addAlbumMedia, fetchAlbums } from "@/services/albums";
 import { AlbumFormDialog } from "./AlbumFormDialog";
 
 /**

@@ -2,7 +2,8 @@
 // tài khoản. Token ngẫu nhiên 32 ký tự; có hạn dùng + giới hạn lượt xem.
 import crypto from "crypto";
 import { dbPool } from "../../config/db.js";
-import { assertRole, getAlbumAccess, httpError } from "./albums.access.js";
+import { assertRole, getAlbumAccess } from "./albums.access.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import { toShareLink } from "./albums.mapper.js";
 import { mediaUrls } from "../media/media.mapper.js";
 import { forgetLink } from "../media/media.access.js";
@@ -55,9 +56,9 @@ export async function getPublicAlbum(token, { limit, offset }) {
     [token],
   );
   const link = result.rows[0];
-  if (!link) throw httpError(404, "Link không tồn tại hoặc đã bị thu hồi", "LINK_NOT_FOUND");
+  if (!link) throw httpError(404, "LINK_NOT_FOUND", "Link không tồn tại hoặc đã bị thu hồi");
   if (link.expires_at && new Date(link.expires_at) < new Date()) {
-    throw httpError(410, "Link đã hết hạn", "LINK_EXPIRED");
+    throw httpError(410, "LINK_EXPIRED", "Link đã hết hạn");
   }
   if (offset === 0) {
     const counted = await dbPool.query(
@@ -66,9 +67,9 @@ export async function getPublicAlbum(token, { limit, offset }) {
        RETURNING view_count`,
       [link.id],
     );
-    if (counted.rowCount === 0) throw httpError(410, "Link đã hết lượt xem", "LINK_EXHAUSTED");
+    if (counted.rowCount === 0) throw httpError(410, "LINK_EXHAUSTED", "Link đã hết lượt xem");
   } else if (link.max_views !== null && link.view_count > link.max_views) {
-    throw httpError(410, "Link đã hết lượt xem", "LINK_EXHAUSTED");
+    throw httpError(410, "LINK_EXHAUSTED", "Link đã hết lượt xem");
   }
 
   const album = { id: link.a_id, user_id: link.a_user_id, kind: link.kind, smart_rule: link.smart_rule };
@@ -86,7 +87,7 @@ export async function getPublicAlbum(token, { limit, offset }) {
     // gắn với link → thu hồi link là ảnh bị chặn ngay.
     items: items.map(({ ownerId: _o, addedBy: _a, ...item }) => ({
       ...item,
-      ...mediaUrls(item.id, { heif: Boolean(item.fullUrl), scope: String(link.id) }),
+      ...mediaUrls(item.id, { heif: Boolean(item.fullUrl), scope: String(link.id), editedAt: item.editedAt }),
     })),
   };
 }

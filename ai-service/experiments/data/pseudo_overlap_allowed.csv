@@ -1,0 +1,18 @@
+# Cặp lớp Open Images được phép có box gần trùng nhau (IoU ≥ --pseudo-overlap-iou) khi gắn nhãn giả.
+# Ngoài các cặp này, box giả trùng box (người vẽ hoặc box giả đã nhận) của lớp KHÁC → bỏ: vật đó đã có nhãn khác
+# (vd box "truck" của YOLO gốc đè lên box Van của người → bỏ). Cặp đối xứng; tên = cột oi_name của oi_classes.csv.
+# Dòng bắt đầu bằng # bị bỏ qua.
+a,b,reason
+Coffee cup,Coffee (drink),ly và đồ uống trong ly
+Mug,Coffee (drink),ly và đồ uống trong ly
+Mug,Beer,ly và đồ uống trong ly
+Wine glass,Wine,ly và đồ uống trong ly
+Wine glass,Cocktail,ly và đồ uống trong ly
+Wine glass,Beer,ly và đồ uống trong ly
+Bottle,Wine,chai và đồ uống trong chai
+Bottle,Beer,chai và đồ uống trong chai
+Bowl,Salad,bát và món trong bát
+Bowl,Pasta,bát và món trong bát
+Bowl,Ice cream,bát và món trong bát
+Person,Human face,ảnh chân dung cận: box người ≈ box mặt
+Person,Dress,box váy ≈ box người mặc

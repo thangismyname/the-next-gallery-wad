@@ -1,7 +1,7 @@
 // Truy vấn dùng chung cho các service moments (feed/collab/reaction/meme):
 // gắn slot collab vào rows và kiểm tra quyền xem.
 import { dbPool } from "../../config/db.js";
-import { COMPLETED_FILTER } from "./moments.constants.js";
+import { COMPLETED_FILTER, SINGLE_MEDIA_VISIBLE } from "./moments.constants.js";
 import { toSlotItem } from "./moments.mapper.js";
 
 // Gắn moment_collab slots vào rows (mutation: row._slots). Moment single → slots [].
@@ -15,7 +15,11 @@ export async function attachSlots(rows) {
   }
 
   const result = await dbPool.query(
-    `SELECT mc.moment_id, mc.slot_index, mc.user_id, mc.media_id, mc.filled_at,
+    `SELECT mc.moment_id, mc.slot_index, mc.user_id,
+            -- Ảnh đã bị xoá vĩnh viễn / đưa vào thùng rác → slot không còn ảnh.
+            CASE WHEN mc.media_id IS NULL OR med.id IS NULL
+                 THEN NULL ELSE mc.media_id END AS media_id,
+            mc.filled_at,
             u.name AS user_name, u.image AS user_avatar,
             med.media_type, med.width, med.height, med.duration_seconds
      FROM moment_collab mc
@@ -60,10 +64,31 @@ export async function canViewMoment(userId, momentId) {
         m.user_id = $1
         OR (m.user_id IN (SELECT fid FROM friend_ids) AND m.visibility IN ('circle', 'public'))
       )
+      AND ${SINGLE_MEDIA_VISIBLE}
       ${COMPLETED_FILTER}`,
     [userId, momentId],
   );
   return result.rowCount > 0;
+}
+
+// Sửa caption/visibility của moment đã đăng (P3.1).
+export async function updateMomentMeta(userId, momentId, patch) {
+  const sets = [];
+  const params = [momentId, userId];
+  if (patch.caption !== undefined) {
+    params.push(patch.caption);
+    sets.push(`caption = $${params.length}`);
+  }
+  if (patch.visibility !== undefined) {
+    params.push(patch.visibility);
+    sets.push(`visibility = $${params.length}`);
+  }
+  if (sets.length === 0) return null;
+  const result = await dbPool.query(
+    `UPDATE moments SET ${sets.join(", ")} WHERE id = $1 AND user_id = $2 RETURNING id`,
+    params,
+  );
+  return result.rowCount > 0 ? momentId : null;
 }
 
 // Danh sách user liên quan trực tiếp tới moment (owner + người trong collab)

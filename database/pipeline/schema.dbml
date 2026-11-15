@@ -1,227 +1,396 @@
 // ==========================================================
-// schema.dbml — The Next Gallery — Phase 1
-// Paste toàn bộ file này vào https://dbdiagram.io để tự vẽ ERD.
-// Đây chỉ là bản mô tả quan hệ để vẽ sơ đồ, KHÔNG dùng để chạy
-// migrate — 4 bảng Better Auth quản lý qua CLI riêng của nó,
-// không tạo/sửa cấu trúc bằng tay.
+// schema.dbml — The Next Gallery
+// SINH TỰ ĐỘNG từ DB (schema.sql + migrate.js) — đừng sửa tay. Paste vào
+// https://dbdiagram.io để vẽ ERD. Note = COMMENT trong schema.sql.
+// 4 bảng đầu (user/session/account/verification) do Better Auth quản lý.
 // ==========================================================
 
-// ==========================================================
-// BETTER AUTH — quản lý bởi Better Auth CLI, đưa vào đây để
-// vẽ đủ quan hệ FK, không tự ý ALTER các bảng này.
-// Có role/banned/banReason/banExpires trên "user" vì bạn đang
-// bật Admin plugin của Better Auth.
-// ==========================================================
 Table user {
-  id text [pk]
-  name text [not null]
-  email text [not null, unique]
-  emailVerified boolean [not null]
-  image text
-  createdAt timestamptz [not null]
-  updatedAt timestamptz [not null]
-  role text [note: 'Admin plugin — vd "admin" | "user"']
-  banned boolean [note: 'Admin plugin']
-  banReason text [note: 'Admin plugin']
-  banExpires timestamptz [note: 'Admin plugin']
+  id "text" [pk]
+  name "text" [not null]
+  email "text" [not null, unique]
+  emailVerified "boolean" [not null]
+  image "text"
+  createdAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
+  role "text" [note: 'Admin plugin của Better Auth — vd "admin" | "user". Quyết định quyền truy cập các tính năng quản trị.']
+  banned "boolean"
+  banReason "text"
+  banExpires "timestamptz"
 
-  Note: 'Quản lý bởi Better Auth CLI. Mọi bảng app dùng user_id (text) đều trỏ FK vào đây.'
+  Note: 'Tài khoản người dùng, quản lý bởi Better Auth. Có role/banned/banReason/banExpires vì Admin plugin đang được bật.'
 }
 
 Table session {
-  id text [pk]
-  expiresAt timestamptz [not null]
-  token text [not null, unique]
-  createdAt timestamptz [not null]
-  updatedAt timestamptz [not null]
-  ipAddress text
-  userAgent text
-  userId text [not null, ref: > user.id]
-  impersonatedBy text [note: 'Admin plugin — admin đang giả lập user này']
+  id "text" [pk]
+  expiresAt "timestamptz" [not null]
+  token "text" [not null, unique]
+  createdAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt "timestamptz" [not null]
+  ipAddress "text"
+  userAgent "text"
+  userId "text" [not null, ref: > user.id, note: 'FK tới user.id — chú ý tên cột camelCase (userId, không phải user_id) vì đây là bảng Better Auth, khác convention snake_case của các bảng app bên dưới.']
+  impersonatedBy "text"
 }
 
 Table account {
-  id text [pk]
-  accountId text [not null]
-  providerId text [not null, note: 'vd "credential", "google"...']
-  userId text [not null, ref: > user.id]
-  accessToken text
-  refreshToken text
-  idToken text
-  accessTokenExpiresAt timestamptz
-  refreshTokenExpiresAt timestamptz
-  scope text
-  password text [note: 'Hash password nếu dùng email/password provider']
-  createdAt timestamptz [not null]
-  updatedAt timestamptz [not null]
-  issuer text
+  id "text" [pk]
+  accountId "text" [not null]
+  providerId "text" [not null, note: 'Provider đăng nhập, vd "credential" (email/password) hoặc "google", "github"...']
+  userId "text" [not null, ref: > user.id]
+  accessToken "text"
+  refreshToken "text"
+  idToken "text"
+  accessTokenExpiresAt "timestamptz"
+  refreshTokenExpiresAt "timestamptz"
+  scope "text"
+  password "text" [note: 'Hash password, chỉ có giá trị khi providerId = credential.']
+  createdAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt "timestamptz" [not null]
 }
 
 Table verification {
-  id text [pk]
-  identifier text [not null]
-  value text [not null]
-  expiresAt timestamptz [not null]
-  createdAt timestamptz [not null]
-  updatedAt timestamptz [not null]
+  id "text" [pk]
+  identifier "text" [not null]
+  value "text" [not null]
+  expiresAt "timestamptz" [not null]
+  createdAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
+  updatedAt "timestamptz" [not null, default: `CURRENT_TIMESTAMP`]
 }
 
-// ==========================================================
-// APP — Phase 1: Media / Album / Moments
-// ==========================================================
-
 Table media {
-  id uuid [pk, default: `gen_random_uuid()`]
-  user_id text [not null, ref: > user.id, note: 'Chủ sở hữu file']
-  media_type media_type_enum [not null, default: 'photo']
-  original_filename varchar(255)
-  caption text
-  taken_at timestamptz
-  width int
-  height int
-  duration_seconds decimal(10,3) [note: 'Chỉ có giá trị với video']
-  fps real
-  video_codec varchar(50)
-  thumbnail_object text
-  thumbnail_small_object text
-  display_object text [note: 'Bản xem ≤2048px giữ tỉ lệ cho lightbox + AI; video = poster']
-  full_object text [note: 'WebP độ phân giải gốc — chỉ HEIC']
-  minio_object text [not null]
-  minio_bucket varchar(100) [default: 'gallery']
-  file_ext varchar(20)
-  mime_type varchar(100)
-  file_size_kb int
-  decor_data jsonb [note: 'Filter/sticker lúc chụp']
-  extra_data jsonb [note: 'Dự phòng cho phase AI sau']
-  created_at timestamptz
-  updated_at timestamptz
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, ref: > user.id, note: 'Chủ sở hữu file, FK tới bảng "user" của Better Auth. 1 user có nhiều media (1-n).']
+  media_type "media_type" [not null, default: `'photo'::media_type`, note: 'photo | video — quyết định các cột duration/fps/video_codec có giá trị hay NULL.']
+  original_filename "varchar(255)"
+  caption "text"
+  taken_at "timestamptz"
+  width "integer"
+  height "integer"
+  duration_seconds "numeric(10,3)" [note: 'Chỉ có giá trị khi media_type = video (ràng buộc bởi chk_video_duration). NULL với ảnh.']
+  fps "real"
+  video_codec "varchar(50)"
+  thumbnail_object "text" [note: 'Object key trên MinIO của ảnh đại diện — cỡ trung (400px), dùng làm thumbnail lớn / fallback cho ảnh và video.']
+  thumbnail_small_object "text" [note: 'Object key trên MinIO của bản resize nhỏ (200px) dùng cho lưới ảnh (grid) — nhẹ và tải nhanh. NULL với dữ liệu cũ thì fallback về thumbnail_object.']
+  display_object "text" [note: 'Object key trên MinIO của bản xem (WebP, cạnh dài ≤2048px, giữ tỉ lệ) — lightbox hiển thị bản này thay vì file gốc; cũng là ảnh đưa cho CLIP/YOLO/DINO. Với video là poster (1 khung hình cắt bằng ffmpeg). NULL với ảnh cũ → endpoint thumbnail?size=display tự tạo khi được gọi lần đầu.']
+  full_object "text" [note: 'Object key trên MinIO của bản WebP độ phân giải gốc — CHỈ cho ảnh HEIC/HEIF (Chrome/Firefox không hiển thị được file gốc). Tạo khi người dùng bấm "Bản gốc"/phóng to trong lightbox. NULL với mọi định dạng khác.']
+  minio_object "text" [not null]
+  minio_bucket "varchar(100)" [default: `'gallery'::character varying`]
+  file_ext "varchar(20)"
+  mime_type "varchar(100)"
+  file_size_kb "integer"
+  decor_data "jsonb" [note: 'Metadata filter/sticker/khung áp dụng lúc chụp (từ tính năng Moments). Không phải kết quả AI, chỉ là cấu hình chỉnh sửa.']
+  extra_data "jsonb" [note: 'Cột JSONB dự phòng — nơi phase AI sau này có thể lưu thêm dữ liệu linh hoạt mà không cần ALTER TABLE.']
+  created_at "timestamptz" [default: `now()`]
+  updated_at "timestamptz" [default: `now()`]
+  deleted_at "timestamptz" [note: 'Mốc soft-delete. NULL = file đang hiển thị bình thường ở Gallery. Khác NULL = file nằm trong Thùng rác (deleted_at là thời điểm xoá), vẫn còn nguyên trên MinIO để có thể khôi phục; chỉ bị gỡ object khi xoá vĩnh viễn.']
+  is_favorite "boolean" [not null, default: `false`]
+  yolo_processed_at "timestamptz" [note: 'Thời điểm ảnh chạy xong YOLO object detection (NULL = chưa chạy). Khác với việc có detection hay không — ảnh không có object vẫn được set để backfill không lặp vô hạn.']
 
-  Note: 'Nguồn sự thật duy nhất cho 1 file đã upload — mọi bảng khác chỉ trỏ media_id vào đây'
+  indexes {
+    (user_id, minio_object) [unique]
+  }
+
+  Note: 'File gốc (ảnh/video) đã upload lên MinIO. Là bảng trung tâm — mọi bảng khác (album_media, moments, moment_reactions) chỉ tham chiếu media_id, không copy lại thông tin file.'
 }
 
 Table albums {
-  id uuid [pk, default: `gen_random_uuid()`]
-  user_id text [not null, ref: > user.id, note: 'Owner gốc']
-  name varchar(255) [not null]
-  description text
-  cover_media_id uuid [ref: > media.id]
-  is_shared boolean [default: false]
-  created_at timestamptz
-  updated_at timestamptz
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, ref: > user.id, note: 'Chủ sở hữu album (owner gốc). Không đại diện cho tất cả người có quyền truy cập — xem thêm album_members.']
+  name "varchar(255)" [not null]
+  description "text"
+  cover_media_id "uuid" [ref: > media.id, note: 'Ảnh/video đại diện hiển thị ở ngoài danh sách album. NULL = FE tự lấy media mới nhất làm cover.']
+  is_shared "boolean" [default: `false`, note: 'Cờ tiện lợi để query nhanh "album nào đang được share" mà không cần JOIN album_members mỗi lần — nên đồng bộ = true khi có record đầu tiên trong album_members.']
+  kind "varchar(10)" [not null, default: `'manual'::character varying`]
+  smart_rule "jsonb"
+  created_at "timestamptz" [default: `now()`]
+  updated_at "timestamptz" [default: `now()`]
+
+  Note: 'Bộ sưu tập do user tạo để tổ chức media. Chủ sở hữu (user_id) luôn có toàn quyền; muốn chia sẻ cho người khác thì thêm record vào album_members.'
 }
 
 Table album_media {
-  id uuid [pk, default: `gen_random_uuid()`]
-  album_id uuid [not null, ref: > albums.id]
-  media_id uuid [not null, ref: > media.id]
-  position int
-  added_at timestamptz
-
-  Note: 'Bảng nối n-n: 1 album nhiều media, 1 media nằm được trong nhiều album'
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  album_id "uuid" [not null, ref: > albums.id]
+  media_id "uuid" [not null, ref: > media.id]
+  position "integer" [note: 'Thứ tự hiển thị trong album, tự set khi user kéo-thả sắp xếp lại. NULL = mặc định sort theo added_at.']
+  added_by "text" [ref: > user.id]
+  added_at "timestamptz" [default: `now()`]
 
   indexes {
     (album_id, media_id) [unique]
   }
+
+  Note: 'Bảng nối n-n giữa albums và media. Không có bảng này thì 1 media chỉ thuộc được 1 album duy nhất (1-n) — có bảng này thì 1 media thả được vào nhiều album (vd vừa trong "Du lịch 2026" vừa trong "Bạn bè").'
 }
 
 Table album_members {
-  id uuid [pk, default: `gen_random_uuid()`]
-  album_id uuid [not null, ref: > albums.id]
-  user_id text [not null, ref: > user.id]
-  role varchar(20) [default: 'viewer', note: 'owner | editor | viewer']
-  invited_at timestamptz
-  accepted_at timestamptz [note: 'NULL = lời mời đang chờ']
-
-  Note: 'Bảng nối n-n: album cộng tác, ai ngoài owner được quyền truy cập'
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  album_id "uuid" [not null, ref: > albums.id]
+  user_id "text" [not null, ref: > user.id]
+  role "varchar(20)" [not null, default: `'viewer'::character varying`, note: 'owner | editor | viewer — owner thường trùng với albums.user_id, thêm ở đây để query quyền thống nhất 1 chỗ thay vì check riêng 2 nơi.']
+  invited_at "timestamptz" [default: `now()`]
+  accepted_at "timestamptz" [note: 'NULL = lời mời đang chờ (pending invite), có giá trị = user đã chấp nhận tham gia album.']
 
   indexes {
     (album_id, user_id) [unique]
   }
+
+  Note: 'Album cộng tác: ai (ngoài owner) được quyền xem/sửa album này. Bảng nối n-n giữa albums và user, có thêm role/accepted_at để quản lý lời mời.'
 }
 
 Table share_links {
-  id uuid [pk, default: `gen_random_uuid()`]
-  token varchar(64) [not null, unique]
-  created_by_user_id text [not null, ref: > user.id]
-  album_id uuid [ref: > albums.id, note: 'Chia sẻ cả album']
-  media_id uuid [ref: > media.id, note: 'Hoặc chia sẻ 1 file lẻ']
-  permission varchar(20) [default: 'view', note: 'view | download | edit']
-  expires_at timestamptz
-  max_views int
-  view_count int [default: 0]
-  created_at timestamptz
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  token "varchar(64)" [not null, unique, note: 'Chuỗi random duy nhất dùng trong URL public, vd gallery.app/s/{token}. Phải random đủ dài để không đoán được (tránh brute-force truy cập trái phép).']
+  created_by_user_id "text" [not null, ref: > user.id]
+  album_id "uuid" [ref: > albums.id, note: 'Chia sẻ nguyên 1 album. Loại trừ lẫn nhau về mặt logic với media_id (thường chỉ set 1 trong 2, ràng buộc chk_share_target chỉ yêu cầu ít nhất 1 cái có giá trị).']
+  media_id "uuid" [ref: > media.id, note: 'Chia sẻ 1 file lẻ, không phải cả album.']
+  permission "varchar(20)" [not null, default: `'view'::character varying`]
+  expires_at "timestamptz"
+  max_views "integer"
+  view_count "integer" [not null, default: `0`]
+  created_at "timestamptz" [default: `now()`]
 
-  Note: 'Link chia sẻ công khai, người nhận không cần tài khoản'
+  Note: 'Link chia sẻ công khai (kiểu Google Photos share link) — khác album_members ở chỗ người nhận KHÔNG cần có tài khoản trong hệ thống, chỉ cần link + token.'
 }
 
 Table friendships {
-  id uuid [pk, default: `gen_random_uuid()`]
-  requester_id text [not null, ref: > user.id]
-  addressee_id text [not null, ref: > user.id]
-  status varchar(20) [default: 'pending', note: 'pending | accepted | blocked']
-  created_at timestamptz
-  responded_at timestamptz
-
-  Note: 'Self-referencing n-n trên bảng user — vòng bạn bè cho Moments'
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  requester_id "text" [not null, ref: > user.id, note: 'Người gửi lời mời kết bạn.']
+  addressee_id "text" [not null, ref: > user.id, note: 'Người nhận lời mời. Khi FE query "bạn bè của tôi", phải check cả 2 chiều: WHERE (requester_id = :me OR addressee_id = :me) AND status = \'accepted\'.']
+  status "varchar(20)" [not null, default: `'pending'::character varying`, note: 'pending | accepted | blocked.']
+  created_at "timestamptz" [default: `now()`]
+  responded_at "timestamptz"
 
   indexes {
     (requester_id, addressee_id) [unique]
   }
+
+  Note: 'Vòng bạn bè giữa 2 user, dùng để quyết định ai thấy moment của ai (visibility = circle). Quan hệ 2 chiều được lưu 1 row duy nhất (không lưu 2 lần A-B và B-A).'
 }
 
 Table moments {
-  id uuid [pk, default: `gen_random_uuid()`]
-  user_id text [not null, ref: > user.id, note: 'Người đăng']
-  media_id uuid [not null, ref: > media.id, note: 'Ảnh/video vừa chụp']
-  caption text
-  visibility varchar(20) [default: 'circle', note: 'circle | public | private']
-  expires_at timestamptz [note: 'NULL = không tự biến mất']
-  created_at timestamptz
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, ref: > user.id]
+  media_id "uuid" [ref: > media.id, note: 'Ảnh/video của moment single (duo/trio: NULL). ON DELETE SET NULL: xoá vĩnh viễn ảnh thì moment vẫn còn và card hiện "Ảnh đã bị xoá". Ảnh chỉ vào thùng rác (deleted_at) → moment tự ẩn khỏi feed.']
+  template "varchar(30)" [not null, default: `'single'::character varying`, note: 'single = 1 ảnh dọc (cũ). duo_square = 2 ảnh vuông ghép ngang (2 người cùng chụp). trio_wide = 3 ảnh ngang (3 người). Draft chưa đủ slot tự huỷ sau 24h và không hiện ở feed.']
+  caption "text"
+  visibility "varchar(20)" [not null, default: `'circle'::character varying`, note: 'circle (chỉ bạn bè trong friendships) | private. public giữ lại cho dữ liệu cũ nhưng hiện xử lý như circle (chưa có feed công khai).']
+  expires_at "timestamptz" [note: 'Dự phòng, chưa dùng (story mode chưa implement).']
+  created_at "timestamptz" [default: `now()`]
+
+  Note: 'Khoảnh khắc chụp/quay nhanh gửi cho vòng bạn bè (kiểu Locket). single: tham chiếu đúng 1 media_id. duo_square/trio_wide: media_id NULL, ảnh nằm trong moment_collab (mỗi người 1 slot, connect thành 1 moment).'
+}
+
+Table moment_collab {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  moment_id "uuid" [not null, ref: > moments.id]
+  slot_index "integer" [not null, note: 'Vị trí slot trong template (0 = ảnh trái/trên, sau đó sang phải). Số lượng slot theo template được giữ ở tầng service (moments.collab.service.js::insertMomentSlots); DB chặn slot_index âm + trùng bằng CHECK/UNIQUE.']
+  user_id "text" [not null, ref: > user.id]
+  media_id "uuid" [ref: > media.id, note: 'Ảnh/video người này chọn cho slot. NULL = slot trống (draft). ON DELETE SET NULL: xoá media tự động bỏ slot đó, moment trở về draft.']
+  filled_at "timestamptz" [note: 'Thời điểm slot được điền ảnh. NULL = đang chờ. Moment chỉ xuất hiện ở feed khi MỌI slot có filled_at.']
+  created_at "timestamptz" [default: `now()`]
+
+  indexes {
+    (moment_id, slot_index) [unique]
+  }
+
+  Note: 'Slot ảnh từng người trong moment template (duo_square/trio_wide). Mỗi row = 1 người + 1 ô ảnh lắp vào template chung. self-fill: creator chiếm mọi slot. collab: vòng bạn được mời điền ảnh của họ.'
 }
 
 Table moment_reactions {
-  id uuid [pk, default: `gen_random_uuid()`]
-  moment_id uuid [not null, ref: > moments.id]
-  user_id text [not null, ref: > user.id, note: 'Người react']
-  reaction_emoji varchar(10) [not null]
-  created_at timestamptz
-
-  Note: 'Bảng nối n-n giữa moments và user — 1 người chỉ react 1 lần/moment'
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  moment_id "uuid" [not null, ref: > moments.id]
+  user_id "text" [not null, ref: > user.id]
+  reaction_emoji "varchar(10)" [not null]
+  created_at "timestamptz" [default: `now()`]
 
   indexes {
     (moment_id, user_id) [unique]
   }
+
+  Note: 'Reaction emoji theo moment kiểu Locket. UNIQUE(moment_id, user_id) nghĩa là 1 người chỉ react được 1 lần cho mỗi moment — đổi ý thì phải UPDATE record cũ, không insert thêm.'
 }
 
 Table moment_memes {
-  id uuid [pk, default: `gen_random_uuid()`]
-  moment_id uuid [not null, ref: > moments.id]
-  user_id text [not null, ref: > user.id, note: 'Người đăng meme']
-  image_url text [not null, note: 'URL ảnh meme render từ memegen.link']
-  template_id varchar(64) [note: 'ID template nguồn meme']
-  caption text [note: 'Ghi chú thêm (tùy chọn)']
-  created_at timestamptz
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  moment_id "uuid" [not null, ref: > moments.id]
+  user_id "text" [not null, ref: > user.id]
+  image_url "text" [note: 'URL nguồn memegen.link lúc render — chỉ dùng làm fallback cho meme tạo trước khi lưu MinIO (image_object NULL).']
+  image_object "text" [note: 'Object key ảnh meme trong MinIO (moments/<momentId>/memes/<memeId>.<ext>). Backend stream qua GET /api/moments/:momentId/memes/:memeId/image (URL có chữ ký). NULL = meme cũ, đọc image_url.']
+  template_id "varchar(64)" [note: 'ID template trên nguồn meme (memegen.link) dùng để render — để đối chiếu/ghi chú nguồn gốc meme.']
+  caption "text" [note: 'Ghi chú tùy chọn của người đăng hiển thị dưới ảnh meme. NULL = không có.']
+  created_at "timestamptz" [default: `now()`]
 
-  Note: 'Meme thả lên 1 moment — mặt sau thẻ khi lật, dạng bình luận ảnh với avatar người đăng'
-
-  indexes {
-    (moment_id, created_at) [desc]
-  }
+  Note: 'Meme "thả" lên 1 moment — kiểu bình luận ảnh ở mặt sau thẻ khi lật. Mỗi row = 1 meme của 1 user trên 1 moment, gồm ảnh đã lưu ở MinIO + caption tùy chọn.'
 }
 
 Table meme_reactions {
-  meme_id uuid [not null, ref: > moment_memes.id, note: 'Meme được tim']
-  user_id text [not null, ref: > user.id, note: 'User tim meme']
-  created_at timestamptz
-
-  Note: 'Tim (❤️) của user trên 1 meme — PK đôi (meme_id, user_id) chống trùng, bấm lần nữa = bỏ tim. Số lượng hiển thị phía đối diện avatar'
+  meme_id "uuid" [not null, ref: > moment_memes.id, note: 'Meme được tim. Xóa meme → xóa luôn các tim (CASCADE).']
+  user_id "text" [not null, ref: > user.id, note: 'User tim meme. Xóa user → tim tự gỡ (CASCADE).']
+  created_at "timestamptz" [default: `now()`]
 
   indexes {
-    (meme_id)
+    (meme_id, user_id) [pk]
+  }
+
+  Note: 'Tim (heart) của user trên 1 meme — mỗi row = 1 lần tim của 1 user (PK đôi chống trùng).'
+}
+
+Table transfers {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  sender_id "text" [not null, ref: > user.id]
+  kind "varchar(10)" [not null]
+  token_hash "char(64)" [unique, note: 'Chỉ lưu hash — token + khoá giải mã nằm trong #fragment của link, không bao giờ tới server.']
+  code "varchar(8)"
+  code_expires_at "timestamptz"
+  max_receivers "integer"
+  expires_at "timestamptz" [not null]
+  revoked_at "timestamptz"
+  purged_at "timestamptz"
+  created_at "timestamptz" [default: `now()`]
+
+  Note: 'Phiên gửi file. link = ai có link/QR/mã đều nhận (không cần đăng nhập); direct = gửi thẳng bạn bè.'
+}
+
+Table transfer_files {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  transfer_id "uuid" [not null, ref: > transfers.id]
+  position "integer" [not null]
+  name "varchar(255)" [not null]
+  size "bigint" [not null]
+  mime "varchar(100)" [not null]
+  media_id "uuid" [ref: > media.id]
+  thumb "text"
+  relay_parts "integer" [not null, default: `0`]
+}
+
+Table transfer_relay_parts {
+  file_id "uuid" [not null, ref: > transfer_files.id]
+  part "integer" [not null]
+  size "integer" [not null]
+
+  indexes {
+    (file_id, part) [pk]
   }
 }
 
-Enum media_type_enum {
-  photo
-  video
+Table transfer_recipients {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  transfer_id "uuid" [not null, ref: > transfers.id]
+  user_id "text" [ref: > user.id]
+  guest_id "varchar(64)"
+  access_hash "char(64)" [unique]
+  display_name "varchar(100)"
+  wrapped_keys "jsonb"
+  status "varchar(12)" [not null, default: `'pending'::character varying`]
+  via "varchar(8)" [note: 'Đường dữ liệu thực tế: p2p (trực tiếp) · turn (WebRTC qua TURN) · relay (server, mã hoá) · server (ảnh thư viện) · copy (server copy vào thư viện) — số liệu so sánh cho luận văn.']
+  bytes "bigint" [not null, default: `0`]
+  created_at "timestamptz" [default: `now()`]
+  started_at "timestamptz"
+  finished_at "timestamptz"
+}
+
+Table user_device_keys {
+  user_id "text" [not null, ref: > user.id]
+  device_id "varchar(64)" [not null]
+  public_key "jsonb" [not null]
+  last_seen_at "timestamptz" [default: `now()`]
+
+  indexes {
+    (user_id, device_id) [pk]
+  }
+}
+
+Table media_embeddings {
+  media_id "uuid" [pk, ref: > media.id]
+  user_id "text" [not null, ref: > user.id]
+  model "varchar(100)" [not null, note: 'Tên model đã tạo embedding (vd ViT-B-32). Lưu lại để biết vector tương thích với text encoder nào khi search.']
+  embedding "vector(512)" [not null, note: 'Vector CLIP 512 chiều (đã chuẩn hoá L2). Query dùng 1 - (embedding <=> $query) để tính cosine similarity.']
+  created_at "timestamptz" [default: `now()`]
+  updated_at "timestamptz" [default: `now()`]
+
+  Note: 'Embedding CLIP (OpenCLIP) của từng ảnh — phục vụ semantic search. Mỗi media tối đa 1 embedding; xoá media thì embedding tự xoá theo (CASCADE).'
+}
+
+Table media_dino_embeddings {
+  media_id "uuid" [pk, ref: > media.id]
+  user_id "text" [not null, ref: > user.id]
+  model "varchar(100)" [not null]
+  embedding "vector(384)" [not null, note: 'Vector DINOv3 ViT-S/16 384 chiều (đã chuẩn hoá L2). Chỉ so với row cùng model.']
+  created_at "timestamptz" [default: `now()`]
+  updated_at "timestamptz" [default: `now()`]
+
+  Note: 'Descriptor DINOv3 (pooler_output/CLS) của từng ảnh — phục vụ tìm ảnh tương tự. Mỗi media tối đa 1 row; xoá media thì tự xoá theo (CASCADE).'
+}
+
+Table media_tags {
+  media_id "uuid" [not null, ref: > media.id]
+  user_id "text" [not null, ref: > user.id]
+  tag "varchar(40)" [not null]
+  confidence "real" [not null]
+  threshold "real" [not null]
+  model "varchar(160)" [not null]
+  created_at "timestamptz" [default: `now()`]
+
+  indexes {
+    (media_id, tag) [pk]
+  }
+
+  Note: 'Xác suất 17 tag nội dung của từng ảnh (1 row / ảnh / tag). Xoá media thì tự xoá theo (CASCADE).'
+}
+
+Table developer_requests {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, unique, ref: > user.id]
+  status "varchar(20)" [not null, default: `'pending'::character varying`, note: 'pending | approved | rejected. Approved = user được phép bật Developer Mode.']
+  message "text"
+  reviewed_by "text" [ref: > user.id, note: 'Admin đã duyệt (FK "user".id). NULL khi còn pending hoặc admin đã bị xoá.']
+  reviewed_at "timestamptz"
+  created_at "timestamptz" [default: `now()`]
+  updated_at "timestamptz" [default: `now()`]
+
+  Note: 'Yêu cầu bật Developer Mode. User tự đăng ký (status=pending), admin duyệt approve/reject. Chỉ approved mới bật được Developer Mode.'
+}
+
+Table media_detections {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  media_id "uuid" [not null, ref: > media.id]
+  user_id "text" [not null, ref: > user.id]
+  class_name "varchar(80)" [not null, note: 'Tên class COCO (80 class) do YOLO trả về, vd person/dog/car.']
+  confidence "real" [not null]
+  bbox "real[]" [not null, note: 'Bounding box [x1,y1,x2,y2] đã chuẩn hoá 0–1 để client scale theo ảnh hiển thị.']
+  model "varchar(100)" [not null, note: 'Model tạo ra detection (vd yolo26n). Đổi model thì backfill lại và có thể filter theo model.']
+  created_at "timestamptz" [default: `now()`]
+
+  indexes {
+    (media_id, model, class_name, confidence, bbox) [unique]
+  }
+
+  Note: 'Object detection YOLO26 trên từng ảnh — phục vụ search theo đối tượng và hiển thị tag/bbox (Developer Mode). Xoá media → detection tự xoá (CASCADE).'
+}
+
+Table user_labels {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, ref: > user.id]
+  name "varchar(40)"
+  color "varchar(16)" [not null, default: `'slate'::character varying`]
+  position "integer" [not null, default: `0`]
+  created_at "timestamptz" [default: `now()`]
+  preset "varchar(20)"
+}
+
+Table media_user_labels {
+  label_id "uuid" [not null, ref: > user_labels.id]
+  media_id "uuid" [not null, ref: > media.id]
+  created_at "timestamptz" [default: `now()`]
+
+  indexes {
+    (label_id, media_id) [pk]
+  }
+}
+
+Table user_label_seeds {
+  user_id "text" [pk, ref: > user.id]
+  created_at "timestamptz" [default: `now()`]
 }

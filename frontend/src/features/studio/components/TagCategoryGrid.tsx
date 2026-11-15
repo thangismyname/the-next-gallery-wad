@@ -1,11 +1,13 @@
+import { tagSummaryQueryKey } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchTagSummary, tagSummaryQueryKey } from "@/services/media";
+import { fetchTagSummary } from "@/services/media";
 import { TAG_GROUPS } from "../tagCatalog";
 import { TagCategoryCard } from "./TagCategoryCard";
+import { LabelSections } from "./LabelSections";
 
-/** Lưới danh mục theo 3 nhóm (đối tượng / cảnh / thuộc tính). */
+/** Lưới 17 danh mục theo 3 nhóm (đối tượng / cảnh / thuộc tính) + nhãn chi tiết theo nhóm. */
 export const TagCategoryGrid: React.FC<{ onOpen: (tag: string) => void }> = ({
   onOpen,
 }) => {
@@ -60,6 +62,7 @@ export const TagCategoryGrid: React.FC<{ onOpen: (tag: string) => void }> = ({
           </div>
         </section>
       ))}
+      <LabelSections onOpen={onOpen} />
     </div>
   );
 };

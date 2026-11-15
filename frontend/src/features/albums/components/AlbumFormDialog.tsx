@@ -1,3 +1,4 @@
+import { type Album, type SmartRule, albumsQueryKey } from "@tng/shared";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,13 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { SettingOptionGroup } from "@/features/settings/components/SettingOptionGroup";
-import {
-  type Album,
-  type SmartRule,
-  albumsQueryKey,
-  createAlbum,
-  updateAlbum,
-} from "@/services/albums";
+import { createAlbum, updateAlbum } from "@/services/albums";
 import { isSmartRuleValid } from "../albumRules";
 import { SmartRuleFields } from "./SmartRuleFields";
 

@@ -1,0 +1,124 @@
+{
+  "classes": 128,
+  "coco_classes": 81,
+  "gap_classes": 47,
+  "device": "mps",
+  "pseudo": {
+    "precision_target": 0.9,
+    "classes_reached": 49,
+    "coco_classes": 80,
+    "pseudo_boxes": 4590,
+    "images_with_pseudo": 2330,
+    "human_boxes": 76899,
+    "clip_resolved": 364,
+    "clip_rejected": 163,
+    "skipped": {
+      "đã có box người": 19923,
+      "lớp đã xác minh (positive đủ box / negative)": 5768,
+      "trùng box lớp khác": 630,
+      "CLIP không chắc": 163
+    }
+  },
+  "dataset": {
+    "yaml": "/Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Data/open-images-yolo-pl/data.yaml",
+    "train": {
+      "images": 14116,
+      "boxes": 81489
+    },
+    "val": {
+      "images": 2744,
+      "boxes": 11753
+    },
+    "test": {
+      "images": 4490,
+      "boxes": 19933
+    }
+  },
+  "resumed": true,
+  "train_seconds": 20605.5,
+  "ultralytics_test": {
+    "mAP50": 0.4565595495630399,
+    "mAP50_95": 0.3536279534694653,
+    "mAP50_95_coco_classes": 0.4251541399504582,
+    "mAP50_95_gap_classes": 0.2303594193213713,
+    "speed_ms": {
+      "preprocess": 0.13334430244349138,
+      "inference": 2.172258777056235,
+      "loss": 3.511736162068044e-05,
+      "postprocess": 6.115204054338327
+    }
+  },
+  "weights": "yolo26n-oi-20261109-100541.pt",
+  "oi_detection_AP50": {
+    "base_coco": 0.6382074296861214,
+    "ft_coco": 0.6144669013324899,
+    "ft_gap": 0.4191695043310528
+  },
+  "tag": [
+    {
+      "model": "base",
+      "set": "coco",
+      "classes": 78,
+      "mAP": 0.8973081976925565,
+      "macro_f1": 0.8293171225451393,
+      "macro_f1_at_precision": 0.7612794228186738,
+      "micro_precision_at_precision": 0.9317931793179318
+    },
+    {
+      "model": "base",
+      "set": "objects",
+      "classes": 78,
+      "mAP": 0.8973081976925565,
+      "macro_f1": 0.8293171225451393,
+      "macro_f1_at_precision": 0.7612794228186738,
+      "micro_precision_at_precision": 0.9317931793179318
+    },
+    {
+      "model": "ft",
+      "set": "coco",
+      "classes": 78,
+      "mAP": 0.8819496419291206,
+      "macro_f1": 0.816526060467176,
+      "macro_f1_at_precision": 0.7466372277887056,
+      "micro_precision_at_precision": 0.932662192393736
+    },
+    {
+      "model": "ft",
+      "set": "gap",
+      "classes": 47,
+      "mAP": 0.7888099594326797,
+      "macro_f1": 0.7518721438211063,
+      "macro_f1_at_precision": 0.5485555381571953,
+      "micro_precision_at_precision": 0.9142011834319527
+    },
+    {
+      "model": "ft",
+      "set": "objects",
+      "classes": 125,
+      "mAP": 0.8469291213104587,
+      "macro_f1": 0.792216187808254,
+      "macro_f1_at_precision": 0.6721585124872577,
+      "micro_precision_at_precision": 0.9257039308614441
+    }
+  ],
+  "paired_ci95": {
+    "ft_minus_base_coco_mAP_lo": -0.02789782344545421,
+    "ft_minus_base_coco_mAP_hi": -0.0050060041778904425,
+    "ft_minus_base_coco_macro_f1_at_precision_lo": -0.027750390881710333,
+    "ft_minus_base_coco_macro_f1_at_precision_hi": 0.00020039544770902558
+  },
+  "latency": {
+    "base": {
+      "ms_per_image": 28.61205062499721,
+      "images": 200,
+      "params_m": 2.57228,
+      "file_mb": 5.544453
+    },
+    "ft": {
+      "ms_per_image": 29.197043330004817,
+      "images": 200,
+      "params_m": 2.595608,
+      "file_mb": 5.562053
+    }
+  }
+}

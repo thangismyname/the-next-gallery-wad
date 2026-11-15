@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { AI_BAR, type AiSource } from "@/lib/aiColors";
 import { cn } from "@/lib/utils";
-import type { AiCoverage } from "@/types";
+import type { AiCoverage } from "@tng/shared";
 
 const PIPELINES: { key: keyof AiCoverage["done"]; source: AiSource }[] = [
   { key: "tags", source: "tag" },

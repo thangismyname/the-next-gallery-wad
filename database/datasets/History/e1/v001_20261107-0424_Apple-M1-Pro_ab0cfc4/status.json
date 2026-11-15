@@ -1,0 +1,8 @@
+{
+  "exp": "e1",
+  "run_id": "20261107-034923",
+  "state": "done",
+  "stage": "ViT-L-14-336:openai · mscoco_captions · backend: 5000 ảnh, 25010 caption",
+  "elapsed_s": 2130.3,
+  "updated": "2026-11-06T21:24:53Z"
+}

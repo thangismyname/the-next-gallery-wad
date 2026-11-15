@@ -1,0 +1,20 @@
+{"t": "2026-11-07T16:11:59Z", "type": "log", "message": "run e6/20261107-231158 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261107-231158"}
+{"t": "2026-11-07T16:11:59Z", "type": "log", "message": "── load"}
+{"t": "2026-11-07T16:11:59Z", "type": "stage", "stage": "load"}
+{"t": "2026-11-07T16:11:59Z", "type": "log", "message": "── chọn λ trên caption val"}
+{"t": "2026-11-07T16:11:59Z", "type": "stage", "stage": "chọn λ trên caption val"}
+{"t": "2026-11-07T16:12:12Z", "type": "log", "message": "  yolo: λ = 0.05 (val MRR 0.4390)"}
+{"t": "2026-11-07T16:12:12Z", "type": "log", "message": "  clip: λ = 0.02 (val MRR 0.4264)"}
+{"t": "2026-11-07T16:12:12Z", "type": "log", "message": "  fused: λ = 0.02 (val MRR 0.4346)"}
+{"t": "2026-11-07T16:12:12Z", "type": "log", "message": "── captions test"}
+{"t": "2026-11-07T16:12:12Z", "type": "stage", "stage": "captions test"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  clip   -     R@1 0.247 · MRR 0.3607"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  filter yolo  R@1 0.234 · MRR 0.3460"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  boost  yolo  R@1 0.254 · MRR 0.3699"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  filter clip  R@1 0.173 · MRR 0.2751"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  boost  clip  R@1 0.243 · MRR 0.3564"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  filter fused R@1 0.184 · MRR 0.2910"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "  boost  fused R@1 0.249 · MRR 0.3641"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "── query ghép"}
+{"t": "2026-11-07T16:12:24Z", "type": "stage", "stage": "query ghép"}
+{"t": "2026-11-07T16:12:24Z", "type": "log", "message": "xong sau 26s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e6/20261107-231158"}

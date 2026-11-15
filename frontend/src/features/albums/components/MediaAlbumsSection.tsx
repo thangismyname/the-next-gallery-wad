@@ -2,10 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { FolderOpen } from "lucide-react";
-import {
-  albumsContainingQueryKey,
-  fetchAlbumsContaining,
-} from "@/services/albums";
+import { albumsContainingQueryKey, fetchAlbumsContaining } from "@/services/albums";
 
 type Props = { mediaId: string; active: boolean };
 
@@ -25,10 +22,10 @@ export const MediaAlbumsSection: React.FC<Props> = ({ mediaId, active }) => {
   if (albums.length === 0) return null;
 
   return (
-    <div className="border-t border-white/10 pt-3">
+    <div className="border-t border-foreground/10 pt-3">
       <div className="mb-2 flex items-center gap-1.5">
-        <FolderOpen size={13} className="text-white/40" />
-        <p className="text-[11px] tracking-wide text-white/40 uppercase">
+        <FolderOpen size={13} className="text-foreground/40" />
+        <p className="text-[11px] tracking-wide text-foreground/40 uppercase">
           {t("albums.inAlbums")}
         </p>
       </div>
@@ -37,9 +34,9 @@ export const MediaAlbumsSection: React.FC<Props> = ({ mediaId, active }) => {
           <Link
             key={album.id}
             to={`/albums/${album.id}`}
-            className="flex items-center gap-2 rounded-lg p-1 text-sm text-white/80 hover:bg-white/10 hover:text-white"
+            className="flex items-center gap-2 rounded-lg p-1 text-sm text-foreground/80 hover:bg-foreground/10 hover:text-foreground"
           >
-            <span className="size-8 shrink-0 overflow-hidden rounded-md bg-white/10">
+            <span className="size-8 shrink-0 overflow-hidden rounded-md bg-foreground/10">
               {album.coverUrl && (
                 <img
                   src={album.coverUrl}
@@ -49,7 +46,7 @@ export const MediaAlbumsSection: React.FC<Props> = ({ mediaId, active }) => {
               )}
             </span>
             <span className="min-w-0 flex-1 truncate">{album.name}</span>
-            <span className="text-xs text-white/40">{album.mediaCount}</span>
+            <span className="text-xs text-foreground/40">{album.mediaCount}</span>
           </Link>
         ))}
       </div>

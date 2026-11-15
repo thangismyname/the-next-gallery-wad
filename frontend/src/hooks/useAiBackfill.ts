@@ -1,15 +1,11 @@
 // hooks/useAiBackfill.ts
 // Trạng thái + chạy backfill theo lô cho 1 pipeline AI (CLIP / YOLO / DINOv3 /
 // tag) — dùng ở thẻ "Xử lý AI" trong Cài đặt và banner của AI Studio.
+import { type AiPipeline, aiStatusQueryKey } from "@tng/shared";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import {
-  type AiPipeline,
-  aiStatusQueryKey,
-  fetchAiStatus,
-  runAiBackfillBatch,
-} from "@/services/aiProcessing";
+import { fetchAiStatus, runAiBackfillBatch } from "@/services/aiProcessing";
 
 export function useAiBackfill(
   pipeline: AiPipeline,

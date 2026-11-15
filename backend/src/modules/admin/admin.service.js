@@ -4,6 +4,8 @@
 import { dbPool } from "../../config/db.js";
 import { minioClient, BUCKET_NAME } from "../../config/minio.js";
 import { currentModels, getHealth } from "../ai/ai.client.js";
+import { httpError } from "../../middleware/errorHandler.js";
+import { logger } from "../../lib/logger.js";
 
 const CHART_DAYS = 30;
 
@@ -84,7 +86,8 @@ const USER_SELECT = `
          u."emailVerified", u."createdAt",
          COALESCE(m.media_count, 0)::int AS media_count,
          COALESCE(m.storage_bytes, 0)::bigint AS storage_bytes,
-         s.last_active_at
+         s.last_active_at,
+         (dr.status = 'approved') AS is_developer
   FROM "user" u
   LEFT JOIN (
     SELECT user_id, COUNT(*) AS media_count, SUM(file_size_kb)::bigint * 1024 AS storage_bytes
@@ -92,7 +95,8 @@ const USER_SELECT = `
   ) m ON m.user_id = u.id
   LEFT JOIN (
     SELECT "userId", MAX("updatedAt") AS last_active_at FROM session GROUP BY "userId"
-  ) s ON s."userId" = u.id`;
+  ) s ON s."userId" = u.id
+  LEFT JOIN developer_requests dr ON dr.user_id = u.id`;
 
 const toAdminUser = (u) => ({
   id: u.id,
@@ -107,6 +111,7 @@ const toAdminUser = (u) => ({
   mediaCount: u.media_count,
   storageBytes: Number(u.storage_bytes),
   lastActiveAt: u.last_active_at ?? null,
+  isDeveloper: Boolean(u.is_developer),
 });
 
 /** Bảng người dùng: q (tên / email), role, status, sort, dir, limit, offset. */
@@ -193,7 +198,7 @@ export async function getSystem() {
 export async function getUserDetail(userId) {
   const found = await dbPool.query(`${USER_SELECT} WHERE u.id = $1`, [userId]);
   if (found.rowCount === 0) {
-    throw Object.assign(new Error("User not found"), { status: 404 });
+    throw httpError(404, null, "User not found");
   }
   const { clipModel } = await currentModels();
   const [stats, coverage] = await Promise.all([
@@ -231,13 +236,16 @@ export async function getUserDetail(userId) {
  */
 export async function deleteUser(userId, currentUserId) {
   if (currentUserId && userId === currentUserId) {
-    throw Object.assign(new Error("Cannot delete your own account"), { status: 400 });
+    throw httpError(400, null, "Cannot delete your own account");
   }
 
   const media = await dbPool.query(
-    `SELECT minio_bucket, minio_object, thumbnail_object, thumbnail_small_object,
-            display_object, full_object
-     FROM media WHERE user_id = $1`,
+    `SELECT m.minio_bucket, m.minio_object, m.thumbnail_object, m.thumbnail_small_object,
+            m.display_object, m.full_object,
+            e.display_object AS edit_display, e.thumbnail_object AS edit_med,
+            e.thumbnail_small_object AS edit_small
+     FROM media m LEFT JOIN media_edits e ON e.media_id = m.id
+     WHERE m.user_id = $1`,
     [userId],
   );
   const byBucket = new Map();
@@ -250,6 +258,9 @@ export async function deleteUser(userId, currentUserId) {
       row.thumbnail_small_object,
       row.display_object,
       row.full_object,
+      row.edit_display,
+      row.edit_med,
+      row.edit_small,
     ]) {
       if (key) byBucket.get(bucket).add(key);
     }
@@ -258,13 +269,13 @@ export async function deleteUser(userId, currentUserId) {
     try {
       await minioClient.removeObjects(bucket, [...keys]);
     } catch (err) {
-      console.error(`Lỗi xoá object MinIO của user ${userId}:`, err.message);
+      logger.error({ err }, `Lỗi xoá object MinIO của user ${userId}`);
     }
   }
 
   const result = await dbPool.query(`DELETE FROM "user" WHERE id = $1`, [userId]);
   if (result.rowCount === 0) {
-    throw Object.assign(new Error("User not found"), { status: 404 });
+    throw httpError(404, null, "User not found");
   }
   return { success: true, removedObjects: [...byBucket.values()].reduce((n, s) => n + s.size, 0) };
 }

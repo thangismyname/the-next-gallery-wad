@@ -1,39 +1,108 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Camera } from "lucide-react";
+import { Camera, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { MOMENT_ASPECT, isMomentUnseen, type Moment } from "@tng/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Moment } from "@/types";
-import { MomentSlide } from "./MomentSlide";
+import { useElementSize } from "../useElementSize";
+import { CARD_CHROME } from "../momentCard";
+import { MomentCard } from "./MomentCard";
 
 type Props = {
   moments: Moment[];
   isPending: boolean;
   isError: boolean;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
   onRetry: () => void;
+  /** Moments are filtered (a person / me) → different empty text. */
+  filtered: boolean;
+  /** Changes when the filter changes → back to the first page. */
+  filterKey: string;
+  /** "Seen until" mark the feed opened with (New badges). */
+  seenUntil: string | null;
+  /** Open at this moment once it's loaded (`?id=` from the Gallery strip). */
+  openId?: string | null;
+  /** A card became the current page. */
+  onViewed: (moment: Moment) => void;
   onDelete: (moment: Moment) => void;
   onLeave?: (moment: Moment) => void;
   onToggleReaction: (moment: Moment, emoji: string) => void;
   onNew: () => void;
 };
 
-const MD_QUERY = "(min-width: 768px)";
-// Đủ rộng cho 3 card (384px mỗi card + gap): 3×384 + 2×20 + p-6(p-4) ≈ < 1400.
-const XL_QUERY = "(min-width: 1400px)";
+/** Widest the square picture gets (desktop). */
+const CARD_MAX = 560;
+/** Vertical breathing room of a page. */
+const PAGE_PAD = 24;
+/**
+ * BottomBar là `fixed` trên mobile → chừa chỗ ở đáy để thẻ không bị thanh nav đè.
+ * Đặt ở phần tử ĐO ĐƯỢC để chiều cao tính toán đã trừ sẵn.
+ */
+const BOTTOM_RESERVE = "pb-[calc(5rem+env(safe-area-inset-bottom))] sm:pb-0";
+
+/** Sentinel cho infinite scroll — tự tải trang kế khi cuộn gần cuối feed. */
+const InfiniteScrollSentinel: React.FC<{
+  hasNextPage: boolean;
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+  /** Vùng cuộn thật (tránh root = viewport khi feed cuộn bên trong). */
+  rootRef?: React.RefObject<HTMLDivElement | null>;
+}> = ({ hasNextPage, fetchNextPage, isFetchingNextPage, rootRef }) => {
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  // Giữ callback mới nhất nhưng KHÔNG đưa vào deps → observer không bị tạo lại
+  // mỗi lần react-query render (tránh vòng fetch lặp).
+  const fetchRef = useRef(fetchNextPage);
+  fetchRef.current = fetchNextPage;
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    // Đang tải trang kế → ngắt observer, nối lại khi xong (IO bắn lại trạng thái
+    // ban đầu nên vẫn tự tải tiếp nếu sentinel còn trong vùng nhìn).
+    if (!hasNextPage || !node || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) fetchRef.current();
+      },
+      { root: rootRef?.current ?? null, rootMargin: "400px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, rootRef]);
+
+  if (!hasNextPage) return null;
+
+  return (
+    <div ref={sentinelRef} className="flex shrink-0 justify-center py-4">
+      {isFetchingNextPage && (
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
+      )}
+    </div>
+  );
+};
 
 /**
- * Feed DẠNG VUỐT (vertical snap pager — kiểu stories), card bo cong 2xl:
- * - MOBILE (< md): mỗi lần vuốt = 1 card (PORTRAIT) full màn hình.
- * - DESKTOP (≥ md): mỗi lần vuốt = 1 HÀNG 2 card nằm NGANG cạnh nhau.
- * - DESKTOP RỘNG (≥ xl): mỗi hàng 3 card nếu màn hình đủ chỗ.
- * Mũi tên ↑/↓ điều hướng giữa các hàng (row).
+ * Feed = vertical snap pager, **one moment per page** (same as mobile): the card
+ * is centered and sized to the room left (square side = min(width, height −
+ * card chrome) ÷ aspect, 560). ↑/↓/PageUp/PageDown/Space or the side buttons move one
+ * page; only the current page ± 1 is mounted (video + images stay light).
  */
 export const MomentFeed: React.FC<Props> = ({
   moments,
   isPending,
   isError,
+  isFetchingNextPage,
+  hasNextPage,
+  fetchNextPage,
   onRetry,
+  filtered,
+  filterKey,
+  seenUntil,
+  openId,
+  onViewed,
   onDelete,
   onLeave,
   onToggleReaction,
@@ -41,123 +110,169 @@ export const MomentFeed: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const isMulti = useMediaQuery(MD_QUERY);
-  const isXl = useMediaQuery(XL_QUERY);
-  // Số card mỗi hàng: 1 (mobile) / 2 (desktop) / 3 (màn hình rộng đủ chỗ).
-  const perRow = isMulti ? (isXl ? 3 : 2) : 1;
+  const { ref: boxRef, width: boxW, height: boxH } = useElementSize<HTMLDivElement>();
+  const size = Math.max(200, Math.min(CARD_MAX, boxW - 32, Math.floor((boxH - PAGE_PAD * 2 - CARD_CHROME) / MOMENT_ASPECT)));
+  const count = moments.length;
 
-  // Nhóm moments thành từng hàng: mỗi hàng = 1 lần vuốt (snap 1 row).
-  const rows = useMemo(() => {
-    if (moments.length === 0) return [];
-    const out: Array<{ moment: Moment; index: number }[]> = [];
-    for (let i = 0; i < moments.length; i += perRow) {
-      out.push(
-        moments
-          .slice(i, i + perRow)
-          .map((m, offset) => ({ moment: m, index: i + offset })),
-      );
-    }
-    return out;
-  }, [moments, perRow]);
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const onScroll = () =>
+      setCurrent(Math.max(0, Math.min(count - 1, Math.round(el.scrollTop / Math.max(1, el.clientHeight)))));
+    onScroll();
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [count]);
+
+  // The current page counts as seen (moves the "seen until" mark).
+  const currentMoment = moments[current];
+  useEffect(() => {
+    if (currentMoment) onViewed(currentMoment);
+  }, [currentMoment, onViewed]);
+
+  // `openId` → jump to that page once (instant), when it's in the loaded list.
+  const openedRef = useRef<string | null>(null);
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!openId || openedRef.current === openId || !el) return;
+    const index = moments.findIndex((m) => m.id === openId);
+    if (index < 0) return;
+    openedRef.current = openId;
+    el.scrollTo({ top: index * el.clientHeight });
+  }, [openId, moments]);
+
+  // A new filter → back to the first page (not when new moments arrive).
+  useEffect(() => {
+    scrollerRef.current?.scrollTo({ top: 0 });
+  }, [filterKey]);
 
   const goTo = useCallback(
     (index: number) => {
       const el = scrollerRef.current;
-      if (!el || index < 0 || index >= rows.length) return;
-      el.children[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      if (!el || index < 0 || index >= count) return;
+      el.scrollTo({ top: index * el.clientHeight, behavior: "smooth" });
     },
-    [rows.length],
+    [count],
   );
 
-  // Phím tắt: ↑/↓/PageUp/PageDown/Space → chuyển giữa các hàng
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const el = scrollerRef.current;
-      if (!el || rows.length === 0) return;
-      const current = Math.round(el.scrollTop / el.clientHeight);
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("input, textarea, [contenteditable=true], [role=dialog], [role=menu], button, a")) return;
       let next: number | null = null;
-      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") {
-        next = Math.min(current + 1, rows.length - 1);
-      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
-        next = Math.max(current - 1, 0);
-      }
-      if (next !== null && next !== current) {
-        e.preventDefault();
-        goTo(next);
-      }
+      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " " || e.key === "j") next = current + 1;
+      else if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "k") next = current - 1;
+      if (next === null || next < 0 || next >= count) return;
+      e.preventDefault();
+      goTo(next);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [rows.length, goTo]);
+  }, [current, count, goTo]);
 
-  if (isPending) {
-    return (
-      <div className="flex h-full items-center justify-center gap-6 p-6">
-        <div className="w-72">
-          <Skeleton className="aspect-4/5 w-full rounded-2xl bg-muted/40" />
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-muted-foreground">
-        <p className="text-sm">{t("moments.loadFailed")}</p>
-        <Button variant="outline" size="sm" onClick={onRetry}>
-          {t("moments.retry")}
-        </Button>
-      </div>
-    );
-  }
-
-  if (moments.length === 0) {
-    return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-muted-foreground">
-        <span className="grid size-12 place-items-center rounded-full bg-muted/60">
-          <Camera className="size-6 text-muted-foreground/50" />
-        </span>
-        <div className="space-y-1">
-          <p className="text-sm">{t("moments.empty")}</p>
-          <p className="text-xs text-muted-foreground/60">
-            {t("moments.emptyHint")}
-          </p>
-        </div>
-        <Button size="sm" onClick={onNew}>
-          {t("moments.newMoment")}
-        </Button>
-      </div>
-    );
-  }
+  const placeholder = (
+    <div className="flex flex-col gap-3" style={{ width: size }}>
+      <Skeleton className="h-9 w-40 rounded-full" />
+      <Skeleton className="rounded-[2.25rem]" style={{ width: size, height: size * MOMENT_ASPECT }} />
+      <Skeleton className="h-12 rounded-full" />
+    </div>
+  );
 
   return (
-    <div
-      ref={scrollerRef}
-      className="flex h-full flex-col snap-y snap-mandatory overflow-y-auto overscroll-contain scrollbar-none [&::-webkit-scrollbar]:hidden"
-    >
-      {rows.map((row, rowIndex) => (
-        <div
-          key={`row-${rowIndex}`}
-          className="flex h-full shrink-0 snap-start snap-always items-center justify-center gap-5 p-4 md:p-6"
-        >
-          {row.map(({ moment }) => (
-            <div
-              key={moment.id}
-              className="relative aspect-4/5 h-full w-full max-w-sm max-h-full self-center md:h-full md:w-96 md:max-w-none md:max-h-none"
-            >
-              <MomentSlide
-                moment={moment}
-                onDelete={() => onDelete(moment)}
-                onLeave={onLeave ? () => onLeave(moment) : undefined}
-                onToggleReaction={(emoji) => onToggleReaction(moment, emoji)}
-              />
+    <div className="relative h-full">
+      <div ref={boxRef} className={`h-full ${BOTTOM_RESERVE}`}>
+        {isPending ? (
+          <div className="flex h-full items-center justify-center">{placeholder}</div>
+        ) : isError ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-muted-foreground">
+            <p className="text-sm">{t("moments.loadFailed")}</p>
+            <Button variant="outline" size="sm" onClick={onRetry}>
+              {t("moments.retry")}
+            </Button>
+          </div>
+        ) : count === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center text-muted-foreground">
+            <span className="grid size-14 place-items-center rounded-full bg-muted/60">
+              <Camera className="size-6 text-muted-foreground/60 animate-float" />
+            </span>
+            <div className="space-y-1">
+              <p className="text-base font-medium text-foreground">{t(filtered ? "moments.emptyFiltered" : "moments.empty")}</p>
+              {!filtered && <p className="text-sm">{t("moments.emptyHint")}</p>}
             </div>
-          ))}
+            {!filtered && (
+              <Button className="rounded-full" onClick={onNew}>
+                {t("moments.newMoment")}
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div
+            ref={scrollerRef}
+            className="flex h-full flex-col snap-y snap-mandatory overflow-y-auto overscroll-contain scrollbar-none [&::-webkit-scrollbar]:hidden"
+          >
+            {moments.map((moment, index) => (
+              <section
+                key={moment.id}
+                className="flex h-full shrink-0 snap-start snap-always items-center justify-center"
+                style={{ padding: `${PAGE_PAD}px 16px` }}
+                aria-current={index === current}
+              >
+                {Math.abs(index - current) <= 1 ? (
+                  <MomentCard
+                    moment={moment}
+                    size={size}
+                    active={index === current}
+                    unseen={isMomentUnseen(moment, seenUntil)}
+                    onDelete={() => onDelete(moment)}
+                    onLeave={onLeave ? () => onLeave(moment) : undefined}
+                    onToggleReaction={(emoji) => onToggleReaction(moment, emoji)}
+                  />
+                ) : (
+                  placeholder
+                )}
+              </section>
+            ))}
+            <InfiniteScrollSentinel
+              hasNextPage={hasNextPage}
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              rootRef={scrollerRef}
+            />
+          </div>
+        )}
+      </div>
+
+      {count > 1 && (
+        <div className="absolute top-1/2 right-4 z-40 hidden -translate-y-1/2 flex-col items-center gap-1.5 md:flex">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => goTo(current - 1)}
+            disabled={current <= 0}
+            className="rounded-full bg-background/80 backdrop-blur"
+            aria-label={t("moments.prev")}
+          >
+            <ChevronUp className="size-4" />
+          </Button>
+          <span className="font-mono text-[10px] text-muted-foreground tabular-nums">
+            {Math.min(current + 1, count)}/{count}
+            {hasNextPage ? "+" : ""}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => goTo(current + 1)}
+            disabled={current >= count - 1}
+            className="rounded-full bg-background/80 backdrop-blur"
+            aria-label={t("moments.next")}
+          >
+            <ChevronDown className="size-4" />
+          </Button>
         </div>
-      ))}
+      )}
     </div>
   );
 };
+
+export { InfiniteScrollSentinel };

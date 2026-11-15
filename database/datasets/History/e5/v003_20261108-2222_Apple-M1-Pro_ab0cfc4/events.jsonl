@@ -1,0 +1,25 @@
+{"t": "2026-11-08T15:21:32Z", "type": "log", "message": "run e5/20261108-222131 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e5/20261108-222131"}
+{"t": "2026-11-08T15:21:32Z", "type": "log", "message": "── load E2 + E4"}
+{"t": "2026-11-08T15:21:32Z", "type": "stage", "stage": "load E2 + E4"}
+{"t": "2026-11-08T15:21:32Z", "type": "log", "message": "── calibrate YOLO + chọn quy tắc từng tag trên val"}
+{"t": "2026-11-08T15:21:32Z", "type": "stage", "stage": "calibrate YOLO + chọn quy tắc từng tag trên val"}
+{"t": "2026-11-08T15:21:32Z", "type": "log", "message": "  E2 = 20261107-033218 · E4 = 20261107-033725 · 81 lớp có YOLO"}
+{"t": "2026-11-08T15:21:33Z", "type": "log", "message": "  E4 fine-tune = 20261108-222120 · 128 lớp có YOLO"}
+{"t": "2026-11-08T15:21:33Z", "type": "log", "message": "── so chiến lược trên test"}
+{"t": "2026-11-08T15:21:33Z", "type": "stage", "stage": "so chiến lược trên test"}
+{"t": "2026-11-08T15:21:33Z", "type": "log", "message": "── bootstrap ghép cặp 500×"}
+{"t": "2026-11-08T15:21:33Z", "type": "stage", "stage": "bootstrap ghép cặp 500×"}
+{"t": "2026-11-08T15:22:05Z", "type": "log", "message": "── artifacts cho E6"}
+{"t": "2026-11-08T15:22:05Z", "type": "stage", "stage": "artifacts cho E6"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  clip_only          macro-F1 0.6908 · mAP 0.8633"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  yolo_only          macro-F1 0.3460 · mAP 0.7335"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  or                 macro-F1 0.7645 · mAP 0.8894"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  and                macro-F1 0.7392 · mAP 0.8838"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  group_baseline     macro-F1 0.7431 · mAP 0.8815"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  per_tag            macro-F1 0.7637 · mAP 0.8880"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  yolo_only_ft       macro-F1 0.4846 · mAP 0.8402"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  or_ft              macro-F1 0.7798 · mAP 0.8949"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  and_ft             macro-F1 0.7381 · mAP 0.8863"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  group_baseline_ft  macro-F1 0.6966 · mAP 0.8542"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "  per_tag_ft         macro-F1 0.7833 · mAP 0.8914"}
+{"t": "2026-11-08T15:22:06Z", "type": "log", "message": "xong sau 35s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e5/20261108-222131"}

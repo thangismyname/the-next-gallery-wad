@@ -6,7 +6,7 @@ For an overview of the project and its features, see the [README](../README.md).
 ## Requirements
 
 - **Docker** + Docker Compose (for PostgreSQL + MinIO)
-- **Node.js 20+** (backend + frontend)
+- **Node.js 20+** (backend + frontend + mobile)
 - **Python 3.11–3.12** (only for running ai-service natively; not needed for `stub`)
 - `openssl` (to generate a secret)
 
@@ -63,24 +63,21 @@ docker compose -f docker-compose.dev.yml --env-file .env up -d postgres minio
 - PostgreSQL: `localhost:5433`
 - MinIO API: `http://localhost:9002` · MinIO Console: `http://localhost:9091`
 
-> `schema.sql` runs only once, when the Postgres volume is first created. After
-> editing it, reset with `docker compose -f docker-compose.dev.yml down -v` and
-> start again.
->
 > When running the **whole stack** with Docker (`--profile full`), compose
 > overrides `DB_HOST`/`MINIO_ENDPOINT` with the internal service names — you do
 > not need to edit `.env` for that.
 
-## 3. Create auth tables
+## 3. Database tables (automatic)
 
-```bash
-cd backend && npm install
-npx @better-auth/cli migrate
-cd ..
-```
+Nothing to run. On every start the backend (`backend/src/db/migrate.js`):
 
-> Run this after creating `backend/.env` (see step 1). It creates the
-> `user`, `session`, `account` and `verification` tables.
+1. runs the Better Auth migration (`user`, `session`, `account`, `verification`),
+2. on an empty database (no `media` table) runs `backend/src/db/schema.sql`
+   (every app table),
+3. applies the idempotent changes in `migrate.js` for older databases.
+
+If step 1 or 2 fails the server refuses to start (the error is in the log).
+`npx @better-auth/cli migrate` still works if you want to run step 1 by hand.
 
 ## 4. Run the AI service (optional)
 
@@ -108,15 +105,35 @@ See [`ai-service/README.md`](../ai-service/README.md) for provider details.
 
 ## 5. Run backend + frontend
 
+The web app, the mobile app and `packages/shared` are **npm workspaces** with one
+lockfile at the repo root, so install them once from the root. The backend is a
+separate package (own `package.json` / lockfile).
+
 ```bash
 # Terminal 1
 cd backend && npm install && npm run dev
 
-# Terminal 2
-cd frontend && npm install && npm run dev
+# Terminal 2 (repo root)
+npm install            # frontend + packages/shared + apps/mobile
+npm run dev:web        # = npm run dev --workspace=frontend
 ```
 
 Open **http://localhost:5173**.
+
+## 6. Run the mobile app (optional, Expo)
+
+```bash
+cp apps/mobile/.env.example apps/mobile/.env
+# EXPO_PUBLIC_API_URL=http://<Mac LAN IP>:3000/api   ← `ipconfig getifaddr en0`
+npm run dev:mobile     # Expo dev server — scan the QR with Expo Go / dev build
+```
+
+- iOS simulator can use `localhost`; a **real phone or Android emulator needs the
+  Mac's LAN IP** and the same Wi-Fi. The IP changes when you reconnect — if the app
+  can't reach the backend, check it first, then restart with `npx expo start -c`
+  (`EXPO_PUBLIC_*` is baked into the bundle).
+- Add the Expo origin (`http://<LAN IP>:8081`) to `CORS_ORIGINS` / `TRUSTED_ORIGINS`
+  for Expo web; native requests use the `tng://` / `exp://` schemes, already trusted.
 
 ## Verify the setup
 
@@ -145,8 +162,9 @@ Log out and back in, then open the Admin dashboard.
 
 1. Set the providers in `.env`:
    ```env
-   AI_EMBED_PROVIDER=open_clip    # semantic search
+   AI_EMBED_PROVIDER=open_clip    # semantic search + content tags (17 categories, 174 labels)
    AI_OBJECT_PROVIDER=yolo        # object detection
+   AI_SIMILARITY_PROVIDER=dinov3  # "Similar photos" — gated weights, see docs/ai-dino.md
    ```
 2. Make sure the ai-service is running (step 4), then restart the backend.
 3. Backfill media uploaded before AI was enabled:
@@ -154,7 +172,12 @@ Log out and back in, then open the Admin dashboard.
    cd backend
    npm run backfill:embed     # CLIP embeddings for existing images
    npm run backfill:detect    # YOLO object detection for existing images
+   npm run backfill:dino      # DINOv3 similar-photo vectors
+   npm run backfill:tags      # 17 categories + 174 detailed labels (needs CLIP vectors)
+   npm run backfill:thumbs    # missing thumbnail tiers (photos uploaded before tiers existed)
+   npm run backfill:taken-at  # EXIF / video date taken
    ```
+   The same batches run from **Settings → AI processing** in the web app.
    New uploads are processed in the background automatically.
 
 ## OAuth & email (optional)
@@ -221,8 +244,9 @@ docker compose -f docker-compose.prod.yml --env-file .env up --build -d
   the project root and `backend/.env` symlink/copy exists.
 - **Auth errors / `BETTER_AUTH_SECRET`** — the secret must be set and consistent;
   regenerate with `openssl rand -base64 32`.
-- **Schema changes not applied** — `schema.sql` only runs on a fresh volume:
-  `docker compose -f docker-compose.dev.yml down -v` then start again.
+- **Schema changes not applied** — `schema.sql` only runs on an empty database;
+  changes for an existing database must also go into `migrate.js` (idempotent
+  DDL). To start from scratch: `docker compose -f docker-compose.dev.yml down -v`.
 - **UI uses the system font instead of Product Sans** — the Product Sans `.otf`
   files are proprietary and intentionally **not committed**
   (`frontend/src/assets/fonts/` is git-ignored). The app falls back to

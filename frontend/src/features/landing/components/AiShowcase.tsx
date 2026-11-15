@@ -13,10 +13,10 @@ import {
 } from "framer-motion";
 import { Reveal } from "./Reveal";
 import { boxDraw, captionIn, chipSpring, photoAppear } from "../landing.motion";
-import { useTypewriter } from "@/hooks/useTypewriter";
-import streetImage from "@/assets/images/image_3.jpg";
-import portraitImage from "@/assets/images/image_2.jpg";
-import carImage from "@/assets/images/image_5.jpg";
+import { useTypewriter } from "@/features/landing/useTypewriter";
+import streetImage from "@/assets/images/image_3.webp";
+import portraitImage from "@/assets/images/image_2.webp";
+import carImage from "@/assets/images/image_5.webp";
 
 type Box = {
   label: string;

@@ -1,0 +1,355 @@
+{
+  "created": "2026-10-23T12:23:30Z",
+  "folder": "/Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Data/coco",
+  "preprocess": "app",
+  "images": 5000,
+  "errors": 0,
+  "clip": {
+    "model": "ViT-B-32",
+    "pretrained": "laion2b_s34b_b79k",
+    "dimension": 512,
+    "device": "mps"
+  },
+  "yolo": {
+    "model": "yolo26n",
+    "weights": "models/yolo26n.pt",
+    "conf": 0.25,
+    "imgsz": 640,
+    "device": "mps"
+  },
+  "timing": {
+    "prepare_s": 113.01,
+    "clip_s": 39.97,
+    "yolo_s": 140.28,
+    "total_s": 293.83,
+    "images_per_s": 17.02
+  },
+  "class_counts": {
+    "person": {
+      "boxes": 8363,
+      "images": 2574
+    },
+    "car": {
+      "boxes": 1259,
+      "images": 456
+    },
+    "chair": {
+      "boxes": 849,
+      "images": 413
+    },
+    "cup": {
+      "boxes": 595,
+      "images": 319
+    },
+    "dining table": {
+      "boxes": 537,
+      "images": 488
+    },
+    "bottle": {
+      "boxes": 526,
+      "images": 275
+    },
+    "bowl": {
+      "boxes": 457,
+      "images": 261
+    },
+    "sheep": {
+      "boxes": 325,
+      "images": 68
+    },
+    "umbrella": {
+      "boxes": 289,
+      "images": 133
+    },
+    "cow": {
+      "boxes": 285,
+      "images": 77
+    },
+    "traffic light": {
+      "boxes": 284,
+      "images": 130
+    },
+    "elephant": {
+      "boxes": 266,
+      "images": 90
+    },
+    "kite": {
+      "boxes": 259,
+      "images": 90
+    },
+    "motorcycle": {
+      "boxes": 257,
+      "images": 131
+    },
+    "pizza": {
+      "boxes": 254,
+      "images": 150
+    },
+    "bus": {
+      "boxes": 252,
+      "images": 174
+    },
+    "zebra": {
+      "boxes": 244,
+      "images": 84
+    },
+    "horse": {
+      "boxes": 226,
+      "images": 120
+    },
+    "truck": {
+      "boxes": 225,
+      "images": 163
+    },
+    "tv": {
+      "boxes": 224,
+      "images": 184
+    },
+    "couch": {
+      "boxes": 218,
+      "images": 167
+    },
+    "giraffe": {
+      "boxes": 215,
+      "images": 103
+    },
+    "potted plant": {
+      "boxes": 209,
+      "images": 150
+    },
+    "bird": {
+      "boxes": 207,
+      "images": 93
+    },
+    "clock": {
+      "boxes": 203,
+      "images": 163
+    },
+    "dog": {
+      "boxes": 202,
+      "images": 171
+    },
+    "cat": {
+      "boxes": 199,
+      "images": 176
+    },
+    "laptop": {
+      "boxes": 198,
+      "images": 156
+    },
+    "donut": {
+      "boxes": 198,
+      "images": 53
+    },
+    "orange": {
+      "boxes": 188,
+      "images": 62
+    },
+    "boat": {
+      "boxes": 188,
+      "images": 92
+    },
+    "carrot": {
+      "boxes": 177,
+      "images": 57
+    },
+    "vase": {
+      "boxes": 176,
+      "images": 99
+    },
+    "book": {
+      "boxes": 176,
+      "images": 97
+    },
+    "suitcase": {
+      "boxes": 174,
+      "images": 74
+    },
+    "train": {
+      "boxes": 174,
+      "images": 149
+    },
+    "cake": {
+      "boxes": 171,
+      "images": 92
+    },
+    "bicycle": {
+      "boxes": 171,
+      "images": 108
+    },
+    "bench": {
+      "boxes": 169,
+      "images": 132
+    },
+    "tennis racket": {
+      "boxes": 168,
+      "images": 136
+    },
+    "toilet": {
+      "boxes": 165,
+      "images": 133
+    },
+    "surfboard": {
+      "boxes": 162,
+      "images": 108
+    },
+    "sports ball": {
+      "boxes": 162,
+      "images": 134
+    },
+    "sandwich": {
+      "boxes": 155,
+      "images": 100
+    },
+    "broccoli": {
+      "boxes": 153,
+      "images": 55
+    },
+    "sink": {
+      "boxes": 153,
+      "images": 120
+    },
+    "wine glass": {
+      "boxes": 152,
+      "images": 73
+    },
+    "skateboard": {
+      "boxes": 145,
+      "images": 117
+    },
+    "banana": {
+      "boxes": 142,
+      "images": 71
+    },
+    "teddy bear": {
+      "boxes": 141,
+      "images": 80
+    },
+    "bed": {
+      "boxes": 131,
+      "images": 121
+    },
+    "cell phone": {
+      "boxes": 130,
+      "images": 109
+    },
+    "airplane": {
+      "boxes": 129,
+      "images": 97
+    },
+    "keyboard": {
+      "boxes": 125,
+      "images": 84
+    },
+    "remote": {
+      "boxes": 120,
+      "images": 84
+    },
+    "tie": {
+      "boxes": 113,
+      "images": 89
+    },
+    "skis": {
+      "boxes": 107,
+      "images": 80
+    },
+    "frisbee": {
+      "boxes": 105,
+      "images": 82
+    },
+    "fork": {
+      "boxes": 102,
+      "images": 85
+    },
+    "apple": {
+      "boxes": 99,
+      "images": 46
+    },
+    "refrigerator": {
+      "boxes": 97,
+      "images": 79
+    },
+    "baseball glove": {
+      "boxes": 95,
+      "images": 75
+    },
+    "backpack": {
+      "boxes": 94,
+      "images": 68
+    },
+    "handbag": {
+      "boxes": 92,
+      "images": 72
+    },
+    "mouse": {
+      "boxes": 87,
+      "images": 71
+    },
+    "oven": {
+      "boxes": 86,
+      "images": 77
+    },
+    "knife": {
+      "boxes": 85,
+      "images": 71
+    },
+    "fire hydrant": {
+      "boxes": 81,
+      "images": 70
+    },
+    "baseball bat": {
+      "boxes": 80,
+      "images": 60
+    },
+    "spoon": {
+      "boxes": 70,
+      "images": 56
+    },
+    "bear": {
+      "boxes": 61,
+      "images": 46
+    },
+    "hot dog": {
+      "boxes": 61,
+      "images": 29
+    },
+    "stop sign": {
+      "boxes": 58,
+      "images": 54
+    },
+    "microwave": {
+      "boxes": 46,
+      "images": 39
+    },
+    "parking meter": {
+      "boxes": 39,
+      "images": 24
+    },
+    "snowboard": {
+      "boxes": 36,
+      "images": 33
+    },
+    "scissors": {
+      "boxes": 19,
+      "images": 13
+    },
+    "toothbrush": {
+      "boxes": 19,
+      "images": 16
+    },
+    "toaster": {
+      "boxes": 5,
+      "images": 5
+    }
+  },
+  "environment": {
+    "chip": "Apple M1 Pro",
+    "cpu_cores": "8P+2E",
+    "ram_gb": "32",
+    "os": "macOS 27.0",
+    "python": "3.12.15",
+    "torch": "2.14.1",
+    "git_commit": "5683d35",
+    "ultralytics": "8.4.184"
+  }
+}

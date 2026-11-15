@@ -10,6 +10,7 @@ import { readAiSourceBuffer } from "../media/media.derivatives.service.js";
 import { currentModels, embedImage, embedText } from "./ai.client.js";
 import { tagMediaIds } from "./tagging.service.js";
 import sharp from "sharp";
+import { logger } from "../../lib/logger.js";
 
 // Cạnh dài tối đa khi gửi ảnh cho CLIP — đủ ngữ nghĩa, payload nhỏ (ảnh gốc có
 // thể >10MB, vượt giới hạn nhận file của ai-service).
@@ -82,7 +83,7 @@ export function embedMediaInBackground(args) {
     // Có vector CLIP rồi → gắn tag nội dung luôn (không cần đọc lại ảnh).
     .then((result) => result && tagMediaIds(args.userId, [args.mediaId]))
     .catch((err) => {
-      console.warn(`⚠️  Embed/tag media ${args.mediaId} lỗi: ${err.message}`);
+      logger.warn({ err }, `Embed/tag media ${args.mediaId} lỗi`);
     });
 }
 
@@ -157,12 +158,12 @@ export async function backfillEmbeddings(userId, { limit = 50 } = {}) {
       else failed += 1;
     } catch (err) {
       failed += 1;
-      console.warn(`⚠️  Backfill embed ${row.id} lỗi: ${err.message}`);
+      logger.warn({ err }, `Backfill embed ${row.id} lỗi`);
     }
   }
   // Vector mới → tag cũ (chấm trên vector cũ) không còn đúng.
   await tagMediaIds(userId, done).catch((err) =>
-    console.warn(`⚠️  Backfill embed: gắn tag lỗi: ${err.message}`),
+    logger.warn({ err }, `Backfill embed: gắn tag lỗi`),
   );
 
   const { pending } = await countNeedingEmbedding(userId, clipModel);

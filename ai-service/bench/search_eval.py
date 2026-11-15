@@ -42,9 +42,9 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.cls_data import load_coco_tags
+from app.tagging.taxonomy import OBJECT_TAGS, TAG_IDS
+from bench.cls_data import coco_annotations_dir, load_coco_tags
 from bench.cls_features import CLIP_MODEL, cache_dir, load_features, provider
-from bench.cls_taxonomy import OBJECT_TAGS, TAG_IDS
 from bench.common import DEFAULT_DATA_ROOT, RESULTS_DIR, SERVICE_ROOT, append_csv, environment_info, utc_now
 
 RESULTS_CSV = RESULTS_DIR / "search_eval.csv"
@@ -56,7 +56,7 @@ LANGS = ("vi", "en", "ja")
 
 # ── GIỮ KHỚP backend/src/modules/ai/hybrid.search.service.js ─────────────
 PARAMS = {
-    "clip_range": 0.5, "tag": 0.25, "object": 0.25,
+    "clip_range": 0.5, "tag": 0.25, "object": 0.25, "label": 0.25,
     "z_center": 3.0, "z_slope": 1.5, "floor": 0.02, "tie_break": 0.001,
     "min_rows_for_z": 30,
 }
@@ -90,6 +90,21 @@ def _build_entries() -> list[tuple[str, str, str, bool, re.Pattern]]:
 
 
 ENTRIES = _build_entries()
+
+
+def _build_label_entries() -> list[tuple[str, str, bool, re.Pattern]]:
+    entries = []
+    for ident, names in LEXICON.get("labels", {}).items():
+        for lang in LANGS:
+            for raw in names.get(lang, []):
+                term = normalize(raw)
+                cjk = bool(CJK.search(term))
+                pattern = re.escape(term) if cjk else rf"(?<!\w){re.escape(term)}(?:s|es)?(?!\w)"
+                entries.append((ident, term, cjk, re.compile(pattern)))
+    return sorted(entries, key=lambda e: len(e[1]), reverse=True)
+
+
+LABEL_ENTRIES = _build_label_entries()
 NUMBER_WORDS = {**LEXICON["numbers"]["vi"], **LEXICON["numbers"]["en"], **LEXICON["numbers"]["ja"]}
 LATIN_NUMBER = r"\d+|" + _words({**LEXICON["numbers"]["vi"], **LEXICON["numbers"]["en"]})
 JA_NUMBER = r"\d+|[" + "".join(LEXICON["numbers"]["ja"]) + "]+"
@@ -125,18 +140,21 @@ def _content_length(text: str) -> int:
     return len("".join(STOP_JA.sub("", t) for t in tokens))
 
 
-def parse_query(query: str) -> dict:
-    """→ {tags, objects: [{cls, count}], coverage} — như parseQuery của backend."""
+def parse_query(query: str, labels: bool = True) -> dict:
+    """→ {tags, objects: [{cls, count}], labels: [{id, link}], coverage} — như parseQuery
+    của backend. `labels=False` = bỏ nhãn chi tiết (đo trên dữ liệu không có nhãn)."""
     text = normalize(query)
     taken = [False] * len(text)
     tags: list[str] = []
     objects: dict[str, dict] = {}
+    spans: list[tuple[str, str, int, int]] = []
     for kind, ident, _term, cjk, regex in ENTRIES:
         for match in regex.finditer(text):
             start, end = match.span()
             if any(taken[start:end]):
                 continue
             taken[start:end] = [True] * (end - start)
+            spans.append((kind, ident, start, end))
             if kind == "tag":
                 if ident not in tags:
                     tags.append(ident)
@@ -144,12 +162,26 @@ def parse_query(query: str) -> dict:
                 count = _count_for(text, start, end, cjk)
                 prev = objects.get(ident)
                 objects[ident] = {"cls": ident, "count": prev["count"] if prev and prev["count"] else count}
+    found_labels: list[dict] = []
+    if labels:
+        label_taken = [False] * len(text)
+        for ident, _term, _cjk, regex in LABEL_ENTRIES:
+            for match in regex.finditer(text):
+                start, end = match.span()
+                if any(label_taken[start:end]):
+                    continue
+                label_taken[start:end] = [True] * (end - start)
+                if any(lb["id"] == ident for lb in found_labels):
+                    continue
+                hit = next((sp for sp in spans if sp[2] < end and start < sp[3]), None)
+                found_labels.append({"id": ident, "link": {"kind": hit[0], "id": hit[1]} if hit else None})
+        taken = [a or b for a, b in zip(taken, label_taken)]
     coverage = 0.0
-    if tags or objects:
+    if tags or objects or found_labels:
         understood = sum(1 for ch, t in zip(text, taken) if t and not ch.isspace())
         rest = _content_length("".join(" " if t else ch for ch, t in zip(text, taken)))
         coverage = understood / (understood + rest) if understood + rest else 0.0
-    return {"tags": tags, "objects": list(objects.values()), "coverage": coverage}
+    return {"tags": tags, "objects": list(objects.values()), "labels": found_labels, "coverage": coverage}
 
 
 def apply_template(query: str) -> str:
@@ -181,11 +213,14 @@ def count_factor(found: np.ndarray, wanted: int | None) -> np.ndarray:
 
 
 class Index:
-    """Đặc trưng app đã lưu cho N ảnh: vector CLIP, xác suất tag, detection YOLO."""
+    """Đặc trưng app đã lưu cho N ảnh: vector CLIP, xác suất tag, detection YOLO,
+    (tuỳ chọn) xác suất nhãn chi tiết {"oi.<id>": (N,)}."""
 
-    def __init__(self, clip: np.ndarray, tag_probs: np.ndarray, detections: list[list[dict]]) -> None:
+    def __init__(self, clip: np.ndarray, tag_probs: np.ndarray, detections: list[list[dict]],
+                 label_probs: dict[str, np.ndarray] | None = None) -> None:
         self.clip = clip
         self.tag_probs = tag_probs  # (N, 17) theo TAG_IDS
+        self.label_probs = label_probs or {}
         self.det_n: dict[str, np.ndarray] = {}
         self.det_conf: dict[str, np.ndarray] = {}
         for i, dets in enumerate(detections):
@@ -199,16 +234,32 @@ class Index:
                 self.det_n[cls][i] += 1
                 self.det_conf[cls][i] = max(self.det_conf[cls][i], d["confidence"])
 
-    def object_part(self, objects: list[dict]) -> np.ndarray:
+    def label(self, ident: str) -> np.ndarray:
+        return self.label_probs.get(ident, np.zeros(len(self.clip)))
+
+    def linked(self, labels: list[dict], kind: str, ident: str) -> np.ndarray:
+        """= linkedLabel của backend: max confidence nhãn gắn vào tag / vật thể."""
+        best = np.zeros(len(self.clip))
+        for lb in labels:
+            if lb["link"] and lb["link"]["kind"] == kind and lb["link"]["id"] == ident:
+                best = np.maximum(best, self.label(lb["id"]))
+        return best
+
+    def object_part(self, objects: list[dict], labels: list[dict] = ()) -> np.ndarray:
         total = np.zeros(len(self.clip))
         for obj in objects:
             n = self.det_n.get(obj["cls"], np.zeros(len(self.clip)))
             conf = self.det_conf.get(obj["cls"], np.zeros(len(self.clip)))
-            total += conf * count_factor(n, obj["count"])
+            label = self.linked(list(labels), "object", obj["cls"]) * (1.0 if obj["count"] is None else 0.5)
+            total += np.maximum(conf * count_factor(n, obj["count"]), label)
         return total / len(objects)
 
-    def tag_part(self, tags: list[str]) -> np.ndarray:
-        return self.tag_probs[:, [TAG_IDS.index(t) for t in tags]].mean(axis=1)
+    def tag_part(self, tags: list[str], labels: list[dict] = ()) -> np.ndarray:
+        cols = [np.maximum(self.tag_probs[:, TAG_IDS.index(t)], self.linked(list(labels), "tag", t)) for t in tags]
+        return np.mean(cols, axis=0)
+
+    def label_part(self, labels: list[dict]) -> np.ndarray:
+        return np.mean([self.label(lb["id"]) for lb in labels], axis=0)
 
 
 def score(index: Index, mode: str, parsed: dict, q_emb: np.ndarray, negative: np.ndarray,
@@ -217,10 +268,14 @@ def score(index: Index, mode: str, parsed: dict, q_emb: np.ndarray, negative: np
     if mode == "clip":
         return index.clip @ q_emb
     parts, weights = {}, {}
+    labels = parsed.get("labels", [])
     if parsed["tags"]:
-        parts["tag"], weights["tag"] = index.tag_part(parsed["tags"]), PARAMS["tag"]
+        parts["tag"], weights["tag"] = index.tag_part(parsed["tags"], labels), PARAMS["tag"]
     if parsed["objects"]:
-        parts["object"], weights["object"] = index.object_part(parsed["objects"]), PARAMS["object"]
+        parts["object"], weights["object"] = index.object_part(parsed["objects"], labels), PARAMS["object"]
+    standalone = [lb for lb in labels if not lb["link"]]
+    if standalone:
+        parts["label"], weights["label"] = index.label_part(standalone), PARAMS["label"]
     structured = bool(weights)
     if mode == "struct":
         if not structured:
@@ -269,7 +324,7 @@ def count_phrase(cls: str, n: int, lang: str) -> str:
 
 def coco_instances(data_root: Path, files: list[str]) -> tuple[list[Counter], dict[int, list[str]]]:
     """Số instance mỗi class / ảnh (bỏ crowd) + caption (nếu có file)."""
-    ann_dir = data_root.expanduser().resolve() / "coco" / "annotations"
+    ann_dir = coco_annotations_dir(data_root)
     data = json.loads((ann_dir / "instances_val2017.json").read_text())
     cat = {c["id"]: c["name"] for c in data["categories"]}
     by_file = {img["file_name"]: img["id"] for img in data["images"]}
@@ -367,6 +422,9 @@ def main() -> int:
     parser.add_argument("--min-relevant", type=int, default=5)
     parser.add_argument("--max-captions", type=int, default=1000)
     parser.add_argument("--tag-config", default="lp_clip", help="= AI_TAG_CONFIG của ai-service")
+    parser.add_argument("--labels", action="store_true",
+                        help="Dùng thêm 174 nhãn chi tiết (app/tagging/probes/oi-<tag-config>.npz) như app. "
+                             "Mặc định tắt để so được với các run trước.")
     parser.add_argument("--image-preprocess", default="backend", choices=["backend", "raw"])
     parser.add_argument("--device", default="auto")
     parser.add_argument("--data-root", type=Path, default=DEFAULT_DATA_ROOT)
@@ -389,7 +447,17 @@ def main() -> int:
     print(f"CLIP {'/'.join(CLIP_MODEL)} · tagger {tagger.model} · {len(files)} ảnh ({args.split})", flush=True)
 
     clip = clip_all[idx]
-    index = Index(clip, tagger.predict(clip), [detections.get(f, []) for f in files])
+    label_probs = None
+    if args.labels:
+        from app.tagging.labels import LABEL_PREFIX, label_catalog, load_label_probe
+
+        probe = load_label_probe(SERVICE_ROOT / "app" / "tagging" / "probes", args.tag_config, clip_provider.model)
+        if probe is None:
+            raise SystemExit(f"Không có app/tagging/probes/oi-{args.tag_config}.npz cho CLIP {clip_provider.model}.")
+        P = probe.predict(clip)
+        label_probs = {LABEL_PREFIX + r["id"]: P[:, j] for j, r in enumerate(label_catalog())}
+        print(f"  + nhãn chi tiết {probe.source}", flush=True)
+    index = Index(clip, tagger.predict(clip), [detections.get(f, []) for f in files], label_probs)
     counts, captions = coco_instances(args.data_root, files)
     if "caption" in args.types and not captions:
         print("  ! Không có annotations/captions_val2017.json — bỏ loại truy vấn caption "
@@ -408,7 +476,7 @@ def main() -> int:
 
     rows: dict[tuple, list[dict]] = {}
     for qi, q in enumerate(queries):
-        parsed = parse_query(q["text"])
+        parsed = parse_query(q["text"], labels=args.labels)
         ok = parsed_as_expected(parsed, q["expect"])
         for mode in args.modes:
             t1 = time.perf_counter()
@@ -422,7 +490,7 @@ def main() -> int:
                 m |= {"AP": average_precision(s, rel), "P@10": precision_at(s, rel, 10)}
             rows.setdefault((q["type"], q["lang"], mode), []).append(m)
 
-    base = {"timestamp": utc_now(), "clip_model": "/".join(CLIP_MODEL), "tagger": tagger.model,
+    base = {"timestamp": utc_now(), "clip_model": "/".join(CLIP_MODEL), "tagger": tagger.model + (" · oi-labels" if args.labels else ""),
             "split": args.split, "n_images": len(files), "text_encode_ms": round(encode_ms, 2),
             **environment_info()}
     print(f"\n{'type':8s} {'lang':4s} {'mode':7s} {'n':>4s}  metrics")

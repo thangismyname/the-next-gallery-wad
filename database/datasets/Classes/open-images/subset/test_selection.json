@@ -1,0 +1,1235 @@
+{
+  "candidates": 123782,
+  "excluded_rotated": 1462,
+  "selected": 5000,
+  "min_pos": 50,
+  "median_pos": 46.0,
+  "p10_pos": 36.3,
+  "classes_below_half_min_pos": [
+    "Parking meter",
+    "Flying disc",
+    "Toaster",
+    "Hair dryer",
+    "Toothbrush"
+  ],
+  "per_class": [
+    {
+      "class": "Person",
+      "group": "object",
+      "pos": 1584,
+      "neg": 807,
+      "unknown": 2609
+    },
+    {
+      "class": "Bicycle",
+      "group": "object",
+      "pos": 50,
+      "neg": 366,
+      "unknown": 4584
+    },
+    {
+      "class": "Car",
+      "group": "object",
+      "pos": 281,
+      "neg": 445,
+      "unknown": 4274
+    },
+    {
+      "class": "Motorcycle",
+      "group": "object",
+      "pos": 42,
+      "neg": 322,
+      "unknown": 4636
+    },
+    {
+      "class": "Fixed-wing aircraft",
+      "group": "object",
+      "pos": 50,
+      "neg": 320,
+      "unknown": 4630
+    },
+    {
+      "class": "Bus",
+      "group": "object",
+      "pos": 44,
+      "neg": 331,
+      "unknown": 4625
+    },
+    {
+      "class": "Train",
+      "group": "object",
+      "pos": 39,
+      "neg": 323,
+      "unknown": 4638
+    },
+    {
+      "class": "Truck",
+      "group": "object",
+      "pos": 52,
+      "neg": 333,
+      "unknown": 4615
+    },
+    {
+      "class": "Boat",
+      "group": "object",
+      "pos": 61,
+      "neg": 313,
+      "unknown": 4626
+    },
+    {
+      "class": "Traffic light",
+      "group": "object",
+      "pos": 41,
+      "neg": 12,
+      "unknown": 4947
+    },
+    {
+      "class": "Fire hydrant",
+      "group": "object",
+      "pos": 37,
+      "neg": 1,
+      "unknown": 4962
+    },
+    {
+      "class": "Stop sign",
+      "group": "object",
+      "pos": 33,
+      "neg": 19,
+      "unknown": 4948
+    },
+    {
+      "class": "Parking meter",
+      "group": "object",
+      "pos": 6,
+      "neg": 0,
+      "unknown": 4994
+    },
+    {
+      "class": "Bench",
+      "group": "object",
+      "pos": 45,
+      "neg": 57,
+      "unknown": 4898
+    },
+    {
+      "class": "Bird",
+      "group": "object",
+      "pos": 74,
+      "neg": 36,
+      "unknown": 4890
+    },
+    {
+      "class": "Cat",
+      "group": "object",
+      "pos": 48,
+      "neg": 655,
+      "unknown": 4297
+    },
+    {
+      "class": "Dog",
+      "group": "object",
+      "pos": 55,
+      "neg": 661,
+      "unknown": 4284
+    },
+    {
+      "class": "Horse",
+      "group": "object",
+      "pos": 46,
+      "neg": 653,
+      "unknown": 4301
+    },
+    {
+      "class": "Sheep",
+      "group": "object",
+      "pos": 37,
+      "neg": 659,
+      "unknown": 4304
+    },
+    {
+      "class": "Cattle",
+      "group": "object",
+      "pos": 47,
+      "neg": 664,
+      "unknown": 4289
+    },
+    {
+      "class": "Elephant",
+      "group": "object",
+      "pos": 37,
+      "neg": 638,
+      "unknown": 4325
+    },
+    {
+      "class": "Bear",
+      "group": "object",
+      "pos": 62,
+      "neg": 647,
+      "unknown": 4291
+    },
+    {
+      "class": "Zebra",
+      "group": "object",
+      "pos": 41,
+      "neg": 636,
+      "unknown": 4323
+    },
+    {
+      "class": "Giraffe",
+      "group": "object",
+      "pos": 37,
+      "neg": 644,
+      "unknown": 4319
+    },
+    {
+      "class": "Backpack",
+      "group": "object",
+      "pos": 39,
+      "neg": 461,
+      "unknown": 4500
+    },
+    {
+      "class": "Umbrella",
+      "group": "object",
+      "pos": 38,
+      "neg": 548,
+      "unknown": 4414
+    },
+    {
+      "class": "Handbag",
+      "group": "object",
+      "pos": 42,
+      "neg": 549,
+      "unknown": 4409
+    },
+    {
+      "class": "Tie",
+      "group": "object",
+      "pos": 40,
+      "neg": 550,
+      "unknown": 4410
+    },
+    {
+      "class": "Suitcase",
+      "group": "object",
+      "pos": 38,
+      "neg": 458,
+      "unknown": 4504
+    },
+    {
+      "class": "Flying disc",
+      "group": "object",
+      "pos": 5,
+      "neg": 91,
+      "unknown": 4904
+    },
+    {
+      "class": "Ski",
+      "group": "object",
+      "pos": 54,
+      "neg": 50,
+      "unknown": 4896
+    },
+    {
+      "class": "Snowboard",
+      "group": "object",
+      "pos": 37,
+      "neg": 52,
+      "unknown": 4911
+    },
+    {
+      "class": "Ball (Object)",
+      "group": "object",
+      "pos": 61,
+      "neg": 74,
+      "unknown": 4865
+    },
+    {
+      "class": "Kite",
+      "group": "object",
+      "pos": 37,
+      "neg": 44,
+      "unknown": 4919
+    },
+    {
+      "class": "Baseball bat",
+      "group": "object",
+      "pos": 37,
+      "neg": 56,
+      "unknown": 4907
+    },
+    {
+      "class": "Baseball glove",
+      "group": "object",
+      "pos": 51,
+      "neg": 601,
+      "unknown": 4348
+    },
+    {
+      "class": "Skateboard",
+      "group": "object",
+      "pos": 39,
+      "neg": 46,
+      "unknown": 4915
+    },
+    {
+      "class": "Surfboard",
+      "group": "object",
+      "pos": 39,
+      "neg": 51,
+      "unknown": 4910
+    },
+    {
+      "class": "Tennis racket",
+      "group": "object",
+      "pos": 36,
+      "neg": 46,
+      "unknown": 4918
+    },
+    {
+      "class": "Bottle",
+      "group": "object",
+      "pos": 93,
+      "neg": 65,
+      "unknown": 4842
+    },
+    {
+      "class": "Wine glass",
+      "group": "object",
+      "pos": 47,
+      "neg": 42,
+      "unknown": 4911
+    },
+    {
+      "class": "Mug",
+      "group": "object",
+      "pos": 41,
+      "neg": 29,
+      "unknown": 4930
+    },
+    {
+      "class": "Coffee cup",
+      "group": "object",
+      "pos": 72,
+      "neg": 32,
+      "unknown": 4896
+    },
+    {
+      "class": "Fork",
+      "group": "object",
+      "pos": 42,
+      "neg": 46,
+      "unknown": 4912
+    },
+    {
+      "class": "Knife",
+      "group": "object",
+      "pos": 46,
+      "neg": 26,
+      "unknown": 4928
+    },
+    {
+      "class": "Spoon",
+      "group": "object",
+      "pos": 55,
+      "neg": 48,
+      "unknown": 4897
+    },
+    {
+      "class": "Bowl",
+      "group": "object",
+      "pos": 87,
+      "neg": 29,
+      "unknown": 4884
+    },
+    {
+      "class": "Banana",
+      "group": "object",
+      "pos": 36,
+      "neg": 189,
+      "unknown": 4775
+    },
+    {
+      "class": "Apple",
+      "group": "object",
+      "pos": 40,
+      "neg": 190,
+      "unknown": 4770
+    },
+    {
+      "class": "Sandwich",
+      "group": "object",
+      "pos": 82,
+      "neg": 162,
+      "unknown": 4756
+    },
+    {
+      "class": "Orange (fruit)",
+      "group": "object",
+      "pos": 50,
+      "neg": 194,
+      "unknown": 4756
+    },
+    {
+      "class": "Broccoli",
+      "group": "object",
+      "pos": 43,
+      "neg": 213,
+      "unknown": 4744
+    },
+    {
+      "class": "Carrot",
+      "group": "object",
+      "pos": 36,
+      "neg": 210,
+      "unknown": 4754
+    },
+    {
+      "class": "Hot dog",
+      "group": "object",
+      "pos": 37,
+      "neg": 182,
+      "unknown": 4781
+    },
+    {
+      "class": "Pizza",
+      "group": "object",
+      "pos": 39,
+      "neg": 155,
+      "unknown": 4806
+    },
+    {
+      "class": "Doughnut",
+      "group": "object",
+      "pos": 36,
+      "neg": 198,
+      "unknown": 4766
+    },
+    {
+      "class": "Cake",
+      "group": "object",
+      "pos": 58,
+      "neg": 263,
+      "unknown": 4679
+    },
+    {
+      "class": "Chair",
+      "group": "object",
+      "pos": 148,
+      "neg": 101,
+      "unknown": 4751
+    },
+    {
+      "class": "Couch",
+      "group": "object",
+      "pos": 74,
+      "neg": 76,
+      "unknown": 4850
+    },
+    {
+      "class": "Houseplant",
+      "group": "object",
+      "pos": 58,
+      "neg": 900,
+      "unknown": 4042
+    },
+    {
+      "class": "Bed",
+      "group": "object",
+      "pos": 89,
+      "neg": 75,
+      "unknown": 4836
+    },
+    {
+      "class": "Kitchen & dining room table",
+      "group": "object",
+      "pos": 40,
+      "neg": 140,
+      "unknown": 4820
+    },
+    {
+      "class": "Toilet",
+      "group": "object",
+      "pos": 37,
+      "neg": 16,
+      "unknown": 4947
+    },
+    {
+      "class": "Television",
+      "group": "object",
+      "pos": 46,
+      "neg": 10,
+      "unknown": 4944
+    },
+    {
+      "class": "Laptop",
+      "group": "object",
+      "pos": 57,
+      "neg": 15,
+      "unknown": 4928
+    },
+    {
+      "class": "Computer mouse",
+      "group": "object",
+      "pos": 38,
+      "neg": 0,
+      "unknown": 4962
+    },
+    {
+      "class": "Remote control",
+      "group": "object",
+      "pos": 37,
+      "neg": 0,
+      "unknown": 4963
+    },
+    {
+      "class": "Computer keyboard",
+      "group": "object",
+      "pos": 42,
+      "neg": 7,
+      "unknown": 4951
+    },
+    {
+      "class": "Mobile phone",
+      "group": "object",
+      "pos": 42,
+      "neg": 7,
+      "unknown": 4951
+    },
+    {
+      "class": "Microwave oven",
+      "group": "object",
+      "pos": 50,
+      "neg": 13,
+      "unknown": 4937
+    },
+    {
+      "class": "Oven",
+      "group": "object",
+      "pos": 57,
+      "neg": 17,
+      "unknown": 4926
+    },
+    {
+      "class": "Toaster",
+      "group": "object",
+      "pos": 4,
+      "neg": 9,
+      "unknown": 4987
+    },
+    {
+      "class": "Sink",
+      "group": "object",
+      "pos": 56,
+      "neg": 35,
+      "unknown": 4909
+    },
+    {
+      "class": "Refrigerator",
+      "group": "object",
+      "pos": 51,
+      "neg": 20,
+      "unknown": 4929
+    },
+    {
+      "class": "Book",
+      "group": "object",
+      "pos": 53,
+      "neg": 1,
+      "unknown": 4946
+    },
+    {
+      "class": "Clock",
+      "group": "object",
+      "pos": 41,
+      "neg": 4,
+      "unknown": 4955
+    },
+    {
+      "class": "Vase",
+      "group": "object",
+      "pos": 44,
+      "neg": 12,
+      "unknown": 4944
+    },
+    {
+      "class": "Scissors",
+      "group": "object",
+      "pos": 26,
+      "neg": 24,
+      "unknown": 4950
+    },
+    {
+      "class": "Teddy bear",
+      "group": "object",
+      "pos": 37,
+      "neg": 690,
+      "unknown": 4273
+    },
+    {
+      "class": "Hair dryer",
+      "group": "object",
+      "pos": 3,
+      "neg": 5,
+      "unknown": 4992
+    },
+    {
+      "class": "Toothbrush",
+      "group": "object",
+      "pos": 12,
+      "neg": 17,
+      "unknown": 4971
+    },
+    {
+      "class": "Human face",
+      "group": "object",
+      "pos": 382,
+      "neg": 284,
+      "unknown": 4334
+    },
+    {
+      "class": "Tree",
+      "group": "object",
+      "pos": 1065,
+      "neg": 1148,
+      "unknown": 2787
+    },
+    {
+      "class": "Flower",
+      "group": "object",
+      "pos": 140,
+      "neg": 998,
+      "unknown": 3862
+    },
+    {
+      "class": "Building",
+      "group": "object",
+      "pos": 841,
+      "neg": 188,
+      "unknown": 3971
+    },
+    {
+      "class": "House",
+      "group": "object",
+      "pos": 204,
+      "neg": 290,
+      "unknown": 4506
+    },
+    {
+      "class": "Skyscraper",
+      "group": "object",
+      "pos": 56,
+      "neg": 206,
+      "unknown": 4738
+    },
+    {
+      "class": "Tower",
+      "group": "object",
+      "pos": 84,
+      "neg": 245,
+      "unknown": 4671
+    },
+    {
+      "class": "Castle",
+      "group": "object",
+      "pos": 45,
+      "neg": 195,
+      "unknown": 4760
+    },
+    {
+      "class": "Lighthouse",
+      "group": "object",
+      "pos": 37,
+      "neg": 197,
+      "unknown": 4766
+    },
+    {
+      "class": "Fountain",
+      "group": "object",
+      "pos": 36,
+      "neg": 4,
+      "unknown": 4960
+    },
+    {
+      "class": "Sunglasses",
+      "group": "object",
+      "pos": 51,
+      "neg": 564,
+      "unknown": 4385
+    },
+    {
+      "class": "Hat",
+      "group": "object",
+      "pos": 56,
+      "neg": 553,
+      "unknown": 4391
+    },
+    {
+      "class": "Footwear",
+      "group": "object",
+      "pos": 293,
+      "neg": 626,
+      "unknown": 4081
+    },
+    {
+      "class": "Dress",
+      "group": "object",
+      "pos": 126,
+      "neg": 475,
+      "unknown": 4399
+    },
+    {
+      "class": "Guitar",
+      "group": "object",
+      "pos": 48,
+      "neg": 50,
+      "unknown": 4902
+    },
+    {
+      "class": "Camera",
+      "group": "object",
+      "pos": 39,
+      "neg": 19,
+      "unknown": 4942
+    },
+    {
+      "class": "Balloon",
+      "group": "object",
+      "pos": 42,
+      "neg": 47,
+      "unknown": 4911
+    },
+    {
+      "class": "Christmas tree",
+      "group": "object",
+      "pos": 37,
+      "neg": 1173,
+      "unknown": 3790
+    },
+    {
+      "class": "Swimming pool",
+      "group": "object",
+      "pos": 41,
+      "neg": 32,
+      "unknown": 4927
+    },
+    {
+      "class": "Tent",
+      "group": "object",
+      "pos": 51,
+      "neg": 10,
+      "unknown": 4939
+    },
+    {
+      "class": "Flag",
+      "group": "object",
+      "pos": 47,
+      "neg": 7,
+      "unknown": 4946
+    },
+    {
+      "class": "Street light",
+      "group": "object",
+      "pos": 47,
+      "neg": 15,
+      "unknown": 4938
+    },
+    {
+      "class": "Traffic sign",
+      "group": "object",
+      "pos": 61,
+      "neg": 10,
+      "unknown": 4929
+    },
+    {
+      "class": "Taxi",
+      "group": "object",
+      "pos": 37,
+      "neg": 323,
+      "unknown": 4640
+    },
+    {
+      "class": "Van",
+      "group": "object",
+      "pos": 46,
+      "neg": 448,
+      "unknown": 4506
+    },
+    {
+      "class": "Helicopter",
+      "group": "object",
+      "pos": 37,
+      "neg": 302,
+      "unknown": 4661
+    },
+    {
+      "class": "Monkey",
+      "group": "object",
+      "pos": 36,
+      "neg": 640,
+      "unknown": 4324
+    },
+    {
+      "class": "Duck",
+      "group": "object",
+      "pos": 37,
+      "neg": 38,
+      "unknown": 4925
+    },
+    {
+      "class": "Fish",
+      "group": "object",
+      "pos": 42,
+      "neg": 42,
+      "unknown": 4916
+    },
+    {
+      "class": "Butterfly",
+      "group": "object",
+      "pos": 37,
+      "neg": 44,
+      "unknown": 4919
+    },
+    {
+      "class": "Tiger",
+      "group": "object",
+      "pos": 37,
+      "neg": 648,
+      "unknown": 4315
+    },
+    {
+      "class": "Lion",
+      "group": "object",
+      "pos": 38,
+      "neg": 652,
+      "unknown": 4310
+    },
+    {
+      "class": "Goat",
+      "group": "object",
+      "pos": 46,
+      "neg": 648,
+      "unknown": 4306
+    },
+    {
+      "class": "Pig",
+      "group": "object",
+      "pos": 36,
+      "neg": 638,
+      "unknown": 4326
+    },
+    {
+      "class": "Deer",
+      "group": "object",
+      "pos": 42,
+      "neg": 647,
+      "unknown": 4311
+    },
+    {
+      "class": "Ice cream",
+      "group": "object",
+      "pos": 42,
+      "neg": 260,
+      "unknown": 4698
+    },
+    {
+      "class": "Coffee (drink)",
+      "group": "object",
+      "pos": 51,
+      "neg": 72,
+      "unknown": 4877
+    },
+    {
+      "class": "Wine",
+      "group": "object",
+      "pos": 58,
+      "neg": 75,
+      "unknown": 4867
+    },
+    {
+      "class": "Beer",
+      "group": "object",
+      "pos": 50,
+      "neg": 77,
+      "unknown": 4873
+    },
+    {
+      "class": "Cocktail",
+      "group": "object",
+      "pos": 52,
+      "neg": 90,
+      "unknown": 4858
+    },
+    {
+      "class": "Salad",
+      "group": "object",
+      "pos": 56,
+      "neg": 216,
+      "unknown": 4728
+    },
+    {
+      "class": "Sushi",
+      "group": "object",
+      "pos": 36,
+      "neg": 155,
+      "unknown": 4809
+    },
+    {
+      "class": "Bread",
+      "group": "object",
+      "pos": 73,
+      "neg": 197,
+      "unknown": 4730
+    },
+    {
+      "class": "Cookie",
+      "group": "object",
+      "pos": 39,
+      "neg": 288,
+      "unknown": 4673
+    },
+    {
+      "class": "Hamburger",
+      "group": "object",
+      "pos": 51,
+      "neg": 169,
+      "unknown": 4780
+    },
+    {
+      "class": "French fries",
+      "group": "object",
+      "pos": 47,
+      "neg": 186,
+      "unknown": 4767
+    },
+    {
+      "class": "Pasta",
+      "group": "object",
+      "pos": 48,
+      "neg": 156,
+      "unknown": 4796
+    },
+    {
+      "class": "Beach",
+      "group": "scene",
+      "pos": 53,
+      "neg": 44,
+      "unknown": 4903
+    },
+    {
+      "class": "Sea",
+      "group": "scene",
+      "pos": 147,
+      "neg": 26,
+      "unknown": 4827
+    },
+    {
+      "class": "Coast",
+      "group": "scene",
+      "pos": 88,
+      "neg": 22,
+      "unknown": 4890
+    },
+    {
+      "class": "Island",
+      "group": "scene",
+      "pos": 40,
+      "neg": 1,
+      "unknown": 4959
+    },
+    {
+      "class": "Mountain",
+      "group": "scene",
+      "pos": 131,
+      "neg": 4,
+      "unknown": 4865
+    },
+    {
+      "class": "Mountain range",
+      "group": "scene",
+      "pos": 61,
+      "neg": 7,
+      "unknown": 4932
+    },
+    {
+      "class": "Valley",
+      "group": "scene",
+      "pos": 42,
+      "neg": 17,
+      "unknown": 4941
+    },
+    {
+      "class": "Forest",
+      "group": "scene",
+      "pos": 52,
+      "neg": 2,
+      "unknown": 4946
+    },
+    {
+      "class": "Lake",
+      "group": "scene",
+      "pos": 52,
+      "neg": 9,
+      "unknown": 4939
+    },
+    {
+      "class": "River",
+      "group": "scene",
+      "pos": 72,
+      "neg": 11,
+      "unknown": 4917
+    },
+    {
+      "class": "Waterfall",
+      "group": "scene",
+      "pos": 38,
+      "neg": 4,
+      "unknown": 4958
+    },
+    {
+      "class": "Field",
+      "group": "scene",
+      "pos": 59,
+      "neg": 17,
+      "unknown": 4924
+    },
+    {
+      "class": "Garden",
+      "group": "scene",
+      "pos": 54,
+      "neg": 15,
+      "unknown": 4931
+    },
+    {
+      "class": "Park",
+      "group": "scene",
+      "pos": 38,
+      "neg": 16,
+      "unknown": 4946
+    },
+    {
+      "class": "Desert",
+      "group": "scene",
+      "pos": 38,
+      "neg": 4,
+      "unknown": 4958
+    },
+    {
+      "class": "Snow",
+      "group": "scene",
+      "pos": 115,
+      "neg": 18,
+      "unknown": 4867
+    },
+    {
+      "class": "Sky",
+      "group": "scene",
+      "pos": 923,
+      "neg": 2,
+      "unknown": 4075
+    },
+    {
+      "class": "Cloud",
+      "group": "scene",
+      "pos": 229,
+      "neg": 6,
+      "unknown": 4765
+    },
+    {
+      "class": "Sunset",
+      "group": "scene",
+      "pos": 58,
+      "neg": 4,
+      "unknown": 4938
+    },
+    {
+      "class": "Sunrise",
+      "group": "scene",
+      "pos": 50,
+      "neg": 1,
+      "unknown": 4949
+    },
+    {
+      "class": "Night",
+      "group": "scene",
+      "pos": 58,
+      "neg": 2,
+      "unknown": 4940
+    },
+    {
+      "class": "Road",
+      "group": "scene",
+      "pos": 250,
+      "neg": 7,
+      "unknown": 4743
+    },
+    {
+      "class": "Street",
+      "group": "scene",
+      "pos": 65,
+      "neg": 4,
+      "unknown": 4931
+    },
+    {
+      "class": "City",
+      "group": "scene",
+      "pos": 98,
+      "neg": 20,
+      "unknown": 4882
+    },
+    {
+      "class": "Town",
+      "group": "scene",
+      "pos": 51,
+      "neg": 1,
+      "unknown": 4948
+    },
+    {
+      "class": "Skyline",
+      "group": "scene",
+      "pos": 37,
+      "neg": 2,
+      "unknown": 4961
+    },
+    {
+      "class": "Bridge (structure)",
+      "group": "scene",
+      "pos": 54,
+      "neg": 2,
+      "unknown": 4944
+    },
+    {
+      "class": "Temple",
+      "group": "scene",
+      "pos": 36,
+      "neg": 3,
+      "unknown": 4961
+    },
+    {
+      "class": "Church",
+      "group": "scene",
+      "pos": 37,
+      "neg": 7,
+      "unknown": 4956
+    },
+    {
+      "class": "Room",
+      "group": "scene",
+      "pos": 224,
+      "neg": 12,
+      "unknown": 4764
+    },
+    {
+      "class": "Kitchen",
+      "group": "scene",
+      "pos": 54,
+      "neg": 1,
+      "unknown": 4945
+    },
+    {
+      "class": "Bedroom",
+      "group": "scene",
+      "pos": 37,
+      "neg": 1,
+      "unknown": 4962
+    },
+    {
+      "class": "Living room",
+      "group": "scene",
+      "pos": 39,
+      "neg": 36,
+      "unknown": 4925
+    },
+    {
+      "class": "Restaurant",
+      "group": "scene",
+      "pos": 58,
+      "neg": 15,
+      "unknown": 4927
+    },
+    {
+      "class": "Stadium",
+      "group": "scene",
+      "pos": 48,
+      "neg": 23,
+      "unknown": 4929
+    },
+    {
+      "class": "Wedding",
+      "group": "scene",
+      "pos": 36,
+      "neg": 5,
+      "unknown": 4959
+    },
+    {
+      "class": "Party",
+      "group": "scene",
+      "pos": 39,
+      "neg": 13,
+      "unknown": 4948
+    },
+    {
+      "class": "Concert",
+      "group": "scene",
+      "pos": 37,
+      "neg": 1,
+      "unknown": 4962
+    },
+    {
+      "class": "Festival",
+      "group": "scene",
+      "pos": 37,
+      "neg": 19,
+      "unknown": 4944
+    },
+    {
+      "class": "Crowd",
+      "group": "scene",
+      "pos": 51,
+      "neg": 6,
+      "unknown": 4943
+    },
+    {
+      "class": "Selfie",
+      "group": "scene",
+      "pos": 36,
+      "neg": 4,
+      "unknown": 4960
+    },
+    {
+      "class": "Portrait",
+      "group": "scene",
+      "pos": 56,
+      "neg": 10,
+      "unknown": 4934
+    },
+    {
+      "class": "Smile",
+      "group": "scene",
+      "pos": 45,
+      "neg": 8,
+      "unknown": 4947
+    },
+    {
+      "class": "Text",
+      "group": "scene",
+      "pos": 176,
+      "neg": 1,
+      "unknown": 4823
+    },
+    {
+      "class": "Document",
+      "group": "scene",
+      "pos": 37,
+      "neg": 2,
+      "unknown": 4961
+    },
+    {
+      "class": "Landscape",
+      "group": "scene",
+      "pos": 94,
+      "neg": 0,
+      "unknown": 4906
+    }
+  ]
+}

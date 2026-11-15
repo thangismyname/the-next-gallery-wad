@@ -1,0 +1,9 @@
+template,val_mAP,val_mAP_object,val_mAP_scene
+a photo of a {}.,0.87781,0.85881,0.9348
+a photo of the {}.,0.87504,0.85697,0.92926
+a photo containing a {}.,0.88693,0.87104,0.93459
+a close-up photo of a {}.,0.84783,0.82148,0.92689
+a picture of a {}.,0.87514,0.85491,0.93582
+there is a {} in the photo.,0.8755,0.8579,0.92828
+{},0.87185,0.85302,0.92836
+ensemble,0.8806,0.8628,0.93398

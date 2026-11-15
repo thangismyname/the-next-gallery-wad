@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Film, Heart } from "lucide-react";
-import { Media } from "../../../types";
+import { Media } from "@tng/shared";
 import { cn } from "@/lib/utils";
 
 interface LightboxFilmstripProps {
@@ -76,7 +76,7 @@ const LightboxFilmstrip: React.FC<LightboxFilmstripProps> = ({
     <div
       onClick={(e) => e.stopPropagation()}
       className={cn(
-        "relative shrink-0 w-full bg-black/60 backdrop-blur-md touch-pan-x cursor-grab active:cursor-grabbing",
+        "relative shrink-0 w-full border-t border-border/60 bg-background/70 backdrop-blur-md touch-pan-x cursor-grab active:cursor-grabbing",
         "transition-[height,opacity] duration-300 ease-out overflow-hidden",
         visible ? "h-20 opacity-100" : "h-0 opacity-0",
       )}
@@ -99,14 +99,14 @@ const LightboxFilmstrip: React.FC<LightboxFilmstripProps> = ({
               className={cn(
                 "relative shrink-0 overflow-hidden rounded-lg transition-all",
                 idx === activeIndex
-                  ? "ring-2 ring-white opacity-100"
+                  ? "ring-2 ring-foreground opacity-100"
                   : "opacity-50 hover:opacity-80",
               )}
               style={{ width: 56, height: 56 }}
               aria-label={t("lightbox.jumpTo", { index: idx + 1 })}
             >
               {m.mediaType === "video" ? (
-                <span className="flex h-full w-full items-center justify-center bg-black/30 text-white/70">
+                <span className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
                   <Film size={16} />
                 </span>
               ) : (
@@ -128,7 +128,7 @@ const LightboxFilmstrip: React.FC<LightboxFilmstripProps> = ({
       </div>
 
       {/* Counter */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-white/50 tabular-nums pointer-events-none">
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-foreground/50 tabular-nums pointer-events-none">
         {t("lightbox.counter", {
           current: currentIndex + 1,
           total: mediaList.length,

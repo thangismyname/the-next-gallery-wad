@@ -1,0 +1,37 @@
+{"t": "2026-11-06T20:33:52Z", "type": "log", "message": "run e3/20261107-033351 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e3/20261107-033351"}
+{"t": "2026-11-06T20:33:52Z", "type": "log", "message": "── CLIP image features (test)"}
+{"t": "2026-11-06T20:33:52Z", "type": "stage", "stage": "CLIP image features (test)"}
+{"t": "2026-11-06T20:36:16Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 256, "total": 5000}
+{"t": "2026-11-06T20:36:19Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 512, "total": 5000}
+{"t": "2026-11-06T20:36:21Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 768, "total": 5000}
+{"t": "2026-11-06T20:36:24Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 1024, "total": 5000}
+{"t": "2026-11-06T20:36:26Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 1280, "total": 5000}
+{"t": "2026-11-06T20:36:29Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 1536, "total": 5000}
+{"t": "2026-11-06T20:36:31Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 1792, "total": 5000}
+{"t": "2026-11-06T20:36:34Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 2048, "total": 5000}
+{"t": "2026-11-06T20:36:36Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 2304, "total": 5000}
+{"t": "2026-11-06T20:36:39Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 2560, "total": 5000}
+{"t": "2026-11-06T20:36:41Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 2816, "total": 5000}
+{"t": "2026-11-06T20:36:44Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 3072, "total": 5000}
+{"t": "2026-11-06T20:36:46Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 3328, "total": 5000}
+{"t": "2026-11-06T20:36:49Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 3584, "total": 5000}
+{"t": "2026-11-06T20:36:51Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 3840, "total": 5000}
+{"t": "2026-11-06T20:36:54Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 4096, "total": 5000}
+{"t": "2026-11-06T20:36:56Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 4352, "total": 5000}
+{"t": "2026-11-06T20:36:59Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 4608, "total": 5000}
+{"t": "2026-11-06T20:37:01Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 4864, "total": 5000}
+{"t": "2026-11-06T20:37:03Z", "type": "progress", "stage": "CLIP image features (test)", "label": "CLIP oi-test", "done": 5000, "total": 5000}
+{"t": "2026-11-06T20:37:03Z", "type": "log", "message": "── (a) query theo lớp"}
+{"t": "2026-11-06T20:37:03Z", "type": "stage", "stage": "(a) query theo lớp"}
+{"t": "2026-11-06T20:37:06Z", "type": "log", "message": "  mAP strict 0.6501 · known-only 0.8775"}
+{"t": "2026-11-06T20:37:06Z", "type": "log", "message": "── (b) caption Localized Narratives"}
+{"t": "2026-11-06T20:37:06Z", "type": "stage", "stage": "(b) caption Localized Narratives"}
+{"t": "2026-11-06T20:37:15Z", "type": "log", "message": "  full: R@1/5/10 0.247/0.486/0.593 · MRR 0.361"}
+{"t": "2026-11-06T20:37:24Z", "type": "log", "message": "  first_sentence: R@1/5/10 0.176/0.365/0.470 · MRR 0.272"}
+{"t": "2026-11-06T20:37:24Z", "type": "log", "message": "── (c) query ghép, chấm tay"}
+{"t": "2026-11-06T20:37:24Z", "type": "stage", "stage": "(c) query ghép, chấm tay"}
+{"t": "2026-11-06T20:37:24Z", "type": "log", "message": "  en@app: P@10 0.000 · judged 0%"}
+{"t": "2026-11-06T20:37:24Z", "type": "log", "message": "  vi@app: P@10 0.000 · judged 0%"}
+{"t": "2026-11-06T20:37:25Z", "type": "log", "message": "  vi@multilingual: P@10 0.000 · judged 0%"}
+{"t": "2026-11-06T20:37:25Z", "type": "log", "message": "  → 1828 cặp chưa chấm (1828 mới) — mở /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e3/20261107-033351/judge.html, điền /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Classes/open-images/judgments.csv rồi chạy lại `e3 --parts c`"}
+{"t": "2026-11-06T20:37:25Z", "type": "log", "message": "xong sau 214s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e3/20261107-033351"}

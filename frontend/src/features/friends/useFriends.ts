@@ -1,203 +1,133 @@
-import { useMemo, useState } from "react";
+// Dữ liệu + thao tác trang Bạn bè (react-query): bạn bè, lời mời đến, lời mời
+// đã gửi; kết bạn (theo id từ kết quả tìm), chấp nhận / từ chối / huỷ lời mời,
+// huỷ kết bạn. Realtime (WS friend:*) chỉ cần invalidate `friendsKeys.all`
+// (FriendEventsToast).
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  acceptFriendRequest,
-  addFriend,
-  declineFriendRequest,
-  deleteFriend,
-  fetchFriendRequests,
-  fetchFriends,
-  FriendSearchResult,
-  searchFriend,
-} from "@/services/friends";
-import { Friend, FriendRequest, FriendRequestResult } from "@/types";
+import { acceptFriendRequest, addFriend, cancelFriendRequest, declineFriendRequest, deleteFriend, fetchFriendRequests, fetchFriends, fetchSentRequests, searchFriend } from "@/services/friends";
+import { useDebounce } from "@/hooks/useDebounce";
+import type { Friend, FriendRequest, FriendRequestResult } from "@tng/shared";
 
-const friendsQueryKey = ["friends", "list"] as const;
-const requestsQueryKey = ["friends", "requests"] as const;
+export const friendsKeys = {
+  all: ["friends"] as const,
+  list: ["friends", "list"] as const,
+  requests: ["friends", "requests"] as const,
+  sent: ["friends", "requests", "sent"] as const,
+  search: (q: string) => ["friends", "search", q] as const,
+};
 
+export type Notice = { tone: "ok" | "error"; text: string } | null;
 
-function notifyLabels(t: ReturnType<typeof useTranslation>["t"]) {
-  return (result: FriendRequestResult, name: string) => {
-    switch (result) {
-      case "already_friends":
-        return t("friends.alreadyFriends", { name });
-      case "pending_inbound":
-        return t("friends.pendingInbound", { name });
-      case "pending_outbound":
-        return t("friends.pendingOutbound", { name });
-      case "sent":
-      default:
-        return t("friends.sent", { name });
-    }
-  };
-}
-
-/**
- * Dữ liệu + thao tác trang Bạn bè: danh sách bạn, lời mời đến, tìm theo
- * email / mã → gửi lời mời, chấp nhận / từ chối, xoá bạn (có xác nhận).
- * Lỗi từ server được đổi sang câu đã dịch khi nhận ra (không tìm thấy, tự
- * thêm chính mình).
- */
 export function useFriends() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-
-  const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: friendsQueryKey });
-    queryClient.invalidateQueries({ queryKey: requestsQueryKey });
-  };
-
-  const { data, isPending, isError, refetch } = useQuery({
-    queryKey: friendsQueryKey,
-    queryFn: fetchFriends,
-    staleTime: 30_000,
-  });
-
-  const {
-    data: requestsData,
-    isPending: requestsPending,
-    isError: requestsError,
-    refetch: refetchRequests,
-  } = useQuery({
-    queryKey: requestsQueryKey,
-    queryFn: fetchFriendRequests,
-    staleTime: 15_000,
-  });
-
-  const friends: Friend[] = useMemo(() => data ?? [], [data]);
-  const requests: FriendRequest[] = useMemo(
-    () => requestsData ?? [],
-    [requestsData],
-  );
-
-  const [query, setQuery] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [searchResult, setSearchResult] = useState<FriendSearchResult | null>(
-    null,
-  );
-  const [adding, setAdding] = useState(false);
-  const [addMessage, setAddMessage] = useState<string | null>(null);
-  const [addError, setAddError] = useState<string | null>(null);
-  const [toDelete, setToDelete] = useState<Friend | null>(null);
-  const [deleting, setDeleting] = useState(false);
-
-  const submitting = (value: string, id: string) => {
-    setBusy((prev) => ({ ...prev, [id]: value }));
-  };
   const [busy, setBusy] = useState<Record<string, string>>({});
+  const [notice, setNotice] = useState<Notice>(null);
 
-  const handleSearch = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    const trimmed = query.trim();
-    if (!trimmed) return;
+  const list = useQuery({ queryKey: friendsKeys.list, queryFn: fetchFriends, staleTime: 30_000 });
+  const incoming = useQuery({ queryKey: friendsKeys.requests, queryFn: fetchFriendRequests, staleTime: 15_000 });
+  const sent = useQuery({ queryKey: friendsKeys.sent, queryFn: fetchSentRequests, staleTime: 15_000 });
 
-    setSearching(true);
-    setAddError(null);
-    setAddMessage(null);
-    setSearchResult(null);
-    try {
-      const result = await searchFriend(trimmed);
-      setSearchResult(result);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const key = message.toLowerCase();
-      if (key.includes("không tìm thấy") || key.includes("no user found")) {
-        setAddError(t("friends.notFound"));
-      } else {
-        setAddError(message);
+  const friends: Friend[] = useMemo(() => list.data ?? [], [list.data]);
+  const requests: FriendRequest[] = useMemo(() => incoming.data ?? [], [incoming.data]);
+  const sentRequests: FriendRequest[] = useMemo(() => sent.data ?? [], [sent.data]);
+
+  const refreshAll = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: friendsKeys.all }),
+    [queryClient],
+  );
+
+  /** Chạy 1 thao tác theo id (khoá nút đó), làm mới mọi danh sách khi xong. */
+  const run = useCallback(
+    async (id: string, kind: string, fn: () => Promise<string | void>) => {
+      setBusy((b) => ({ ...b, [id]: kind }));
+      try {
+        const text = await fn();
+        if (text) setNotice({ tone: "ok", text });
+        await refreshAll();
+      } catch (err) {
+        setNotice({ tone: "error", text: err instanceof Error ? err.message : t("friends.actionFailed") });
+      } finally {
+        setBusy((b) => {
+          const next = { ...b };
+          delete next[id];
+          return next;
+        });
       }
-    } finally {
-      setSearching(false);
-    }
-  };
+    },
+    [refreshAll, t],
+  );
 
-  const confirmSend = async () => {
-    if (!searchResult) return;
-    setAdding(true);
-    setAddError(null);
-    setAddMessage(null);
-    try {
-      const { friend, result } = await addFriend(query.trim());
-      setAddMessage(notifyLabels(t)(result, friend.name));
-      setQuery("");
-      setSearchResult(null);
-      invalidateAll();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      const key = message.toLowerCase();
-      if (key.includes("không tìm thấy") || key.includes("no user found")) {
-        setAddError(t("friends.notFound"));
-      } else if (key.includes("chính mình") || key.includes("add yourself")) {
-        setAddError(t("friends.self"));
-      } else {
-        setAddError(message);
-      }
-    } finally {
-      setAdding(false);
-    }
-  };
+  const resultText = useCallback(
+    (result: FriendRequestResult, name: string) =>
+      ({
+        sent: t("friends.sent", { name }),
+        accepted: t("friends.nowFriends", { name }),
+        already_friends: t("friends.alreadyFriends", { name }),
+        pending_inbound: t("friends.pendingInbound", { name }),
+        pending_outbound: t("friends.pendingOutbound", { name }),
+      })[result],
+    [t],
+  );
 
-  const handleRespond = async (
-    request: FriendRequest,
-    action: "accept" | "decline",
-  ) => {
-    submitting(action, request.id);
-    try {
-      if (action === "accept") {
-        await acceptFriendRequest(request.id);
-      } else {
-        await declineFriendRequest(request.id);
-      }
-      invalidateAll();
-    } catch (error) {
-      console.error("Failed to respond to request:", error);
-    } finally {
-      setBusy((prev) => {
-        const next = { ...prev };
-        delete next[request.id];
-        return next;
-      });
-    }
-  };
+  const add = (userId: string) =>
+    run(userId, "add", async () => {
+      const { friend, result } = await addFriend(userId);
+      return resultText(result, friend.name);
+    });
 
-  const confirmDelete = async () => {
-    if (!toDelete) return;
-    setDeleting(true);
-    try {
-      await deleteFriend(toDelete.id);
-      invalidateAll();
-      setToDelete(null);
-    } catch (error) {
-      console.error("Failed to delete friend:", error);
-    } finally {
-      setDeleting(false);
-    }
-  };
+  const accept = (r: FriendRequest) =>
+    run(r.id, "accept", async () => {
+      await acceptFriendRequest(r.id);
+      return t("friends.nowFriends", { name: r.name });
+    });
+
+  const decline = (r: FriendRequest) => run(r.id, "decline", () => declineFriendRequest(r.id));
+  const cancel = (r: FriendRequest) => run(r.id, "cancel", () => cancelFriendRequest(r.id));
+
+  const unfriend = (f: Friend) =>
+    run(f.id, "delete", async () => {
+      await deleteFriend(f.id);
+      return t("friends.deleted", { name: f.name });
+    });
 
   return {
     friends,
     requests,
-    isPending,
-    isError,
-    refetch,
-    requestsPending,
-    requestsError,
-    refetchRequests,
-    query,
-    setQuery,
-    searching,
-    searchResult,
-    adding,
-    addMessage,
-    addError,
-    handleSearch,
-    confirmSend,
+    sentRequests,
+    listState: { pending: list.isPending, error: list.isError, retry: () => void list.refetch() },
+    requestsState: {
+      pending: incoming.isPending || sent.isPending,
+      error: incoming.isError || sent.isError,
+      retry: () => void Promise.all([incoming.refetch(), sent.refetch()]),
+    },
     busy,
-    handleRespond,
-    toDelete,
-    setToDelete,
-    deleting,
-    confirmDelete,
+    notice,
+    clearNotice: () => setNotice(null),
+    add,
+    accept,
+    decline,
+    cancel,
+    unfriend,
+  };
+}
+
+/** Tìm người khi gõ (đợi 400 ms): email đầy đủ, hoặc tên ≥ 2 ký tự. */
+export function useFriendSearch(query: string) {
+  const q = useDebounce(query.trim(), 400);
+  const enabled = q.includes("@") ? q.length >= 3 : q.length >= 2;
+  const search = useQuery({
+    queryKey: friendsKeys.search(q),
+    queryFn: ({ signal }) => searchFriend(q, signal),
+    enabled,
+    staleTime: 15_000,
+  });
+  return {
+    results: enabled ? (search.data ?? []) : [],
+    searching: enabled && search.isFetching,
+    error: enabled && search.isError ? (search.error as Error).message : null,
+    tooShort: query.trim().length > 0 && !enabled,
+    debouncedQuery: q,
   };
 }

@@ -1,0 +1,2645 @@
+{
+  "mapping_hash": "6f06806690",
+  "classes": [
+    {
+      "oi_name": "Person",
+      "oi_mid": "/m/01g317",
+      "group": "object",
+      "coco": "person",
+      "old_tag": "",
+      "prompt": "person",
+      "display": "Person",
+      "boxable": true,
+      "descendants": [
+        "/m/01bl7v",
+        "/m/03bt1vf",
+        "/m/04yx4",
+        "/m/05r655"
+      ],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Bicycle",
+      "oi_mid": "/m/0199g",
+      "group": "object",
+      "coco": "bicycle",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Bicycle",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/05y5lj",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Car",
+      "oi_mid": "/m/0k4j",
+      "group": "object",
+      "coco": "car",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Car",
+      "boxable": true,
+      "descendants": [
+        "/m/01lcw4",
+        "/m/0h2r6"
+      ],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Motorcycle",
+      "oi_mid": "/m/04_sv",
+      "group": "object",
+      "coco": "motorcycle",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Motorcycle",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Fixed-wing aircraft",
+      "oi_mid": "/m/0cmf2",
+      "group": "object",
+      "coco": "airplane",
+      "old_tag": "vehicles",
+      "prompt": "airplane",
+      "display": "Fixed-wing aircraft",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/07yv9",
+        "/m/0bl9f",
+        "/m/0k5j"
+      ]
+    },
+    {
+      "oi_name": "Bus",
+      "oi_mid": "/m/01bjv",
+      "group": "object",
+      "coco": "bus",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Bus",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Train",
+      "oi_mid": "/m/07jdr",
+      "group": "object",
+      "coco": "train",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Train",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Truck",
+      "oi_mid": "/m/07r04",
+      "group": "object",
+      "coco": "truck",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Truck",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Boat",
+      "oi_mid": "/m/019jd",
+      "group": "object",
+      "coco": "boat",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Boat",
+      "boxable": true,
+      "descendants": [
+        "/m/01btn",
+        "/m/02068x",
+        "/m/0ph39"
+      ],
+      "ancestors": [
+        "/m/01rzcn",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Traffic light",
+      "oi_mid": "/m/015qff",
+      "group": "object",
+      "coco": "traffic light",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Traffic light",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Fire hydrant",
+      "oi_mid": "/m/01pns0",
+      "group": "object",
+      "coco": "fire hydrant",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Fire hydrant",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Stop sign",
+      "oi_mid": "/m/02pv19",
+      "group": "object",
+      "coco": "stop sign",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Stop sign",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01mqdt",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Parking meter",
+      "oi_mid": "/m/015qbp",
+      "group": "object",
+      "coco": "parking meter",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Parking meter",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Bench",
+      "oi_mid": "/m/0cvnqh",
+      "group": "object",
+      "coco": "bench",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Bench",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0c_jw"
+      ]
+    },
+    {
+      "oi_name": "Bird",
+      "oi_mid": "/m/015p6",
+      "group": "object",
+      "coco": "bird",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Bird",
+      "boxable": true,
+      "descendants": [
+        "/m/012074",
+        "/m/01dy8n",
+        "/m/01f8m5",
+        "/m/05n4y",
+        "/m/05z6w",
+        "/m/06j2d",
+        "/m/09b5t",
+        "/m/09csl",
+        "/m/09d5_",
+        "/m/09ddx",
+        "/m/0ccs93",
+        "/m/0dbvp",
+        "/m/0dftk",
+        "/m/0f6wt",
+        "/m/0gv1x",
+        "/m/0h23m",
+        "/m/0jly1"
+      ],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Cat",
+      "oi_mid": "/m/01yrx",
+      "group": "object",
+      "coco": "cat",
+      "old_tag": "pets",
+      "prompt": "",
+      "display": "Cat",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Dog",
+      "oi_mid": "/m/0bt9lr",
+      "group": "object",
+      "coco": "dog",
+      "old_tag": "pets",
+      "prompt": "",
+      "display": "Dog",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Horse",
+      "oi_mid": "/m/03k3r",
+      "group": "object",
+      "coco": "horse",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Horse",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Sheep",
+      "oi_mid": "/m/07bgp",
+      "group": "object",
+      "coco": "sheep",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Sheep",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Cattle",
+      "oi_mid": "/m/01xq0k1",
+      "group": "object",
+      "coco": "cow",
+      "old_tag": "animals",
+      "prompt": "cow",
+      "display": "Cattle",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Elephant",
+      "oi_mid": "/m/0bwd_0j",
+      "group": "object",
+      "coco": "elephant",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Elephant",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Bear",
+      "oi_mid": "/m/01dws",
+      "group": "object",
+      "coco": "bear",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Bear",
+      "boxable": true,
+      "descendants": [
+        "/m/01dxs",
+        "/m/03bj1",
+        "/m/0633h",
+        "/m/0kmg4"
+      ],
+      "ancestors": [
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Zebra",
+      "oi_mid": "/m/0898b",
+      "group": "object",
+      "coco": "zebra",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Zebra",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Giraffe",
+      "oi_mid": "/m/03bk1",
+      "group": "object",
+      "coco": "giraffe",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Giraffe",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Backpack",
+      "oi_mid": "/m/01940j",
+      "group": "object",
+      "coco": "backpack",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Backpack",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/09j2d",
+        "/m/0bl9f",
+        "/m/0hf58v5"
+      ]
+    },
+    {
+      "oi_name": "Umbrella",
+      "oi_mid": "/m/0hnnb",
+      "group": "object",
+      "coco": "umbrella",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Umbrella",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0463sg",
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Handbag",
+      "oi_mid": "/m/080hkjn",
+      "group": "object",
+      "coco": "handbag",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Handbag",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0463sg",
+        "/m/09j2d",
+        "/m/0bl9f",
+        "/m/0hf58v5"
+      ]
+    },
+    {
+      "oi_name": "Tie",
+      "oi_mid": "/m/01rkbr",
+      "group": "object",
+      "coco": "tie",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Tie",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0463sg",
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Suitcase",
+      "oi_mid": "/m/01s55n",
+      "group": "object",
+      "coco": "suitcase",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Suitcase",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/09j2d",
+        "/m/0bl9f",
+        "/m/0hf58v5"
+      ]
+    },
+    {
+      "oi_name": "Flying disc",
+      "oi_mid": "/m/02wmf",
+      "group": "object",
+      "coco": "frisbee",
+      "old_tag": "sports",
+      "prompt": "frisbee",
+      "display": "Flying disc",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0138tl",
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Ski",
+      "oi_mid": "/m/071p9",
+      "group": "object",
+      "coco": "skis",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Ski",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Snowboard",
+      "oi_mid": "/m/06__v",
+      "group": "object",
+      "coco": "snowboard",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Snowboard",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Ball (Object)",
+      "oi_mid": "/m/018xm",
+      "group": "object",
+      "coco": "sports ball",
+      "old_tag": "sports",
+      "prompt": "ball",
+      "display": "Ball (Object)",
+      "boxable": true,
+      "descendants": [
+        "/m/01226z",
+        "/m/02ctlc",
+        "/m/02rgn06",
+        "/m/05ctyq",
+        "/m/0wdt60w"
+      ],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Kite",
+      "oi_mid": "/m/02zt3",
+      "group": "object",
+      "coco": "kite",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Kite",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0138tl",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Baseball bat",
+      "oi_mid": "/m/03g8mr",
+      "group": "object",
+      "coco": "baseball bat",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Baseball bat",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Baseball glove",
+      "oi_mid": "/m/03grzl",
+      "group": "object",
+      "coco": "baseball glove",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Baseball glove",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0174n1",
+        "/m/0463sg",
+        "/m/05y5lj",
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Skateboard",
+      "oi_mid": "/m/06_fw",
+      "group": "object",
+      "coco": "skateboard",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Skateboard",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Surfboard",
+      "oi_mid": "/m/019w40",
+      "group": "object",
+      "coco": "surfboard",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Surfboard",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Tennis racket",
+      "oi_mid": "/m/0h8my_4",
+      "group": "object",
+      "coco": "tennis racket",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Tennis racket",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05y5lj",
+        "/m/0bl9f",
+        "/m/0dv9c"
+      ]
+    },
+    {
+      "oi_name": "Bottle",
+      "oi_mid": "/m/04dr76w",
+      "group": "object",
+      "coco": "bottle",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Bottle",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/011q46kg",
+        "/m/03_wxk",
+        "/m/04brg2",
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Wine glass",
+      "oi_mid": "/m/09tvcd",
+      "group": "object",
+      "coco": "wine glass",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Wine glass",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/04brg2",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Mug",
+      "oi_mid": "/m/02jvh9",
+      "group": "object",
+      "coco": "cup",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Mug",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/04brg2",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Coffee cup",
+      "oi_mid": "/m/02p5f1q",
+      "group": "object",
+      "coco": "cup",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Coffee cup",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/04brg2",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Fork",
+      "oi_mid": "/m/0dt3t",
+      "group": "object",
+      "coco": "fork",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Fork",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/03hlz0c",
+        "/m/04brg2",
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Knife",
+      "oi_mid": "/m/04ctx",
+      "group": "object",
+      "coco": "knife",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Knife",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/03hlz0c",
+        "/m/07k1x",
+        "/m/083kb",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Spoon",
+      "oi_mid": "/m/0cmx8",
+      "group": "object",
+      "coco": "spoon",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Spoon",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/03hlz0c",
+        "/m/04brg2",
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Bowl",
+      "oi_mid": "/m/04kkgm",
+      "group": "object",
+      "coco": "bowl",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Bowl",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03_wxk",
+        "/m/04brg2",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Banana",
+      "oi_mid": "/m/09qck",
+      "group": "object",
+      "coco": "banana",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Banana",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/02xwb",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Apple",
+      "oi_mid": "/m/014j1m",
+      "group": "object",
+      "coco": "apple",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Apple",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/02xwb",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Sandwich",
+      "oi_mid": "/m/0l515",
+      "group": "object",
+      "coco": "sandwich",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Sandwich",
+      "boxable": true,
+      "descendants": [
+        "/m/06pcq",
+        "/m/0cdn1"
+      ],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Orange (fruit)",
+      "oi_mid": "/m/0cyhj_",
+      "group": "object",
+      "coco": "orange",
+      "old_tag": "food",
+      "prompt": "orange",
+      "display": "Orange (fruit)",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/02xwb",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Broccoli",
+      "oi_mid": "/m/0hkxq",
+      "group": "object",
+      "coco": "broccoli",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Broccoli",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f",
+        "/m/0f4s2w"
+      ]
+    },
+    {
+      "oi_name": "Carrot",
+      "oi_mid": "/m/0fj52s",
+      "group": "object",
+      "coco": "carrot",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Carrot",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f",
+        "/m/0f4s2w"
+      ]
+    },
+    {
+      "oi_name": "Hot dog",
+      "oi_mid": "/m/01b9xk",
+      "group": "object",
+      "coco": "hot dog",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Hot dog",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01_bhs",
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Pizza",
+      "oi_mid": "/m/0663v",
+      "group": "object",
+      "coco": "pizza",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Pizza",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Doughnut",
+      "oi_mid": "/m/0jy4k",
+      "group": "object",
+      "coco": "donut",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Doughnut",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/052lwg6",
+        "/m/0bl9f",
+        "/m/0hnyx"
+      ]
+    },
+    {
+      "oi_name": "Cake",
+      "oi_mid": "/m/0fszt",
+      "group": "object",
+      "coco": "cake",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Cake",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0270h",
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Chair",
+      "oi_mid": "/m/01mzpv",
+      "group": "object",
+      "coco": "chair",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Chair",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0c_jw"
+      ]
+    },
+    {
+      "oi_name": "Couch",
+      "oi_mid": "/m/02crq1",
+      "group": "object",
+      "coco": "couch",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Couch",
+      "boxable": true,
+      "descendants": [
+        "/m/03m3pdh",
+        "/m/0703r8"
+      ],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0c_jw"
+      ]
+    },
+    {
+      "oi_name": "Houseplant",
+      "oi_mid": "/m/03fp41",
+      "group": "object",
+      "coco": "potted plant",
+      "old_tag": "indoor",
+      "prompt": "potted plant",
+      "display": "Houseplant",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05s2s",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Bed",
+      "oi_mid": "/m/03ssj5",
+      "group": "object",
+      "coco": "bed",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Bed",
+      "boxable": true,
+      "descendants": [
+        "/m/026qbn5",
+        "/m/061hd_"
+      ],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0c_jw"
+      ]
+    },
+    {
+      "oi_name": "Kitchen & dining room table",
+      "oi_mid": "/m/0h8n5zk",
+      "group": "object",
+      "coco": "dining table",
+      "old_tag": "indoor",
+      "prompt": "dining table",
+      "display": "Kitchen & dining room table",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04bcr3",
+        "/m/0bl9f",
+        "/m/0c_jw"
+      ]
+    },
+    {
+      "oi_name": "Toilet",
+      "oi_mid": "/m/09g1w",
+      "group": "object",
+      "coco": "toilet",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Toilet",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02pkr5",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Television",
+      "oi_mid": "/m/07c52",
+      "group": "object",
+      "coco": "tv",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Television",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Laptop",
+      "oi_mid": "/m/01c648",
+      "group": "object",
+      "coco": "laptop",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Laptop",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Computer mouse",
+      "oi_mid": "/m/020lf",
+      "group": "object",
+      "coco": "mouse",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Computer mouse",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Remote control",
+      "oi_mid": "/m/0qjjc",
+      "group": "object",
+      "coco": "remote",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Remote control",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Computer keyboard",
+      "oi_mid": "/m/01m2v",
+      "group": "object",
+      "coco": "keyboard",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Computer keyboard",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Mobile phone",
+      "oi_mid": "/m/050k8",
+      "group": "object",
+      "coco": "cell phone",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Mobile phone",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/07cx4",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Microwave oven",
+      "oi_mid": "/m/0fx9l",
+      "group": "object",
+      "coco": "microwave",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Microwave oven",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/019dx1",
+        "/m/03_wxk",
+        "/m/0bl9f",
+        "/m/0h99cwc"
+      ]
+    },
+    {
+      "oi_name": "Oven",
+      "oi_mid": "/m/029bxz",
+      "group": "object",
+      "coco": "oven",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Oven",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/019dx1",
+        "/m/03_wxk",
+        "/m/0bl9f",
+        "/m/0h99cwc"
+      ]
+    },
+    {
+      "oi_name": "Toaster",
+      "oi_mid": "/m/01k6s3",
+      "group": "object",
+      "coco": "toaster",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Toaster",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/019dx1",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Sink",
+      "oi_mid": "/m/0130jx",
+      "group": "object",
+      "coco": "sink",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Sink",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02pkr5",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Refrigerator",
+      "oi_mid": "/m/040b_t",
+      "group": "object",
+      "coco": "refrigerator",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Refrigerator",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/019dx1",
+        "/m/03_wxk",
+        "/m/0bl9f",
+        "/m/0h99cwc"
+      ]
+    },
+    {
+      "oi_name": "Book",
+      "oi_mid": "/m/0bt_c3",
+      "group": "object",
+      "coco": "book",
+      "old_tag": "document",
+      "prompt": "",
+      "display": "Book",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Clock",
+      "oi_mid": "/m/01x3z",
+      "group": "object",
+      "coco": "clock",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Clock",
+      "boxable": true,
+      "descendants": [
+        "/m/046dlr",
+        "/m/06_72j",
+        "/m/0h8mzrc"
+      ],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Vase",
+      "oi_mid": "/m/02s195",
+      "group": "object",
+      "coco": "vase",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Vase",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Scissors",
+      "oi_mid": "/m/01lsmm",
+      "group": "object",
+      "coco": "scissors",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Scissors",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02rdsp",
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Teddy bear",
+      "oi_mid": "/m/0kmg4",
+      "group": "object",
+      "coco": "teddy bear",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Teddy bear",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0138tl",
+        "/m/01dws",
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Hair dryer",
+      "oi_mid": "/m/03wvsk",
+      "group": "object",
+      "coco": "hair drier",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Hair dryer",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/019dx1",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Toothbrush",
+      "oi_mid": "/m/012xff",
+      "group": "object",
+      "coco": "toothbrush",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Toothbrush",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02w3_ws",
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Human face",
+      "oi_mid": "/m/0dzct",
+      "group": "object",
+      "coco": "",
+      "old_tag": "portrait",
+      "prompt": "human face",
+      "display": "Human face",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Tree",
+      "oi_mid": "/m/07j7r",
+      "group": "object",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Tree",
+      "boxable": true,
+      "descendants": [
+        "/m/025nd",
+        "/m/0cdl1",
+        "/m/0cffdh",
+        "/m/0mw_6"
+      ],
+      "ancestors": [
+        "/m/05s2s",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Flower",
+      "oi_mid": "/m/0c9ph5",
+      "group": "object",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Flower",
+      "boxable": true,
+      "descendants": [
+        "/m/04gth",
+        "/m/06m11",
+        "/m/0ftb8",
+        "/m/0jqgx"
+      ],
+      "ancestors": [
+        "/m/05s2s",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Building",
+      "oi_mid": "/m/0cgh4",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Building",
+      "boxable": true,
+      "descendants": [
+        "/m/01fdzj",
+        "/m/021sj1",
+        "/m/02wg_p",
+        "/m/03jm5",
+        "/m/04h7h",
+        "/m/079cl",
+        "/m/0crjs",
+        "/m/0d5gx"
+      ],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "House",
+      "oi_mid": "/m/03jm5",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "House",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0cgh4"
+      ]
+    },
+    {
+      "oi_name": "Skyscraper",
+      "oi_mid": "/m/079cl",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Skyscraper",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0cgh4"
+      ]
+    },
+    {
+      "oi_name": "Tower",
+      "oi_mid": "/m/01fdzj",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Tower",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0cgh4"
+      ]
+    },
+    {
+      "oi_name": "Castle",
+      "oi_mid": "/m/0d5gx",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Castle",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0cgh4"
+      ]
+    },
+    {
+      "oi_name": "Lighthouse",
+      "oi_mid": "/m/04h7h",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Lighthouse",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0cgh4"
+      ]
+    },
+    {
+      "oi_name": "Fountain",
+      "oi_mid": "/m/0220r2",
+      "group": "object",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Fountain",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Sunglasses",
+      "oi_mid": "/m/017ftj",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Sunglasses",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02w3_ws",
+        "/m/0463sg",
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Hat",
+      "oi_mid": "/m/02dl1y",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Hat",
+      "boxable": true,
+      "descendants": [
+        "/m/025rp__",
+        "/m/02fq_6",
+        "/m/02jfl0",
+        "/m/02wbtzl"
+      ],
+      "ancestors": [
+        "/m/0463sg",
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Footwear",
+      "oi_mid": "/m/09j5n",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "shoes",
+      "display": "Footwear",
+      "boxable": true,
+      "descendants": [
+        "/m/01b638",
+        "/m/02p3w7d",
+        "/m/03nfch",
+        "/m/06k2mb"
+      ],
+      "ancestors": [
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Dress",
+      "oi_mid": "/m/01d40f",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Dress",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/09j2d",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Guitar",
+      "oi_mid": "/m/0342h",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Guitar",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04szw",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Camera",
+      "oi_mid": "/m/0dv5r",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Camera",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/07k1x",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Balloon",
+      "oi_mid": "/m/01j51",
+      "group": "object",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Balloon",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0138tl",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Christmas tree",
+      "oi_mid": "/m/025nd",
+      "group": "object",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Christmas tree",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/05s2s",
+        "/m/07j7r",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Swimming pool",
+      "oi_mid": "/m/0b_rs",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Swimming pool",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Tent",
+      "oi_mid": "/m/01j61q",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Tent",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Flag",
+      "oi_mid": "/m/03120",
+      "group": "object",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Flag",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Street light",
+      "oi_mid": "/m/033rq4",
+      "group": "object",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Street light",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Traffic sign",
+      "oi_mid": "/m/01mqdt",
+      "group": "object",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Traffic sign",
+      "boxable": true,
+      "descendants": [
+        "/m/02pv19"
+      ],
+      "ancestors": [
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Taxi",
+      "oi_mid": "/m/0pg52",
+      "group": "object",
+      "coco": "",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Taxi",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Van",
+      "oi_mid": "/m/0h2r6",
+      "group": "object",
+      "coco": "",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Van",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01prls",
+        "/m/07yv9",
+        "/m/0bl9f",
+        "/m/0k4j"
+      ]
+    },
+    {
+      "oi_name": "Helicopter",
+      "oi_mid": "/m/09ct_",
+      "group": "object",
+      "coco": "",
+      "old_tag": "vehicles",
+      "prompt": "",
+      "display": "Helicopter",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/07yv9",
+        "/m/0bl9f",
+        "/m/0k5j"
+      ]
+    },
+    {
+      "oi_name": "Monkey",
+      "oi_mid": "/m/08pbxl",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Monkey",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Duck",
+      "oi_mid": "/m/09ddx",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Duck",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/015p6",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Fish",
+      "oi_mid": "/m/0ch_cf",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Fish",
+      "boxable": true,
+      "descendants": [
+        "/m/03fj2",
+        "/m/0by6g",
+        "/m/0m53l",
+        "/m/0nybt"
+      ],
+      "ancestors": [
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Butterfly",
+      "oi_mid": "/m/0cyf8",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Butterfly",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/03vt0",
+        "/m/03xxp",
+        "/m/0bl9f",
+        "/m/0d_2m",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Tiger",
+      "oi_mid": "/m/07dm6",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Tiger",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Lion",
+      "oi_mid": "/m/096mb",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Lion",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01lrl",
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Goat",
+      "oi_mid": "/m/03fwl",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Goat",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Pig",
+      "oi_mid": "/m/068zj",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Pig",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Deer",
+      "oi_mid": "/m/09kx5",
+      "group": "object",
+      "coco": "",
+      "old_tag": "animals",
+      "prompt": "",
+      "display": "Deer",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/04rky",
+        "/m/0bl9f",
+        "/m/0jbk"
+      ]
+    },
+    {
+      "oi_name": "Ice cream",
+      "oi_mid": "/m/0cxn2",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Ice cream",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0270h",
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Coffee (drink)",
+      "oi_mid": "/m/02vqfm",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "coffee",
+      "display": "Coffee (drink)",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0271t",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Wine",
+      "oi_mid": "/m/081qc",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Wine",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0271t",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Beer",
+      "oi_mid": "/m/01599",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Beer",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0271t",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Cocktail",
+      "oi_mid": "/m/024g6",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Cocktail",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/0271t",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Salad",
+      "oi_mid": "/m/0grw1",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Salad",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f",
+        "/m/0f4s2w"
+      ]
+    },
+    {
+      "oi_name": "Sushi",
+      "oi_mid": "/m/07030",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Sushi",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Bread",
+      "oi_mid": "/m/09728",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Bread",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/052lwg6",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Cookie",
+      "oi_mid": "/m/021mn",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Cookie",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01ww8y",
+        "/m/0270h",
+        "/m/02wbm",
+        "/m/052lwg6",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Hamburger",
+      "oi_mid": "/m/0cdn1",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Hamburger",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f",
+        "/m/0l515"
+      ]
+    },
+    {
+      "oi_name": "French fries",
+      "oi_mid": "/m/02y6n",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "French fries",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/01_bhs",
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Pasta",
+      "oi_mid": "/m/05z55",
+      "group": "object",
+      "coco": "",
+      "old_tag": "food",
+      "prompt": "",
+      "display": "Pasta",
+      "boxable": true,
+      "descendants": [],
+      "ancestors": [
+        "/m/02wbm",
+        "/m/0bl9f"
+      ]
+    },
+    {
+      "oi_name": "Beach",
+      "oi_mid": "/m/0b3yr",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "beach",
+      "prompt": "",
+      "display": "Beach",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Sea",
+      "oi_mid": "/m/06npx",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "beach",
+      "prompt": "",
+      "display": "Sea",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Coast",
+      "oi_mid": "/m/01lxd",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "beach",
+      "prompt": "",
+      "display": "Coast",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Island",
+      "oi_mid": "/m/03s0c",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "beach",
+      "prompt": "",
+      "display": "Island",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Mountain",
+      "oi_mid": "/m/09d_r",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "mountain",
+      "prompt": "",
+      "display": "Mountain",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Mountain range",
+      "oi_mid": "/m/04wxr",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "mountain",
+      "prompt": "",
+      "display": "Mountain range",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Valley",
+      "oi_mid": "/m/07yxk",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "mountain",
+      "prompt": "",
+      "display": "Valley",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Forest",
+      "oi_mid": "/m/02zr8",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Forest",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Lake",
+      "oi_mid": "/m/04h4w",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Lake",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "River",
+      "oi_mid": "/m/06cnp",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "River",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Waterfall",
+      "oi_mid": "/m/0j2kx",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Waterfall",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Field",
+      "oi_mid": "/m/0brn2d",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Field",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Garden",
+      "oi_mid": "/m/0bl0l",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Garden",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Park",
+      "oi_mid": "/m/0166ls",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Park",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Desert",
+      "oi_mid": "/m/0284w",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Desert",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Snow",
+      "oi_mid": "/m/06_dn",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Snow",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Sky",
+      "oi_mid": "/m/01bqvp",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Sky",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Cloud",
+      "oi_mid": "/m/0csby",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "",
+      "prompt": "",
+      "display": "Cloud",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Sunset",
+      "oi_mid": "/m/01b2w5",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "sunset",
+      "prompt": "",
+      "display": "Sunset",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Sunrise",
+      "oi_mid": "/m/01b2q6",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "sunset",
+      "prompt": "",
+      "display": "Sunrise",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Night",
+      "oi_mid": "/m/01d74z",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "night",
+      "prompt": "",
+      "display": "Night",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Road",
+      "oi_mid": "/m/06gfj",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Road",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Street",
+      "oi_mid": "/m/01c8br",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Street",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "City",
+      "oi_mid": "/m/01n32",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "City",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Town",
+      "oi_mid": "/m/0dx1j",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "street",
+      "prompt": "",
+      "display": "Town",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Skyline",
+      "oi_mid": "/m/0204fg",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Skyline",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Bridge (structure)",
+      "oi_mid": "/m/015kr",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "bridge",
+      "display": "Bridge (structure)",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Temple",
+      "oi_mid": "/m/0cx45",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Temple",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Church",
+      "oi_mid": "/m/01wb7",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "architecture",
+      "prompt": "",
+      "display": "Church",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Room",
+      "oi_mid": "/m/06ht1",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Room",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Kitchen",
+      "oi_mid": "/m/0d4wf",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Kitchen",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Bedroom",
+      "oi_mid": "/m/02_58j",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Bedroom",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Living room",
+      "oi_mid": "/m/03f6tq",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Living room",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Restaurant",
+      "oi_mid": "/m/06l8d",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "indoor",
+      "prompt": "",
+      "display": "Restaurant",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Stadium",
+      "oi_mid": "/m/019cfy",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "sports",
+      "prompt": "",
+      "display": "Stadium",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Wedding",
+      "oi_mid": "/m/081hv",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Wedding",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Party",
+      "oi_mid": "/m/05_4_",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Party",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Concert",
+      "oi_mid": "/m/01jddz",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Concert",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Festival",
+      "oi_mid": "/m/0hr5k",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "event",
+      "prompt": "",
+      "display": "Festival",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Crowd",
+      "oi_mid": "/m/03qtwd",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "group",
+      "prompt": "",
+      "display": "Crowd",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Selfie",
+      "oi_mid": "/m/0sgh53y",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "portrait",
+      "prompt": "",
+      "display": "Selfie",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Portrait",
+      "oi_mid": "/m/01dv4h",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "portrait",
+      "prompt": "",
+      "display": "Portrait",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Smile",
+      "oi_mid": "/m/019nj4",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "portrait",
+      "prompt": "",
+      "display": "Smile",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Text",
+      "oi_mid": "/m/07s6nbt",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "document",
+      "prompt": "",
+      "display": "Text",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Document",
+      "oi_mid": "/m/015bv3",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "document",
+      "prompt": "",
+      "display": "Document",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    },
+    {
+      "oi_name": "Landscape",
+      "oi_mid": "/m/025s3q0",
+      "group": "scene",
+      "coco": "",
+      "old_tag": "nature",
+      "prompt": "",
+      "display": "Landscape",
+      "boxable": false,
+      "descendants": [],
+      "ancestors": []
+    }
+  ]
+}

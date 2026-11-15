@@ -23,7 +23,6 @@ services:
       POSTGRES_DB: ${DB_NAME}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/pipeline:/docker-entrypoint-initdb.d
     networks:
       - internal
     logging: *default-logging
@@ -62,6 +61,28 @@ services:
           cpus: "1.0"
           memory: 1G
 
+  redis:
+    image: redis:7-alpine
+    container_name: gallery_redis
+    restart: always
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - internal
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
   backend:
     build:
       context: ./backend
@@ -108,11 +129,18 @@ services:
       SMTP_PASS: ${SMTP_PASS:-}
       SMTP_FROM: ${SMTP_FROM:-}
       AI_SERVICE_URL: http://ai-service:8000
+      REDIS_URL: redis://redis:6379
       AI_TIMEOUT_MS: ${AI_TIMEOUT_MS:-15000}
       AI_CLIP_MIN_SIM: ${AI_CLIP_MIN_SIM:-0.22}
       AI_YOLO_MIN_CONF: ${AI_YOLO_MIN_CONF:-0.4}
       AI_DINO_MIN_SIM: ${AI_DINO_MIN_SIM:-0.35}
       AI_SEARCH_MIN_SCORE: ${AI_SEARCH_MIN_SCORE:-0.5}
+      # Gửi file P2P: STUN mặc định Google; TURN (coturn, profile "turn") —
+      # TURN_URLS vd "turn:gallery.example.com:3478?transport=udp,turn:gallery.example.com:3478?transport=tcp".
+      STUN_URLS: ${STUN_URLS:-stun:stun.l.google.com:19302}
+      TURN_URLS: ${TURN_URLS:-}
+      TURN_SECRET: ${TURN_SECRET:-}
+      TURN_TTL_SECONDS: ${TURN_TTL_SECONDS:-3600}
     networks:
       - internal
     logging: *default-logging
@@ -120,6 +148,8 @@ services:
       postgres:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
@@ -134,8 +164,9 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+      # Gốc repo: frontend dùng packages/shared (npm workspaces)
+      context: .
+      dockerfile: frontend/Dockerfile.prod
       args:
         VITE_API_BASE_URL: ${PUBLIC_API_BASE_URL}
     container_name: gallery_frontend
@@ -205,6 +236,39 @@ services:
       - backend
       - frontend
 
+  # TURN (coturn) — WebRTC đi vòng qua máy chủ khi 2 máy không nối thẳng được
+  # (4G/CGNAT, mạng công ty). Bật: --profile turn + TURN_SECRET/TURN_URLS/TURN_EXTERNAL_IP.
+  # Dùng network host: TURN cần UDP 3478 + dải port relay trên IP công khai (mở firewall).
+  coturn:
+    profiles: ["turn"]
+    image: coturn/coturn:4.6
+    container_name: gallery_coturn
+    restart: always
+    network_mode: host
+    command:
+      - -n
+      - --log-file=stdout
+      - --listening-port=3478
+      - --min-port=49160
+      - --max-port=49200
+      - --fingerprint
+      - --use-auth-secret
+      - --static-auth-secret=${TURN_SECRET}
+      - --realm=${TURN_REALM:-the-next-gallery}
+      - --external-ip=${TURN_EXTERNAL_IP}
+      - --no-cli
+      - --no-tls
+      - --no-dtls
+      # Chặn dùng TURN để chui vào mạng nội bộ của server.
+      - --no-multicast-peers
+      - --denied-peer-ip=0.0.0.0-0.255.255.255
+      - --denied-peer-ip=10.0.0.0-10.255.255.255
+      - --denied-peer-ip=127.0.0.0-127.255.255.255
+      - --denied-peer-ip=169.254.0.0-169.254.255.255
+      - --denied-peer-ip=172.16.0.0-172.31.255.255
+      - --denied-peer-ip=192.168.0.0-192.168.255.255
+    logging: *default-logging
+
 networks:
   internal:
     driver: bridge
@@ -212,5 +276,6 @@ networks:
 volumes:
   postgres_data:
   minio_data:
+  redis_data:
   caddy_data:
   caddy_config:

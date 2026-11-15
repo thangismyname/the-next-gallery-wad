@@ -1,0 +1,235 @@
+{
+  "e2_run": "20261107-033218",
+  "e4_run": "20261107-033725",
+  "precision_target": 0.9,
+  "test_all_classes": {
+    "clip_only": {
+      "macro_f1": 0.6907551552267795,
+      "mAP": 0.8632937061777076,
+      "micro_precision": 0.925494901019796
+    },
+    "yolo_only": {
+      "macro_f1": 0.34603616672221255,
+      "mAP": 0.7334568308688838,
+      "micro_precision": 0.9352678571428571
+    },
+    "or": {
+      "macro_f1": 0.7645080046775955,
+      "mAP": 0.8894352686290297,
+      "micro_precision": 0.9326091329712332
+    },
+    "and": {
+      "macro_f1": 0.739221795724512,
+      "mAP": 0.8837604044014747,
+      "micro_precision": 0.9314315352697096
+    },
+    "group_baseline": {
+      "macro_f1": 0.7430941122791926,
+      "mAP": 0.8814609156848545,
+      "micro_precision": 0.9378484410489366
+    },
+    "per_tag": {
+      "macro_f1": 0.7636636391115225,
+      "mAP": 0.8879528986809355,
+      "micro_precision": 0.9304865938430983
+    },
+    "yolo_only_ft": {
+      "macro_f1": 0.48460214725788436,
+      "mAP": 0.840166970866852,
+      "micro_precision": 0.7873521602703355
+    },
+    "or_ft": {
+      "macro_f1": 0.779788224348499,
+      "mAP": 0.8949492925556298,
+      "micro_precision": 0.9282204282204283
+    },
+    "and_ft": {
+      "macro_f1": 0.7380909515036647,
+      "mAP": 0.8862630612915763,
+      "micro_precision": 0.9256692614391494
+    },
+    "group_baseline_ft": {
+      "macro_f1": 0.6965695637415995,
+      "mAP": 0.8541943757272309,
+      "micro_precision": 0.8378355419639824
+    },
+    "per_tag_ft": {
+      "macro_f1": 0.7832538657787816,
+      "mAP": 0.8913585030752466,
+      "micro_precision": 0.9255721906728618
+    }
+  },
+  "paired_ci95": {
+    "per_tag_minus_clip_macro_f1_lo": 0.06929417123157569,
+    "per_tag_minus_clip_macro_f1_hi": 0.08206223274101222,
+    "per_tag_minus_clip_mAP_lo": 0.019862610205161453,
+    "per_tag_minus_clip_mAP_hi": 0.030242784793415353,
+    "per_tag_minus_yolo_macro_f1_covered_lo": 0.03664806236206257,
+    "per_tag_minus_yolo_macro_f1_covered_hi": 0.05771524762496301,
+    "per_tag_minus_yolo_mAP_covered_lo": 0.006576233866059145,
+    "per_tag_minus_yolo_mAP_covered_hi": 0.02287856762741936,
+    "per_tag_ft_minus_per_tag_macro_f1_lo": 0.013310296410534841,
+    "per_tag_ft_minus_per_tag_macro_f1_hi": 0.026773795881208283,
+    "per_tag_ft_minus_per_tag_mAP_lo": -0.00267900236140374,
+    "per_tag_ft_minus_per_tag_mAP_hi": 0.008126560468358962,
+    "per_tag_ft_minus_per_tag_macro_f1_covered_lo": -0.03034059121974298,
+    "per_tag_ft_minus_per_tag_macro_f1_covered_hi": -0.004985039842666593,
+    "yolo_ft_minus_yolo_macro_f1_covered_lo": -0.05190182389072398,
+    "yolo_ft_minus_yolo_macro_f1_covered_hi": -0.01935326400708127,
+    "yolo_ft_minus_yolo_mAP_covered_lo": -0.037073997722309376,
+    "yolo_ft_minus_yolo_mAP_covered_hi": -0.012737858311749178
+  },
+  "rule_choice": [
+    {
+      "group": "object",
+      "yolo_covered": true,
+      "classes": 81,
+      "clip": 19,
+      "yolo": 16,
+      "or": 34,
+      "and": 12,
+      "target_reached": 80
+    },
+    {
+      "group": "object",
+      "yolo_covered": false,
+      "classes": 47,
+      "clip": 47,
+      "yolo": 0,
+      "or": 0,
+      "and": 0,
+      "target_reached": 47
+    },
+    {
+      "group": "scene",
+      "yolo_covered": false,
+      "classes": 46,
+      "clip": 46,
+      "yolo": 0,
+      "or": 0,
+      "and": 0,
+      "target_reached": 46
+    }
+  ],
+  "e4_ft_run": "20261108-222120",
+  "rule_choice_ft": [
+    {
+      "group": "object",
+      "yolo_covered": true,
+      "classes": 128,
+      "clip": 34,
+      "yolo": 22,
+      "or": 59,
+      "and": 13,
+      "target_reached": 127
+    },
+    {
+      "group": "scene",
+      "yolo_covered": false,
+      "classes": 46,
+      "clip": 46,
+      "yolo": 0,
+      "or": 0,
+      "and": 0,
+      "target_reached": 46
+    }
+  ],
+  "test_by_set": {
+    "yolo_only@all": {
+      "macro_f1": 0.34603616672221255,
+      "mAP": 0.7334568308688838
+    },
+    "yolo_only@yolo_covered": {
+      "macro_f1": 0.7541813890099505,
+      "mAP": 0.8756567998393183
+    },
+    "yolo_only@object": {
+      "macro_f1": 0.4706091867422091,
+      "mAP": 0.6779775588866005
+    },
+    "yolo_only@scene": {
+      "macro_f1": 0.0,
+      "mAP": 0.8875659197085597
+    },
+    "yolo_only@coco": {
+      "macro_f1": 0.7541813890099505,
+      "mAP": 0.8756567998393183
+    },
+    "yolo_only@non_coco": {
+      "macro_f1": 0.0,
+      "mAP": 0.6128959876113418
+    },
+    "per_tag@all": {
+      "macro_f1": 0.7636636391115225,
+      "mAP": 0.8879528986809355
+    },
+    "per_tag@yolo_covered": {
+      "macro_f1": 0.7990124090291307,
+      "mAP": 0.8898059935487259
+    },
+    "per_tag@object": {
+      "macro_f1": 0.7503068627738176,
+      "mAP": 0.8690149405008757
+    },
+    "per_tag@scene": {
+      "macro_f1": 0.8007657956051462,
+      "mAP": 0.9405583380699912
+    },
+    "per_tag@coco": {
+      "macro_f1": 0.7990124090291307,
+      "mAP": 0.8898059935487259
+    },
+    "per_tag@non_coco": {
+      "macro_f1": 0.7336940298335499,
+      "mAP": 0.8863817965104177
+    },
+    "yolo_only_ft@all": {
+      "macro_f1": 0.48460214725788436,
+      "mAP": 0.840166970866852
+    },
+    "yolo_only_ft@yolo_covered": {
+      "macro_f1": 0.7196722482982202,
+      "mAP": 0.8493006858182748
+    },
+    "yolo_only_ft@object": {
+      "macro_f1": 0.6590589202707225,
+      "mAP": 0.823103349283837
+    },
+    "yolo_only_ft@scene": {
+      "macro_f1": 0.0,
+      "mAP": 0.8875659197085597
+    },
+    "yolo_only_ft@coco": {
+      "macro_f1": 0.7196722482982202,
+      "mAP": 0.8493006858182748
+    },
+    "yolo_only_ft@non_coco": {
+      "macro_f1": 0.28530358333238226,
+      "mAP": 0.8324231690602106
+    },
+    "per_tag_ft@all": {
+      "macro_f1": 0.7832538657787816,
+      "mAP": 0.8913585030752466
+    },
+    "per_tag_ft@yolo_covered": {
+      "macro_f1": 0.7823024418616156,
+      "mAP": 0.8772329754510293
+    },
+    "per_tag_ft@object": {
+      "macro_f1": 0.7769495710412903,
+      "mAP": 0.8736465624771387
+    },
+    "per_tag_ft@scene": {
+      "macro_f1": 0.8007657956051462,
+      "mAP": 0.9405583380699912
+    },
+    "per_tag_ft@coco": {
+      "macro_f1": 0.7823024418616156,
+      "mAP": 0.8772329754510293
+    },
+    "per_tag_ft@non_coco": {
+      "macro_f1": 0.7840605077955093,
+      "mAP": 0.903334493887083
+    }
+  }
+}

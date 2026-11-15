@@ -1,52 +1,25 @@
+import { type AutoAlbum, autoAlbumName } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import {
-  Heart,
-  Image,
-  Images,
-  type LucideIcon,
-  Smartphone,
-  Video,
-} from "lucide-react";
-import type { AutoAlbum } from "@/services/albums";
-import { autoAlbumName } from "../autoAlbums";
+import { Image, Images, type LucideIcon, Smartphone, Video } from "lucide-react";
+import { CoverCard } from "./CoverCard";
 
 const TYPE_ICONS: Record<string, LucideIcon> = {
   "type-photos": Image,
   "type-videos": Video,
   "type-screenshots": Smartphone,
-  "type-favorites": Heart,
 };
 
 /** Thẻ album tự động — cùng kiểu với AlbumCard (ô trong lưới). */
 export const AutoAlbumCard: React.FC<{ album: AutoAlbum }> = ({ album }) => {
   const { t, i18n } = useTranslation();
   return (
-    <Link
+    <CoverCard
       to={`/albums/auto/${album.key}`}
-      className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:w-44"
-    >
-      <div className="relative aspect-square overflow-hidden rounded-xl bg-muted/50">
-        {album.coverUrl ? (
-          <img
-            src={album.coverUrl}
-            alt=""
-            loading="lazy"
-            className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-        ) : (
-          <Images className="absolute top-1/2 left-1/2 size-8 -translate-1/2 text-muted-foreground/40" />
-        )}
-      </div>
-      <div className="mt-2 min-w-0 px-0.5">
-        <p className="truncate text-sm font-medium">
-          {autoAlbumName(album, t, i18n.language)}
-        </p>
-        <p className="truncate text-xs text-muted-foreground">
-          {t("albums.photoCount", { n: album.count })}
-        </p>
-      </div>
-    </Link>
+      title={autoAlbumName(album, t, i18n.language)}
+      subtitle={t("albums.photoCount", { n: album.count })}
+      coverUrl={album.coverUrl}
+    />
   );
 };
 

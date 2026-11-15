@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { albumsQueryKey, fetchAlbums } from "@/services/albums";
+import { fetchAlbums } from "@/services/albums";
 import { useLabels } from "@/features/favorites/useLabels";
-import { LANGUAGES } from "@/lib/languages";
+import { LANGUAGES, albumsQueryKey } from "@tng/shared";
 import { buildScopes } from "./searchScope";
 
 /**

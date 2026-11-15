@@ -11,17 +11,15 @@ import { ImageCard } from "./components/ImageCard";
 import { UploadButton } from "./components/UploadButton";
 import { Lightbox } from "./components/Lightbox";
 import { SelectionActionBar } from "./components/SelectionActionBar";
-import { Media } from "../../types";
+import { Media, toMedia, type GallerySort } from "@tng/shared";
 import { useGalleryMedia } from "@/hooks/useGalleryMedia";
-import { useIntroStagger } from "@/hooks/useIntroStagger";
-import { useGridSize } from "@/hooks/useGridSize";
-import { useInfiniteSentinel } from "@/hooks/useInfiniteSentinel";
+import { useIntroStagger } from "@/features/gallery/useIntroStagger";
+import { useGridSize } from "@/features/gallery/useGridSize";
+import { useInfiniteSentinel } from "@/features/gallery/useInfiniteSentinel";
 import { useRangeSelection } from "@/hooks/useRangeSelection";
 import { columnsFor, gridMetrics } from "./gridLayout";
-import { GALLERY_COLUMNS, useGridDensity } from "@/hooks/useGridDensity";
-import { toMedia } from "@/services/media";
-import type { GallerySort } from "@/services/media";
-import { useSelectionStore } from "@/hooks/useSelectionStore";
+import { GALLERY_COLUMNS, useGridDensity } from "@tng/shared";
+import { useSelectionStore } from "@tng/shared";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,6 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
 import { Check, ImagePlus, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RecentMoments } from "@/features/moments/components/RecentMoments";
 import { buildDisplayRows, DisplayRow } from "@/utils/mediaGrouping";
 
 const HEADER_HEIGHT = 44;
@@ -65,7 +64,7 @@ export const GalleryView: React.FC = () => {
     useGalleryActions();
   const openAddToAlbum = useGalleryActionsStore((s) => s.openAddToAlbum);
 
-  // Tải thêm khi cuộn gần đáy (hooks/useInfiniteSentinel).
+  // Tải thêm khi cuộn gần đáy (useInfiniteSentinel.ts).
   const sentinelRef = useInfiniteSentinel({ hasNextPage, isFetchingNextPage, fetchNextPage });
   const sortOptions = [
     { value: "newest", label: t("gallery.sort.newest") },
@@ -80,7 +79,7 @@ export const GalleryView: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // ── Kích thước lưới (hooks/useGridSize) ────────────────────────────────
+  // ── Kích thước lưới (useGridSize.ts) ────────────────────────────────
   // Đo lại vị trí khi banner lỗi / trạng thái tải làm lưới dịch xuống.
   const {
     ref: gridWrapRef,
@@ -252,6 +251,9 @@ export const GalleryView: React.FC = () => {
         </div>
       </div>
 
+      {/* Moments gần đây (ẩn khi chưa có moment nào) */}
+      <RecentMoments />
+
       {/* Thông báo lỗi */}
       {isError && (
         <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-xl text-center text-sm">
@@ -405,12 +407,14 @@ export const GalleryView: React.FC = () => {
           onToggleFavorite={() => handleFavorite([mediaList[selectedIndex].id])}
           onDelete={() => handleDelete([mediaList[selectedIndex].id])}
           onAddToAlbum={() => openAddToAlbum([mediaList[selectedIndex].id])}
+          editable
         />
       )}
 
-      {/* Toolbar chọn ảnh — desktop (mobile dùng BottomBar sẵn có) */}
+      {/* Toolbar chọn ảnh — floating pill, trong view (giống web/desktop).
+          Mobile: nổi trên thanh điều hướng BottomBar; desktop: bottom-6. */}
       {isSelecting && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden sm:block">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 sm:bottom-6">
           <SelectionActionBar
             onShare={handleShare}
             onDownload={handleDownload}

@@ -1,5 +1,12 @@
+import { logger } from "../lib/logger.js";
+
+/** Lỗi có status (4xx → message trả cho client) + mã lỗi `code` (null → "BAD_REQUEST"). */
+export function httpError(status, code, message) {
+  return Object.assign(new Error(message), { status, ...(code ? { code } : {}) });
+}
+
 export function errorHandler(err, req, res, _next) {
-  console.error(err);
+  logger.error({ err, reqId: req?.id }, "Request error");
 
   // Lỗi tự ném (httpError, multer…) mang status 4xx → trả message cho client.
   // Lỗi 5xx / không rõ (Postgres, MinIO, ai-service) → chỉ trả câu chung,

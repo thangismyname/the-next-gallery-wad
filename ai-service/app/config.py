@@ -47,15 +47,14 @@ class Settings(BaseSettings):
     dino_model: str = "models/dinov3-vits16-pretrain-lvd1689m"
     dino_device: str = "auto"
 
-    # Gắn tag nội dung (classification) từ vector CLIP: đọc model .npz do
-    # bench/cls_eval.py train. Path tương đối tính từ ai-service/. Config chỉ
-    # nhận model dùng feature CLIP ("lp_clip" | "zs_clip"); thiếu file →
-    # zero-shot cho nhóm tag đó.
-    tag_models_dir: str = "bench/runs/cls"
+    # Gắn tag nội dung (classification) từ vector CLIP. Thư mục model .npz của
+    # app (path tương đối tính từ ai-service/), commit trong repo:
+    #   coco-<config>.npz · places6-<config>.npz  17 tag danh mục (bench/cls_eval.py)
+    #   oi-<config>.npz                           174 nhãn chi tiết (experiments export_tags)
+    # Config chỉ nhận model dùng feature CLIP ("lp_clip" | "zs_clip"); thiếu file
+    # → zero-shot cho nhóm tag đó / bỏ nhãn chi tiết.
+    tag_models_dir: str = "app/tagging/probes"
     tag_config: str = "lp_clip"
-
-    # CORS — FE web gọi trực tiếp API (dev).
-    cors_origins: list[str] = ["http://localhost:5173"]
 
     model_config = SettingsConfigDict(
         env_prefix="AI_",

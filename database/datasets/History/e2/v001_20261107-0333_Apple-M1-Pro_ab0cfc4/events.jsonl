@@ -1,0 +1,59 @@
+{"t": "2026-11-06T20:32:19Z", "type": "log", "message": "run e2/20261107-033218 → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e2/20261107-033218"}
+{"t": "2026-11-06T20:32:19Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-06T20:32:19Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-06T20:32:19Z", "type": "log", "message": "  val 3000 ảnh · test 5000 ảnh · 174 lớp"}
+{"t": "2026-11-06T20:32:19Z", "type": "log", "message": "── CLIP image features"}
+{"t": "2026-11-06T20:32:19Z", "type": "stage", "stage": "CLIP image features"}
+{"t": "2026-11-06T20:32:19Z", "type": "log", "message": "  ! cache clip@ViT-B-32@laion2b_s34b_b79k-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-06T20:32:26Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 256, "total": 3000}
+{"t": "2026-11-06T20:32:28Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 512, "total": 3000}
+{"t": "2026-11-06T20:32:31Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 768, "total": 3000}
+{"t": "2026-11-06T20:32:33Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 1024, "total": 3000}
+{"t": "2026-11-06T20:32:36Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 1280, "total": 3000}
+{"t": "2026-11-06T20:32:38Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 1536, "total": 3000}
+{"t": "2026-11-06T20:32:41Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 1792, "total": 3000}
+{"t": "2026-11-06T20:32:43Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 2048, "total": 3000}
+{"t": "2026-11-06T20:32:46Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 2304, "total": 3000}
+{"t": "2026-11-06T20:32:48Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 2560, "total": 3000}
+{"t": "2026-11-06T20:32:51Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 2816, "total": 3000}
+{"t": "2026-11-06T20:32:53Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-validation", "done": 3000, "total": 3000}
+{"t": "2026-11-06T20:32:53Z", "type": "log", "message": "  ! cache clip@ViT-B-32@laion2b_s34b_b79k-backend.npz thiếu ảnh — tính lại"}
+{"t": "2026-11-06T20:32:55Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 256, "total": 5000}
+{"t": "2026-11-06T20:32:58Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 512, "total": 5000}
+{"t": "2026-11-06T20:33:01Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 768, "total": 5000}
+{"t": "2026-11-06T20:33:03Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 1024, "total": 5000}
+{"t": "2026-11-06T20:33:06Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 1280, "total": 5000}
+{"t": "2026-11-06T20:33:08Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 1536, "total": 5000}
+{"t": "2026-11-06T20:33:11Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 1792, "total": 5000}
+{"t": "2026-11-06T20:33:13Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 2048, "total": 5000}
+{"t": "2026-11-06T20:33:16Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 2304, "total": 5000}
+{"t": "2026-11-06T20:33:18Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 2560, "total": 5000}
+{"t": "2026-11-06T20:33:21Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 2816, "total": 5000}
+{"t": "2026-11-06T20:33:23Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 3072, "total": 5000}
+{"t": "2026-11-06T20:33:26Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 3328, "total": 5000}
+{"t": "2026-11-06T20:33:28Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 3584, "total": 5000}
+{"t": "2026-11-06T20:33:31Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 3840, "total": 5000}
+{"t": "2026-11-06T20:33:33Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 4096, "total": 5000}
+{"t": "2026-11-06T20:33:36Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 4352, "total": 5000}
+{"t": "2026-11-06T20:33:38Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 4608, "total": 5000}
+{"t": "2026-11-06T20:33:41Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 4864, "total": 5000}
+{"t": "2026-11-06T20:33:42Z", "type": "progress", "stage": "CLIP image features", "label": "CLIP oi-test", "done": 5000, "total": 5000}
+{"t": "2026-11-06T20:33:42Z", "type": "log", "message": "── chọn template trên val"}
+{"t": "2026-11-06T20:33:42Z", "type": "stage", "stage": "chọn template trên val"}
+{"t": "2026-11-06T20:33:43Z", "type": "log", "message": "  'a photo of a {}.': val mAP 0.8778"}
+{"t": "2026-11-06T20:33:43Z", "type": "log", "message": "  'a photo of the {}.': val mAP 0.8750"}
+{"t": "2026-11-06T20:33:43Z", "type": "log", "message": "  'a photo containing a {}.': val mAP 0.8869"}
+{"t": "2026-11-06T20:33:44Z", "type": "log", "message": "  'a close-up photo of a {}.': val mAP 0.8478"}
+{"t": "2026-11-06T20:33:44Z", "type": "log", "message": "  'a picture of a {}.': val mAP 0.8751"}
+{"t": "2026-11-06T20:33:44Z", "type": "log", "message": "  'there is a {} in the photo.': val mAP 0.8755"}
+{"t": "2026-11-06T20:33:45Z", "type": "log", "message": "  '{}': val mAP 0.8719"}
+{"t": "2026-11-06T20:33:47Z", "type": "log", "message": "  'ensemble': val mAP 0.8806"}
+{"t": "2026-11-06T20:33:47Z", "type": "log", "message": "  → chọn 'a photo containing a {}.'"}
+{"t": "2026-11-06T20:33:47Z", "type": "log", "message": "── ngưỡng + calibration trên val"}
+{"t": "2026-11-06T20:33:47Z", "type": "stage", "stage": "ngưỡng + calibration trên val"}
+{"t": "2026-11-06T20:33:47Z", "type": "log", "message": "── đánh giá test"}
+{"t": "2026-11-06T20:33:47Z", "type": "stage", "stage": "đánh giá test"}
+{"t": "2026-11-06T20:33:47Z", "type": "log", "message": "── bootstrap 200×"}
+{"t": "2026-11-06T20:33:47Z", "type": "stage", "stage": "bootstrap 200×"}
+{"t": "2026-11-06T20:33:50Z", "type": "log", "message": "  test: mAP 0.8841 · macro-F1 0.8257 · ECE 0.1479 → 0.0309"}
+{"t": "2026-11-06T20:33:50Z", "type": "log", "message": "xong sau 92s → /Users/thang_ismyname/Documents/Study/Thesis/Datasets/Results/oi/e2/20261107-033218"}

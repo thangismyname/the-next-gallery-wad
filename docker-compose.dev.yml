@@ -19,13 +19,29 @@ services:
       - "5433:5432"   # host port 5433 để không đụng Postgres/MariaDB cũ (5432/3306)
     volumes:
       - next_gallery_pgdata:/var/lib/postgresql/data
-      - ./database/pipeline:/docker-entrypoint-initdb.d
     networks:
       - internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: next_gallery_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - next_gallery_redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
       retries: 5
 
   minio:
@@ -84,6 +100,9 @@ services:
       TRUSTED_ORIGINS: "http://localhost:5173"
       # Semantic search: backend gọi ai-service để embed ảnh/text
       AI_SERVICE_URL: "http://ai-service:8000"
+      REDIS_URL: "redis://redis:6379"
+      TURN_URLS: ${TURN_URLS:-}
+      TURN_SECRET: ${TURN_SECRET:-}
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -93,6 +112,8 @@ services:
       postgres:
         condition: service_healthy
       minio:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
@@ -104,8 +125,9 @@ services:
   frontend:
     profiles: ["full"]
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      # Gốc repo: frontend dùng packages/shared (npm workspaces)
+      context: .
+      dockerfile: frontend/Dockerfile.dev
     container_name: gallery_frontend
     restart: unless-stopped
     ports:
@@ -113,14 +135,16 @@ services:
     environment:
       VITE_API_BASE_URL: "http://localhost:3000/api"
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/repo/frontend
+      - ./packages/shared:/repo/packages/shared
+      - /repo/node_modules
+      - /repo/frontend/node_modules
     networks:
       - internal
     depends_on:
       backend:
         condition: service_started   # dev ưu tiên tốc độ, không cần chờ healthy
-    command: npm run dev -- --host 0.0.0.0
+    command: npm run dev --workspace=frontend -- --host 0.0.0.0
 
   ai-service:
     profiles: ["full"]
@@ -145,11 +169,42 @@ services:
       AI_OBJECT_PROVIDER: ${AI_OBJECT_PROVIDER:-yolo}
       AI_YOLO_WEIGHTS: /opt/yolo-cache/${AI_YOLO_MODEL:-yolo26n.pt}
       AI_YOLO_CONF: ${AI_YOLO_CONF:-0.25}
+      # Similar photos (DINOv3) — weights are gated (not baked): download them into
+      # ai-service/models/ (scripts/download_dino_weight.py); the volume below
+      # mounts that folder at /app/models. Without this the service runs "stub".
+      AI_SIMILARITY_PROVIDER: ${AI_SIMILARITY_PROVIDER:-stub}
+      AI_DINO_MODEL: ${AI_DINO_MODEL:-models/dinov3-vits16-pretrain-lvd1689m}
+      AI_DINO_DEVICE: ${AI_DINO_DEVICE:-auto}
     volumes:
       - ./ai-service:/app
     networks:
       - internal
     depends_on: []
+
+  # TURN thử ở máy dev (tuỳ chọn): --profile turn, đặt TURN_SECRET và
+  # TURN_URLS=turn:<IP LAN của máy>:3478 trong .env.
+  coturn:
+    profiles: ["turn"]
+    image: coturn/coturn:4.6
+    container_name: gallery_coturn
+    restart: unless-stopped
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+      - "49160-49200:49160-49200/udp"
+    command:
+      - -n
+      - --log-file=stdout
+      - --listening-port=3478
+      - --min-port=49160
+      - --max-port=49200
+      - --fingerprint
+      - --use-auth-secret
+      - --static-auth-secret=${TURN_SECRET:-dev-turn-secret}
+      - --realm=the-next-gallery
+      - --no-cli
+      - --no-tls
+      - --no-dtls
 
 networks:
   internal:
@@ -158,3 +213,4 @@ networks:
 volumes:
   next_gallery_pgdata:
   next_gallery_minio_data:
+  next_gallery_redis_data:

@@ -40,7 +40,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={busy}>
-            {t("share.cancel")}
+            {t("common.cancel")}
           </Button>
           <Button variant="destructive" onClick={onConfirm} disabled={busy}>
             {busy ? (

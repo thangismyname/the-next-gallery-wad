@@ -1,7 +1,8 @@
+import { mediaLabelsQueryKey } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Bookmark, Settings2 } from "lucide-react";
-import { fetchMediaLabels, mediaLabelsQueryKey } from "@/services/labels";
+import { fetchMediaLabels } from "@/services/labels";
 import { cn } from "@/lib/utils";
 import { LABEL_DOT } from "../labelColors";
 import { useLabelActions, useLabels } from "../useLabels";
@@ -27,16 +28,16 @@ export function MediaLabelsSection({ mediaId, active }: { mediaId: string; activ
   if (!data?.editable) return null;
 
   return (
-    <div className="border-t border-white/10 pt-3">
+    <div className="border-t border-foreground/10 pt-3">
       <div className="mb-2 flex items-center gap-1.5">
-        <Bookmark size={13} className="text-white/40" />
-        <p className="flex-1 text-[11px] tracking-wide text-white/40 uppercase">
+        <Bookmark size={13} className="text-foreground/40" />
+        <p className="flex-1 text-[11px] tracking-wide text-foreground/40 uppercase">
           {t("favorites.labels.title")}
         </p>
         <button
           type="button"
           onClick={() => openManager(true)}
-          className="rounded p-0.5 text-white/40 transition-colors hover:text-white"
+          className="rounded p-0.5 text-foreground/40 transition-colors hover:text-foreground"
           aria-label={t("favorites.labels.manage")}
           title={t("favorites.labels.manage")}
         >
@@ -55,8 +56,8 @@ export function MediaLabelsSection({ mediaId, active }: { mediaId: string; activ
               className={cn(
                 "inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors active:scale-95",
                 on
-                  ? "border-white/30 bg-white/15 text-white"
-                  : "border-white/10 text-white/50 hover:border-white/25 hover:text-white/80",
+                  ? "border-foreground/30 bg-foreground/15 text-foreground"
+                  : "border-foreground/10 text-foreground/50 hover:border-foreground/25 hover:text-foreground/80",
               )}
             >
               <span

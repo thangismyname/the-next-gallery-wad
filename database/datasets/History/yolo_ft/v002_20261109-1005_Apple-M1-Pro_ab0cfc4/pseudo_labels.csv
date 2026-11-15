@@ -1,0 +1,82 @@
+coco,class,threshold,val_precision,val_recall,val_tp,reached,human_boxes,pseudo_boxes,pseudo_share
+person,Person,0.38155,0.90034,0.57128,1599,True,24082,2764,0.10296
+bicycle,Bicycle,0.42632,0.90323,0.56,28,True,195,29,0.12946
+car,Car,0.4738,0.9,0.45,189,True,1704,271,0.13722
+motorcycle,Motorcycle,0.74415,0.90476,0.44186,19,True,183,7,0.03684
+airplane,Fixed-wing aircraft,0.90664,0.90909,0.27778,10,True,156,0,0.0
+bus,Bus,0.83734,0.91667,0.70968,22,True,129,3,0.02273
+train,Train,0.70327,0.94118,0.57143,16,True,96,2,0.02041
+truck,Truck,inf,,,0,False,139,0,0.0
+boat,Boat,0.47773,0.92593,0.45455,25,True,598,21,0.03393
+traffic light,Traffic light,0.66266,0.90625,0.44615,29,True,265,21,0.07343
+fire hydrant,Fire hydrant,0.89599,0.93333,0.93333,14,True,58,0,0.0
+stop sign,Stop sign,0.72546,0.92857,1.0,13,True,93,3,0.03125
+parking meter,Parking meter,inf,,,0,False,48,0,0.0
+bench,Bench,inf,,,0,False,96,0,0.0
+bird,Bird,0.44997,0.90385,0.33813,47,True,1010,31,0.02978
+cat,Cat,0.38267,0.90625,0.93548,29,True,116,8,0.06452
+dog,Dog,0.51449,0.90909,0.66667,30,True,172,14,0.07527
+horse,Horse,0.26732,0.9,0.76596,36,True,130,39,0.23077
+sheep,Sheep,0.67001,0.9,0.54545,36,True,252,8,0.03077
+cow,Cattle,0.49485,0.91429,0.64,32,True,331,16,0.04611
+elephant,Elephant,0.36328,0.92105,0.83333,35,True,181,18,0.09045
+bear,Bear,0.89592,0.90909,0.18182,10,True,238,0,0.0
+zebra,Zebra,0.25032,0.91111,0.93182,41,True,188,2,0.01053
+giraffe,Giraffe,0.69502,0.90909,0.8,20,True,150,2,0.01316
+backpack,Backpack,inf,,,0,False,69,0,0.0
+umbrella,Umbrella,inf,,,0,False,168,0,0.0
+handbag,Handbag,inf,,,0,False,74,0,0.0
+tie,Tie,0.68517,0.92,0.76667,23,True,94,98,0.51042
+suitcase,Suitcase,0.5544,0.90909,0.60606,20,True,100,29,0.22481
+frisbee,Flying disc,inf,,,0,False,63,0,0.0
+skis,Ski,0.54395,0.90909,0.13514,10,True,267,0,0.0
+snowboard,Snowboard,inf,,,0,False,140,0,0.0
+sports ball,Ball (Object),0.54591,0.94118,0.41026,16,True,158,36,0.18557
+kite,Kite,0.78228,0.91667,0.37931,11,True,489,4,0.00811
+baseball bat,Baseball bat,inf,,,0,False,112,0,0.0
+baseball glove,Baseball glove,0.52409,0.90476,0.51351,19,True,171,20,0.10471
+skateboard,Skateboard,0.27226,0.92308,0.70588,24,True,198,19,0.08756
+surfboard,Surfboard,inf,,,0,False,170,0,0.0
+tennis racket,Tennis racket,0.5167,0.91304,0.72414,21,True,128,2,0.01538
+bottle,Bottle,0.87785,0.92308,0.10084,12,True,680,3,0.00439
+wine glass,Wine glass,inf,,,0,False,357,0,0.0
+cup,Mug,0.56498,0.90196,0.62162,46,True,113,348,0.75488
+cup,Coffee cup,0.56498,0.90196,0.62162,46,True,203,109,0.34936
+fork,Fork,inf,,,0,False,81,0,0.0
+knife,Knife,inf,,,0,False,53,0,0.0
+spoon,Spoon,inf,,,0,False,55,0,0.0
+bowl,Bowl,inf,,,0,False,103,0,0.0
+banana,Banana,inf,,,0,False,216,0,0.0
+apple,Apple,0.59618,0.90476,0.55882,19,True,282,9,0.03093
+sandwich,Sandwich,0.25091,0.90566,0.7619,48,True,199,84,0.29682
+orange,Orange (fruit),0.60167,0.91667,0.75862,22,True,444,16,0.03478
+broccoli,Broccoli,0.65181,0.92308,0.35294,12,True,183,16,0.0804
+carrot,Carrot,inf,,,0,False,211,0,0.0
+hot dog,Hot dog,inf,,,0,False,117,0,0.0
+pizza,Pizza,0.52904,0.91667,0.95652,22,True,154,14,0.08333
+donut,Doughnut,inf,,,0,False,199,0,0.0
+cake,Cake,0.77321,0.90909,0.40816,20,True,135,5,0.03571
+chair,Chair,0.64497,0.90244,0.42775,74,True,1467,231,0.13604
+couch,Couch,0.32536,0.9,0.6,36,True,164,56,0.25455
+potted plant,Houseplant,0.49201,0.90625,0.36709,29,True,249,140,0.3599
+bed,Bed,0.5425,0.91892,0.52308,34,True,225,21,0.08537
+dining table,Kitchen & dining room table,inf,,,0,False,97,0,0.0
+toilet,Toilet,0.84164,0.90909,0.38462,10,True,114,0,0.0
+tv,Television,inf,,,0,False,71,0,0.0
+laptop,Laptop,inf,,,0,False,104,0,0.0
+mouse,Computer mouse,0.39623,0.9,0.75,18,True,84,23,0.21495
+remote,Remote control,inf,,,0,False,57,0,0.0
+keyboard,Computer keyboard,0.83357,0.91667,0.40741,11,True,117,4,0.03306
+cell phone,Mobile phone,inf,,,0,False,66,0,0.0
+microwave,Microwave oven,0.68144,0.90909,0.33333,10,True,78,8,0.09302
+oven,Oven,inf,,,0,False,105,0,0.0
+toaster,Toaster,inf,,,0,False,17,0,0.0
+sink,Sink,0.54202,0.92857,0.43333,13,True,69,0,0.0
+refrigerator,Refrigerator,0.76232,0.9375,0.78947,15,True,56,11,0.16418
+book,Book,inf,,,0,False,263,0,0.0
+clock,Clock,inf,,,0,False,42,0,0.0
+vase,Vase,0.65747,0.92,0.53488,23,True,43,10,0.18868
+scissors,Scissors,inf,,,0,False,111,0,0.0
+teddy bear,Teddy bear,0.6351,0.90909,0.66667,20,True,174,15,0.07937
+hair drier,Hair dryer,inf,,,0,False,13,0,0.0
+toothbrush,Toothbrush,inf,,,0,False,55,0,0.0

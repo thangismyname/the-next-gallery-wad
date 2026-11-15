@@ -1,4 +1,5 @@
 import { dbPool } from "../../config/db.js";
+import { parseAvatarUrl } from "./profile.avatar.js";
 
 /**
  * Số liệu hiển thị trên trang hồ sơ của chính user: ảnh/video (không tính
@@ -60,18 +61,20 @@ export async function getStorageBreakdown(userId) {
 
 /**
  * Ảnh đại diện chọn từ thư viện: user.image = URL ổn định
- * /api/profile/avatar/:mediaId (không phải URL ký — URL ký hết hạn sau 1–2
- * ngày). Chỉ phục vụ khi ảnh đó ĐANG là avatar của chính chủ ảnh.
+ * /api/profile/avatar/:mediaId[?c=x,y,w,h] (không phải URL ký — URL ký hết hạn sau
+ * 1–2 ngày; `c` = vùng crop, xem profile.avatar.js). Chỉ phục vụ khi ảnh đó ĐANG là
+ * avatar của chính chủ ảnh → `{ crop }` (null = cả ảnh), không phải → null.
  */
-export async function isCurrentAvatar(mediaId) {
+export async function getCurrentAvatar(mediaId) {
   const result = await dbPool.query(
-    `SELECT 1
+    `SELECT u.image
      FROM media m
      JOIN "user" u ON u.id = m.user_id
      WHERE m.id = $1
        AND m.deleted_at IS NULL
-       AND u.image LIKE '%/api/profile/avatar/' || m.id::text`,
+       AND u.image LIKE '%/api/profile/avatar/' || m.id::text || '%'`,
     [mediaId],
   );
-  return result.rowCount > 0;
+  const parsed = parseAvatarUrl(result.rows[0]?.image);
+  return parsed && parsed.mediaId === String(mediaId).toLowerCase() ? { crop: parsed.crop } : null;
 }

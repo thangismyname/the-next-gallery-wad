@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
-import { admin } from "better-auth/plugins";
+import { expo } from "@better-auth/expo";
+import { admin, bearer } from "better-auth/plugins";
 import { sendResetPasswordEmail } from "./mail.js";
 import { dbPool } from "../config/db.js";
 
@@ -33,11 +34,22 @@ const socialProviders = Object.fromEntries(
     ]),
 );
 
-// Origin được phép gọi auth (CSRF) — TRUSTED_ORIGINS, mặc định = CORS_ORIGINS.
-export const trustedOrigins = (process.env.TRUSTED_ORIGINS || process.env.CORS_ORIGINS || "")
-  .split(",")
-  .map((o) => o.trim())
-  .filter(Boolean);
+// Scheme deep link của app mobile (apps/mobile/app.json → "scheme"). Plugin expo()
+// gửi origin "tng://" cho request từ app; OAuth quay về app qua tng://... — phải trust.
+// Trình duyệt không thể gửi Origin dạng này nên không mở CSRF cho web.
+const MOBILE_APP_ORIGIN = `${process.env.MOBILE_APP_SCHEME || "tng"}://`;
+
+// Origin được phép gọi auth (CSRF) — TRUSTED_ORIGINS, mặc định = CORS_ORIGINS, + app mobile.
+export const trustedOrigins = [
+  ...(process.env.TRUSTED_ORIGINS || process.env.CORS_ORIGINS || "")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+  MOBILE_APP_ORIGIN,
+  // Expo Go (dev) gửi origin exp://<ip>:8081 — plugin expo() chỉ tự trust khi
+  // NODE_ENV === "development", mà dev server của mình không đặt NODE_ENV.
+  ...(process.env.NODE_ENV === "production" ? [] : ["exp://"]),
+];
 
 export const auth = betterAuth({
   database: dbPool,
@@ -55,5 +67,6 @@ export const auth = betterAuth({
   secret,
   baseURL: requireEnv("BETTER_AUTH_URL"),
   trustedOrigins,
-  plugins: [admin()],
+  // expo(): app mobile (cookie lưu trong SecureStore, OAuth qua deep link).
+  plugins: [admin(), bearer(), expo()],
 });

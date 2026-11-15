@@ -21,37 +21,47 @@ Published reference numbers live in `published.py` (with their source).
 ```fish
 cd ai-service
 uv sync --group bench                                   # exact versions from uv.lock
-set -x TNG_DATASETS ~/Documents/Study/Thesis/Datasets   # bash/zsh: export TNG_DATASETS=...
 ```
 
-Datasets live outside the repo under `$TNG_DATASETS` (default `~/datasets`;
-every script also accepts `--data-root`). Every command below runs from
+Datasets live in the repo at `database/datasets/` (`Data/` and `Classes/` are
+git-ignored; `Results/` and `History/` are committed). Override with `TNG_DATASETS`
+(env or `.env`; relative paths resolve from the repo root); every script also
+accepts `--data-root`. Every command below runs from
 `ai-service/` through `uv run`. Ultralytics auto-install is disabled
 (`YOLO_AUTOINSTALL=False`) so runs never change the environment.
 
 ## Datasets
 
+Layout (shared with `experiments/` and `pipeline/`, defined once in `bench/common.py`):
+**Data/** = images (+ files a model reads next to them), **Classes/** = class lists and
+annotations, **Results/** = current outputs + feature caches, **History/** = versioned
+snapshots of past measurements (`python -m experiments archive bench`).
+
 ```text
 $TNG_DATASETS/
-├── coco/                      # YOLO — COCO val2017 (already prepared)
-│   ├── images/val2017/        # 5000 images
-│   ├── labels/val2017/        # YOLO labels
-│   ├── annotations/instances_val2017.json
-│   └── coco-val2017.yaml      # created by `python -m bench.download_coco`
-├── revisitop/                 # DINOv3 — Revisited Oxford/Paris
-│   ├── roxford5k/{jpg/*.jpg, gnd_roxford5k.pkl}   ~1.8 GB · 4993 db images, 70 queries
-│   └── rparis6k/{jpg/*.jpg, gnd_rparis6k.pkl}     ~2.4 GB · 6322 db images, 70 queries
-├── places365/                 # Classification T1 — Places365 val (small 256 px)
-│   ├── categories_places365.txt, places365_val.txt
-│   └── val_256/*.jpg          # 36,500 images, ~0.5 GB
-├── gallery-gt/                # Classification — YOUR photos + labels.json (pre-label → review)
-├── cls_cache/                 # feature cache written by cls_eval / cls_prelabel (safe to delete)
-└── clip_benchmark/            # CLIP — CLIP_benchmark webdatasets (HuggingFace)
-    ├── mscoco_captions/test/*.tar          ~840 MB  (5k images, 25k captions)
-    ├── flickr30k/test/*.tar                ~146 MB  (1k images, 5k captions)
-    ├── cifar10/{test/*.tar, classnames.txt, zeroshot_classification_templates.txt}    ~56 MB
-    ├── cifar100/{...same...}                                                         ~56 MB
-    └── imagenetv2/{...same...}            ~1.3 GB  (optional)
+├── Data/
+│   ├── coco/                      # YOLO — COCO val2017
+│   │   ├── images/val2017/        # 5000 images
+│   │   ├── labels/val2017/        # YOLO labels (Ultralytics needs them next to images/)
+│   │   └── coco-val2017.yaml      # written by `python -m bench.download_coco`
+│   ├── revisitop/{roxford5k,rparis6k}/jpg/*.jpg   # DINOv3 — ~1.8 + 2.4 GB
+│   ├── places365/val_256/*.jpg    # Classification T1 — 36,500 images, ~0.5 GB
+│   ├── cls_places6_yolo/          # ImageFolder for the YOLO26n-cls fine-tune (symlinks → places365)
+│   ├── gallery-gt/images/         # YOUR photos (classification ground truth)
+│   └── clip_benchmark/            # CLIP — CLIP_benchmark webdatasets (HuggingFace)
+│       ├── mscoco_captions/test/*.tar          ~840 MB  (5k images, 25k captions)
+│       ├── flickr30k/test/*.tar                ~146 MB  (1k images, 5k captions)
+│       ├── cifar10/{test/*.tar, classnames.txt, zeroshot_classification_templates.txt}  ~56 MB
+│       ├── cifar100/{...same...}                                                       ~56 MB
+│       └── imagenetv2/{...same...}            ~1.3 GB  (optional)
+├── Classes/
+│   ├── coco/annotations/instances_val2017.json   (+ captions_val2017.json for search_eval)
+│   ├── revisitop/{roxford5k/gnd_roxford5k.pkl, rparis6k/gnd_rparis6k.pkl}   # 70 queries each
+│   ├── places365/categories_places365.txt, places365_val.txt
+│   └── gallery-gt/labels.json     # pre-label → review
+└── Results/
+    ├── pipeline/<dataset>/        # `python -m pipeline run`
+    └── cache/cls/                 # feature cache written by cls_eval / cls_prelabel (safe to delete)
 ```
 
 COCO for YOLO: `coco2017labels.zip` (Ultralytics assets) + `val2017.zip`
@@ -61,7 +71,7 @@ to verify and write the yaml.
 CLIP datasets (only the `test` split is needed):
 
 ```fish
-set D $TNG_DATASETS/clip_benchmark
+set D $TNG_DATASETS/Data/clip_benchmark
 uv run hf download clip-benchmark/wds_mscoco_captions --repo-type dataset --include "test/*" --local-dir $D/mscoco_captions
 uv run hf download clip-benchmark/wds_flickr30k       --repo-type dataset --include "test/*" --local-dir $D/flickr30k
 for c in cifar10 cifar100
@@ -214,15 +224,16 @@ official transformers reference (atol 1e-3). Only ViT-S/16 is mapped so far.
 **Dataset** (official sources, same as the `revisitop` toolkit):
 
 ```fish
-set R $TNG_DATASETS/revisitop
-mkdir -p $R/roxford5k/jpg $R/rparis6k/jpg
+set R $TNG_DATASETS/Data/revisitop
+set G $TNG_DATASETS/Classes/revisitop
+mkdir -p $R/roxford5k/jpg $R/rparis6k/jpg $G/roxford5k $G/rparis6k
 # Oxford: 1 archive, flat jpgs
 curl -L https://www.robots.ox.ac.uk/~vgg/data/oxbuildings/oxbuild_images-v1.tgz | tar -xz -C $R/roxford5k/jpg
-curl -L -o $R/roxford5k/gnd_roxford5k.pkl http://cmp.felk.cvut.cz/revisitop/data/datasets/roxford5k/gnd_roxford5k.pkl
+curl -L -o $G/roxford5k/gnd_roxford5k.pkl http://cmp.felk.cvut.cz/revisitop/data/datasets/roxford5k/gnd_roxford5k.pkl
 # Paris: 2 archives with subfolders (flattened by the check below)
 curl -L https://www.robots.ox.ac.uk/~vgg/data/parisbuildings/paris_1-v1.tgz | tar -xz -C $R/rparis6k/jpg
 curl -L https://www.robots.ox.ac.uk/~vgg/data/parisbuildings/paris_2-v1.tgz | tar -xz -C $R/rparis6k/jpg
-curl -L -o $R/rparis6k/gnd_rparis6k.pkl http://cmp.felk.cvut.cz/revisitop/data/datasets/rparis6k/gnd_rparis6k.pkl
+curl -L -o $G/rparis6k/gnd_rparis6k.pkl http://cmp.felk.cvut.cz/revisitop/data/datasets/rparis6k/gnd_rparis6k.pkl
 uv run python -m bench.revisitop          # flatten Paris + check 4993 / 6322 images, 70 queries each
 ```
 
@@ -258,7 +269,7 @@ forward, i.e. per-upload cost), params, weights SHA-256, library versions.
 
 ## 6. Classification — 17 gallery tags (Thesis Form §2, §6)
 
-Taxonomy in `cls_taxonomy.py` (edit tags / prompts / rules there): 7 **object**
+Taxonomy in `app/tagging/taxonomy.py` (shared with the app — edit tags / prompts / rules there): 7 **object**
 tags (labels derived from COCO val2017 annotations), 6 **scene** tags (Places365
 val categories mapped to tags), 4 **attribute** tags (night, sunset, event,
 document — ground truth only from your own reviewed photos).
@@ -282,12 +293,13 @@ thresholds are picked on val, results reported on test with a **95% bootstrap CI
 **Data (Places365 val, ~0.5 GB):** official URLs (same as `torchvision.datasets.Places365`):
 
 ```fish
-set P $TNG_DATASETS/places365
+set P $TNG_DATASETS/Data/places365
+set PC $TNG_DATASETS/Classes/places365
 mkdir -p $P
 curl -L -o $P/filelist.tar http://data.csail.mit.edu/places/places365/filelist_places365-standard.tar
 curl -L -C - -o $P/val_256.tar http://data.csail.mit.edu/places/places365/val_256.tar
 md5 $P/filelist.tar $P/val_256.tar   # 35a0585fee1fa656440f3ab298f8479c · e27b17d8d44f4af9a78502beb927f808
-tar -xf $P/filelist.tar -C $P        # → categories_places365.txt, places365_val.txt, …
+mkdir -p $PC; tar -xf $P/filelist.tar -C $PC   # → categories_places365.txt, places365_val.txt, …
 tar -xf $P/val_256.tar -C $P         # → val_256/
 rm $P/filelist.tar $P/val_256.tar
 ```
@@ -306,14 +318,15 @@ uv run python -m bench.report
 ```
 
 The first run extracts CLIP / DINOv3 / YOLO features once (cached under
-`$TNG_DATASETS/cls_cache/`); later runs only train the probes (seconds). Trained
-models go to `bench/runs/cls/<dataset>-<config>.npz` (plain arrays + JSON).
+`$TNG_DATASETS/Results/cache/cls/`); later runs only train the probes (seconds). Trained
+models go to `bench/runs/cls/<dataset>-<config>.npz` (plain arrays + JSON); the app reads
+copies in `app/tagging/probes/` — copy the CLIP configs there after retraining.
 
 **Ground truth from your own photos (pre-label → review):**
 
 ```fish
-mkdir -p $TNG_DATASETS/gallery-gt/images      # copy photos here (JPEG/PNG/WebP; convert HEIC first)
-uv run python -m bench.cls_prelabel           # → gallery-gt/labels.json (status = auto)
+mkdir -p $TNG_DATASETS/Data/gallery-gt/images      # copy photos here (JPEG/PNG/WebP; convert HEIC first)
+uv run python -m bench.cls_prelabel           # → Classes/gallery-gt/labels.json (status = auto)
 # … review labels in the UI (sets status = reviewed) …
 uv run python -m bench.cls_eval --datasets gallery
 ```
@@ -344,6 +357,7 @@ Needs the COCO feature cache + probes from section 6 (`bench.cls_eval --datasets
 ```fish
 uv run python -m bench.search_eval                               # vi + en + ja, all modes
 uv run python -m bench.search_eval --langs vi en --types count pair
+uv run python -m bench.search_eval --labels                      # + 174 detailed labels (app/tagging/probes/oi-lp_clip.npz), như app
 ```
 
 **Multilingual CLIP** (OpenCLIP `xlm-roberta-base-ViT-B-32` / `laion5b_s13b_b90k`,
@@ -390,11 +404,11 @@ report.
 | `clip_eval.py` | CLIP retrieval + zero-shot + ablations |
 | `revisitop.py` | Revisited Oxford/Paris reader, layout check, mAP (E/M/H) |
 | `dino_retrieval.py` | DINOv3 / DINOv2 / CLIP instance retrieval + latency |
-| `cls_taxonomy.py` | 17 tags: definitions, CLIP prompts, COCO rules, Places365 mapping |
+| `../app/tagging/taxonomy.py` | 17 tags: definitions, CLIP prompts, COCO rules, Places365 mapping |
 | `cls_data.py` / `cls_features.py` | labelled datasets · cached CLIP / DINOv3 / YOLO features (app providers) |
 | `cls_models.py` | zero-shot, linear probe, YOLO rule, thresholds, metrics (mAP, F1, ECE), save/load |
 | `cls_eval.py` / `cls_yolo_finetune.py` | classification benchmark · YOLO26n-cls fine-tune |
-| `cls_prelabel.py` | draft labels for your photos → `gallery-gt/labels.json` |
+| `cls_prelabel.py` | draft labels for your photos → `Classes/gallery-gt/labels.json` |
 | `report.py` | CSV → Markdown / LaTeX tables |
 | `results/` | result CSVs (tracked); `*_smoke.csv` ignored |
 | `runs/` | raw Ultralytics outputs (ignored) |

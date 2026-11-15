@@ -14,3 +14,10 @@ def test_root_service_info(client):
     body = res.json()
     assert body["service"] == "ai-service"
     assert "version" in body
+
+
+def test_health_reports_tagger_mode(client):
+    tagger = client.get("/health").json()["tagger"]
+    # stub CLIP → không probe nào khớp → zero-shot, không có nhãn chi tiết
+    assert tagger["categories"]["coco"] == "zero-shot"
+    assert tagger["labels"] is None and tagger["label_count"] == 0

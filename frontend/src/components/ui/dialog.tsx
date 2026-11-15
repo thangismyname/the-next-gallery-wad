@@ -106,6 +106,20 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Thân dialog: chừa lề ngang đúng bằng header/footer (p-6). Đặt DialogContent
+ * "flex max-h-[…] flex-col" để header + footer đứng yên, chỉ thân cuộn.
+ */
+function DialogBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="dialog-body"
+      className={cn("min-h-0 flex-1 overflow-y-auto px-6 pb-4", className)}
+      {...props}
+    />
+  )
+}
+
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -152,6 +166,7 @@ function DialogDescription({
 }
 
 export {
+  DialogBody,
   Dialog,
   DialogTrigger,
   DialogClose,

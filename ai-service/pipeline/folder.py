@@ -4,8 +4,8 @@ Dùng đúng provider của app (`app/providers/`), mặc định tiền xử l�
 backend (sharp): EXIF rotate → CLIP: cạnh ≤512 WebP q80, YOLO: cạnh ≤1280 JPEG q85.
 
 Dataset gọi bằng TÊN, tính từ folder Datasets (TNG_DATASETS trong .env gốc dự án):
-  <Datasets>/coco/           ảnh đầu vào (quét cả thư mục con)
-  <Datasets>/result-coco/    kết quả (tự tạo, chạy lại thì ghi đè)
+  <Datasets>/Data/coco/              ảnh đầu vào (quét cả thư mục con)
+  <Datasets>/Results/pipeline/coco/  kết quả (tự tạo, chạy lại thì ghi đè)
 Bỏ trống tên → hiện danh sách để chọn.
 
 3 lệnh:
@@ -36,7 +36,7 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.common import DEFAULT_DATA_ROOT, environment_info, utc_now
+from bench.common import DEFAULT_DATA_ROOT, data_dir, environment_info, results_dir, utc_now
 
 RESULT_PREFIX = "result-"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".bmp"}
@@ -111,24 +111,23 @@ def draw_detections(image_bytes: bytes, detections: list[dict], out_path: Path) 
 
 
 # ── Chọn dataset / kết quả theo tên ───────────────────────────────────────
-def result_dir_for(dataset: Path) -> Path:
-    """<Datasets>/coco → <Datasets>/result-coco (cạnh folder dataset)."""
-    return dataset.parent / f"{RESULT_PREFIX}{dataset.name}"
+def result_dir_for(dataset: Path, data_root: Path = DEFAULT_DATA_ROOT) -> Path:
+    """Data/coco → Results/pipeline/coco."""
+    return results_dir(data_root, "pipeline") / dataset.name
 
 
 def list_datasets(data_root: Path) -> list[Path]:
-    if not data_root.is_dir():
+    base = data_dir(data_root)
+    if not base.is_dir():
         return []
-    return sorted(
-        p for p in data_root.iterdir()
-        if p.is_dir() and not p.name.startswith((".", RESULT_PREFIX))
-    )
+    return sorted(p for p in base.iterdir() if p.is_dir() and not p.name.startswith("."))
 
 
 def list_results(data_root: Path) -> list[Path]:
-    if not data_root.is_dir():
+    base = results_dir(data_root, "pipeline")
+    if not base.is_dir():
         return []
-    return sorted(p for p in data_root.iterdir() if p.name.startswith(RESULT_PREFIX) and (p / "meta.json").exists())
+    return sorted(p for p in base.iterdir() if (p / "meta.json").exists())
 
 
 def choose(options: list[Path], what: str, data_root: Path) -> Path:
@@ -157,18 +156,19 @@ def resolve_dataset(name: str | None, data_root: Path) -> Path:
     path = Path(name).expanduser()
     if path.is_dir():
         return path.resolve()
-    if (data_root / name).is_dir():
-        return (data_root / name).resolve()
+    if (data_dir(data_root) / name).is_dir():
+        return (data_dir(data_root) / name).resolve()
     available = ", ".join(p.name for p in list_datasets(data_root)) or "(trống)"
     raise SystemExit(f"Không thấy dataset '{name}' trong {data_root}. Có: {available}")
 
 
 def resolve_result(name: str | None, data_root: Path) -> Path:
-    """"coco" / "result-coco" / path → folder kết quả; trống → chọn."""
+    """"coco" → Results/pipeline/coco (hoặc path) → folder kết quả; trống → chọn."""
     if not name:
-        return choose(list_results(data_root), "kết quả (result-*)", data_root)
+        return choose(list_results(data_root), "kết quả (Results/pipeline)", data_root)
     path = Path(name).expanduser()
-    for candidate in (path, data_root / name, data_root / f"{RESULT_PREFIX}{name}"):
+    base = results_dir(data_root, "pipeline")
+    for candidate in (path, base / name, base / name.removeprefix(RESULT_PREFIX)):
         if (candidate / "meta.json").exists():
             return candidate.resolve()
     raise SystemExit(f"Chưa có kết quả cho '{name}' — chạy `python -m pipeline run {name}` trước.")
@@ -461,7 +461,7 @@ def cmd_run(args) -> int:
         args.conf if args.conf is not None else settings.yolo_conf, args.imgsz or settings.yolo_imgsz,
     )
     dataset = resolve_dataset(args.dataset, args.data_root)
-    out_dir = args.out or result_dir_for(dataset)
+    out_dir = args.out or result_dir_for(dataset, args.data_root)
     run_folder(dataset, out_dir, clip, yolo, args.preprocess, args.batch_size, args.limit, args.draw)
     return 0
 
@@ -538,7 +538,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     run = sub.add_parser("run", parents=[data_root], help="YOLO + CLIP cho cả 1 dataset")
     run.add_argument("dataset", nargs="?", help="tên folder trong Datasets (vd coco) hoặc path; bỏ trống → chọn")
-    run.add_argument("--out", type=Path, help="ghi vào folder này thay vì <Datasets>/result-<dataset>")
+    run.add_argument("--out", type=Path, help="ghi vào folder này thay vì <Datasets>/Results/pipeline/<dataset>")
     run.add_argument("--limit", type=int, help="chỉ lấy N ảnh đầu (chạy thử)")
     run.add_argument("--preprocess", choices=["app", "raw"], default="app",
                      help="app = giống backend (EXIF rotate, CLIP ≤512 WebP, YOLO ≤1280 JPEG); raw = ảnh gốc")
@@ -556,7 +556,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     search = sub.add_parser("search", parents=[data_root], help="tìm ảnh bằng câu mô tả / object")
     search.add_argument("queries", nargs="*", help='câu truy vấn tiếng Anh, vd "a dog on the beach"')
-    search.add_argument("-d", "--dataset", help="vd coco (→ result-coco); bỏ trống → tự chọn")
+    search.add_argument("-d", "--dataset", help="vd coco (→ Results/pipeline/coco); bỏ trống → tự chọn")
     search.add_argument("--object", help="chỉ giữ ảnh có object này (YOLO class, vd person, dog)")
     search.add_argument("--min-conf", type=float, default=DEFAULT_MIN_CONF, help="confidence tối thiểu cho --object")
     search.add_argument("--min-sim", type=float, default=DEFAULT_MIN_SIM, help="cosine tối thiểu (0 = tắt)")
@@ -567,7 +567,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     classify = sub.add_parser("classify", parents=[data_root], help="zero-shot phân loại mọi ảnh")
     classify.add_argument("labels", nargs="+", help="≥2 nhãn, vd indoor outdoor food")
-    classify.add_argument("-d", "--dataset", help="vd coco (→ result-coco); bỏ trống → tự chọn")
+    classify.add_argument("-d", "--dataset", help="vd coco (→ Results/pipeline/coco); bỏ trống → tự chọn")
     classify.add_argument("--templates", nargs="+", help='prompt có {} — mặc định "a photo of a {}"')
     classify.add_argument("--top-k", type=int, default=24, help="số ảnh / nhãn trong classify.html")
     classify.add_argument("--device", default="auto")

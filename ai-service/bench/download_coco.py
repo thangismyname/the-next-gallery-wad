@@ -13,7 +13,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from bench.common import DEFAULT_DATA_ROOT
+from bench.common import DEFAULT_DATA_ROOT, classes_dir, data_dir
 
 LABELS_ZIP = "coco2017labels.zip"  # bbox labels (không cần segments cho detection)
 VAL_IMAGES_URL = "http://images.cocodataset.org/zips/val2017.zip"
@@ -21,7 +21,7 @@ EXPECTED_VAL_IMAGES = 5000
 
 
 def coco_dir(data_root: Path) -> Path:
-    return data_root.expanduser().resolve() / "coco"
+    return data_dir(data_root, "coco")
 
 
 def val_yaml_path(data_root: Path) -> Path:
@@ -71,7 +71,7 @@ def main() -> int:
 
     n_images = len(list(images_dir.glob("*.jpg")))
     n_labels = len(list((root / "labels" / "val2017").glob("*.txt")))
-    annotations = root / "annotations" / "instances_val2017.json"
+    annotations = classes_dir(args.data_root, "coco") / "annotations" / "instances_val2017.json"
     yaml_path = write_val_yaml(root)
 
     print(f"\nảnh val2017:   {n_images} (kỳ vọng {EXPECTED_VAL_IMAGES})")

@@ -1,5 +1,5 @@
+import { ObjectDetection } from "@tng/shared";
 import React from "react";
-import { ObjectDetection } from "@/services/media";
 
 interface DetectionOverlayProps {
   detections: ObjectDetection[];

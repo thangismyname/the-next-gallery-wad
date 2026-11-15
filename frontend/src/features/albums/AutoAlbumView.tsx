@@ -14,18 +14,9 @@ import { ImageCard } from "@/features/gallery/components/ImageCard";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { GRID_DENSITY_CLASS, useGridDensity, albumsQueryKey, autoAlbumMediaQueryKey, autoAlbumsQueryKey, toMedia, autoAlbumName } from "@tng/shared";
 import { cn } from "@/lib/utils";
-import {
-  albumsQueryKey,
-  autoAlbumMediaQueryKey,
-  autoAlbumsQueryKey,
-  fetchAutoAlbumMedia,
-  fetchAutoAlbums,
-  saveAutoAlbum,
-} from "@/services/albums";
-import { toMedia } from "@/services/media";
-import { autoAlbumName } from "./autoAlbums";
+import { fetchAutoAlbumMedia, fetchAutoAlbums, saveAutoAlbum } from "@/services/albums";
 
 const PAGE_SIZE = 60;
 

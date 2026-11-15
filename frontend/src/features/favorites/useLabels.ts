@@ -1,29 +1,8 @@
+import { labelsQueryKey, mediaLabelsQueryKey, type LabelColor, type SavedMediaItem, type UserLabel, labelDisplayName } from "@tng/shared";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createLabel,
-  deleteLabel,
-  fetchLabels,
-  labelsQueryKey,
-  mediaLabelsQueryKey,
-  seedLabels,
-  setLabelMedia,
-  updateLabel,
-  type LabelColor,
-  type SavedMediaItem,
-  type UserLabel,
-  type UserLabelDto,
-} from "@/services/labels";
-
-/** Tên hiển thị: tên user đặt, hoặc tên nhãn gợi ý theo ngôn ngữ đang dùng. */
-export function labelDisplayName(label: UserLabelDto, t: TFunction) {
-  return (
-    label.name ??
-    t(`favorites.labels.suggested.${label.preset}`, { defaultValue: label.preset ?? "" })
-  );
-}
+import { createLabel, deleteLabel, fetchLabels, seedLabels, setLabelMedia, updateLabel } from "@/services/labels";
 
 /**
  * Danh sách nhãn của user. Lần đầu (server báo `seeded: false`) tự tạo 3 nhãn

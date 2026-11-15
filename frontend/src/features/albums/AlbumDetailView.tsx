@@ -18,18 +18,10 @@ import { ImageCard } from "@/features/gallery/components/ImageCard";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { useGalleryActions } from "@/hooks/useGalleryActions";
 import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
-import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { GRID_DENSITY_CLASS, useGridDensity } from "@tng/shared";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/services/authClient";
-import {
-  addAlbumMedia,
-  convertAlbum,
-  deleteAlbum,
-  removeAlbumMedia,
-  removeAlbumMember,
-  respondAlbumInvitation,
-  updateAlbum,
-} from "@/services/albums";
+import { addAlbumMedia, convertAlbum, deleteAlbum, removeAlbumMedia, removeAlbumMember, respondAlbumInvitation, updateAlbum } from "@/services/albums";
 import { useAlbumDetail } from "./useAlbumDetail";
 import { type AlbumAction, AlbumHeader } from "./components/AlbumHeader";
 import { AlbumFormDialog } from "./components/AlbumFormDialog";
@@ -290,7 +282,7 @@ export const AlbumDetailView: React.FC = () => {
 
       {/* Thanh thao tác khi đang chọn ảnh */}
       {selecting && selected.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1.5 rounded-full p-1.5 pl-3 glass">
+        <div className="fixed bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1.5 rounded-full p-1.5 pl-3 glass sm:bottom-6">
           <button
             onClick={stopSelecting}
             className="rounded-full p-2 text-muted-foreground hover:bg-muted/50"

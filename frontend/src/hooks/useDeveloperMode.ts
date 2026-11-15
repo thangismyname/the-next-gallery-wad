@@ -2,13 +2,10 @@
 // Store toàn cục cho Developer Mode — nhiều nơi cần biết (UserMenu, Lightbox...),
 // nên state nằm trong zustand. `enabled` (công tắc người dùng) persist vào
 // localStorage; `status` lấy từ backend (developer_requests) và cache trong store.
+import { type DeveloperStatus } from "@tng/shared";
 import { useCallback, useEffect } from "react";
 import { create } from "zustand";
-import {
-  type DeveloperStatus,
-  fetchDeveloperStatus,
-  requestDeveloper,
-} from "@/services/developer";
+import { fetchDeveloperStatus, requestDeveloper } from "@/services/developer";
 
 const ENABLED_STORAGE_KEY = "tng.devModeEnabled";
 

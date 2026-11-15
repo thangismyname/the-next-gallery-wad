@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { formatCountdown } from "@/utils/format";
+import { formatCountdown, InviteTokenData } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { QRCodeSVG } from "qrcode.react";
 import { Check, Copy } from "lucide";
-import { Loader2, QrCode, RefreshCw } from "lucide-react";
+import { Loader2, QrCode, RefreshCw, Share2 } from "lucide-react";
 import { MorphIcon } from "morphicons/react";
 
 import { Button } from "@/components/ui/button";
-import { fetchInviteToken, InviteTokenData } from "@/services/friends";
+import { fetchInviteToken } from "@/services/friends";
 
 export const FriendInviteCard: React.FC = () => {
   const { t } = useTranslation();
@@ -62,7 +62,7 @@ export const FriendInviteCard: React.FC = () => {
   };
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+    <div className="@container overflow-hidden rounded-xl border border-border/50 bg-card">
       <div className="flex items-center gap-2 border-b border-border/40 px-4 py-3">
         <QrCode className="size-4 text-primary" />
         <h3 className="text-sm font-semibold text-foreground">
@@ -93,12 +93,12 @@ export const FriendInviteCard: React.FC = () => {
             ) : (
               <RefreshCw className="size-3.5" />
             )}
-            <span className="hidden sm:inline">{t("friends.resetInvite")}</span>
+            <span className="hidden @sm:inline">{t("friends.resetInvite")}</span>
           </Button>
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-4 p-4 sm:flex-row sm:items-center sm:justify-center">
+      <div className="flex flex-col items-center gap-4 p-4 @md:flex-row @md:justify-center">
         <div className="flex h-36 w-36 shrink-0 items-center justify-center rounded-lg bg-background ring-1 ring-border">
           {loading ? (
             <Loader2 className="size-5 animate-spin text-muted-foreground" />
@@ -121,8 +121,8 @@ export const FriendInviteCard: React.FC = () => {
           )}
         </div>
 
-        <div className="flex w-full max-w-xs flex-col items-center gap-3 sm:items-stretch">
-          <p className="text-center text-xs text-muted-foreground sm:text-left">
+        <div className="flex w-full max-w-xs flex-col items-center gap-3 @md:items-stretch">
+          <p className="text-center text-xs text-muted-foreground @md:text-left">
             {t("friends.inviteHint")}
           </p>
           <div className="flex w-full items-center gap-2">
@@ -141,10 +141,21 @@ export const FriendInviteCard: React.FC = () => {
                 size={16}
                 className={copied ? "text-emerald-500" : ""}
               />
-              <span className="hidden sm:inline">
+              <span className="hidden @md:inline">
                 {copied ? t("friends.copied") : t("friends.copy")}
               </span>
             </Button>
+            {typeof navigator !== "undefined" && typeof navigator.share === "function" && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!inviteUrl || expired}
+                onClick={() => void navigator.share({ url: inviteUrl, title: t("friends.inviteTitle") }).catch(() => {})}
+                aria-label={t("friends.shareInvite")}
+              >
+                <Share2 className="size-3.5" />
+              </Button>
+            )}
           </div>
         </div>
       </div>

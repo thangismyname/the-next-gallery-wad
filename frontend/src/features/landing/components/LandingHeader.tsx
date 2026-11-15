@@ -5,10 +5,10 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LanguageToggle } from "@/features/toggles/LanguageToggle";
-import { ThemeToggle } from "@/features/toggles/ThemeToggle";
+import { LanguageToggle } from "@/components/toggles/LanguageToggle";
+import { ThemeToggle } from "@/components/toggles/ThemeToggle";
 import { cn } from "@/lib/utils";
-import { useScrolled } from "@/hooks/useScrolled";
+import { useScrolled } from "@/features/landing/useScrolled";
 import { menuItem, menuPanel } from "../landing.motion";
 import { LandingAuthActions } from "./LandingAuthActions";
 

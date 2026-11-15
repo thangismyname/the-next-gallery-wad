@@ -1,4 +1,4 @@
-import { UploadProgress } from "@/types";
+import { UploadProgress } from "@tng/shared";
 import { API_URL as BASE_URL } from "@/lib/config";
 
 /**

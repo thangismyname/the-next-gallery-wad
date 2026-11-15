@@ -1,9 +1,6 @@
-// File trong danh sách gửi của SendView (/share): chọn từ máy (local) hoặc
-// ảnh / video đã có trên tài khoản (library). Hàm thuần đọc thông tin hiển thị
-// + dựng TransferSource để gửi qua WebRTC.
-import type { TransferSource } from "@/hooks/useFileTransfer";
-import type { MediaListItem } from "@/services/media";
-import { buildMediaSource } from "./mediaSource";
+import { type MediaListItem } from "@tng/shared";
+// File trong danh sách gửi: chọn từ máy (local) hoặc ảnh / video đã có trên
+// tài khoản (library — server copy / stream, không cần P2P).
 
 export type SendEntry =
   | { kind: "local"; id: string; file: File; previewUrl?: string }
@@ -16,17 +13,7 @@ export function localEntry(file: File): Extract<SendEntry, { kind: "local" }> {
   return { kind: "local", id: `local-${++localIdCounter}`, file };
 }
 
-/** Local: stream thẳng File (đúng dung lượng → tiến độ chính xác); library: tải từ backend. */
-export function buildSource(entry: SendEntry): TransferSource {
-  if (entry.kind === "library") return buildMediaSource(entry.item);
-  return {
-    id: entry.id,
-    name: entry.file.name,
-    type: entry.file.type || "application/octet-stream",
-    size: entry.file.size,
-    stream: () => entry.file.stream(),
-  };
-}
+export const libraryEntry = (item: MediaListItem): SendEntry => ({ kind: "library", id: item.id, item });
 
 export const entryName = (entry: SendEntry): string =>
   entry.kind === "local" ? entry.file.name : (entry.item.title ?? entry.item.id);

@@ -1,0 +1,7 @@
+source,lambda,val_MRR
+oracle,0.02,0.44309
+oracle,0.05,0.44276
+oracle,0.1,0.4323
+oracle,0.2,0.40313
+oracle,0.3,0.38252
+oracle,0.5,0.36303

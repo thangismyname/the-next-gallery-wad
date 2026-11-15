@@ -1,0 +1,8 @@
+mode,source,P@10,nDCG@10,P@20,nDCG@20,judged_fraction
+clip,-,0.0,,0.0,,0.0
+filter,yolo,0.0,,0.0,,0.0
+boost,yolo,0.0,,0.0,,0.0
+filter,clip,0.0,,0.0,,0.0
+boost,clip,0.0,,0.0,,0.0
+filter,fused,0.0,,0.0,,0.0
+boost,fused,0.0,,0.0,,0.0

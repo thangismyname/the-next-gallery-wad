@@ -1,9 +1,9 @@
-import { UploadProgress } from "@/types"; // hoặc "../../../types" nếu chưa có alias @/
+import { UploadProgress } from "@tng/shared"; // hoặc "../../../types" nếu chưa có alias @/
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { uploadMediaInBatches } from "../../../services/api";
+import { uploadMediaInBatches } from "@/services/upload";
 
 interface UploadButtonProps {
   onUploaded: () => void; // gọi lại để GalleryView refetch danh sách media

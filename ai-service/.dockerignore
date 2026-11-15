@@ -1,10 +1,18 @@
+# Build context của ai-service (dùng chung Dockerfile.dev + Dockerfile.prod).
+# Image chỉ cần app/ + scripts/ + pyproject.toml/uv.lock; dev mount source vào /app nên
+# bench/experiments/tests vẫn chạy được trong container dev.
 __pycache__
 *.pyc
 .venv
 venv
 .git
 .env
-models/
+.DS_Store
 .pytest_cache
+# Weights tải/bake lúc build (scripts/download_*_weight.py), không gửi từ máy dev (~GB)
+models/
+# Code + kết quả thesis (offline, không thuộc service) — bench/runs có thể vài trăm MB
+bench/
+experiments/
+pipeline/
 tests/
-static/bench/runs/

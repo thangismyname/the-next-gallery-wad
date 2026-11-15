@@ -1,0 +1,9 @@
+model,dataset,preprocess,caption_prefix,images,captions,t2i_R@1,t2i_R@5,t2i_R@10,i2t_R@1,i2t_R@5,i2t_R@10,image_encode_s,text_encode_s,pub_t2i_R@1,pub_t2i_R@5,pub_t2i_R@10,pub_i2t_R@1,pub_i2t_R@5,pub_i2t_R@10,delta_t2i_R@1,delta_i2t_R@1,pass,published_source
+ViT-L-14-336:openai,flickr30k,raw,a photo of,1000,5000,65.16,88.14,92.98,88.3,98.4,99.5,116.5,18.3,68.7,90.6,95.2,88.0,98.7,99.4,-3.54,0.3,False,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, Flickr30k 1K test"
+ViT-L-14-336:openai,flickr30k,raw,none,1000,5000,65.68,88.22,92.8,87.9,98.0,99.2,116.5,18.2,68.7,90.6,95.2,88.0,98.7,99.4,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, Flickr30k 1K test"
+ViT-L-14-336:openai,flickr30k,backend,a photo of,1000,5000,65.46,87.4,92.52,86.6,97.3,99.0,137.4,18.2,68.7,90.6,95.2,88.0,98.7,99.4,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, Flickr30k 1K test"
+ViT-L-14-336:openai,flickr30k,backend,none,1000,5000,65.84,87.38,92.54,86.8,97.6,98.7,137.4,18.6,68.7,90.6,95.2,88.0,98.7,99.4,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, Flickr30k 1K test"
+ViT-L-14-336:openai,mscoco_captions,raw,a photo of,5000,25010,35.67,60.35,70.53,59.08,81.8,88.6,587.5,89.7,37.8,62.4,72.2,58.4,81.5,88.1,-2.13,0.68,False,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, MSCOCO 5K test"
+ViT-L-14-336:openai,mscoco_captions,raw,none,5000,25010,36.33,61.1,71.44,58.82,80.84,88.5,587.5,89.7,37.8,62.4,72.2,58.4,81.5,88.1,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, MSCOCO 5K test"
+ViT-L-14-336:openai,mscoco_captions,backend,a photo of,5000,25010,36.72,61.18,71.3,57.56,79.86,87.48,681.3,94.0,37.8,62.4,72.2,58.4,81.5,88.1,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, MSCOCO 5K test"
+ViT-L-14-336:openai,mscoco_captions,backend,none,5000,25010,36.69,61.25,71.35,57.24,79.44,86.52,681.3,90.2,37.8,62.4,72.2,58.4,81.5,88.1,,,,"Radford et al. 2021 (CLIP), Table 13, zero-shot CLIP, MSCOCO 5K test"

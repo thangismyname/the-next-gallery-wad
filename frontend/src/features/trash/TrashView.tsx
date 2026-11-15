@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import {
+  ArrowLeft,
   HardDrive,
   Loader2,
   RotateCcw,
@@ -20,20 +22,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  fetchTrash,
-  trashQueryKey,
-  restoreMedia,
-  permanentDeleteMedia,
-  toMedia,
-} from "@/services/media";
+import { fetchTrash, restoreMedia, permanentDeleteMedia } from "@/services/media";
 import { Lightbox } from "@/features/gallery/components/Lightbox";
 import { galleryQueryPrefix } from "@/hooks/useGalleryMedia";
 import { AnimatePresence } from "framer-motion";
 import { AnimatedGridItem } from "@/components/motion/AnimatedGridItem";
 import { ImageCard } from "@/features/gallery/components/ImageCard";
 import { TrashCardActions } from "./components/TrashCardActions";
-import { GRID_DENSITY_CLASS, useGridDensity } from "@/hooks/useGridDensity";
+import { GRID_DENSITY_CLASS, useGridDensity, trashQueryKey, toMedia, storageQueryKey } from "@tng/shared";
 import { cn } from "@/lib/utils";
 
 export const TrashView: React.FC = () => {
@@ -82,6 +78,11 @@ export const TrashView: React.FC = () => {
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: trashQueryKey });
     queryClient.invalidateQueries({ queryKey: galleryQueryPrefix });
+    // Dung lượng + số mục trên thẻ Thùng rác (Albums), album / nhãn đếm lại ảnh khôi phục.
+    queryClient.invalidateQueries({ queryKey: storageQueryKey });
+    queryClient.invalidateQueries({ queryKey: ["albums"] });
+    queryClient.invalidateQueries({ queryKey: ["labels"] });
+    queryClient.invalidateQueries({ queryKey: ["favorites"] });
   };
 
   const doRestore = async (ids: string[]) => {
@@ -133,6 +134,14 @@ export const TrashView: React.FC = () => {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      {/* Về Albums — Thùng rác là 1 bộ sưu tập trong Albums (giống Yêu thích) */}
+      <Button variant="ghost" size="sm" asChild className="-ml-2 mb-3">
+        <Link to="/albums">
+          <ArrowLeft className="size-4" />
+          {t("albums.title")}
+        </Link>
+      </Button>
+
       {/* Header */}
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
@@ -295,7 +304,7 @@ export const TrashView: React.FC = () => {
               onClick={() => setConfirmTarget(null)}
               disabled={busy}
             >
-              {t("share.cancel")}
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"

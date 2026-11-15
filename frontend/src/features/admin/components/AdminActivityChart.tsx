@@ -9,7 +9,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { AdminOverview } from "@/types";
+import type { AdminOverview } from "@tng/shared";
 
 /** Người dùng mới + lượt upload theo ngày (30 ngày). */
 export function AdminActivityChart({

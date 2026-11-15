@@ -1,0 +1,19 @@
+# Build context gốc repo — hiện chỉ frontend (Dockerfile.dev/prod) dùng; backend và
+# ai-service build từ thư mục riêng (có .dockerignore riêng).
+**/node_modules
+**/dist
+**/.DS_Store
+.git
+.env
+.env.*
+!.env.example
+.turbo
+graphify-out
+database
+backend
+ai-service
+docs
+# mobile: chỉ cần package.json (để lock workspace khớp), không cần mã
+apps/mobile/*
+!apps/mobile/package.json
+# font độc quyền chỉ để local (git-ignore) — vẫn gửi nếu có trên máy build

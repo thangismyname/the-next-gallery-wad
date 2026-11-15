@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
+import { LANGUAGES, toLanguageCode } from "@tng/shared";
 import {
   Card,
   CardContent,
@@ -25,7 +26,7 @@ export const AuthView: React.FC<AuthViewProps> = ({
   defaultTab = "login",
   onSuccess,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [tab, setTab] = useState<"login" | "register">(defaultTab);
   const navigate = useNavigate();
   const location = useLocation();
@@ -80,6 +81,27 @@ export const AuthView: React.FC<AuthViewProps> = ({
               />
             </TabsContent>
           </Tabs>
+          <div className="mt-4 flex justify-center gap-2">
+            {LANGUAGES.map((lang) => {
+              const current = toLanguageCode(i18n.resolvedLanguage ?? i18n.language);
+              const active = current === lang.code;
+              return (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => void i18n.changeLanguage(lang.code)}
+                  className={
+                    "rounded-md px-3 py-1 text-xs font-medium transition-colors " +
+                    (active
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground")
+                  }
+                >
+                  {lang.short}
+                </button>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
     </div>

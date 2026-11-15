@@ -1,6 +1,7 @@
 import { dbPool } from "../../config/db.js";
 import { minioClient, BUCKET_NAME } from "../../config/minio.js";
 import { MEDIA_COLUMNS, toMediaItem } from "./media.mapper.js";
+import { logger } from "../../lib/logger.js";
 
 export async function softDeleteMedia(userId, ids) {
   if (!Array.isArray(ids) || ids.length === 0) return { count: 0 };
@@ -62,12 +63,14 @@ export async function permanentDeleteMedia(userId, ids) {
   // các media dính album/moment: album_media/moments/moment_reactions có FK
   // ON DELETE CASCADE / SET NULL nên xoá row media là đủ, DB tự dọn.
   const picked = await dbPool.query(
-    `SELECT id, minio_object, minio_bucket, thumbnail_object, thumbnail_small_object,
-            display_object, full_object
-     FROM media
-     WHERE user_id = $1
-       AND id = ANY($2::uuid[])
-       AND deleted_at IS NOT NULL`,
+    `SELECT m.id, m.minio_object, m.minio_bucket, m.thumbnail_object, m.thumbnail_small_object,
+            m.display_object, m.full_object,
+            e.display_object AS edit_display, e.thumbnail_object AS edit_med,
+            e.thumbnail_small_object AS edit_small
+     FROM media m LEFT JOIN media_edits e ON e.media_id = m.id
+     WHERE m.user_id = $1
+       AND m.id = ANY($2::uuid[])
+       AND m.deleted_at IS NOT NULL`,
     [userId, ids],
   );
 
@@ -81,6 +84,7 @@ export async function permanentDeleteMedia(userId, ids) {
     if (row.thumbnail_small_object) objects.add(row.thumbnail_small_object);
     if (row.display_object) objects.add(row.display_object);
     if (row.full_object) objects.add(row.full_object);
+    for (const key of [row.edit_display, row.edit_med, row.edit_small]) if (key) objects.add(key);
   }
 
   const objectList = Array.from(objects);
@@ -89,7 +93,7 @@ export async function permanentDeleteMedia(userId, ids) {
     try {
       await minioClient.removeObjects(bucket, objectList);
     } catch (err) {
-      console.error("Lỗi xoá object trên MinIO:", err.message);
+      logger.error({ err }, "Lỗi xoá object trên MinIO");
     }
   }
 

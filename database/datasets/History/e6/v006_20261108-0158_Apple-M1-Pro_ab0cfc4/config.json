@@ -1,0 +1,59 @@
+{
+  "exp": "e6",
+  "run_id": "20261108-015734",
+  "started": "2026-11-07T18:57:34Z",
+  "params": {
+    "data_root": "/Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets",
+    "device": "auto",
+    "smoke": 0,
+    "note": "",
+    "clip": "ViT-B-32:laion2b_s34b_b79k",
+    "preprocess": "backend",
+    "sources": [
+      "yolo",
+      "clip",
+      "fused",
+      "lp_clip",
+      "lp_dino",
+      "lp_clip_dino",
+      "fused_learned",
+      "oracle"
+    ],
+    "modes": [
+      "filter",
+      "boost",
+      "boost_prob"
+    ],
+    "lambdas": [
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ],
+    "query_sets": [
+      "captions",
+      "compositional"
+    ],
+    "caption_variant": "full",
+    "lang": "en",
+    "top_k": 20,
+    "e5_run": "",
+    "probe_run": "",
+    "bootstrap": 500,
+    "batch_size": 64
+  },
+  "environment": {
+    "chip": "Apple M1 Pro",
+    "cpu_cores": "8P+2E",
+    "ram_gb": "32",
+    "os": "macOS 27.2",
+    "python": "3.12.15",
+    "torch": "2.14.1",
+    "git_commit": "ab0cfc4",
+    "ultralytics": "8.4.184"
+  }
+}

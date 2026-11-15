@@ -1,18 +1,30 @@
+# Build context = GỐC repo (monorepo npm workspaces): frontend cần packages/shared
+# (@tng/shared). docker-compose.prod.yml: context ".", dockerfile frontend/Dockerfile.prod.
 FROM node:20-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+WORKDIR /repo
+
+# 1. Chỉ manifest + lock gốc → layer cài dependency được cache khi code đổi.
+#    package.json của mọi workspace phải có mặt để lock khớp (mobile không được cài).
+COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/
+COPY packages/shared/package.json packages/shared/
+COPY apps/mobile/package.json apps/mobile/
+RUN npm ci --workspace=frontend --include-workspace-root=false --ignore-scripts --no-audit --no-fund
+
+# 2. Mã nguồn
+COPY packages/shared packages/shared
+COPY frontend frontend
 
 ARG VITE_API_URL
 ARG VITE_API_BASE_URL
 ENV VITE_API_URL=${VITE_API_URL}
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
-RUN npm run build
+# build = typecheck (tsc) + vite build
+RUN npm run build --workspace=frontend
 
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /repo/frontend/dist /usr/share/nginx/html
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

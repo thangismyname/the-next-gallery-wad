@@ -1,0 +1,148 @@
+[
+  {
+    "query": "a dog",
+    "prompt": "a photo of a a dog",
+    "hits": [
+      {
+        "rank": 1,
+        "index": 2195,
+        "path": "images/val2017/000000253386.jpg",
+        "score": 0.306,
+        "objects": "person×2, dog×1, frisbee×1"
+      },
+      {
+        "rank": 2,
+        "index": 3375,
+        "path": "images/val2017/000000389933.jpg",
+        "score": 0.3027,
+        "objects": "dog×1, couch×1"
+      },
+      {
+        "rank": 3,
+        "index": 272,
+        "path": "images/val2017/000000029393.jpg",
+        "score": 0.2923,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 4,
+        "index": 2259,
+        "path": "images/val2017/000000261161.jpg",
+        "score": 0.2908,
+        "objects": "bench×1, dog×1"
+      },
+      {
+        "rank": 5,
+        "index": 3152,
+        "path": "images/val2017/000000364636.jpg",
+        "score": 0.2896,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 6,
+        "index": 3128,
+        "path": "images/val2017/000000361571.jpg",
+        "score": 0.2888,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 7,
+        "index": 4019,
+        "path": "images/val2017/000000464522.jpg",
+        "score": 0.2886,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 8,
+        "index": 4303,
+        "path": "images/val2017/000000498286.jpg",
+        "score": 0.2858,
+        "objects": "dog×1, car×1"
+      },
+      {
+        "rank": 9,
+        "index": 3273,
+        "path": "images/val2017/000000377575.jpg",
+        "score": 0.2836,
+        "objects": "teddy bear×1, fire hydrant×1"
+      },
+      {
+        "rank": 10,
+        "index": 4484,
+        "path": "images/val2017/000000520301.jpg",
+        "score": 0.2805,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 11,
+        "index": 3175,
+        "path": "images/val2017/000000367195.jpg",
+        "score": 0.2794,
+        "objects": "dog×1, couch×1, bed×1"
+      },
+      {
+        "rank": 12,
+        "index": 4718,
+        "path": "images/val2017/000000549220.jpg",
+        "score": 0.2788,
+        "objects": "person×3, dog×1"
+      },
+      {
+        "rank": 13,
+        "index": 2859,
+        "path": "images/val2017/000000331075.jpg",
+        "score": 0.2764,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 14,
+        "index": 1793,
+        "path": "images/val2017/000000205834.jpg",
+        "score": 0.2747,
+        "objects": "bowl×1, dog×1"
+      },
+      {
+        "rank": 15,
+        "index": 1464,
+        "path": "images/val2017/000000170278.jpg",
+        "score": 0.2743,
+        "objects": "dog×1"
+      },
+      {
+        "rank": 16,
+        "index": 3898,
+        "path": "images/val2017/000000452891.jpg",
+        "score": 0.2734,
+        "objects": "dog×1, bench×1"
+      },
+      {
+        "rank": 17,
+        "index": 2751,
+        "path": "images/val2017/000000318908.jpg",
+        "score": 0.2733,
+        "objects": "dog×1, couch×1"
+      },
+      {
+        "rank": 18,
+        "index": 533,
+        "path": "images/val2017/000000060835.jpg",
+        "score": 0.2722,
+        "objects": "sheep×1"
+      },
+      {
+        "rank": 19,
+        "index": 1051,
+        "path": "images/val2017/000000125405.jpg",
+        "score": 0.2719,
+        "objects": "dog×2, frisbee×1"
+      },
+      {
+        "rank": 20,
+        "index": 4697,
+        "path": "images/val2017/000000546829.jpg",
+        "score": 0.2718,
+        "objects": "bench×1, dog×1"
+      }
+    ]
+  }
+]

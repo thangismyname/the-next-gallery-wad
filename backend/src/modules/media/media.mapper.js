@@ -14,12 +14,16 @@ export const MEDIA_COLUMNS = `
       created_at,
       deleted_at,
       taken_at,
-      -- 2 tag nội dung tin cậy nhất (đạt ngưỡng) — hiện trên ô ảnh. \`id\` ở
-      -- đây là cột của bảng media bên ngoài (media_tags không có cột id).
+      -- 2 tag DANH MỤC tin cậy nhất (đạt ngưỡng; không tính nhãn chi tiết "oi.*")
+      -- — hiện trên ô ảnh. \`id\` ở đây là cột của bảng media bên ngoài
+      -- (media_tags không có cột id).
       (SELECT array_agg(x.tag ORDER BY x.confidence DESC)
          FROM (SELECT t.tag, t.confidence FROM media_tags t
                 WHERE t.media_id = id AND t.confidence >= t.threshold
-                ORDER BY t.confidence DESC LIMIT 2) x) AS ai_tags`;
+                  AND t.tag NOT LIKE 'oi.%'
+                ORDER BY t.confidence DESC LIMIT 2) x) AS ai_tags,
+      -- Lần chỉnh gần nhất (basic edit) — null = chưa chỉnh. Vào URL thumbnail.
+      (SELECT e.updated_at FROM media_edits e WHERE e.media_id = id) AS edited_at`;
 
 // Whitelist các kiểu sắp xếp → ORDER BY an toàn (không cho dính SQL injection).
 // Mới / cũ theo NGÀY CHỤP (EXIF), thiếu thì ngày tải lên.
@@ -39,10 +43,12 @@ const THUMB_VERSION = 2;
 
 /**
  * URL thumbnail của 1 media (đã ký — media.urls.js): size = small (200) |
- * med (400) | display (≤2048) | full (HEIC). `scope` = id link công khai.
+ * med (400) | display (≤2048) | full (HEIC) | base (display gốc, cho editor).
+ * `scope` = id link công khai. `editedAt` (ảnh đã chỉnh) đổi URL → bỏ cache cũ.
  */
-export function mediaThumbUrl(mediaId, size, scope = "") {
-  return `/api/gallery/media/${mediaId}/thumbnail?size=${size}&v=${THUMB_VERSION}&${signParams(mediaId, size, scope)}`;
+export function mediaThumbUrl(mediaId, size, scope = "", editedAt = null) {
+  const v = editedAt ? `${THUMB_VERSION}.${new Date(editedAt).getTime()}` : THUMB_VERSION;
+  return `/api/gallery/media/${mediaId}/thumbnail?size=${size}&v=${v}&${signParams(mediaId, size, scope)}`;
 }
 
 /** URL file gốc (đã ký). */
@@ -51,14 +57,14 @@ export function mediaFileUrl(mediaId, scope = "") {
 }
 
 /** Bộ URL của 1 media — dùng lại khi cần ký lại cho link công khai. */
-export function mediaUrls(mediaId, { heif = false, scope = "" } = {}) {
+export function mediaUrls(mediaId, { heif = false, scope = "", editedAt = null } = {}) {
   return {
     url: mediaFileUrl(mediaId, scope),
     // Ảnh + video (poster): endpoint tự tạo bản còn thiếu.
-    thumbnailUrl: mediaThumbUrl(mediaId, "small", scope),
-    thumbnailUrlLarge: mediaThumbUrl(mediaId, "med", scope),
+    thumbnailUrl: mediaThumbUrl(mediaId, "small", scope, editedAt),
+    thumbnailUrlLarge: mediaThumbUrl(mediaId, "med", scope, editedAt),
     // Ảnh: bản xem lightbox (≤2048px); video: poster.
-    displayUrl: mediaThumbUrl(mediaId, "display", scope),
+    displayUrl: mediaThumbUrl(mediaId, "display", scope, editedAt),
     // Bản xem độ phân giải gốc khi trình duyệt không hiển thị được file gốc
     // (HEIC). null → lightbox dùng thẳng `url`.
     fullUrl: heif ? mediaThumbUrl(mediaId, "full", scope) : null,
@@ -77,6 +83,7 @@ export function toMediaItem(item) {
     title: item.title,
     ...mediaUrls(mediaId, {
       heif: isPhoto && HEIF_MIMES.has(String(item.mime_type || "").toLowerCase()),
+      editedAt: item.edited_at ?? null,
     }),
     width: item.width || 800,
     height: item.height || 600,
@@ -90,6 +97,8 @@ export function toMediaItem(item) {
     takenAt: item.taken_at ?? null,
     deletedAt: item.deleted_at || null,
     aiTags: item.ai_tags ?? [],
+    // Đã chỉnh (basic edit) → lightbox không mở file gốc khi phóng to.
+    editedAt: item.edited_at ?? null,
     score: item.score ?? null,
   };
 }

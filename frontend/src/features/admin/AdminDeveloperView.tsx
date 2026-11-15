@@ -1,8 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { Check, Code2, Loader2, X } from "lucide-react";
+import { Check, Code2, Loader2, Search, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -12,12 +20,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAdminDeveloperRequests } from "@/hooks/useAdminDeveloperRequests";
-import type { AdminDeveloperRequest, DeveloperStatus } from "@/services/developer";
+import { useAdminDeveloperRequests } from "@/features/admin/useAdminDeveloperRequests";
 import { AdminPageHeader } from "./components/AdminPageHeader";
 import { UserCell } from "./components/UserCell";
-import { formatRelative } from "@/utils/format";
+import { formatRelative, type AdminDeveloperRequest, type DeveloperStatus } from "@tng/shared";
 
 const FILTERS = ["pending", "approved", "rejected", "all"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -29,7 +35,7 @@ const STATUS_VARIANT: Record<DeveloperStatus, "default" | "destructive" | "secon
   rejected: "destructive",
 };
 
-/** /admin/developer — duyệt yêu cầu Developer Mode, lọc theo trạng thái (?status=). */
+/** /admin/developer — duyệt yêu cầu Developer Mode; tìm (?q=, tên / email) + lọc trạng thái (?status=) như trang Users. */
 export function AdminDeveloperView() {
   const { t, i18n } = useTranslation();
   const [params, setParams] = useSearchParams();
@@ -40,7 +46,23 @@ export function AdminDeveloperView() {
 
   const count = (f: Filter) =>
     f === "all" ? requests.length : requests.filter((r) => r.status === f).length;
-  const shown = filter === "all" ? requests : requests.filter((r) => r.status === filter);
+  const q = params.get("q") ?? "";
+  const needle = q.trim().toLowerCase();
+  const shown = requests.filter(
+    (r) =>
+      (filter === "all" || r.status === filter) &&
+      (!needle || `${r.userName} ${r.userEmail}`.toLowerCase().includes(needle)),
+  );
+  const update = (key: "q" | "status", value: string | null) =>
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set(key, value);
+        else next.delete(key);
+        return next;
+      },
+      { replace: true },
+    );
 
   const actions = (req: AdminDeveloperRequest) =>
     req.status === "pending" ? (
@@ -82,28 +104,41 @@ export function AdminDeveloperView() {
         subtitle={t("admin.developer.desc")}
       />
 
-      <Tabs
-        value={filter}
-        onValueChange={(v) =>
-          setParams(v === "pending" ? {} : { status: v }, { replace: true })
-        }
-      >
-        <TabsList className="max-w-full overflow-x-auto">
-          {FILTERS.map((f) => (
-            <TabsTrigger key={f} value={f} className="gap-1.5">
-              {f === "all" ? t("admin.developer.all") : t(`admin.developer.status.${f}`)}
-              <span className="text-muted-foreground tabular-nums">{count(f)}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      {/* Bộ lọc — giống trang Users, xuống dòng trên màn hẹp */}
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative min-w-0 flex-1 basis-60">
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => update("q", e.target.value || null)}
+            placeholder={t("admin.users.search")}
+            className="pl-9"
+          />
+        </div>
+        <Select
+          value={filter}
+          onValueChange={(v) => update("status", v === "pending" ? null : v)}
+        >
+          <SelectTrigger className="w-44">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {FILTERS.map((f) => (
+              <SelectItem key={f} value={f}>
+                {f === "all" ? t("admin.users.allStatus") : t(`admin.developer.status.${f}`)}
+                <span className="text-muted-foreground tabular-nums">{count(f)}</span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {error ? (
         <p className="py-10 text-center text-sm text-destructive">
           {t("admin.error.loadFailed")}
         </p>
       ) : loading ? (
-        <Skeleton className="h-64 rounded-xl bg-muted/40" />
+        <Skeleton className="h-96 rounded-xl bg-muted/40" />
       ) : shown.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-border/60 py-16 text-sm text-muted-foreground">
           <Code2 className="size-8 animate-float text-muted-foreground/40" />

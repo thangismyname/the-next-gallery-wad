@@ -1,3 +1,4 @@
+import { TAG_ID_RE } from "../ai/tagging.constants.js";
 import { z } from "zod";
 import { LINK_PERMISSIONS, MAX_MEDIA_PER_REQUEST, MEMBER_ROLES, SMART_MAX_TAGS } from "./albums.constants.js";
 
@@ -11,7 +12,7 @@ const description = z.string().trim().max(2000);
 export const smartRuleSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("tags"),
-    tags: z.array(z.string().regex(/^[a-z_]{1,40}$/)).min(1).max(SMART_MAX_TAGS),
+    tags: z.array(z.string().regex(TAG_ID_RE)).min(1).max(SMART_MAX_TAGS),
     minConfidence: z.number().min(0).max(1).nullable().default(null),
   }),
   z.object({
@@ -19,6 +20,8 @@ export const smartRuleSchema = z.discriminatedUnion("type", [
     query: z.string().trim().min(1).max(120),
   }),
 ]);
+
+export const smartPreviewSchema = z.object({ smartRule: smartRuleSchema });
 
 export const albumParamsSchema = z.object({ id: uuid });
 export const memberParamsSchema = z.object({ id: uuid, userId });

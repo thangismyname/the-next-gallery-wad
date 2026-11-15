@@ -31,15 +31,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  adminQueryKeys,
-  banAdminUser,
-  deleteAdminUser,
-  revokeAllAdminUserSessions,
-  setAdminUserRole,
-  unbanAdminUser,
-} from "@/services/admin";
-import type { AdminUser } from "@/types";
+import { banAdminUser, deleteAdminUser, revokeAllAdminUserSessions, setAdminUserRole, unbanAdminUser } from "@/services/admin";
+import { type AdminUser, adminQueryKeys } from "@tng/shared";
 
 type Dialog = "ban" | "delete" | null;
 

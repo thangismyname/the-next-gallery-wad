@@ -1,13 +1,7 @@
+import { albumMediaQueryKey, albumQueryKey, albumsQueryKey, toMedia } from "@tng/shared";
 import { useCallback, useMemo, useState } from "react";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  albumMediaQueryKey,
-  albumQueryKey,
-  albumsQueryKey,
-  fetchAlbum,
-  fetchAlbumMedia,
-} from "@/services/albums";
-import { toMedia } from "@/services/media";
+import { fetchAlbum, fetchAlbumMedia } from "@/services/albums";
 
 const PAGE_SIZE = 60;
 

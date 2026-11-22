@@ -4,11 +4,12 @@ export const LANGUAGES = [
   { code: "vi", label: "Tiếng Việt", short: "VI" },
   { code: "en", label: "English", short: "EN" },
   { code: "ja", label: "日本語", short: "JA" },
+  { code: "zh", label: "简体中文", short: "ZH" },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]["code"];
 
-/** "ja-JP" → "ja"; ngôn ngữ lạ → "vi" (fallback). */
+/** "ja-JP" → "ja", "zh-TW" → "zh" (chỉ có bản giản thể); ngôn ngữ lạ → "vi" (fallback). */
 export function toLanguageCode(lng?: string | null): LanguageCode {
   const base = lng?.split("-")[0];
   return LANGUAGES.find((l) => l.code === base)?.code ?? "vi";

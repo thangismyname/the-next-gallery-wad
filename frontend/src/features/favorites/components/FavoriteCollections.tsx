@@ -1,13 +1,14 @@
 import { savedQueryKey } from "@tng/shared";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { Bookmark, Heart, Settings2, Trash2 } from "lucide-react";
+import { Bookmark, GalleryHorizontalEnd, Heart, Settings2, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { CoverCard } from "@/features/albums/components/CoverCard";
 import { fetchSaved } from "@/services/labels";
 import { cn } from "@/lib/utils";
 import { TRASH_PATH } from "@/features/trash/trashPath";
+import { REVIEW_PATH } from "@/features/review/reviewPath";
 import { useTrashSummary } from "@/features/trash/useTrashSummary";
 import { favoritesPath } from "../favoritesPath";
 import { LABEL_DOT } from "../labelColors";
@@ -17,7 +18,7 @@ import { useLabelManager } from "../useLabelManager";
 /**
  * Mục "Bộ sưu tập" đầu trang Albums (giống tab Albums của app mobile): thẻ Yêu thích
  * (thả tim HOẶC có nhãn) + 1 thẻ / nhãn cá nhân → trang Yêu thích đã lọc theo nhãn đó
- * + thẻ Thùng rác cuối cùng (→ /albums/trash, như app mobile).
+ * + thẻ "Vuốt để dọn" (→ /albums/review) + thẻ Thùng rác cuối cùng (→ /albums/trash, như app mobile).
  */
 export const FavoriteCollections: React.FC<{ gridClassName: string }> = ({ gridClassName }) => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export const FavoriteCollections: React.FC<{ gridClassName: string }> = ({ gridC
         <h2 className="flex items-center gap-2 text-sm font-semibold">
           <Heart className="size-4 text-rose-500" />
           {t("albums.collections")}
-          <span className="font-normal text-muted-foreground">({labels.length + 2})</span>
+          <span className="font-normal text-muted-foreground">({labels.length + 3})</span>
         </h2>
         <Button
           variant="ghost"
@@ -71,6 +72,14 @@ export const FavoriteCollections: React.FC<{ gridClassName: string }> = ({ gridC
             leading={<span className={cn("size-2 shrink-0 rounded-full", LABEL_DOT[label.color])} />}
           />
         ))}
+        <CoverCard
+          to={REVIEW_PATH}
+          title={t("review.title")}
+          subtitle={t("review.cardSubtitle")}
+          coverUrl={null}
+          icon={GalleryHorizontalEnd}
+          leading={<GalleryHorizontalEnd className="size-3.5 shrink-0 text-muted-foreground" />}
+        />
         <CoverCard
           to={TRASH_PATH}
           title={t("trash.title")}

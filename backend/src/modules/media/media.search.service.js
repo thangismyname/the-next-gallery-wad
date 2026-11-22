@@ -2,6 +2,8 @@ import { dbPool } from "../../config/db.js";
 import { semanticSearch } from "../ai/embedding.service.js";
 import { hybridSearch } from "../ai/hybrid.search.service.js";
 import { parseQuery } from "../ai/search.query.js";
+import { parseDateQuery } from "../ai/search.date.js";
+import { resolveTimeZone } from "../albums/albums.auto.service.js";
 import { searchByObject } from "../ai/detection.service.js";
 import { findSimilarMedia } from "../ai/similarity.service.js";
 import { listMediaIdsByTag } from "../ai/tagging.service.js";
@@ -18,11 +20,11 @@ const SCOPE_LIST_LIMIT = 60;
 //  - mode "clip": CLIP text→image thuần (cosine ≥ AI_CLIP_MIN_SIM) — giữ để so sánh.
 // Có embedding mà không ảnh nào đạt → trả rỗng; chỉ fallback tìm theo tên file
 // khi user chưa có embedding nào (của model CLIP hiện tại) hoặc ai-service lỗi.
-export async function searchMedia(userId, query, { mode = "hybrid", scope } = {}) {
-  // Phạm vi (Spotlight chip): chỉ ảnh trong Yêu thích / 1 nhãn / 1 album.
-  const scopeIds = scope ? await scopeMediaIds(userId, scope) : null;
+export async function searchMedia(userId, rawQuery, { mode = "hybrid", scope, tz } = {}) {
+  // Phạm vi (Spotlight chip: Yêu thích / 1 nhãn / 1 album) ∩ ngày trong câu ("2026", "tháng 3", "19/11").
+  const { query, ids: scopeIds } = await narrowSearch(userId, rawQuery, { scope, tz });
   if (scopeIds && !query) {
-    // Chưa gõ gì sau chip → liệt kê ảnh trong phạm vi.
+    // Chỉ có phạm vi / ngày, không còn chữ → liệt kê ảnh (mới nhất trước).
     return getMediaItemsByIds(userId, scopeIds.slice(0, SCOPE_LIST_LIMIT));
   }
   const onlyIds = scopeIds && new Set(scopeIds);
@@ -65,11 +67,42 @@ export async function searchMedia(userId, query, { mode = "hybrid", scope } = {}
   return result.rows.map(toMediaItem);
 }
 
+/**
+ * Ngày trong câu → id ảnh có ngày chụp (taken_at, không có thì ngày tải lên) khớp năm / tháng / ngày theo
+ * múi giờ client (giống cách Thư viện nhóm ảnh), giao với phạm vi. Trả phần chữ còn lại để search tiếp.
+ * @returns {Promise<{ query: string, ids: string[] | null }>} ids null = không giới hạn.
+ */
+async function narrowSearch(userId, rawQuery, { scope, tz }) {
+  let ids = scope ? await scopeMediaIds(userId, scope) : null;
+  const date = parseDateQuery(rawQuery);
+  if (!date) return { query: rawQuery, ids };
+  const result = await dbPool.query(
+    `SELECT id FROM (
+       SELECT id, COALESCE(taken_at, created_at) AT TIME ZONE $2 AS t
+         FROM media WHERE user_id = $1 AND deleted_at IS NULL
+     ) m
+     WHERE ($3::int IS NULL OR EXTRACT(YEAR FROM t) = $3)
+       AND ($4::int IS NULL OR EXTRACT(MONTH FROM t) = $4)
+       AND ($5::int IS NULL OR EXTRACT(DAY FROM t) = $5)
+     ORDER BY t DESC`,
+    [userId, await resolveTimeZone(tz), date.year ?? null, date.month ?? null, date.day ?? null],
+  );
+  const dated = result.rows.map((row) => String(row.id));
+  if (ids) {
+    const inDate = new Set(dated);
+    ids = ids.filter((id) => inDate.has(id));
+  } else {
+    ids = dated;
+  }
+  return { query: date.rest, ids };
+}
+
 // Tìm ảnh theo ĐỐI TƯỢNG (YOLO26) cho Spotlight — khớp class_name.
 // Trả MediaListItem kèm `score` (confidence cao nhất) giống semantic search.
-export async function searchMediaObjects(userId, query, { limit = 20, scope } = {}) {
+export async function searchMediaObjects(userId, rawQuery, { limit = 20, scope, tz } = {}) {
+  const { query, ids: onlyIds } = await narrowSearch(userId, rawQuery, { scope, tz });
+  if (!query) return []; // chỉ có ngày → ảnh đã nằm ở nhóm Ảnh, không có vật thể nào để tìm
   const classes = [...new Set(parseQuery(query).objects.map((o) => o.cls))];
-  const onlyIds = scope ? await scopeMediaIds(userId, scope) : null;
   const hits = await searchByObject(userId, query, { limit, classes, onlyIds });
   const scoreById = new Map(hits.map((hit) => [hit.id, hit.score]));
   const items = await getMediaItemsByIds(

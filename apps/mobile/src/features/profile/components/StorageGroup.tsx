@@ -1,14 +1,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { formatBytes, storageQueryKey, trashQueryKey } from "@tng/shared";
 import { router } from "expo-router";
-import { HardDrive, Trash2 } from "lucide-react-native";
+import { Archive, HardDrive, Trash2 } from "lucide-react-native";
 import { useState } from "react";
-import { Alert, View } from "react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { Text } from "@/components/ui/text";
+import { useTheme } from "@/hooks/useTheme";
 import { mediaApi } from "@/services";
 
+import { NotEnoughSpaceError, useLibraryExport } from "../useLibraryExport";
 import { useStorage } from "../useProfile";
 import { SettingsGroup, SettingsRow } from "./SettingsGroup";
 
@@ -18,6 +20,8 @@ export function StorageGroup() {
   const queryClient = useQueryClient();
   const { data } = useStorage();
   const [emptying, setEmptying] = useState(false);
+  const { colors } = useTheme();
+  const exporter = useLibraryExport();
   const total = data ? data.photoBytes + data.videoBytes + data.trashBytes : 0;
   const part = (bytes: number) => (total ? `${(bytes / total) * 100}%` : "0%");
 
@@ -50,6 +54,12 @@ export function StorageGroup() {
     );
   };
 
+  const exportLibrary = () =>
+    exporter.toggle((data?.photoBytes ?? 0) + (data?.videoBytes ?? 0)).catch((err) =>
+      Alert.alert(t(err instanceof NotEnoughSpaceError ? "transfer.export.noSpace" : "transfer.export.failed")),
+    );
+  const exporting = exporter.bytes !== null;
+
   return (
     <SettingsGroup title={t("settings.storage.title")} footer={t("settings.storage.desc")}>
       <SettingsRow icon={HardDrive} title={t("settings.storage.used")} value={data ? formatBytes(total) : "…"}>
@@ -73,6 +83,17 @@ export function StorageGroup() {
         chevron
         // Leave the sheet for the full-screen grid (its Lightbox portal lives in the root).
         onPress={() => router.replace("/trash")}
+      />
+      <SettingsRow
+        icon={Archive}
+        title={t("transfer.export.title")}
+        subtitle={
+          exporting
+            ? t("transfer.export.progress", { size: formatBytes(exporter.bytes ?? 0) })
+            : t("transfer.export.descriptionMobile")
+        }
+        trailing={exporting ? <ActivityIndicator size="small" color={colors.mutedForeground} /> : undefined}
+        onPress={() => void exportLibrary()}
       />
       {data?.trashCount ? (
         <SettingsRow title={t("settings.storage.emptyTrash")} destructive busy={emptying} onPress={emptyTrash} />

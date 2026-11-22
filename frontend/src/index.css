@@ -242,6 +242,16 @@
   unicode-range: U+3000-303F, U+3040-309F, U+30A0-30FF, U+31F0-31FF, U+3400-4DBF, U+4E00-9FFF, U+FF00-FFEF;
 }
 
+/* Tiếng Trung: subset Zen chỉ có kanji của bản tiếng Nhật (nét kiểu Nhật) → trang zh dùng font
+   giản thể của hệ thống trước, để không trộn 2 kiểu chữ trong cùng 1 câu. Không layer = thắng utility. */
+html:lang(zh) {
+  font-family: "Product Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+}
+html:lang(zh) .font-heading,
+html:lang(zh) .font-serif {
+  font-family: "DFVN Basteleur", "Songti SC", "Noto Serif SC", "SimSun", Georgia, serif;
+}
+
 /* ============================================
    TAILWIND TOKEN MAPPING (v4)
    ============================================ */

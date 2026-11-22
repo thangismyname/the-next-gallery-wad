@@ -45,6 +45,8 @@ export const SIGNAL = {
   MOMENT_MEME_REACTED: "moment:meme-reacted",
   MOMENT_REACTION: "moment:reaction",
   MOMENT_DELETED: "moment:deleted",
+  /** Thông báo mới đã lưu (backend `notifications.service.js::NOTIFICATION_EVENT`). */
+  NOTIFICATION_NEW: "notification:new",
   MOMENT_LEFT: "moment:left",
   MOMENT_UPDATED: "moment:updated",
   ERROR: "error",

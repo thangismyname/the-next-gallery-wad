@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlassPanel } from "@/components/shared/GlassPanel";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { bottomBarOffset } from "@/features/navigation/layout";
+import { floatingBarOffset } from "@/features/navigation/layout";
 import { useTheme } from "@/hooks/useTheme";
 import { fadeOut, riseIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -105,7 +105,7 @@ export function SelectionBar({ items }: { items: MediaListItem[] }) {
     ]);
   };
 
-  const bottom = bottomBarOffset(insets.bottom);
+  const bottom = floatingBarOffset(insets.bottom);
 
   return (
     <>

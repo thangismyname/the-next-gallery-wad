@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   Sidebar as SidebarPrimitive,
@@ -7,11 +6,8 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useNavItems } from "@/features/navigation/useNavItems";
@@ -20,7 +16,6 @@ import { SidebarNavItem } from "./components/SidebarNavItem";
 import { ThemeToggle } from "@/components/toggles/ThemeToggle";
 import { LanguageToggle } from "@/components/toggles/LanguageToggle";
 import type { NavMenuItem } from "./types";
-import { House } from "lucide-react";
 
 // Tiêu đề nhóm (Thùng rác ghim ở footer; Trang chủ = header của sidebar).
 const SECTION_LABEL_KEYS: Record<string, string> = {
@@ -40,19 +35,10 @@ function groupBySection(items: NavMenuItem[]) {
 export const Sidebar: React.FC = () => {
   const { t } = useTranslation();
   const { state, isMobile } = useSidebar();
-  const { width, onMouseDown } = useResizable();
+  const { onMouseDown } = useResizable();
   const menuItems = useNavItems();
   const { system: pinned = [], ...grouped } = groupBySection(menuItems);
   const isCollapsed = state === "collapsed";
-  useEffect(() => {
-    const wrapper = document.querySelector('[data-slot="sidebar-wrapper"]');
-    if (wrapper) {
-      (wrapper as HTMLElement).style.setProperty(
-        "--sidebar-width",
-        `${width}px`,
-      );
-    }
-  }, [width]);
 
   return (
     <SidebarPrimitive
@@ -61,40 +47,11 @@ export const Sidebar: React.FC = () => {
       // thì đáy sidebar (Thùng rác, toggle) thò khỏi mép dưới màn hình 4rem.
       className="top-16 h-[calc(100svh-4rem)] border-r border-border bg-sidebar"
     >
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              asChild
-              className="[&>div]:group-data-[collapsible=icon]:hidden"
-            >
-              {/* Header sidebar = nút về Trang chủ (không lặp mục "Trang chủ" trong danh sách) */}
-              <Link to="/" aria-label={t("sidebar.home")}>
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-foreground text-background">
-                  <House className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    {t("app.name")}
-                  </span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {t("app.tagline", "AI Photo Gallery")}
-                  </span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-
-      <SidebarSeparator />
-
       <SidebarContent className="items-center">
-        {Object.entries(grouped).map(([section, items], idx) => (
+        {/* Gọn: tên app đã có trên Header → không lặp ở đầu sidebar; nhóm cách nhau bằng nhãn, không kẻ vạch. */}
+        {Object.entries(grouped).map(([section, items]) => (
           <React.Fragment key={section}>
-            {idx > 0 && <SidebarSeparator />}
-            <SidebarGroup>
+            <SidebarGroup className="py-1">
               {!isCollapsed && SECTION_LABEL_KEYS[section] && (
                 <SidebarGroupLabel>
                   {t(SECTION_LABEL_KEYS[section])}
@@ -119,7 +76,7 @@ export const Sidebar: React.FC = () => {
       )}
 
       <SidebarFooter className="gap-3 border-t border-border/60 px-2 pt-3 pb-4">
-        {/* Mục section "system" ghim dưới cùng (hiện trống — Thùng rác đã vào Albums) */}
+        {/* Mục section "system" ghim dưới cùng: Quản trị (chỉ admin) */}
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           {pinned.map((item) => (
             <SidebarNavItem key={item.to} item={item} />

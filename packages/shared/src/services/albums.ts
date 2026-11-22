@@ -1,5 +1,5 @@
 import type { HttpClient } from "../http";
-import { mapMediaItem, resolveMediaUrl, type MediaListItem } from "./media";
+import { BULK_IDS_MAX, clientTimeZone, inChunks, mapMediaItem, resolveMediaUrl, type MediaListItem } from "./media";
 
 export type AlbumRole = "owner" | "editor" | "viewer";
 export type MemberRole = Exclude<AlbumRole, "owner">;
@@ -101,8 +101,13 @@ export const createAlbumsService = (http: HttpClient) => ({
     description?: string;
     mediaIds?: string[];
     smartRule?: SmartRule;
-  }): Promise<Album> =>
-    mapAlbum(await http.post<Album>("/albums", body)),
+  }): Promise<Album> => {
+    // Backend takes ≤ 500 ids per request → create with the first chunk, add the rest after.
+    const [first, rest] = [body.mediaIds?.slice(0, BULK_IDS_MAX), body.mediaIds?.slice(BULK_IDS_MAX) ?? []];
+    const album = mapAlbum(await http.post<Album>("/albums", { ...body, ...(first ? { mediaIds: first } : {}) }));
+    await inChunks(rest, (chunk) => http.post(`/albums/${encodeURIComponent(album.id)}/media`, { mediaIds: chunk }));
+    return album;
+  },
 
   updateAlbum: async (
     id: string,
@@ -148,16 +153,24 @@ export const createAlbumsService = (http: HttpClient) => ({
     };
   },
 
-  addAlbumMedia: (id: string, mediaIds: string[]): Promise<{ added: number }> =>
-    http.post<{ added: number }>(`/albums/${encodeURIComponent(id)}/media`, {
-      mediaIds,
-    }),
+  // ≤ 500 ids per request on the backend → chunks, counts summed.
+  addAlbumMedia: async (id: string, mediaIds: string[]): Promise<{ added: number }> => {
+    let added = 0;
+    await inChunks(mediaIds, async (chunk) => {
+      added += (await http.post<{ added: number }>(`/albums/${encodeURIComponent(id)}/media`, { mediaIds: chunk })).added ?? 0;
+    });
+    return { added };
+  },
 
-  removeAlbumMedia: (id: string, mediaIds: string[]): Promise<{ removed: number }> =>
-    http.post<{ removed: number }>(
-      `/albums/${encodeURIComponent(id)}/media/remove`,
-      { mediaIds },
-    ),
+  removeAlbumMedia: async (id: string, mediaIds: string[]): Promise<{ removed: number }> => {
+    let removed = 0;
+    await inChunks(mediaIds, async (chunk) => {
+      removed +=
+        (await http.post<{ removed: number }>(`/albums/${encodeURIComponent(id)}/media/remove`, { mediaIds: chunk }))
+          .removed ?? 0;
+    });
+    return { removed };
+  },
 
   fetchAlbumMembers: (id: string): Promise<AlbumMember[]> =>
     http.get<AlbumMember[]>(`/albums/${encodeURIComponent(id)}/members`),
@@ -245,13 +258,7 @@ export const createAlbumsService = (http: HttpClient) => ({
 
   // ── Auto albums ─────────────────────────────────────────────
   fetchAutoAlbums: async () => {
-    const tz = (() => {
-      try {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-      } catch {
-        return "UTC";
-      }
-    })();
+    const tz = clientTimeZone();
     const data = await http.get<{
       groups: { id: AutoAlbumGroup; albums: AutoAlbum[] }[];
     }>(`/albums/auto`, { params: { tz } });
@@ -268,13 +275,7 @@ export const createAlbumsService = (http: HttpClient) => ({
     key: string,
     { limit = 60, offset = 0 }: { limit?: number; offset?: number } = {},
   ): Promise<{ total: number; items: MediaListItem[] }> => {
-    const tz = (() => {
-      try {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-      } catch {
-        return "UTC";
-      }
-    })();
+    const tz = clientTimeZone();
     const data = await http.get<{ total: number; items: Record<string, unknown>[] }>(
       `/albums/auto/${encodeURIComponent(key)}/media`,
       { params: { limit, offset, tz } },
@@ -283,13 +284,7 @@ export const createAlbumsService = (http: HttpClient) => ({
   },
 
   saveAutoAlbum: async (key: string, name: string): Promise<Album> => {
-    const tz = (() => {
-      try {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
-      } catch {
-        return "UTC";
-      }
-    })();
+    const tz = clientTimeZone();
     return mapAlbum(
       await http.post<Album>(`/albums/auto/${encodeURIComponent(key)}/save`, {
         name,

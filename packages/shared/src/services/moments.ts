@@ -2,6 +2,7 @@ import type { HttpClient } from "../http";
 import type {
   MemeTemplate,
   Moment,
+  MomentFraming,
   MomentMeme,
   MomentReaction,
   MomentSlot,
@@ -33,11 +34,14 @@ function mapSlot(item: Record<string, unknown>): MomentSlot {
     mediaId,
     mediaType: (item.mediaType as MomentSlot["mediaType"]) ?? "photo",
     thumbnailUrl: mediaId ? resolveMediaUrl(item.thumbnailUrl as string) : null,
+    displayUrl: mediaId && item.displayUrl ? resolveMediaUrl(item.displayUrl as string) : null,
+    framing: (item.framing as MomentFraming | null) ?? null,
     url: mediaId ? resolveMediaUrl(item.url as string) : null,
     width: (item.width as number) ?? 800,
     height: (item.height as number) ?? 600,
     durationSeconds: (item.durationSeconds as number | null) ?? null,
     filled: Boolean(item.filled),
+    declined: Boolean(item.declined),
     missing: Boolean(item.missing),
     filledAt: (item.filledAt as string | null) ?? null,
   };
@@ -58,6 +62,7 @@ function mapMoment(item: Record<string, unknown>): Moment {
     mediaId: (item.mediaId as string | null) ?? null,
     mediaType: (item.mediaType as Moment["mediaType"]) ?? "photo",
     caption: (item.caption as string | null) ?? null,
+    framing: (item.framing as MomentFraming | null) ?? null,
     visibility: item.visibility as MomentVisibility | undefined,
     missingMedia: Boolean(item.missingMedia),
     thumbnailUrl: item.thumbnailUrl
@@ -161,6 +166,10 @@ export const createMomentsService = (http: HttpClient) => ({
     template?: MomentTemplate;
     mediaId?: string | null;
     mediaIds?: string[];
+    /** framings[i] goes with my i-th photo (single: [0]); null = centered. */
+    framings?: (MomentFraming | null)[];
+    /** creatorSlots[i] = slot of my i-th photo (collab); omitted = the first slots. */
+    creatorSlots?: number[];
     collaboratorIds?: string[];
     caption?: string;
     visibility?: MomentVisibility;
@@ -172,12 +181,16 @@ export const createMomentsService = (http: HttpClient) => ({
   fillMomentSlots: async (
     momentId: string,
     mediaIds: string[],
+    /** framings[i] goes with mediaIds[i]; null = centred. */
+    framings?: (MomentFraming | null)[],
+    /** slotIndexes[i] = which of my empty slots gets mediaIds[i]; omitted = in order. */
+    slotIndexes?: number[],
   ): Promise<{ filled: number; complete: boolean; moment: Moment }> => {
     const data = await http.post<{
       filled?: number;
       complete?: boolean;
       moment?: Record<string, unknown>;
-    }>(`/moments/${encodeURIComponent(momentId)}/fill`, { mediaIds });
+    }>(`/moments/${encodeURIComponent(momentId)}/fill`, { mediaIds, framings, slotIndexes });
     return {
       filled: Number(data?.filled) || 0,
       complete: Boolean(data?.complete),
@@ -190,6 +203,8 @@ export const createMomentsService = (http: HttpClient) => ({
     payload: {
       template?: MomentTemplate;
       mediaIds?: string[];
+      framings?: (MomentFraming | null)[];
+      creatorSlots?: number[];
       collaboratorIds?: string[];
       caption?: string;
       visibility?: MomentVisibility;
@@ -238,6 +253,10 @@ export const createMomentsService = (http: HttpClient) => ({
 
   deleteMoment: (momentId: string): Promise<void> =>
     http.del<void>(`/moments/${encodeURIComponent(momentId)}`),
+
+  /** Invitee says no: their empty frames are marked declined, the creator gets a notification. */
+  declineMoment: (momentId: string) =>
+    http.post<{ declined: boolean }>(`/moments/${encodeURIComponent(momentId)}/decline`),
 
   leaveMoment: async (momentId: string): Promise<Moment> => {
     const data = await http.post<Record<string, unknown>>(

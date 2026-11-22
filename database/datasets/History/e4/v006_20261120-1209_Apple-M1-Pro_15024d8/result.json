@@ -1,0 +1,82 @@
+{
+  "weights": "yolo26n-oi-20261108-224401.pt",
+  "covered_classes": 128,
+  "gap_classes": 46,
+  "test_detection_mAP50": 0.5485339919201273,
+  "test_detection_mAP50_coco": 0.6175838119360898,
+  "test_detection_mAP50_noncoco": 0.4295332382755964,
+  "test_detection_mAP50_object": 0.5485339919201273,
+  "test_tag": [
+    {
+      "thresholds": "tuned_on_val",
+      "group": "all",
+      "classes": 125,
+      "mAP": 0.8516986199581,
+      "macro_f1": 0.7942830716973156,
+      "micro_f1": 0.8039998165221779,
+      "micro_precision": 0.7650807507638586
+    },
+    {
+      "thresholds": "app_conf_0.25",
+      "group": "all",
+      "classes": 125,
+      "mAP": 0.8516986199581,
+      "macro_f1": 0.6325821948260193,
+      "micro_f1": 0.7197182257775655,
+      "micro_precision": 0.9411397345823576
+    },
+    {
+      "thresholds": "app_min_conf_0.4",
+      "group": "all",
+      "classes": 125,
+      "mAP": 0.8516986199581,
+      "macro_f1": 0.5525933531320598,
+      "micro_f1": 0.6462050003197135,
+      "micro_precision": 0.9546570942754582
+    }
+  ],
+  "test_tag_by_set": [
+    {
+      "thresholds": "tuned_on_val",
+      "group": "all",
+      "classes": 125,
+      "mAP": 0.8516986199581,
+      "macro_f1": 0.7942830716973156,
+      "micro_f1": 0.8039998165221779,
+      "micro_precision": 0.7650807507638586
+    },
+    {
+      "thresholds": "tuned_on_val",
+      "group": "object",
+      "classes": 125,
+      "mAP": 0.8516986199581,
+      "macro_f1": 0.7942830716973156,
+      "micro_f1": 0.8039998165221779,
+      "micro_precision": 0.7650807507638586
+    },
+    {
+      "thresholds": "tuned_on_val",
+      "group": "coco",
+      "classes": 78,
+      "mAP": 0.8865283735115234,
+      "macro_f1": 0.8143706863643911,
+      "micro_f1": 0.8723161694850845,
+      "micro_precision": 0.9032067676568956
+    },
+    {
+      "thresholds": "tuned_on_val",
+      "group": "gap",
+      "classes": 47,
+      "mAP": 0.7938960502311427,
+      "macro_f1": 0.760946179271105,
+      "micro_f1": 0.7402217294900222,
+      "micro_precision": 0.6548964218455744
+    }
+  ],
+  "test_tag_ci95": {
+    "mAP_lo": 0.842026895182529,
+    "mAP_hi": 0.861595804681196,
+    "macro_f1_lo": 0.7811914504386991,
+    "macro_f1_hi": 0.801893972667782
+  }
+}

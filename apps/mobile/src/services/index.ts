@@ -9,9 +9,12 @@ import {
   createAlbumsService,
   createDeveloperService,
   createFriendsService,
+  createImportsService,
+  createLabService,
   createLabelsService,
   createMediaService,
   createMomentsService,
+  createNotificationsService,
   createProfileService,
 } from "@tng/shared";
 
@@ -26,3 +29,6 @@ export const profileApi = createProfileService(mobileHttp);
 export const aiProcessingApi = createAiProcessingService(mobileHttp);
 export const developerApi = createDeveloperService(mobileHttp);
 export const adminApi = createAdminService(mobileHttp);
+export const labApi = createLabService(mobileHttp);
+export const importsApi = createImportsService(mobileHttp);
+export const notificationsApi = createNotificationsService(mobileHttp);

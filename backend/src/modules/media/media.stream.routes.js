@@ -4,6 +4,7 @@ import { validate } from "../../middleware/validate.js";
 import { downloadLimit } from "../../middleware/rateLimit.js";
 import { attachmentHeader, streamMediaZip } from "./media.download.service.js";
 import { zipDownloadSchema } from "./media.schema.js";
+import { streamLibraryExport } from "./media.export.service.js";
 import { authorizeMediaRequest } from "./media.access.js";
 import {
   getThumbnailInfo,
@@ -60,10 +61,11 @@ router.get("/:id/thumbnail", asyncHandler(async (req, res) => {
   stream.pipe(res);
 }));
 
-router.get("/:id/file", asyncHandler(async (req, res) => {
-  const access = await authorizeMediaRequest(req, req.params.id, "file");
+// Bản gốc (`/file`) và video Live Photo (`/motion`) — cùng quyền (URL ký) + Range.
+const streamFile = (kind) => asyncHandler(async (req, res) => {
+  const access = await authorizeMediaRequest(req, req.params.id, kind);
   if (!access) return res.status(403).json(FORBIDDEN);
-  const info = await getFileInfo(req.params.id);
+  const info = await getFileInfo(req.params.id, kind);
 
   if (!info) {
     return res.status(404).json({
@@ -86,7 +88,7 @@ router.get("/:id/file", asyncHandler(async (req, res) => {
   res.setHeader("ETag", info.etag);
   res.setHeader("Accept-Ranges", "bytes");
   // ?download=1 → tải về với tên file gốc (không nằm trong chữ ký URL).
-  if (req.query.download === "1") {
+  if (kind === "file" && req.query.download === "1") {
     res.setHeader("Content-Disposition", attachmentHeader(info.filename));
   }
 
@@ -126,7 +128,10 @@ router.get("/:id/file", asyncHandler(async (req, res) => {
   // Client huỷ request (tua video liên tục) → đóng luôn stream MinIO.
   res.on("close", () => stream.destroy());
   stream.pipe(res);
-}));
+});
+
+router.get("/:id/file", streamFile("file"));
+router.get("/:id/motion", streamFile("motion"));
 
 // Tải nhiều bản gốc thành 1 file zip. Gửi bằng <form method=POST> (trình
 // duyệt tự lưu file đang stream, không qua RAM của tab): body `ids=a,b,c`.
@@ -145,5 +150,15 @@ router.post(
     }
   },
 );
+
+// Xuất cả thư viện (định dạng Google Takeout) để chuyển nền tảng — mở bằng link thường (cookie).
+router.get("/export", requireAuth, downloadLimit, async (req, res, next) => {
+  try {
+    await streamLibraryExport(req.user.id, res);
+  } catch (error) {
+    if (res.headersSent) res.destroy(error);
+    else next(error);
+  }
+});
 
 export default router;

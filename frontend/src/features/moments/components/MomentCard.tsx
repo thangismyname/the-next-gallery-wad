@@ -156,15 +156,17 @@ export function MomentCard({ moment, size, active, unseen, onDelete, onLeave, on
                   {t("moments.editCaption")}
                 </DropdownMenuItem>
               )}
-              {moment.isOwn && onDelete ? (
-                <DropdownMenuItem variant="destructive" onSelect={onDelete}>
-                  <Trash2 />
-                  {t("moments.delete")}
-                </DropdownMenuItem>
-              ) : onLeave ? (
+              {!moment.isOwn && onLeave ? (
                 <DropdownMenuItem variant="destructive" onSelect={onLeave}>
                   <UserMinus />
                   {t("moments.leave")}
+                </DropdownMenuItem>
+              ) : null}
+              {/* Người tham gia moment ghép cũng xoá được cả moment chung. */}
+              {(moment.isOwn || moment.isParticipant) && onDelete ? (
+                <DropdownMenuItem variant="destructive" onSelect={onDelete}>
+                  <Trash2 />
+                  {t(moment.isOwn ? "moments.delete" : "moments.deleteShared")}
                 </DropdownMenuItem>
               ) : null}
             </DropdownMenuContent>

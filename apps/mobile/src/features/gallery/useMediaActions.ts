@@ -120,7 +120,14 @@ export function useMediaActions() {
 
   const moveManyToTrash = useCallback(
     async (ids: string[]) => {
-      await mediaApi.moveToTrash(ids);
+      try {
+        await mediaApi.moveToTrash(ids);
+      } catch (error) {
+        // Sent in chunks of 100 — the first chunks may already be in the Trash.
+        void refetchLists();
+        void queryClient.invalidateQueries({ queryKey: trashQueryKey });
+        throw error;
+      }
       const set = new Set(ids);
       patchLists((items) => items.filter((m) => !set.has(m.id)), -ids.length);
       refreshSaved();
@@ -128,7 +135,7 @@ export function useMediaActions() {
       void queryClient.invalidateQueries({ queryKey: trashQueryKey });
       void queryClient.invalidateQueries({ queryKey: storageQueryKey });
     },
-    [patchLists, refreshSaved, queryClient],
+    [patchLists, refreshSaved, refetchLists, queryClient],
   );
   const moveToTrash = useCallback((item: MediaListItem) => moveManyToTrash([item.id]), [moveManyToTrash]);
 

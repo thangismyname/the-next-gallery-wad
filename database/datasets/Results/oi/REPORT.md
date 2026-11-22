@@ -1,6 +1,6 @@
 # Báo cáo thực nghiệm AI — The Next Gallery (E1–E6)
 
-Tạo lúc 2026-11-12 14:04 · dữ liệu `map=6f06806690 val=3000 tes=5000` (map = mapping lớp, val/tes = số ảnh) · mỗi phần dùng run chính thức mới nhất.
+Tạo lúc 2026-11-22 19:31 · dữ liệu `map=6f06806690 val=3000 tes=5000` (map = mapping lớp, val/tes = số ảnh) · mỗi phần dùng run chính thức mới nhất.
 
 Dữ liệu: Open Images V7, 174 lớp (128 vật thể, 46 cảnh/khái niệm), val 3.000 ảnh để chọn prompt/ngưỡng/quy tắc, test 5.000 ảnh báo cáo 1 lần. Nhãn image-level do người xác minh; cặp chưa gán nhãn bị loại khỏi metric. Model: CLIP ViT-B/32 laion2b (app), YOLO26n, ảnh qua pipeline backend.
 
@@ -8,37 +8,37 @@ Chi tiết từng run: `Results/oi/<exp>/<run_id>/` (CSV theo lớp / query, res
 
 | thí nghiệm | run |
 |---|---|
-| e1 | `20261107-034923` |
-| e2 | `20261107-033218` |
-| e3 | `20261107-231117` |
-| e4 | `20261107-033725` |
-| yolo_ft | `20261109-100541` |
-| e5 | `20261108-222131` |
-| probe | `20261108-014828` |
-| e6 | `20261108-225535` |
+| e1 | `20261120-111931` |
+| e2 | `20261120-115528` |
+| e3 | `20261120-115544` |
+| e4 | `20261120-115621` |
+| yolo_ft | `20261120-115827` |
+| e5 | `20261120-121016` |
+| probe | `20261122-192438` |
+| e6 | `20261122-193042` |
 
 ## E1 — Sanity check CLIP (Flickr30k 1K, COCO 5K)
 
-run `20261107-034923` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-111931` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
-**Kết luận:** ❌ lệch số paper ở ít nhất 1 chiều — xem bảng
+**Kết luận:** ✅ khớp số paper (|Δ R@1| ≤ 2)
 
 | model | dataset | preprocess | prefix | t2i R@1 | R@5 | R@10 | i2t R@1 | R@5 | R@10 | paper R@1 (t2i/i2t) | Δ R@1 | đạt |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| ViT-L-14-336:openai | flickr30k | raw | a photo of | 65.2 | 88.1 | 93.0 | 88.3 | 98.4 | 99.5 | 68.7 / 88 | -3.5 / 0.3 | ❌ |
-| ViT-L-14-336:openai | flickr30k | raw | none | 65.7 | 88.2 | 92.8 | 87.9 | 98 | 99.2 | 68.7 / 88 | – / – |  |
-| ViT-L-14-336:openai | flickr30k | backend | a photo of | 65.5 | 87.4 | 92.5 | 86.6 | 97.3 | 99 | 68.7 / 88 | – / – |  |
-| ViT-L-14-336:openai | flickr30k | backend | none | 65.8 | 87.4 | 92.5 | 86.8 | 97.6 | 98.7 | 68.7 / 88 | – / – |  |
-| ViT-L-14-336:openai | mscoco_captions | raw | a photo of | 35.7 | 60.4 | 70.5 | 59.1 | 81.8 | 88.6 | 37.8 / 58.4 | -2.1 / 0.7 | ❌ |
-| ViT-L-14-336:openai | mscoco_captions | raw | none | 36.3 | 61.1 | 71.4 | 58.8 | 80.8 | 88.5 | 37.8 / 58.4 | – / – |  |
-| ViT-L-14-336:openai | mscoco_captions | backend | a photo of | 36.7 | 61.2 | 71.3 | 57.6 | 79.9 | 87.5 | 37.8 / 58.4 | – / – |  |
-| ViT-L-14-336:openai | mscoco_captions | backend | none | 36.7 | 61.2 | 71.3 | 57.2 | 79.4 | 86.5 | 37.8 / 58.4 | – / – |  |
+| ViT-L-14-336:openai | flickr30k | raw | a photo of | 67.4 | 89.2 | 93.6 | 87.4 | 98.9 | 99.6 | 68.7 / 88 | -1.3 / -0.6 | ✅ |
+| ViT-L-14-336:openai | flickr30k | raw | none | 67.4 | 89 | 93.3 | 87.4 | 98.3 | 99.3 | 68.7 / 88 | – / – |  |
+| ViT-L-14-336:openai | flickr30k | backend | a photo of | 67.2 | 88.2 | 92.6 | 86.5 | 97.9 | 99.3 | 68.7 / 88 | – / – |  |
+| ViT-L-14-336:openai | flickr30k | backend | none | 66.9 | 87.5 | 92.4 | 86.1 | 97.9 | 99.2 | 68.7 / 88 | – / – |  |
+| ViT-L-14-336:openai | mscoco_captions | raw | a photo of | 36.5 | 61.2 | 71.4 | 58.9 | 82.2 | 88.5 | 37.8 / 58.4 | -1.3 / 0.5 | ✅ |
+| ViT-L-14-336:openai | mscoco_captions | raw | none | 37 | 61.7 | 71.5 | 57.8 | 81.2 | 87.8 | 37.8 / 58.4 | – / – |  |
+| ViT-L-14-336:openai | mscoco_captions | backend | a photo of | 37.5 | 62.0 | 72.0 | 58.0 | 80.0 | 87.2 | 37.8 / 58.4 | – / – |  |
+| ViT-L-14-336:openai | mscoco_captions | backend | none | 37.4 | 61.8 | 71.6 | 56.5 | 79.5 | 86.7 | 37.8 / 58.4 | – / – |  |
 
 R@K tính theo %. Δ chỉ chấm ở cấu hình giống paper (raw + "a photo of"); `backend` = ảnh đi qua pipeline app (WebP ≤512).
 
 ## E2 — CLIP zero-shot tag (RQ1)
 
-run `20261107-033218` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-115528` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
 Template chọn trên val: **`a photo containing a {}.`** · test mAP **0.884** (CI95 0.875–0.889) · macro-F1 **0.826** (CI95 0.812–0.827)
 
@@ -80,7 +80,7 @@ Template chọn trên val: **`a photo containing a {}.`** · test mAP **0.884** 
 | tag:sunset | 2 | 0.989 | 0.973 | 0.972 | 0.157 | 0.182 |
 | tag:vehicles | 11 | 0.868 | 0.803 | 0.796 | 0.037 | 0.019 |
 
-**10 lớp kém nhất / tốt nhất** (đủ bảng: `20261107-033218/per_class.csv`):
+**10 lớp kém nhất / tốt nhất** (đủ bảng: `20261120-115528/per_class.csv`):
 
 | lớp | nhóm | AP test | F1 test | pos test |
 |---|---|---|---|---|
@@ -110,7 +110,7 @@ Template chọn trên val: **`a photo containing a {}.`** · test mAP **0.884** 
 
 ## E3 — CLIP zero-shot search (RQ1)
 
-run `20261107-231117` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-115544` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
 **(a) Query theo lớp** — `a photo of a {lớp}`, 5.000 ảnh test:
 
@@ -136,15 +136,15 @@ Chênh lệch strict ↔ known-only ≈ phần do nhãn Open Images thiếu — 
 
 | cấu hình | P@10 | P@20 | nDCG@10 | đã chấm |
 |---|---|---|---|---|
-| en@app | 0.530 | 0.436 | 0.657 | 100% |
-| vi@app | 0.060 | 0.056 | 0.069 | 100% |
-| vi@multilingual | 0.522 | 0.435 | 0.618 | 100% |
+| en@app | 0.530 | 0.436 | 0.641 | 100% |
+| vi@app | 0.060 | 0.056 | 0.067 | 100% |
+| vi@multilingual | 0.522 | 0.435 | 0.605 | 100% |
 
 **(d) Tiếng Việt:** tạm hoãn (chưa có UIT-OpenViIC).
 
 ## E4 — YOLO26 baseline
 
-run `20261107-033725` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-115621` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
 Lớp có trong YOLO (COCO): **81** · khoảng trống (chỉ CLIP lấp được): **93** · detection mAP@0.5 test (giao thức OI): **0.638**
 
@@ -154,10 +154,13 @@ Lớp có trong YOLO (COCO): **81** · khoảng trống (chỉ CLIP lấp đư�
 |---|---|---|---|---|---|---|
 | tuned_on_val | all | 78 | 0.897 | 0.829 | 0.882 | 0.898 |
 | tuned_on_val | object | 78 | 0.897 | 0.829 | 0.882 | 0.898 |
+| tuned_on_val | coco | 78 | 0.897 | 0.829 | 0.882 | 0.898 |
 | app_conf_0.25 | all | 78 | 0.897 | 0.799 | 0.859 | 0.922 |
 | app_conf_0.25 | object | 78 | 0.897 | 0.799 | 0.859 | 0.922 |
+| app_conf_0.25 | coco | 78 | 0.897 | 0.799 | 0.859 | 0.922 |
 | app_min_conf_0.4 | all | 78 | 0.897 | 0.753 | 0.830 | 0.941 |
 | app_min_conf_0.4 | object | 78 | 0.897 | 0.753 | 0.830 | 0.941 |
+| app_min_conf_0.4 | coco | 78 | 0.897 | 0.753 | 0.830 | 0.941 |
 
 **Detection AP@0.5 — 10 lớp kém nhất / tốt nhất:**
 
@@ -191,16 +194,9 @@ Lớp YOLO không có (ví dụ): Human face, Tree, Flower, Building, House, Sky
 
 ## YOLO-FT — Fine-tune YOLO26n trên box Open Images
 
-run `20261109-100541` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-115827` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
-Model: `yolo26n-oi-20261109-100541.pt` · 128 lớp vật thể (81 COCO + 47 ngoài COCO) · train 14116 ảnh / 81489 box · 343 phút trên mps.
-
-| chỉ số (Ultralytics, test) | giá trị |
-|---|---|
-| mAP@50 | 0.457 |
-| mAP@50-95 | 0.354 |
-| mAP@50-95 lớp COCO | 0.425 |
-| mAP@50-95 lớp ngoài COCO | 0.230 |
+Model: `yolo26n-oi-20261109-100541.pt` · 128 lớp vật thể (81 COCO + 47 ngoài COCO) · train ? ảnh / ? box · 0 phút trên mps.
 
 **Giao thức Open Images (như E4), test:**
 
@@ -216,12 +212,12 @@ Fine-tune − gốc trên lớp COCO (CI95 bootstrap ghép cặp): tag mAP -0.02
 
 | model | ms/ảnh (pipeline app) | tham số (M) | file (MB) |
 |---|---|---|---|
-| base | 28.6 | 2.57 | 5.5 |
-| ft | 29.2 | 2.60 | 5.6 |
+| base | 36.0 | 2.57 | 5.5 |
+| ft | 25.3 | 2.60 | 5.6 |
 
 ## E5 — Hợp nhất tag YOLO + CLIP (RQ2, C1)
 
-run `20261108-222131` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261120-121016` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
 Precision mục tiêu khi chọn ngưỡng/quy tắc trên val: **0.9**
 
@@ -253,7 +249,7 @@ Precision mục tiêu khi chọn ngưỡng/quy tắc trên val: **0.9**
 
 ## Probe — Tag có train (linear probe trên feature app)
 
-run `20261108-014828` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261122-192438` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
 Train **15000** ảnh (split train của Open Images). Siêu tham số, ngưỡng và calibrator chọn trên val; test 1 lần. Mốc không train đo cùng thủ tục.
 
@@ -265,15 +261,15 @@ Train **15000** ảnh (split train của Open Images). Siêu tham số, ngưỡn
 | quy tắc từng tag (E5) | all | 170 | 0.888 | 0.848 | 0.764 | 0.026 |
 | quy tắc từng tag (E5) | yolo_covered | 78 | 0.890 | 0.838 | 0.799 | 0.021 |
 | quy tắc từng tag (E5) | yolo_gap | 92 | 0.886 | 0.858 | 0.734 | 0.032 |
-| lp_clip | all | 170 | 0.940 | 0.874 | 0.804 | 0.019 |
-| lp_clip | yolo_covered | 78 | 0.934 | 0.847 | 0.791 | 0.017 |
-| lp_clip | yolo_gap | 92 | 0.945 | 0.897 | 0.816 | 0.023 |
-| lp_dino | all | 170 | 0.927 | 0.857 | 0.773 | 0.021 |
-| lp_dino | yolo_covered | 78 | 0.912 | 0.819 | 0.734 | 0.022 |
-| lp_dino | yolo_gap | 92 | 0.940 | 0.890 | 0.806 | 0.024 |
-| lp_clip_dino | all | 170 | 0.945 | 0.878 | 0.819 | 0.018 |
-| lp_clip_dino | yolo_covered | 78 | 0.938 | 0.849 | 0.791 | 0.019 |
-| lp_clip_dino | yolo_gap | 92 | 0.951 | 0.904 | 0.843 | 0.020 |
+| lp_clip | all | 170 | 0.938 | 0.868 | 0.803 | 0.023 |
+| lp_clip | yolo_covered | 78 | 0.926 | 0.835 | 0.759 | 0.021 |
+| lp_clip | yolo_gap | 92 | 0.948 | 0.895 | 0.841 | 0.026 |
+| lp_dino | all | 170 | 0.929 | 0.860 | 0.783 | 0.021 |
+| lp_dino | yolo_covered | 78 | 0.914 | 0.823 | 0.733 | 0.021 |
+| lp_dino | yolo_gap | 92 | 0.941 | 0.891 | 0.825 | 0.023 |
+| lp_clip_dino | all | 170 | 0.943 | 0.876 | 0.820 | 0.018 |
+| lp_clip_dino | yolo_covered | 78 | 0.936 | 0.845 | 0.786 | 0.019 |
+| lp_clip_dino | yolo_gap | 92 | 0.949 | 0.902 | 0.849 | 0.021 |
 | fused_learned | all | 170 | 0.950 | 0.877 | 0.829 | 0.021 |
 | fused_learned | yolo_covered | 78 | 0.950 | 0.857 | 0.823 | 0.019 |
 | fused_learned | yolo_gap | 92 | 0.950 | 0.894 | 0.834 | 0.023 |
@@ -282,9 +278,9 @@ Train **15000** ảnh (split train của Open Images). Siêu tham số, ngưỡn
 
 | config | L2 | trọng số cặp chưa xác minh | val mAP | biên lưới |
 |---|---|---|---|---|
-| lp_clip | 0.3000 | 0 | 0.941 | unknown_weight |
-| lp_dino | 0.3000 | 0 | 0.930 | unknown_weight |
-| lp_clip_dino | 0.3000 | 0 | 0.947 | unknown_weight |
+| lp_clip | 0.0100 | 1 | 0.939 | – |
+| lp_dino | 0.0100 | 0.100 | 0.929 | – |
+| lp_clip_dino | 0.1000 | 0 | 0.947 | – |
 | fused_learned | 0.0100 | 0.100 | 0.949 | – |
 
 **Chênh lệch ghép cặp trên test (CI95 bootstrap, không chứa 0 = có ý nghĩa):**
@@ -292,15 +288,15 @@ Train **15000** ảnh (split train của Open Images). Siêu tham số, ngưỡn
 | so sánh | Δ mAP | Δ macro-F1 | Δ macro-F1 @P≥0.9 |
 |---|---|---|---|
 | fused_learned − e5_per_tag | 0.054 … 0.068 | 0.023 … 0.036 | 0.059 … 0.075 |
-| fused_learned − lp_clip | 0.007 … 0.014 | -0.004 … 0.010 | 0.017 … 0.035 |
-| lp_clip − zs_clip | 0.051 … 0.063 | 0.042 … 0.058 | 0.098 … 0.116 |
-| lp_dino − lp_clip | -0.017 … -0.007 | -0.023 … -0.011 | -0.040 … -0.025 |
+| fused_learned − lp_clip | 0.008 … 0.016 | 0.004 … 0.015 | 0.020 … 0.035 |
+| lp_clip − zs_clip | 0.050 … 0.060 | 0.036 … 0.051 | 0.096 … 0.115 |
+| lp_dino − lp_clip | -0.014 … -0.004 | -0.016 … -0.001 | -0.030 … -0.014 |
 
 ## E6 — Search lai tag + CLIP (RQ2)
 
-run `20261108-225535` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
+run `20261122-193042` · Apple M1 Pro · torch 2.14.1 · commit `15024d8`
 
-λ (boost) chọn trên caption val: {'boost:yolo': 0.05, 'boost_prob:yolo': 0.1, 'boost:clip': 0.005, 'boost_prob:clip': 0.005, 'boost:fused': 0.02, 'boost_prob:fused': 0.05, 'boost:yolo_ft': 0.02, 'boost_prob:yolo_ft': 0.05, 'boost:fused_ft': 0.02, 'boost_prob:fused_ft': 0.05, 'boost:lp_clip': 0.02, 'boost_prob:lp_clip': 0.05, 'boost:lp_dino': 0.02, 'boost_prob:lp_dino': 0.05, 'boost:lp_clip_dino': 0.02, 'boost_prob:lp_clip_dino': 0.05, 'boost:fused_learned': 0.05, 'boost_prob:fused_learned': 0.05, 'boost:fused_learned_ft': 0.02, 'boost_prob:fused_learned_ft': 0.05, 'boost:oracle': 0.02, 'boost_prob:oracle': 0.02}
+λ (boost) chọn trên caption val: {'boost:yolo': 0.05, 'boost_prob:yolo': 0.1, 'boost:clip': 0.005, 'boost_prob:clip': 0.005, 'boost:fused': 0.02, 'boost_prob:fused': 0.05, 'boost:yolo_ft': 0.02, 'boost_prob:yolo_ft': 0.05, 'boost:fused_ft': 0.02, 'boost_prob:fused_ft': 0.05, 'boost:lp_clip': 0.02, 'boost_prob:lp_clip': 0.05, 'boost:lp_dino': 0.02, 'boost_prob:lp_dino': 0.05, 'boost:lp_clip_dino': 0.02, 'boost_prob:lp_clip_dino': 0.05, 'boost:fused_learned': 0.05, 'boost_prob:fused_learned': 0.05, 'boost:oracle': 0.02, 'boost_prob:oracle': 0.02}
 
 **Caption Localized Narratives (test)** — Δ MRR so với CLIP thuần, CI95 bootstrap ghép cặp:
 
@@ -322,21 +318,18 @@ run `20261108-225535` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
 | filter | fused_ft | 0.189 | 0.395 | 0.499 | 0.291 | 0.292 | -0.076 … -0.062 |
 | boost | fused_ft | 0.248 | 0.488 | 0.599 | 0.363 | 0.372 | 0.000 … 0.005 |
 | boost_prob | fused_ft | 0.251 | 0.489 | 0.605 | 0.366 | 0.375 | 0.002 … 0.008 |
-| filter | lp_clip | 0.183 | 0.391 | 0.487 | 0.284 | 0.284 | -0.084 … -0.069 |
-| boost | lp_clip | 0.247 | 0.491 | 0.596 | 0.363 | 0.372 | 0.000 … 0.004 |
-| boost_prob | lp_clip | 0.252 | 0.491 | 0.603 | 0.366 | 0.376 | 0.003 … 0.009 |
-| filter | lp_dino | 0.177 | 0.366 | 0.465 | 0.273 | 0.271 | -0.095 … -0.081 |
-| boost | lp_dino | 0.249 | 0.487 | 0.598 | 0.364 | 0.373 | 0.000 … 0.005 |
-| boost_prob | lp_dino | 0.254 | 0.488 | 0.602 | 0.367 | 0.377 | 0.003 … 0.010 |
-| filter | lp_clip_dino | 0.190 | 0.397 | 0.494 | 0.291 | 0.292 | -0.077 … -0.062 |
-| boost | lp_clip_dino | 0.249 | 0.491 | 0.599 | 0.364 | 0.374 | 0.002 … 0.006 |
-| boost_prob | lp_clip_dino | 0.252 | 0.491 | 0.604 | 0.368 | 0.377 | 0.004 … 0.010 |
+| filter | lp_clip | 0.197 | 0.406 | 0.509 | 0.300 | 0.302 | -0.067 … -0.054 |
+| boost | lp_clip | 0.248 | 0.488 | 0.594 | 0.362 | 0.371 | -0.001 … 0.004 |
+| boost_prob | lp_clip | 0.248 | 0.490 | 0.600 | 0.364 | 0.373 | 0.000 … 0.006 |
+| filter | lp_dino | 0.199 | 0.405 | 0.509 | 0.302 | 0.303 | -0.066 … -0.052 |
+| boost | lp_dino | 0.253 | 0.491 | 0.600 | 0.368 | 0.377 | 0.004 … 0.009 |
+| boost_prob | lp_dino | 0.258 | 0.494 | 0.610 | 0.372 | 0.383 | 0.009 … 0.015 |
+| filter | lp_clip_dino | 0.196 | 0.397 | 0.494 | 0.295 | 0.296 | -0.072 … -0.057 |
+| boost | lp_clip_dino | 0.249 | 0.492 | 0.600 | 0.365 | 0.375 | 0.003 … 0.007 |
+| boost_prob | lp_clip_dino | 0.255 | 0.491 | 0.605 | 0.370 | 0.380 | 0.006 … 0.012 |
 | filter | fused_learned | 0.201 | 0.415 | 0.520 | 0.306 | 0.308 | -0.062 … -0.048 |
 | boost | fused_learned | 0.252 | 0.495 | 0.607 | 0.367 | 0.377 | 0.003 … 0.010 |
 | boost_prob | fused_learned | 0.259 | 0.496 | 0.609 | 0.373 | 0.383 | 0.009 … 0.015 |
-| filter | fused_learned_ft | 0.199 | 0.411 | 0.512 | 0.303 | 0.305 | -0.065 … -0.051 |
-| boost | fused_learned_ft | 0.251 | 0.491 | 0.598 | 0.366 | 0.376 | 0.003 … 0.007 |
-| boost_prob | fused_learned_ft | 0.255 | 0.493 | 0.604 | 0.370 | 0.380 | 0.006 … 0.012 |
 | filter | oracle (trần) | 0.242 | 0.471 | 0.576 | 0.353 | 0.361 | -0.016 … 0.000 |
 | boost | oracle (trần) | 0.267 | 0.509 | 0.618 | 0.382 | 0.393 | 0.018 … 0.024 |
 | boost_prob | oracle (trần) | 0.267 | 0.509 | 0.618 | 0.382 | 0.393 | 0.018 … 0.024 |
@@ -346,14 +339,13 @@ run `20261108-225535` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
 | a | b | a | b | Δ | CI95 |
 |---|---|---|---|---|---|
 | `boost_prob:fused_learned` | `boost_prob:yolo` | 0.373 | 0.373 | -0.000 | -0.004 … 0.004 |
-| `boost_prob:lp_clip` | `boost_prob:clip` | 0.366 | 0.360 | 0.006 | 0.004 … 0.009 |
-| `boost_prob:lp_dino` | `boost_prob:lp_clip` | 0.367 | 0.366 | 0.001 | -0.002 … 0.004 |
-| `boost_prob:fused_learned` | `boost_prob:lp_clip` | 0.373 | 0.366 | 0.006 | 0.003 … 0.009 |
+| `boost_prob:lp_clip` | `boost_prob:clip` | 0.364 | 0.360 | 0.004 | 0.001 … 0.007 |
+| `boost_prob:lp_dino` | `boost_prob:lp_clip` | 0.372 | 0.364 | 0.009 | 0.006 … 0.011 |
+| `boost_prob:fused_learned` | `boost_prob:lp_clip` | 0.373 | 0.364 | 0.009 | 0.006 … 0.012 |
 | `boost_prob:fused_learned` | `boost:fused_learned` | 0.373 | 0.367 | 0.006 | 0.003 … 0.008 |
 | `filter:fused_learned` | `boost_prob:fused_learned` | 0.306 | 0.373 | -0.067 | -0.073 … -0.061 |
 | `boost_prob:yolo_ft` | `boost_prob:yolo` | 0.369 | 0.373 | -0.003 | -0.007 … 0.001 |
 | `boost_prob:fused_ft` | `boost_prob:fused` | 0.366 | 0.363 | 0.003 | 0.000 … 0.006 |
-| `boost_prob:fused_learned_ft` | `boost_prob:fused_learned` | 0.370 | 0.373 | -0.003 | -0.005 … -0.001 |
 
 **Query ghép (chấm tay, 40 query)** — Δ P@10 so với CLIP thuần, CI95 bootstrap theo query:
 
@@ -369,27 +361,24 @@ run `20261108-225535` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
 | filter | fused | 0.512 | 0.425 | 0.611 | -0.069 … 0.040 | 100% |
 | boost | fused | 0.543 | 0.438 | 0.654 | -0.000 … 0.033 | 100% |
 | boost_prob | fused | 0.550 | 0.445 | 0.661 | 0 … 0.044 | 100% |
-| filter | yolo_ft | 0.515 | 0.438 | 0.630 | -0.039 … 0.005 | 97% |
+| filter | yolo_ft | 0.515 | 0.440 | 0.630 | -0.039 … 0.005 | 100% |
 | boost | yolo_ft | 0.545 | 0.443 | 0.656 | 0.002 … 0.028 | 100% |
 | boost_prob | yolo_ft | 0.560 | 0.447 | 0.671 | 0.004 … 0.057 | 100% |
-| filter | fused_ft | 0.530 | 0.434 | 0.635 | -0.051 … 0.052 | 98% |
+| filter | fused_ft | 0.530 | 0.434 | 0.635 | -0.051 … 0.052 | 100% |
 | boost | fused_ft | 0.542 | 0.439 | 0.655 | -0.002 … 0.033 | 100% |
 | boost_prob | fused_ft | 0.550 | 0.443 | 0.658 | -0.002 … 0.048 | 100% |
-| filter | lp_clip | 0.520 | 0.432 | 0.626 | -0.043 … 0.020 | 94% |
-| boost | lp_clip | 0.540 | 0.446 | 0.653 | 0 … 0.022 | 100% |
-| boost_prob | lp_clip | 0.562 | 0.453 | 0.685 | 0.012 … 0.052 | 100% |
-| filter | lp_dino | 0.525 | 0.443 | 0.619 | -0.045 … 0.034 | 92% |
-| boost | lp_dino | 0.530 | 0.446 | 0.650 | -0.010 … 0.010 | 100% |
-| boost_prob | lp_dino | 0.562 | 0.457 | 0.676 | 0.015 … 0.053 | 100% |
-| filter | lp_clip_dino | 0.535 | 0.455 | 0.647 | -0.030 … 0.047 | 97% |
-| boost | lp_clip_dino | 0.542 | 0.450 | 0.656 | 0.002 … 0.027 | 100% |
-| boost_prob | lp_clip_dino | 0.560 | 0.459 | 0.684 | 0.013 … 0.048 | 100% |
-| filter | fused_learned | 0.588 | 0.485 | 0.694 | 0.005 … 0.113 | 96% |
-| boost | fused_learned | 0.562 | 0.456 | 0.671 | 0.008 … 0.060 | 99% |
+| filter | lp_clip | 0.575 | 0.466 | 0.674 | 0.007 … 0.087 | 100% |
+| boost | lp_clip | 0.542 | 0.453 | 0.652 | -0.001 … 0.028 | 100% |
+| boost_prob | lp_clip | 0.542 | 0.457 | 0.661 | 0 … 0.025 | 100% |
+| filter | lp_dino | 0.535 | 0.454 | 0.637 | -0.033 … 0.050 | 100% |
+| boost | lp_dino | 0.550 | 0.453 | 0.662 | 0.002 … 0.040 | 100% |
+| boost_prob | lp_dino | 0.560 | 0.460 | 0.673 | 0.010 … 0.051 | 100% |
+| filter | lp_clip_dino | 0.537 | 0.466 | 0.650 | -0.025 … 0.044 | 100% |
+| boost | lp_clip_dino | 0.542 | 0.450 | 0.659 | 0 … 0.027 | 100% |
+| boost_prob | lp_clip_dino | 0.560 | 0.459 | 0.685 | 0.015 … 0.048 | 100% |
+| filter | fused_learned | 0.590 | 0.490 | 0.697 | 0.007 … 0.116 | 100% |
+| boost | fused_learned | 0.562 | 0.459 | 0.671 | 0.008 … 0.060 | 100% |
 | boost_prob | fused_learned | 0.562 | 0.465 | 0.674 | 0.007 … 0.065 | 100% |
-| filter | fused_learned_ft | 0.588 | 0.479 | 0.702 | 0.007 … 0.113 | 97% |
-| boost | fused_learned_ft | 0.547 | 0.450 | 0.662 | -0.000 … 0.037 | 100% |
-| boost_prob | fused_learned_ft | 0.568 | 0.454 | 0.688 | 0.013 … 0.068 | 100% |
 | filter | oracle (trần) | 0.607 | 0.490 | 0.718 | 0.024 … 0.134 | 100% |
 | boost | oracle (trần) | 0.565 | 0.450 | 0.673 | 0.015 … 0.056 | 100% |
 | boost_prob | oracle (trần) | 0.565 | 0.450 | 0.673 | 0.015 … 0.056 | 100% |
@@ -399,16 +388,13 @@ run `20261108-225535` · Apple M1 Pro · torch 2.14.1 · commit `ab0cfc4`
 | a | b | a | b | Δ | CI95 |
 |---|---|---|---|---|---|
 | `boost_prob:fused_learned` | `boost_prob:yolo` | 0.562 | 0.562 | 0.000 | -0.024 … 0.025 |
-| `boost_prob:lp_clip` | `boost_prob:clip` | 0.562 | 0.530 | 0.032 | 0.012 … 0.052 |
-| `boost_prob:lp_dino` | `boost_prob:lp_clip` | 0.562 | 0.562 | 0.000 | -0.015 … 0.015 |
-| `boost_prob:fused_learned` | `boost_prob:lp_clip` | 0.562 | 0.562 | 0.000 | -0.020 … 0.023 |
+| `boost_prob:lp_clip` | `boost_prob:clip` | 0.542 | 0.530 | 0.013 | 0 … 0.025 |
+| `boost_prob:lp_dino` | `boost_prob:lp_clip` | 0.560 | 0.542 | 0.017 | 0 … 0.035 |
+| `boost_prob:fused_learned` | `boost_prob:lp_clip` | 0.562 | 0.542 | 0.020 | 0.000 … 0.045 |
 | `boost_prob:fused_learned` | `boost:fused_learned` | 0.562 | 0.562 | -0.000 | -0.010 … 0.010 |
-| `filter:fused_learned` | `boost_prob:fused_learned` | 0.588 | 0.562 | 0.025 | -0.010 … 0.068 |
+| `filter:fused_learned` | `boost_prob:fused_learned` | 0.590 | 0.562 | 0.028 | -0.008 … 0.070 |
 | `boost_prob:yolo_ft` | `boost_prob:yolo` | 0.560 | 0.562 | -0.003 | -0.022 … 0.017 |
 | `boost_prob:fused_ft` | `boost_prob:fused` | 0.550 | 0.550 | -0.000 | -0.010 … 0.010 |
-| `boost_prob:fused_learned_ft` | `boost_prob:fused_learned` | 0.568 | 0.562 | 0.005 | -0.012 … 0.022 |
-
-⚠️ còn **204** cặp chưa chấm (`20261108-225535/judge.html`).
 
 ## Lịch sử các lần đo (History)
 
@@ -419,12 +405,14 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | version | ngày | máy | commit | dữ liệu | all_pass |
 |---|---|---|---|---|---|
 | v001 | 2026-11-06 21:24 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | False |
+| v002 | 2026-11-20 04:55 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | True |
 
 **e2**
 
 | version | ngày | máy | commit | dữ liệu | test.mAP | test.macro_f1 | test.ece_calibrated |
 |---|---|---|---|---|---|---|---|
 | v001 | 2026-11-06 20:33 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.884 | 0.826 | 0.031 |
+| v002 | 2026-11-20 04:55 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.884 | 0.826 | 0.031 |
 
 **e3**
 
@@ -432,6 +420,7 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 |---|---|---|---|---|---|---|---|
 | v001 | 2026-11-06 20:37 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.877 | 0.650 | 0.361 |
 | v002 | 2026-11-07 16:11 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.877 | 0.650 | 0.361 |
+| v003 | 2026-11-20 04:56 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.877 | 0.650 | 0.361 |
 
 **e4**
 
@@ -440,6 +429,10 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | v001 | 2026-11-06 20:48 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.638 |
 | v002 | 2026-11-08 15:21 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.551 |
 | v003 | 2026-11-09 09:46 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.549 |
+| v004 | 2026-11-20 04:56 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.638 |
+| v005 | 2026-11-20 05:09 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.551 |
+| v006 | 2026-11-20 05:09 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.549 |
+| v007 | 2026-11-20 05:09 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.543 |
 
 **yolo_ft**
 
@@ -448,6 +441,9 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | v001 | 2026-11-08 10:59 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.351 |
 | v002 | 2026-11-09 03:05 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.351 |
 | v003 | 2026-11-12 07:04 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.354 |
+| v004 | 2026-11-20 04:57 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | – |
+| v005 | 2026-11-20 04:58 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | – |
+| v006 | 2026-11-20 04:59 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | – |
 
 **e5**
 
@@ -457,6 +453,9 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | v002 | 2026-11-07 17:44 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
 | v003 | 2026-11-08 15:22 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
 | v004 | 2026-11-09 09:47 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
+| v005 | 2026-11-20 05:10 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
+| v006 | 2026-11-20 05:11 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
+| v007 | 2026-11-20 05:12 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 0.764 | 0.691 |
 
 **probe**
 
@@ -466,6 +465,11 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | v002 | 2026-11-07 18:55 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 15000 |
 | v003 | 2026-11-08 15:55 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 15000 |
 | v004 | 2026-11-09 10:35 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 15000 |
+| v005 | 2026-11-20 05:20 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 15000 |
+| v006 | 2026-11-20 05:22 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 15000 |
+| v007 | 2026-11-20 05:24 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 15000 |
+| v008 | 2026-11-20 05:56 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 15000 |
+| v009 | 2026-11-22 12:30 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 15000 |
 
 **e6**
 
@@ -479,3 +483,7 @@ Mỗi dòng = 1 version trong `History/<exp>/`. `data_fingerprint` đổi = dữ
 | v006 | 2026-11-07 18:58 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 5000 |
 | v007 | 2026-11-08 15:56 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 5000 |
 | v008 | 2026-11-09 10:35 | Apple M1 Pro | ab0cfc4 | map=6f06806690 val=3000 tes=5000 | 5000 |
+| v009 | 2026-11-20 05:57 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 5000 |
+| v010 | 2026-11-20 05:57 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 5000 |
+| v011 | 2026-11-20 05:58 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 5000 |
+| v012 | 2026-11-22 12:31 | Apple M1 Pro | 15024d8 | map=6f06806690 val=3000 tes=5000 | 5000 |

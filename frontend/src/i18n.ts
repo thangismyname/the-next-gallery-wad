@@ -8,11 +8,12 @@ import { LANGUAGES, type LanguageCode } from "@tng/shared";
 // Bản dịch dùng chung với app mobile (packages/shared). Thêm ngôn ngữ: tạo
 // locales/<code>/translation.json, thêm 1 dòng vào LOCALES + 1 dòng trong lib/languages.ts.
 // Chỉ "vi" (mặc định + fallback) nằm trong bundle chính; ngôn ngữ khác là chunk riêng,
-// tải khi được chọn / dò ra (~60 KB mỗi file — không bắt ai cũng tải cả 3).
+// tải khi được chọn / dò ra (~60 KB mỗi file — không bắt ai cũng tải hết).
 const LOCALES: Record<LanguageCode, () => Promise<{ default: object }>> = {
   vi: () => Promise.resolve({ default: translationVI }),
   en: () => import("@tng/shared/i18n/locales/en/translation.json"),
   ja: () => import("@tng/shared/i18n/locales/ja/translation.json"),
+  zh: () => import("@tng/shared/i18n/locales/zh/translation.json"),
 };
 
 const lazyLocales: BackendModule = {
@@ -52,5 +53,12 @@ void i18n
     },
     interpolation: { escapeValue: false },
   });
+
+// <html lang> theo ngôn ngữ đang dùng: trình đọc màn hình + chọn font CJK đúng (index.css `:lang(zh)`).
+const syncHtmlLang = (lng?: string) => {
+  if (lng) document.documentElement.lang = lng;
+};
+syncHtmlLang(i18n.resolvedLanguage);
+i18n.on("languageChanged", syncHtmlLang);
 
 export default i18n;

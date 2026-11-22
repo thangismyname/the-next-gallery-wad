@@ -114,7 +114,7 @@ const toAdminUser = (u) => ({
   isDeveloper: Boolean(u.is_developer),
 });
 
-/** Bảng người dùng: q (tên / email), role, status, sort, dir, limit, offset. */
+/** Bảng người dùng: q (tên / email), role (user | developer | admin = loại tài khoản), status, sort, dir, limit, offset. */
 export async function listUsers({ q, role, status, sort, dir, limit, offset }) {
   const where = [];
   const params = [];
@@ -126,7 +126,12 @@ export async function listUsers({ q, role, status, sort, dir, limit, offset }) {
     const p = add(`%${q}%`);
     where.push(`(u.name ILIKE ${p} OR u.email ILIKE ${p})`);
   }
-  if (role) where.push(`COALESCE(u.role, 'user') = ${add(role)}`);
+  if (role) {
+    // Same kinds as `userKind` (admin wins). EXISTS, not the join: the COUNT query has no joins.
+    const dev = `EXISTS (SELECT 1 FROM developer_requests d WHERE d.user_id = u.id AND d.status = 'approved')`;
+    if (role === "admin") where.push(`u.role = 'admin'`);
+    else where.push(`COALESCE(u.role, 'user') <> 'admin'`, role === "developer" ? dev : `NOT ${dev}`);
+  }
   if (status === "banned") where.push(`u.banned IS TRUE`);
   if (status === "active") where.push(`u.banned IS NOT TRUE`);
   const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
@@ -241,7 +246,7 @@ export async function deleteUser(userId, currentUserId) {
 
   const media = await dbPool.query(
     `SELECT m.minio_bucket, m.minio_object, m.thumbnail_object, m.thumbnail_small_object,
-            m.display_object, m.full_object,
+            m.display_object, m.full_object, m.motion_object,
             e.display_object AS edit_display, e.thumbnail_object AS edit_med,
             e.thumbnail_small_object AS edit_small
      FROM media m LEFT JOIN media_edits e ON e.media_id = m.id
@@ -258,6 +263,7 @@ export async function deleteUser(userId, currentUserId) {
       row.thumbnail_small_object,
       row.display_object,
       row.full_object,
+      row.motion_object,
       row.edit_display,
       row.edit_med,
       row.edit_small,

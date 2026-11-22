@@ -1,0 +1,23 @@
+{"t": "2026-11-20T04:58:28Z", "type": "log", "message": "run yolo_ft/20261120-115827 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/yolo_ft/20261120-115827"}
+{"t": "2026-11-20T04:58:28Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-20T04:58:28Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-20T04:58:28Z", "type": "log", "message": "  128 lớp vật thể có box (81 có trong COCO · 47 ngoài COCO)"}
+{"t": "2026-11-20T04:58:28Z", "type": "log", "message": "  --eval-only: đánh giá yolo26n-oi-20261109-100541.pt"}
+{"t": "2026-11-20T04:58:28Z", "type": "log", "message": "── detect val/test (gốc + fine-tune, pipeline app)"}
+{"t": "2026-11-20T04:58:28Z", "type": "stage", "stage": "detect val/test (gốc + fine-tune, pipeline app)"}
+{"t": "2026-11-20T04:58:29Z", "type": "log", "message": "── detection AP@IoU (giao thức OI)"}
+{"t": "2026-11-20T04:58:29Z", "type": "stage", "stage": "detection AP@IoU (giao thức OI)"}
+{"t": "2026-11-20T04:58:36Z", "type": "log", "message": "── tag image-level"}
+{"t": "2026-11-20T04:58:36Z", "type": "stage", "stage": "tag image-level"}
+{"t": "2026-11-20T04:58:37Z", "type": "log", "message": "── bootstrap ghép cặp 300×"}
+{"t": "2026-11-20T04:58:37Z", "type": "stage", "stage": "bootstrap ghép cặp 300×"}
+{"t": "2026-11-20T04:58:44Z", "type": "log", "message": "── latency (200 ảnh test, pipeline app)"}
+{"t": "2026-11-20T04:58:44Z", "type": "stage", "stage": "latency (200 ảnh test, pipeline app)"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  base: 36.0 ms/ảnh · 2.57M tham số · 5.5 MB"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  ft: 25.3 ms/ảnh · 2.60M tham số · 5.6 MB"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  tag base coco    mAP 0.8973 · macro-F1 0.8293 · F1@P 0.7613"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  tag base objects mAP 0.8973 · macro-F1 0.8293 · F1@P 0.7613"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  tag ft   coco    mAP 0.8819 · macro-F1 0.8165 · F1@P 0.7466"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  tag ft   gap     mAP 0.7888 · macro-F1 0.7519 · F1@P 0.5486"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "  tag ft   objects mAP 0.8469 · macro-F1 0.7922 · F1@P 0.6722"}
+{"t": "2026-11-20T04:59:00Z", "type": "log", "message": "xong sau 33s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/yolo_ft/20261120-115827"}

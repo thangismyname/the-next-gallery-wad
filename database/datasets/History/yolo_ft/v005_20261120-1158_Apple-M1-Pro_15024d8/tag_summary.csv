@@ -1,0 +1,6 @@
+model,set,classes,mAP,macro_f1,macro_f1_at_precision,micro_precision_at_precision
+base,coco,78,0.89731,0.82932,0.76128,0.93179
+base,objects,78,0.89731,0.82932,0.76128,0.93179
+ft,coco,78,0.88653,0.81437,0.74763,0.93584
+ft,gap,47,0.7939,0.76095,0.56233,0.64556
+ft,objects,125,0.8517,0.79428,0.67796,0.79845

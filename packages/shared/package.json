@@ -9,6 +9,7 @@
     ".": "./src/index.ts",
     "./types": "./src/types/index.ts",
     "./utils": "./src/utils/index.ts",
+    "./lab": "./src/lab/index.ts",
     "./stores": "./src/stores/index.ts",
     "./protocol": "./src/protocol/transfers.constants.ts",
     "./i18n/*": "./src/i18n/*"

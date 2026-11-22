@@ -13,6 +13,8 @@
     "backfill:thumbs": "node src/scripts/backfill-thumbnails.js",
     "backfill:tags": "node src/scripts/backfill-tags.js",
     "backfill:taken-at": "node src/scripts/backfill-taken-at.js",
+    "backfill:hash": "node src/scripts/backfill-hash.js",
+    "import:takeout": "tsx src/scripts/import-takeout.js",
     "db:dbml": "node src/scripts/generate-dbml.js"
   },
   "dependencies": {

@@ -9,8 +9,8 @@ import { galleryKeys } from "../gallery/useGalleryMedia";
 /** Requests in flight at the same time. */
 const CONCURRENCY = 2;
 /**
- * Files per request: the backend allows 30 upload requests / min, so one file per
- * request would hit 429 after 30 photos. A batch that fails with 4xx is split
+ * Files per request: the backend allows 120 upload requests / min, so one file per
+ * request would hit 429 after 120 photos. A batch that fails with 4xx is split
  * into single files so only the bad file ends up failed.
  */
 const BATCH = 8;
@@ -142,6 +142,7 @@ export const useUploadQueue = create<UploadQueueState>((set, get) => {
             uri: src.uri,
             name: src.name,
             type: src.type,
+            meta: src.meta,
             preview: src.preview ?? null,
             status: "queued" as const,
             progress: 0,

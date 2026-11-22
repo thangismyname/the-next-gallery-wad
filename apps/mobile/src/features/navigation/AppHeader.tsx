@@ -1,11 +1,16 @@
 import { getInitials, resolveMediaUrl } from "@tng/shared";
+import { Portal } from "@rn-primitives/portal";
 import { router } from "expo-router";
 import {
   Camera,
+  FileArchive,
+  FolderOpen,
   FolderPlus,
+  Images,
+  LayoutPanelTop,
   Plus,
+  Smartphone,
   Search,
-  Upload,
   type LucideIcon,
 } from "lucide-react-native";
 import { useState } from "react";
@@ -21,7 +26,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { useSession } from "@/features/auth/session";
-import { pickAndUpload } from "@/features/upload/pickAndUpload";
+import { MomentReview } from "@/features/camera/components/MomentReview";
+import type { MomentDraft } from "@/features/camera/useCameraCapture";
+import { openMomentCamera, pickMomentDraft } from "@/features/moments/newMoment";
+import { pickAndUpload, pickFilesAndUpload } from "@/features/upload/pickAndUpload";
 import { layoutGlide } from "@/lib/motion";
 
 import { HEADER_COLLAPSE_DISTANCE, HEADER_ROW, HEADER_TITLE_ROW } from "./layout";
@@ -36,10 +44,30 @@ const EXPANDED_SCALE = 1.3;
 export interface HeaderAction {
   icon: LucideIcon;
   label: string;
-  items: GlassMenuItem[];
+  /** Menu under the button (e.g. sort options)… */
+  items?: GlassMenuItem[];
+  /** …or a plain button (e.g. Moments bell → inbox). */
+  onPress?: () => void;
+  /** Count dot on the button (unread / pending). */
+  badge?: number;
 }
 
 type OpenMenu = "add" | "action" | null;
+
+/** Items of the "+" menu — each tab lists only what fits it (`add` prop). */
+export type AddMenuKey =
+  | "upload"
+  | "files"
+  | "takeout"
+  | "camera"
+  | "album"
+  | "moment-camera"
+  | "moment-multi"
+  | "moment-account"
+  | "moment-device";
+
+/** Library tab (and the default): ways to add photos. */
+export const LIBRARY_ADD: AddMenuKey[] = ["upload", "files", "camera", "takeout"];
 
 /**
  * Transparent floating header for the tab screens (content scrolls under it).
@@ -58,10 +86,13 @@ export function AppHeader({
   scrollY,
   title,
   action,
+  add = LIBRARY_ADD,
 }: {
   scrollY: SharedValue<number>;
   title?: string;
   action?: HeaderAction;
+  /** What the "+" menu offers on this screen, in this order. */
+  add?: AddMenuKey[];
 }) {
   const { t } = useTranslation();
   const { top, left, right } = useSafeAreaInsets();
@@ -103,14 +134,43 @@ export function AppHeader({
   // Room left of the three icon buttons.
   const greetingMaxW = screenW - SIDE * 2 - left - right - (BUTTON * 3 + 10 * 2) - 12;
 
-  const addItems: GlassMenuItem[] = [
+  // "Moment từ thư viện" → màn duyệt (khung + caption + Đăng) phủ cả tab bar.
+  const [momentDraft, setMomentDraft] = useState<MomentDraft | null>(null);
+
+  const allAddItems: (GlassMenuItem & { key: AddMenuKey })[] = [
     {
       key: "upload",
       label: t("upload.fromDevice"),
-      icon: Upload,
+      icon: Images,
       onPress: pick(() => void pickAndUpload().catch(() => Alert.alert(t("upload.pickFailed")))),
     },
+    {
+      key: "files",
+      label: t("upload.fromFiles"),
+      icon: FolderOpen,
+      onPress: pick(() => void pickFilesAndUpload().catch(() => Alert.alert(t("upload.pickFilesFailed")))),
+    },
+    { key: "takeout", label: t("takeout.menu"), icon: FileArchive, onPress: pick(() => router.push("/import-takeout")) },
     { key: "camera", label: t("upload.takePhoto"), icon: Camera, onPress: pick(() => router.navigate("/camera")) },
+    { key: "moment-camera", label: t("camera.momentsMode"), icon: Camera, onPress: pick(openMomentCamera) },
+    {
+      key: "moment-multi",
+      label: t("moments.multiMenu"),
+      icon: LayoutPanelTop,
+      onPress: pick(() => router.push("/moment-create")),
+    },
+    {
+      key: "moment-account",
+      label: t("moments.fromAccountMenu"),
+      icon: Images,
+      onPress: pick(() => router.push("/moment-library")),
+    },
+    {
+      key: "moment-device",
+      label: t("moments.fromDeviceMenu"),
+      icon: Smartphone,
+      onPress: pick(() => void pickMomentDraft().then((d) => d && setMomentDraft(d))),
+    },
     {
       key: "album",
       label: t("albums.newAlbum"),
@@ -118,6 +178,7 @@ export function AppHeader({
       onPress: pick(() => router.push("/album-form")),
     },
   ];
+  const addItems = add.flatMap((key) => allAddItems.filter((item) => item.key === key));
 
   const avatar = (size: number, textClass: string) => (
     <Avatar alt={user?.name ?? ""} style={{ width: size, height: size }}>
@@ -215,20 +276,34 @@ export function AppHeader({
             <GlassButton
               size={BUTTON}
               accessibilityLabel={action.label}
-              accessibilityState={{ expanded: open === "action" }}
-              onPress={() => toggle("action")}
+              accessibilityState={action.items ? { expanded: open === "action" } : undefined}
+              onPress={() => {
+                if (action.items) return toggle("action");
+                setOpen(null);
+                action.onPress?.();
+              }}
             >
               <Icon as={action.icon} size={19} />
             </GlassButton>
+            {action.badge ? (
+              <View pointerEvents="none" className="absolute -right-1 -top-1 h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary px-1">
+                <Text className="text-[10px] font-semibold text-primary-foreground">{action.badge > 99 ? "99+" : action.badge}</Text>
+              </View>
+            ) : null}
           </Animated.View>
         ) : null}
-        {action && open === "action" ? (
+        {action?.items && open === "action" ? (
           <GlassMenu
             width={230}
             items={action.items.map((item) => ({ ...item, onPress: pick(item.onPress) }))}
           />
         ) : null}
       </View>
+      {momentDraft ? (
+        <Portal name="moment-review">
+          <MomentReview draft={momentDraft} onClose={() => setMomentDraft(null)} onPosted={() => setMomentDraft(null)} />
+        </Portal>
+      ) : null}
     </View>
   );
 }

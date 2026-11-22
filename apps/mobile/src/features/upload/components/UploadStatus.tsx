@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GlassPanel } from "@/components/shared/GlassPanel";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { BOTTOM_BAR_HEIGHT, bottomBarOffset } from "@/features/navigation/layout";
+import { tabBarSpace } from "@/features/navigation/layout";
 import { useLayout } from "@/hooks/useLayout";
 import { useTheme } from "@/hooks/useTheme";
 import { SLIDE_TIMING } from "@/lib/motion";
@@ -56,7 +56,7 @@ export function UploadStatus() {
     <View
       pointerEvents="box-none"
       className="absolute inset-x-0 items-center px-4"
-      style={{ bottom: bottomBarOffset(insets.bottom) + BOTTOM_BAR_HEIGHT + 10 }}
+      style={{ bottom: tabBarSpace(insets.bottom) + 10 }}
     >
       <View style={{ width: Math.min(formWidth, 360) }}>
         <GlassPanel radius={22} padding={8} materialize>

@@ -25,7 +25,7 @@ import { Lightbox, type LightboxAction } from "@/features/gallery/lightbox/Light
 import { galleryKeys } from "@/features/gallery/useGalleryMedia";
 import { useDragSelect, type DragSelectScroller } from "@/features/gallery/useDragSelect";
 import { useTileViewer } from "@/features/gallery/useTileViewer";
-import { BOTTOM_BAR_HEIGHT, HEADER_ROW, bottomBarOffset } from "@/features/navigation/layout";
+import { FLOATING_BAR_HEIGHT, HEADER_ROW, floatingBarOffset } from "@/features/navigation/layout";
 import { useStorage } from "@/features/profile/useProfile";
 import { useTheme } from "@/hooks/useTheme";
 import { fadeIn } from "@/lib/motion";
@@ -122,7 +122,7 @@ export function TrashScreen() {
     getOffset: () => offset.current,
     getMaxOffset: () => contentHeight.current - height,
     scrollTo: (y) => listRef.current?.scrollToOffset({ offset: y, animated: false }),
-    edges: { top: insets.top + HEADER_ROW, bottom: height - bottomBarOffset(insets.bottom) - BOTTOM_BAR_HEIGHT },
+    edges: { top: insets.top + HEADER_ROW, bottom: height - floatingBarOffset(insets.bottom) - FLOATING_BAR_HEIGHT },
   };
   const { gesture, dragging, swallowTap } = useDragSelect({ items, tiles, scroller });
 
@@ -217,7 +217,7 @@ export function TrashScreen() {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void query.refetch()} progressViewOffset={top} />}
             contentContainerStyle={{
               paddingTop: top,
-              paddingBottom: insets.bottom + BOTTOM_BAR_HEIGHT + 32,
+              paddingBottom: insets.bottom + FLOATING_BAR_HEIGHT + 32,
               paddingLeft: insets.left,
               paddingRight: insets.right,
             }}

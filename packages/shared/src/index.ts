@@ -12,4 +12,8 @@ export * from "./services/friends";
 export * from "./services/moments";
 export * from "./services/labels";
 export * from "./services/admin";
+export * from "./services/lab";
 export * from "./services/aiProcessing";
+export * from "./services/imports";
+export * from "./services/notifications";
+export * from "./import";

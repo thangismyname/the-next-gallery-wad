@@ -39,7 +39,7 @@ export function UsersTab() {
   const me = useSession().data?.user.id;
   const [search, setSearch] = useState("");
   const [q, setQ] = useState("");
-  const [role, setRole] = useState<"all" | "user" | "admin">("all");
+  const [role, setRole] = useState<"all" | "user" | "developer" | "admin">("all");
   const [status, setStatus] = useState<"all" | "active" | "banned">("all");
   const [sort, setSort] = useState<AdminUserSort>("createdAt");
   const [dir, setDir] = useState<"asc" | "desc">("desc");
@@ -84,6 +84,7 @@ export function UsersTab() {
           options={[
             { value: "all", label: t("admin.users.allRoles") },
             { value: "user", label: t("admin.role.user") },
+            { value: "developer", label: t("admin.role.developer") },
             { value: "admin", label: t("admin.role.admin") },
           ]}
         />

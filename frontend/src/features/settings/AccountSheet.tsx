@@ -22,11 +22,12 @@ export function AccountSheet({ open, onOpenChange }: { open: boolean; onOpenChan
   const drag = useDragControls();
   const { pathname } = useLocation();
 
-  // A row navigated somewhere (Trash, Admin…) → get out of the way.
-  const lastPath = useRef(pathname);
+  // A row navigated somewhere (Trash, Admin…) → get out of the way. Only when it was already open
+  // before the path changed: /settings opens it and redirects in the same render, which must not close it.
+  const prev = useRef({ open, pathname });
   useEffect(() => {
-    if (lastPath.current !== pathname && open) onOpenChange(false);
-    lastPath.current = pathname;
+    if (prev.current.open && open && prev.current.pathname !== pathname) onOpenChange(false);
+    prev.current = { open, pathname };
   }, [pathname, open, onOpenChange]);
 
   return (

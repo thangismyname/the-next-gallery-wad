@@ -11,10 +11,10 @@ import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { useSession } from "@/features/auth/session";
+import { LibraryPickGrid } from "@/features/gallery/components/LibraryPickGrid";
 import { authClient } from "@/lib/authClient";
 
 import { AvatarCropper, type AvatarCropperHandle } from "./components/AvatarCropper";
-import { AvatarLibraryGrid } from "./components/AvatarLibraryGrid";
 import { FormLabel, FormModal } from "./components/FormModal";
 
 const NAME_MAX = 64;
@@ -64,8 +64,9 @@ export function EditProfileScreen() {
         leading={{ icon: ChevronLeft, label: t("common.back"), onPress: () => setStep({ kind: "form" }) }}
         scroll={false}
       >
-        <AvatarLibraryGrid
-          selectedId={step.selected?.id ?? null}
+        <LibraryPickGrid
+          hint={t("profile.avatarPickDesc")}
+          selectedIds={step.selected ? [step.selected.id] : []}
           onSelect={(item) => setStep({ kind: "pick", selected: item })}
           bottomInset={insets.bottom}
         />

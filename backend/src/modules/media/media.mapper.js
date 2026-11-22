@@ -14,6 +14,10 @@ export const MEDIA_COLUMNS = `
       created_at,
       deleted_at,
       taken_at,
+      caption,
+      latitude,
+      longitude,
+      motion_object IS NOT NULL AS has_motion,
       -- 2 tag DANH MỤC tin cậy nhất (đạt ngưỡng; không tính nhãn chi tiết "oi.*")
       -- — hiện trên ô ảnh. \`id\` ở đây là cột của bảng media bên ngoài
       -- (media_tags không có cột id).
@@ -54,6 +58,11 @@ export function mediaThumbUrl(mediaId, size, scope = "", editedAt = null) {
 /** URL file gốc (đã ký). */
 export function mediaFileUrl(mediaId, scope = "") {
   return `/api/gallery/media/${mediaId}/file?${signParams(mediaId, "file", scope)}`;
+}
+
+/** URL video Live Photo (đã ký). */
+export function mediaMotionUrl(mediaId, scope = "") {
+  return `/api/gallery/media/${mediaId}/motion?${signParams(mediaId, "motion", scope)}`;
 }
 
 /** Bộ URL của 1 media — dùng lại khi cần ký lại cho link công khai. */
@@ -99,6 +108,10 @@ export function toMediaItem(item) {
     aiTags: item.ai_tags ?? [],
     // Đã chỉnh (basic edit) → lightbox không mở file gốc khi phóng to.
     editedAt: item.edited_at ?? null,
+    caption: item.caption ?? null,
+    location: item.latitude != null && item.longitude != null ? { lat: Number(item.latitude), lng: Number(item.longitude) } : null,
+    // Live Photo: video ngắn đi kèm (URL đã ký, phát trong lightbox).
+    motionUrl: item.has_motion ? mediaMotionUrl(mediaId) : null,
     score: item.score ?? null,
   };
 }

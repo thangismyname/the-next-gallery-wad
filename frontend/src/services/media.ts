@@ -31,8 +31,17 @@ export const {
 } = createMediaService(webHttp);
 
 /** Tải bản gốc: 1 ảnh → file gốc; nhiều ảnh → 1 file .zip do server nén. */
-export function downloadMedia(ids: string[]) {
-  if (ids.length === 0) return;
+/** Cả thư viện → zip định dạng Google Takeout (backend `media.export.service.js`), trình duyệt tự lưu. */
+export function exportLibrary() {
+  const a = document.createElement("a");
+  a.href = `${API_URL}/gallery/media/export`;
+  a.target = downloadFrame();
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function downloadFrame() {
   const target = "tng-download";
   if (!document.querySelector(`iframe[name="${target}"]`)) {
     const frame = document.createElement("iframe");
@@ -40,6 +49,12 @@ export function downloadMedia(ids: string[]) {
     frame.hidden = true;
     document.body.appendChild(frame);
   }
+  return target;
+}
+
+export function downloadMedia(ids: string[]) {
+  if (ids.length === 0) return;
+  const target = downloadFrame();
   if (ids.length === 1) {
     const a = document.createElement("a");
     a.href = `${API_URL}/gallery/media/${ids[0]}/file?download=1`;

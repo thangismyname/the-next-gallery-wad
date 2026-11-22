@@ -400,27 +400,28 @@ def text_e6(r: dict | None) -> list[str]:
     filters_bad = all((x.get("dMRR_ci_hi") or 0) < 0 for x in rows if x["mode"] == "filter")
     msg = ("tag giúp search **một chút** khi dùng để cộng điểm" if boosts else "tag chưa giúp search rõ")
     if filters_bad:
-        msg += "; lọc cứng luôn làm tệ hơn (tag sai một lần là ảnh đúng bị loại hẳn) → dùng tag để *ưu tiên*, không để *lọc*"
+        msg += "; với caption dài, lọc cứng luôn làm tệ hơn (tag sai một lần là ảnh đúng bị loại hẳn) → dùng tag để *ưu tiên*, không để *lọc*"
     comp = r.get("compositional")
-    if comp and comp.get("unjudged_pairs"):
-        msg += f". Query ghép chưa có số (còn {comp['unjudged_pairs']} cặp chưa chấm)"
-    elif comp:
+    if comp:
         crow = [x for x in comp["rows"] if not _ceiling(x)]
         cbase = next(x for x in crow if x["mode"] == "clip")
-        out.append(f"- **Query ghép** (40 query, chấm tay, P@10 — CLIP thuần **{_f(cbase['P@10'])}**): " + " · ".join(
-            f"{_mode_vi(x['mode'])} {x['source']} {_f(x['P@10'])}"
-            for x in crow if x["mode"] != "clip"))
+        out.append(f"- **Query ghép** ({comp.get('queries') or 40} query, chấm tay, P@10 — CLIP thuần "
+                   f"**{_f(cbase['P@10'])}**): " + " · ".join(
+                       f"{_mode_vi(x['mode'])} {x['source']} {_f(x['P@10'])}" for x in crow if x["mode"] != "clip"))
+        if comp.get("unjudged_pairs"):
+            out.append(f"- ⚠️ Query ghép còn {comp['unjudged_pairs']} cặp chưa chấm (cặp chưa chấm tính là sai) "
+                       "→ số có thể lệch nhẹ, chấm nốt bằng `judge.html` rồi chạy lại.")
         best = max(crow, key=lambda x: x["P@10"])
         gain = best["P@10"] - cbase["P@10"]
-        msg += (f". Với query ghép, tốt nhất là {_mode_vi(best['mode'])} bằng tag "
-                f"{best['source']} (+{gain:.3f} P@10 ≈ {gain * 400:.0f} ảnh đúng thêm trên 400 ô top-10) — "
-                "chênh nhỏ và chỉ có 40 query nên coi là *xu hướng*, chưa phải kết luận chắc; tag CLIP lọc cứng "
-                "vẫn làm tệ hơn, khớp với kết quả caption") if best["mode"] != "clip" else \
+        sure = (best.get("dP@10_ci_lo") or 0) > 0
+        msg += (f". Với query ghép, tốt nhất là {_mode_vi(best['mode'])} bằng tag {best['source']} "
+                f"(+{gain:.3f} P@10, {_ci_sig(best.get('dP@10_ci_lo'), best.get('dP@10_ci_hi'))}"
+                + ("" if sure else "; chỉ 40 query nên coi là *xu hướng*") + ")"
+                + (" — query ngắn nêu rõ lớp thì lọc bằng tag tốt *giúp*, khác với caption dài"
+                   if best["mode"] == "filter" and sure else "")) if best["mode"] != "clip" else \
                ". Với query ghép, tag không cải thiện so với CLIP thuần"
     for key, label, metric in (("captions", "caption", "MRR"), ("compositional", "query ghép", "P@10")):
         pw = ((r.get(key) or {}).get("pairwise")) or []
-        if key == "compositional" and comp and comp.get("unjudged_pairs"):
-            continue
         for x in pw:
             out.append(f"- So sánh ({label}, {metric}): `{x['a']}` {_f(x['a_mean'])} vs `{x['b']}` {_f(x['b_mean'])} "
                        f"→ Δ {_sf(x['diff'])} ({_sf(x.get('diff_ci_lo'))} … {_sf(x.get('diff_ci_hi'))}) → "
@@ -538,7 +539,12 @@ def _conclusions(res: dict) -> str:
             items.append(f"Tag có train: mAP zero-shot {_f((pr.get('zs_clip') or {}).get('mAP'))} → {best} "
                          f"{_f(pr[best]['mAP'])}")
     if e6 and e6.get("captions"):
-        items.append("Tag cho search: chỉ nên cộng điểm nhẹ, không lọc cứng")
+        t = "Tag cho search: caption dài → chỉ nên cộng điểm nhẹ, không lọc cứng"
+        crow = [x for x in ((e6.get("compositional") or {}).get("rows") or []) if not _ceiling(x)]
+        best = max(crow, key=lambda x: x["P@10"], default=None)
+        if best and best["mode"] == "filter" and (best.get("dP@10_ci_lo") or 0) > 0:
+            t += f"; query ghép ngắn → lọc bằng tag {best['source']} tốt nhất (P@10 {_f(best['P@10'])})"
+        items.append(t)
     return "\n".join(f"{i}. {t}" for i, t in enumerate(items, 1)) or "Chưa có run nào."
 
 

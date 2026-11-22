@@ -11,11 +11,20 @@ export const listInvitationsQuerySchema = z.object({
   offset: z.coerce.number().int().min(0).default(0),
 });
 
+// Khung ảnh: { x, y } = tâm vùng hiện (0–1), zoom 1–3 — khớp @tng/shared `MomentFraming`.
+const framingSchema = z
+  .object({ x: z.number().min(0).max(1), y: z.number().min(0).max(1), zoom: z.number().min(1).max(3) })
+  .strict();
+
 export const createMomentSchema = z
   .object({
     template: z.enum(["single", "duo_square", "trio_wide"]).default("single"),
     mediaId: z.string().uuid("mediaId không hợp lệ").nullable().optional(),
     mediaIds: z.array(z.string().uuid("mediaId không hợp lệ")).max(3).optional(),
+    // framings[i] đi với ảnh thứ i của mình (single: [0] = mediaId); null = mặc định.
+    framings: z.array(framingSchema.nullable()).max(3).optional(),
+    // creatorSlots[i] = ô (0-based) đặt ảnh thứ i của mình; bỏ trống = các ô đầu. Ô còn lại = bạn bè.
+    creatorSlots: z.array(z.number().int().min(0).max(2)).max(3).optional(),
     collaboratorIds: z.array(z.string().min(1, "ID bạn bè không hợp lệ").max(64)).max(2).optional(),
     caption: z.string().max(280).optional(),
     visibility: z.enum(["circle", "public", "private"]).default("circle"),
@@ -47,6 +56,10 @@ export const patchMomentSchema = z
 
 export const fillSlotsSchema = z.object({
   mediaIds: z.array(z.string().uuid("mediaId không hợp lệ")).min(1).max(3),
+  // framings[i] đi với mediaIds[i] (ô trống thứ i của mình); null = mặc định.
+  framings: z.array(framingSchema.nullable()).max(3).optional(),
+  // slotIndexes[i] = ô trống của mình nhận mediaIds[i]; bỏ trống = lấp lần lượt.
+  slotIndexes: z.array(z.number().int().min(0).max(2)).max(3).optional(),
 });
 
 export const momentParamsSchema = z.object({

@@ -19,7 +19,7 @@ export async function attachSlots(rows) {
             -- Ảnh đã bị xoá vĩnh viễn / đưa vào thùng rác → slot không còn ảnh.
             CASE WHEN mc.media_id IS NULL OR med.id IS NULL
                  THEN NULL ELSE mc.media_id END AS media_id,
-            mc.filled_at,
+            mc.filled_at, mc.framing, mc.declined_at,
             u.name AS user_name, u.image AS user_avatar,
             med.media_type, med.width, med.height, med.duration_seconds
      FROM moment_collab mc

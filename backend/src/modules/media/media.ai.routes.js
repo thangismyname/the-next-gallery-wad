@@ -52,7 +52,9 @@ router.get(
   requireAuth,
   searchLimit,
   validate(mediaSearchQuerySchema, "query"),
-  respond((req) => searchMedia(req.user.id, req.query.q, { mode: req.query.mode, scope: req.query.scope })),
+  respond((req) =>
+    searchMedia(req.user.id, req.query.q, { mode: req.query.mode, scope: req.query.scope, tz: req.query.tz }),
+  ),
 );
 
 // Tìm album theo tên — Spotlight search
@@ -93,7 +95,7 @@ router.get(
   requireAuth,
   searchLimit,
   validate(objectSearchQuerySchema, "query"),
-  respond((req) => searchMediaObjects(req.user.id, req.query.q, { scope: req.query.scope })),
+  respond((req) => searchMediaObjects(req.user.id, req.query.q, { scope: req.query.scope, tz: req.query.tz })),
 );
 
 // Danh sách class đã phát hiện (kèm số ảnh) — gợi ý cho ô search

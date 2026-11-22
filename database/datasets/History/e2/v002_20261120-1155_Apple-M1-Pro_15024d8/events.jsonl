@@ -1,0 +1,25 @@
+{"t": "2026-11-20T04:55:29Z", "type": "log", "message": "run e2/20261120-115528 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e2/20261120-115528"}
+{"t": "2026-11-20T04:55:29Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-20T04:55:29Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-20T04:55:29Z", "type": "log", "message": "  val 3000 ảnh · test 5000 ảnh · 174 lớp"}
+{"t": "2026-11-20T04:55:29Z", "type": "log", "message": "── CLIP image features"}
+{"t": "2026-11-20T04:55:29Z", "type": "stage", "stage": "CLIP image features"}
+{"t": "2026-11-20T04:55:29Z", "type": "log", "message": "── chọn template trên val"}
+{"t": "2026-11-20T04:55:29Z", "type": "stage", "stage": "chọn template trên val"}
+{"t": "2026-11-20T04:55:36Z", "type": "log", "message": "  'a photo of a {}.': val mAP 0.8778"}
+{"t": "2026-11-20T04:55:36Z", "type": "log", "message": "  'a photo of the {}.': val mAP 0.8750"}
+{"t": "2026-11-20T04:55:36Z", "type": "log", "message": "  'a photo containing a {}.': val mAP 0.8869"}
+{"t": "2026-11-20T04:55:37Z", "type": "log", "message": "  'a close-up photo of a {}.': val mAP 0.8478"}
+{"t": "2026-11-20T04:55:37Z", "type": "log", "message": "  'a picture of a {}.': val mAP 0.8751"}
+{"t": "2026-11-20T04:55:37Z", "type": "log", "message": "  'there is a {} in the photo.': val mAP 0.8755"}
+{"t": "2026-11-20T04:55:38Z", "type": "log", "message": "  '{}': val mAP 0.8719"}
+{"t": "2026-11-20T04:55:40Z", "type": "log", "message": "  'ensemble': val mAP 0.8806"}
+{"t": "2026-11-20T04:55:40Z", "type": "log", "message": "  → chọn 'a photo containing a {}.'"}
+{"t": "2026-11-20T04:55:40Z", "type": "log", "message": "── ngưỡng + calibration trên val"}
+{"t": "2026-11-20T04:55:40Z", "type": "stage", "stage": "ngưỡng + calibration trên val"}
+{"t": "2026-11-20T04:55:40Z", "type": "log", "message": "── đánh giá test"}
+{"t": "2026-11-20T04:55:40Z", "type": "stage", "stage": "đánh giá test"}
+{"t": "2026-11-20T04:55:40Z", "type": "log", "message": "── bootstrap 200×"}
+{"t": "2026-11-20T04:55:40Z", "type": "stage", "stage": "bootstrap 200×"}
+{"t": "2026-11-20T04:55:44Z", "type": "log", "message": "  test: mAP 0.8841 · macro-F1 0.8257 · ECE 0.1479 → 0.0309"}
+{"t": "2026-11-20T04:55:44Z", "type": "log", "message": "xong sau 16s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e2/20261120-115528"}

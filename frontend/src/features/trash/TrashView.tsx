@@ -90,11 +90,12 @@ export const TrashView: React.FC = () => {
     try {
       await restoreMedia(ids);
       clearSelection();
-      invalidate();
     } catch (err) {
       console.error("Khôi phục thất bại:", err);
     } finally {
       setBusy(false);
+      // Gửi theo lô 100 — lỗi giữa chừng thì các lô đầu đã xong: luôn làm mới.
+      invalidate();
     }
   };
 
@@ -103,11 +104,12 @@ export const TrashView: React.FC = () => {
     try {
       await permanentDeleteMedia(ids);
       clearSelection();
-      invalidate();
     } catch (err) {
       console.error("Xóa vĩnh viễn thất bại:", err);
     } finally {
       setBusy(false);
+      // Gửi theo lô 100 — lỗi giữa chừng thì các lô đầu đã xong: luôn làm mới.
+      invalidate();
     }
   };
 

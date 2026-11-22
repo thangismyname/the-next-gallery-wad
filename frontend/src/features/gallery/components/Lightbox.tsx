@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { LightboxVideo } from "./LightboxVideo";
+import { ChevronLeft, ChevronRight, Loader2, Play } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Media, MediaListItem, toMedia } from "@tng/shared";
@@ -61,6 +62,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
   // Developer Mode: vẽ bounding box YOLO lên ảnh
   const { devModeEnabled } = useDeveloperMode();
   const showOverlay = devModeEnabled && !isVideo;
+  // Live Photo: phát video đi kèm (bấm "LIVE"), hết thì về ảnh; đổi ảnh → dừng.
+  const [livePlaying, setLivePlaying] = useState(false);
+  useEffect(() => setLivePlaying(false), [media.id]);
   const { detections } = useMediaDetections(showOverlay ? media.id : null);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
@@ -262,15 +266,8 @@ export const Lightbox: React.FC<LightboxProps> = ({
           )}
 
           {isVideo ? (
-            <video
-              src={media.url}
-              // Poster hiện ngay; trình duyệt chỉ tải đoạn đầu (Range) để phát.
-              poster={media.displayUrl ?? undefined}
-              preload="metadata"
-              controls
-              autoPlay
-              className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
-            />
+            // key = media → mỗi video mount lại, áp âm lượng / tốc độ đã nhớ.
+            <LightboxVideo key={media.id} src={media.url} poster={media.displayUrl ?? undefined} />
           ) : (
             <>
               {/* Loader ẩn — báo hiệu khi từng tầng tải xong rồi mới đổi src */}
@@ -311,6 +308,27 @@ export const Lightbox: React.FC<LightboxProps> = ({
                 // duyệt không zoom cả trang / cuộn.
                 style={{ touchAction: "none" }}
               >
+                {livePlaying && media.motionUrl && (
+                  <video
+                    src={media.motionUrl}
+                    autoPlay
+                    playsInline
+                    onEnded={() => setLivePlaying(false)}
+                    onError={() => setLivePlaying(false)}
+                    className="absolute max-h-full max-w-full object-contain rounded-lg"
+                  />
+                )}
+                {media.motionUrl && view.zoom === 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setLivePlaying((v) => !v)}
+                    className="glass-soft absolute top-4 left-4 z-10 flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wider text-foreground/90 uppercase"
+                    aria-pressed={livePlaying}
+                  >
+                    <Play className="size-3 fill-current" />
+                    {t("lightbox.live")}
+                  </button>
+                )}
                 <img
                   ref={imgRef}
                   src={imageSrc}

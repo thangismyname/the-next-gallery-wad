@@ -30,7 +30,34 @@ export interface Media {
   aiTags: string[];
   /** Lần chỉnh gần nhất (basic edit); null = ảnh gốc. */
   editedAt?: string | null;
+  /** Description (Google Takeout import…). */
+  caption?: string | null;
+  /** Where it was taken (WGS84). */
+  location?: { lat: number; lng: number } | null;
+  /** Live Photo video (signed URL). */
+  motionUrl?: string | null;
   metadata?: MediaMetadata;
+}
+
+/**
+ * Per-file upload metadata (importers, e.g. Google Takeout) — backend `media.schema.js::parseUploadMeta`.
+ * `takenAt` (ISO 8601) only fills in when the file has no EXIF / video creation_time.
+ */
+export interface UploadMeta {
+  takenAt?: string;
+  favorite?: boolean;
+  /** Own manual albums to add the photo to (others are ignored by the backend). */
+  albumIds?: string[];
+  /** Importer upload: AI runs on the slow lane; a duplicate that is in the Trash stays there. */
+  bulk?: boolean;
+  /** Import session (`/api/imports`) this upload belongs to — counted in its report. */
+  importId?: string;
+  /** → media.caption (only when empty). */
+  description?: string;
+  /** Where it was taken (only when unknown). */
+  location?: { lat: number; lng: number };
+  /** This file is the Live Photo video of file #n in the SAME request (n comes first). */
+  livePhotoOf?: number;
 }
 
 export interface UploadProgress {

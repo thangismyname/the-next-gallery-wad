@@ -104,8 +104,8 @@ class E6Params(CommonParams):
     preprocess: str = opt("backend", "Tiền xử lý ảnh.", choices=["backend", "raw"])
     sources: list[str] = opt(list(SOURCES), "Nguồn tag (thiếu run E5 / probe → bỏ nguồn đó).", choices=SOURCES)
     modes: list[str] = opt(list(MODES), "Cấu hình dùng tag (luôn có thêm `clip` làm gốc).", choices=MODES)
-    lambdas: list[float] = opt([0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5],
-                               "Lưới λ cho boost / boost_prob (chọn trên val).")
+    lambdas: list[float] = opt([0.0, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5],
+                               "Lưới λ cho boost / boost_prob (chọn trên val; λ = 0 = không cộng điểm).")
     query_sets: list[str] = opt(["captions", "compositional"], "Bộ query.")
     caption_variant: str = opt("full", "Caption dùng.", choices=["full", "first_sentence"])
     lang: str = opt("en", "Ngôn ngữ query ghép (CLIP app chỉ hiểu tiếng Anh).")
@@ -210,7 +210,8 @@ def run(p: E6Params) -> dict:
 
         # ── chọn λ trên caption val ────────────────────────────────────────
         boosts = [(m, s) for m, s in pairs_ms if m != "filter"]
-        best_lam = {(m, s): p.lambdas[0] for m, s in boosts}
+        lam0 = min((x for x in p.lambdas if x > 0), default=0.0)  # không có caption val → λ dương nhỏ nhất như trước
+        best_lam = {(m, s): lam0 for m, s in boosts}
         cap_v, tgt_v = caption_queries(val, p.caption_variant)
         edge = []
         if cap_v and boosts:
@@ -226,7 +227,7 @@ def run(p: E6Params) -> dict:
                     if best is None or mrr > best[0]:
                         best = (mrr, lam)
                 best_lam[(m, s)] = best[1]
-                at_edge = len(p.lambdas) > 1 and best[1] in (min(p.lambdas), max(p.lambdas))
+                at_edge = len(p.lambdas) > 1 and best[1] in (min(p.lambdas), max(p.lambdas)) and best[1] != 0  # λ = 0 là biên tự nhiên
                 if at_edge:
                     edge.append(f"{m}:{s}")
                 run.log(f"  {m:10s} {s:13s} λ = {best[1]} (val MRR {best[0]:.4f})" + ("  ! biên lưới" if at_edge else ""))

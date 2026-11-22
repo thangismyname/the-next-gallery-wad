@@ -10,7 +10,7 @@ import {
 import { Image } from "expo-image";
 import { FolderOpen, ScanSearch, Sparkles, Images, Tag, type LucideIcon } from "lucide-react-native";
 import { useEffect, useState, type ReactNode } from "react";
-import { ActivityIndicator, Pressable, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, Linking, Pressable, View, useWindowDimensions } from "react-native";
 import { useTranslation } from "react-i18next";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
@@ -107,6 +107,7 @@ export function InfoSheet({
                 {item.title}
               </Text>
             ) : null}
+            {item.caption ? <Text className="mt-2 text-[15px]">{item.caption}</Text> : null}
             <View className="mt-4 gap-3">
               <Row label={t("lightbox.detailType")}>
                 {item.mediaType === "video" ? t("lightbox.video") : t("lightbox.photo")}
@@ -118,6 +119,19 @@ export function InfoSheet({
                 <Row label={t("lightbox.detailDuration")}>{formatDuration(item.durationSeconds)}</Row>
               ) : null}
               {taken && added ? <Row label={t("lightbox.detailDate")}>{added}</Row> : null}
+              {item.location ? (
+                <Pressable
+                  accessibilityRole="link"
+                  accessibilityHint={t("lightbox.openMap")}
+                  onPress={() =>
+                    void Linking.openURL(`https://www.openstreetmap.org/?mlat=${item.location!.lat}&mlon=${item.location!.lng}#map=15/${item.location!.lat}/${item.location!.lng}`)
+                  }
+                >
+                  <Row label={t("lightbox.detailLocation")}>
+                    {`${item.location.lat.toFixed(5)}, ${item.location.lng.toFixed(5)}`}
+                  </Row>
+                </Pressable>
+              ) : null}
             </View>
             <Details item={item} active={active} onSelectSimilar={onSelectSimilar} />
           </Animated.View>

@@ -1,0 +1,16 @@
+{"t": "2026-11-20T04:55:45Z", "type": "log", "message": "run e3/20261120-115544 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e3/20261120-115544"}
+{"t": "2026-11-20T04:55:45Z", "type": "log", "message": "── CLIP image features (test)"}
+{"t": "2026-11-20T04:55:45Z", "type": "stage", "stage": "CLIP image features (test)"}
+{"t": "2026-11-20T04:55:45Z", "type": "log", "message": "── (a) query theo lớp"}
+{"t": "2026-11-20T04:55:45Z", "type": "stage", "stage": "(a) query theo lớp"}
+{"t": "2026-11-20T04:55:50Z", "type": "log", "message": "  mAP strict 0.6501 · known-only 0.8775"}
+{"t": "2026-11-20T04:55:50Z", "type": "log", "message": "── (b) caption Localized Narratives"}
+{"t": "2026-11-20T04:55:50Z", "type": "stage", "stage": "(b) caption Localized Narratives"}
+{"t": "2026-11-20T04:55:59Z", "type": "log", "message": "  full: R@1/5/10 0.247/0.486/0.593 · MRR 0.361"}
+{"t": "2026-11-20T04:56:08Z", "type": "log", "message": "  first_sentence: R@1/5/10 0.176/0.365/0.470 · MRR 0.272"}
+{"t": "2026-11-20T04:56:08Z", "type": "log", "message": "── (c) query ghép, chấm tay"}
+{"t": "2026-11-20T04:56:08Z", "type": "stage", "stage": "(c) query ghép, chấm tay"}
+{"t": "2026-11-20T04:56:08Z", "type": "log", "message": "  en@app: P@10 0.530 · judged 100%"}
+{"t": "2026-11-20T04:56:09Z", "type": "log", "message": "  vi@app: P@10 0.060 · judged 100%"}
+{"t": "2026-11-20T04:56:20Z", "type": "log", "message": "  vi@multilingual: P@10 0.522 · judged 100%"}
+{"t": "2026-11-20T04:56:20Z", "type": "log", "message": "xong sau 36s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e3/20261120-115544"}

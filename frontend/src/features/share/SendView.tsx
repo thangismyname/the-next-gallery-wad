@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   ArrowLeft,
+  Archive,
   FileImage,
   FileVideo,
   Images,
@@ -26,6 +27,7 @@ import { pickMedia } from "@/features/media-picker/pickMedia";
 import { fetchTransfers, transfersQueryKey, TransferHttpError } from "@/services/transfers";
 import { usePresence } from "@/hooks/usePresence";
 import { formatBytes } from "@tng/shared";
+import { exportLibrary } from "@/services/media";
 import { FriendPicker } from "./components/FriendPicker";
 import { HostPanel } from "./components/HostPanel";
 import { CodeEntry } from "./components/CodeEntry";
@@ -327,6 +329,18 @@ export const SendView: React.FC = () => {
                       : t("transfer.sendToFriends", { count: friendIds.size })}
                   </Button>
                 </div>
+              </Card>
+
+              {/* Chuyển nền tảng: cả thư viện → 1 zip định dạng Google Takeout. */}
+              <Card className="flex-row flex-wrap items-center justify-between gap-3 p-5">
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="text-sm font-medium">{t("transfer.export.title")}</p>
+                  <p className="text-xs text-muted-foreground">{t("transfer.export.description")}</p>
+                </div>
+                <Button variant="outline" size="sm" className="gap-1.5" onClick={exportLibrary}>
+                  <Archive className="size-3.5" />
+                  {t("transfer.export.button")}
+                </Button>
               </Card>
             </>
           )}

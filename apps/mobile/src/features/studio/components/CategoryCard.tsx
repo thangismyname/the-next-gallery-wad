@@ -50,24 +50,27 @@ export const CategoryCard = memo(function CategoryCard({
           <Icon as={icon} size={30} className="text-muted-foreground/50" />
         </View>
       )}
-      {/* Text on the photo → dark scrim + white text (dark-on-image, like the web card). */}
-      <Svg pointerEvents="none" style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: "65%" }}>
-        <Defs>
-          <LinearGradient id="scrim" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#000" stopOpacity={0} />
-            <Stop offset="1" stopColor="#000" stopOpacity={0.72} />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill="url(#scrim)" />
-      </Svg>
+      {/* Text on the photo → dark scrim + white text (dark-on-image, like the web card). No photo → no scrim
+          (it drew a dark box on the muted tile) and theme-colored text. Unique gradient id per card. */}
+      {cover ? (
+        <Svg pointerEvents="none" width={width} height={width * 0.75 * 0.65} style={{ position: "absolute", left: 0, bottom: 0 }}>
+          <Defs>
+            <LinearGradient id={`scrim-${tag}`} x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#000" stopOpacity={0} />
+              <Stop offset="1" stopColor="#000" stopOpacity={0.72} />
+            </LinearGradient>
+          </Defs>
+          <Rect width="100%" height="100%" fill={`url(#scrim-${tag})`} />
+        </Svg>
+      ) : null}
       <View pointerEvents="none" className="absolute inset-x-0 bottom-0 gap-0.5 p-3">
         <View className="flex-row items-center gap-1.5">
-          <Icon as={icon} size={15} className="text-white" />
-          <Text numberOfLines={1} className="flex-1 text-[15px] font-semibold text-white">
+          <Icon as={icon} size={15} className={cover ? "text-white" : "text-foreground"} />
+          <Text numberOfLines={1} className={cn("flex-1 text-[15px] font-semibold", cover ? "text-white" : "text-foreground")}>
             {name}
           </Text>
         </View>
-        <Text className="text-[12px] text-white/80">{t("studio.photoCount", { n: count })}</Text>
+        <Text className={cn("text-[12px]", cover ? "text-white/80" : "text-muted-foreground")}>{t("studio.photoCount", { n: count })}</Text>
       </View>
     </PressableScale>
   );

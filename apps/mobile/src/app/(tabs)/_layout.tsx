@@ -1,30 +1,30 @@
-import { Tabs } from "expo-router";
+import { useSelectionStore } from "@tng/shared";
+import { Camera, Clock3, FolderOpen, Image as ImageIcon, Sparkles } from "lucide-react-native";
 import { View } from "react-native";
 
-import { BottomBar } from "@/features/navigation";
+import { AppTabs, type AppTab } from "@/features/navigation/AppTabs";
 import { UploadStatus } from "@/features/upload/components/UploadStatus";
 
+/** Same slots as the web `useNavItems` bottom bar. Icons only. */
+const TABS: AppTab[] = [
+  { name: "index", labelKey: "sidebar.gallery", sf: "photo", md: "photo_library", icon: ImageIcon },
+  { name: "albums", labelKey: "sidebar.albums", sf: "folder", md: "folder", icon: FolderOpen },
+  { name: "camera", labelKey: "navigation.camera", sf: "camera", md: "photo_camera", icon: Camera },
+  { name: "moments", labelKey: "sidebar.moments", sf: "clock", md: "schedule", icon: Clock3 },
+  { name: "studio", labelKey: "navigation.aiEdit", sf: "sparkles", md: "auto_awesome", icon: Sparkles },
+];
+
 /**
- * No navigator header / scene padding: each tab screen draws the transparent
- * `AppHeader` itself and lets its content scroll under the header and the
- * floating glass BottomBar (`TabScreen` / `useTabContentInsets`).
+ * App tabs (`AppTabs`: system bar or custom glass bar, `NATIVE_TAB_BAR`). No navigator header: each tab
+ * screen draws the transparent `AppHeader` itself and pads its content for the bar (`useTabContentInsets`).
  */
 export default function TabLayout() {
+  // Gallery selection mode: its `SelectionBar` takes the tab bar's spot.
+  const selecting = useSelectionStore((s) => s.isSelecting);
   return (
     <View className="flex-1">
-    <Tabs
-      tabBar={(props) => <BottomBar {...props} />}
-      // No navigator animation: it fades the whole scene, which breaks the header's
-      // Liquid Glass. Each screen fades its *content* in instead (useTabEnterStyle).
-      screenOptions={{ headerShown: false, animation: "none" }}
-    >
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="albums" />
-      <Tabs.Screen name="camera" />
-      <Tabs.Screen name="moments" />
-      <Tabs.Screen name="studio" />
-    </Tabs>
-      {/* Upload progress pill, above the BottomBar on every tab. */}
+      <AppTabs tabs={TABS} hidden={selecting} />
+      {/* Upload progress pill, above the tab bar on every tab. */}
       <UploadStatus />
     </View>
   );

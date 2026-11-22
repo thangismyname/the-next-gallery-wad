@@ -1,0 +1,15 @@
+{"t": "2026-11-20T05:09:38Z", "type": "log", "message": "run e4/20261120-120937 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e4/20261120-120937"}
+{"t": "2026-11-20T05:09:38Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-20T05:09:38Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-20T05:09:38Z", "type": "log", "message": "  yolo26n-oi-20261109-100541.pt: 128 / 174 lớp có trong YOLO (81 lớp COCO · 47 lớp ngoài COCO)"}
+{"t": "2026-11-20T05:09:38Z", "type": "log", "message": "── YOLO detect"}
+{"t": "2026-11-20T05:09:38Z", "type": "stage", "stage": "YOLO detect"}
+{"t": "2026-11-20T05:09:39Z", "type": "log", "message": "── detection mAP@IoU (giao thức OI)"}
+{"t": "2026-11-20T05:09:39Z", "type": "stage", "stage": "detection mAP@IoU (giao thức OI)"}
+{"t": "2026-11-20T05:09:46Z", "type": "log", "message": "── tag image-level"}
+{"t": "2026-11-20T05:09:46Z", "type": "stage", "stage": "tag image-level"}
+{"t": "2026-11-20T05:09:46Z", "type": "log", "message": "── bootstrap 200×"}
+{"t": "2026-11-20T05:09:46Z", "type": "stage", "stage": "bootstrap 200×"}
+{"t": "2026-11-20T05:09:48Z", "type": "log", "message": "  test detection mAP@0.5: 0.5428 · tag mAP 0.8469 · macro-F1 0.7922"}
+{"t": "2026-11-20T05:09:48Z", "type": "log", "message": "  --no-latest: không ghi latest.json (dùng run id 20261120-120937 ở thí nghiệm sau)"}
+{"t": "2026-11-20T05:09:48Z", "type": "log", "message": "xong sau 11s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/e4/20261120-120937"}

@@ -1,0 +1,175 @@
+class,group,coco,train_pos,test_pos,zs_clip_AP,e5_per_tag_AP,fused_learned_AP
+Person,object,person,5893,1584,0.88641,0.98771,0.98255
+Bicycle,object,bicycle,138,50,0.83745,0.89019,0.8528
+Car,object,car,862,281,0.88883,0.96975,0.95415
+Motorcycle,object,motorcycle,102,42,0.92419,0.94889,0.9669
+Fixed-wing aircraft,object,airplane,101,50,0.92021,0.89301,0.97312
+Bus,object,bus,106,44,0.81755,0.96733,0.95236
+Train,object,train,100,39,0.91642,0.92498,0.95215
+Truck,object,truck,102,52,0.82474,0.82844,0.79482
+Boat,object,boat,205,61,0.76047,0.84181,0.90441
+Traffic light,object,traffic light,103,41,0.87032,0.98806,0.93613
+Fire hydrant,object,fire hydrant,100,37,1.0,1.0,1.0
+Stop sign,object,stop sign,100,33,0.96941,0.94044,0.9901
+Parking meter,object,parking meter,46,6,,,
+Bench,object,bench,112,45,0.76371,0.82196,0.8862
+Bird,object,bird,291,74,0.9454,0.88712,0.98754
+Cat,object,cat,107,48,0.97707,0.96087,0.99019
+Dog,object,dog,160,55,0.96118,0.89718,0.98887
+Horse,object,horse,106,46,0.86336,0.95801,0.99604
+Sheep,object,sheep,102,37,0.87164,0.84211,0.95926
+Cattle,object,cow,105,47,0.92673,0.8557,0.88077
+Elephant,object,elephant,100,37,0.97291,0.97083,0.97443
+Bear,object,bear,152,62,0.76706,0.73053,0.9591
+Zebra,object,zebra,100,41,0.98496,0.97725,0.98237
+Giraffe,object,giraffe,100,37,0.98384,0.95188,0.98335
+Backpack,object,backpack,102,39,0.75755,0.85875,0.87234
+Umbrella,object,umbrella,102,38,0.36789,0.45407,0.73061
+Handbag,object,handbag,102,42,0.62149,0.53465,0.86095
+Tie,object,tie,106,40,0.73891,0.9018,0.96214
+Suitcase,object,suitcase,100,38,0.8025,0.85745,0.92092
+Flying disc,object,frisbee,57,5,0.96667,0.925,1.0
+Ski,object,skis,109,54,0.98739,0.98676,0.98045
+Snowboard,object,snowboard,100,37,0.98663,0.95035,0.96282
+Ball (Object),object,sports ball,123,61,0.81809,0.86406,0.83432
+Kite,object,kite,100,37,0.99724,0.9703,0.99026
+Baseball bat,object,baseball bat,100,37,0.94891,0.94949,0.95948
+Baseball glove,object,baseball glove,111,51,0.88786,0.89492,0.97466
+Skateboard,object,skateboard,100,39,1.0,0.9853,1.0
+Surfboard,object,surfboard,100,39,0.9079,0.8913,0.94428
+Tennis racket,object,tennis racket,100,36,0.98581,0.95393,0.99076
+Bottle,object,bottle,363,93,0.71879,0.91436,0.92221
+Wine glass,object,wine glass,136,47,0.87766,0.87606,0.9311
+Mug,object,cup,101,41,0.90946,0.87701,0.93593
+Coffee cup,object,cup,162,72,0.94081,0.93466,0.98348
+Fork,object,fork,101,42,0.80742,0.97695,0.96011
+Knife,object,knife,101,46,0.93298,0.97949,0.99631
+Spoon,object,spoon,116,55,0.81629,0.88832,0.92354
+Bowl,object,bowl,158,87,0.84641,0.90738,0.94884
+Banana,object,banana,100,36,0.94299,0.96967,0.98526
+Apple,object,apple,100,40,0.9047,0.93393,0.93751
+Sandwich,object,sandwich,161,82,0.96601,0.93386,0.98935
+Orange (fruit),object,orange,100,50,0.58512,0.56743,0.64176
+Broccoli,object,broccoli,100,43,0.83554,0.90588,0.98949
+Carrot,object,carrot,100,36,0.68585,0.78575,0.93783
+Hot dog,object,hot dog,100,37,0.94367,0.88607,0.94695
+Pizza,object,pizza,100,39,0.98689,0.94591,0.99742
+Doughnut,object,donut,100,36,0.92822,0.89708,0.96506
+Cake,object,cake,102,58,0.87818,0.8884,0.95207
+Chair,object,chair,595,148,0.59242,0.91442,0.92424
+Couch,object,couch,175,74,0.8171,0.90142,0.91123
+Houseplant,object,potted plant,109,58,0.59783,0.80841,0.82012
+Bed,object,bed,196,89,0.89101,0.91046,0.94571
+Kitchen & dining room table,object,dining table,100,40,0.82927,0.82052,0.92047
+Toilet,object,toilet,100,37,0.90252,0.90621,0.9128
+Television,object,tv,108,46,0.7933,0.82222,0.90248
+Laptop,object,laptop,156,57,0.77945,0.95176,0.8927
+Computer mouse,object,mouse,100,38,,,
+Remote control,object,remote,93,37,,,
+Computer keyboard,object,keyboard,113,42,0.90018,0.98527,0.95846
+Mobile phone,object,cell phone,110,42,0.90655,0.95472,0.94449
+Microwave oven,object,microwave,100,50,0.9484,0.98385,0.96705
+Oven,object,oven,104,57,0.88921,0.8996,0.92575
+Toaster,object,toaster,27,4,0.69048,0.84091,0.89286
+Sink,object,sink,153,56,0.7199,0.91047,0.88589
+Refrigerator,object,refrigerator,100,51,0.8993,0.9294,0.93765
+Book,object,book,145,53,0.99818,0.99818,0.99856
+Clock,object,clock,103,41,0.97203,0.97488,0.9752
+Vase,object,vase,113,44,0.91369,0.86956,0.88084
+Scissors,object,scissors,100,26,0.81021,0.79372,0.91885
+Teddy bear,object,teddy bear,100,37,0.93253,0.92158,0.95957
+Hair dryer,object,hair drier,13,3,0.80952,0.27579,0.91667
+Toothbrush,object,toothbrush,29,12,0.99359,0.95115,1.0
+Human face,object,,2074,382,0.76879,0.75085,0.98359
+Tree,object,,2960,1065,0.69569,0.69298,0.92795
+Flower,object,,580,140,0.56809,0.55628,0.89148
+Building,object,,2239,841,0.8831,0.87823,0.93779
+House,object,,675,204,0.54796,0.55254,0.74857
+Skyscraper,object,,271,56,0.90585,0.90203,0.93193
+Tower,object,,230,84,0.79756,0.79496,0.82822
+Castle,object,,101,45,0.90363,0.90003,0.92154
+Lighthouse,object,,100,37,0.98986,0.89515,0.99589
+Fountain,object,,100,36,0.95616,0.95575,0.98005
+Sunglasses,object,,121,51,0.55336,0.53618,0.92963
+Hat,object,,182,56,0.6261,0.6241,0.90821
+Footwear,object,,1009,293,0.38558,0.36989,0.93528
+Dress,object,,362,126,0.61074,0.59229,0.86881
+Guitar,object,,101,48,0.94047,0.86975,0.95324
+Camera,object,,106,39,0.92425,0.87885,0.95055
+Balloon,object,,101,42,0.86582,0.80157,0.91476
+Christmas tree,object,,100,37,0.82302,0.70445,0.95894
+Swimming pool,object,,100,41,0.876,0.90559,0.95284
+Tent,object,,104,51,0.82817,0.84165,0.85648
+Flag,object,,117,47,0.93323,0.92418,0.93973
+Street light,object,,166,47,0.75838,0.76799,0.83318
+Traffic sign,object,,161,61,0.96344,0.96393,0.98691
+Taxi,object,,100,37,0.89296,0.86781,0.98216
+Van,object,,100,46,0.80704,0.67137,0.89388
+Helicopter,object,,100,37,0.96203,0.9558,0.98653
+Monkey,object,,100,36,0.99848,0.99848,1.0
+Duck,object,,101,37,0.97725,0.95407,0.9924
+Fish,object,,100,42,0.96126,0.86562,0.95314
+Butterfly,object,,101,37,0.98354,0.96009,0.99115
+Tiger,object,,100,37,0.95833,0.9481,0.99338
+Lion,object,,100,38,0.94256,0.88982,0.97209
+Goat,object,,100,46,0.96237,0.97349,0.95268
+Pig,object,,100,36,0.98581,0.95604,0.99313
+Deer,object,,100,42,0.926,0.90031,0.96071
+Ice cream,object,,100,42,0.89571,0.87799,0.90947
+Coffee (drink),object,,100,51,0.9024,0.88615,0.95314
+Wine,object,,112,58,0.85521,0.78284,0.84957
+Beer,object,,109,50,0.9171,0.87615,0.89944
+Cocktail,object,,101,52,0.88247,0.86816,0.86463
+Salad,object,,109,56,0.90685,0.90379,0.92387
+Sushi,object,,100,36,1.0,0.99925,1.0
+Bread,object,,111,73,0.83493,0.79601,0.90455
+Cookie,object,,100,39,0.82844,0.79355,0.91085
+Hamburger,object,,100,51,0.96776,0.94109,0.97857
+French fries,object,,101,47,0.94359,0.92708,0.99047
+Pasta,object,,100,48,0.97697,0.96971,0.99394
+Beach,scene,,468,53,0.80009,0.76588,0.85347
+Sea,scene,,124,147,0.93375,0.92412,0.94747
+Coast,scene,,100,88,0.93728,0.89844,0.9236
+Island,scene,,34,40,0.9961,0.99747,0.98112
+Mountain,scene,,566,131,0.9772,0.96129,0.96172
+Mountain range,scene,,74,61,0.88863,0.90281,0.94869
+Valley,scene,,48,42,0.83397,0.83214,0.77198
+Forest,scene,,103,52,0.9943,0.99245,0.99058
+Lake,scene,,503,52,0.95156,0.92137,0.99212
+River,scene,,102,72,0.92182,0.91058,0.91551
+Waterfall,scene,,102,38,0.96225,0.93982,0.97149
+Field,scene,,100,59,0.87646,0.8765,0.84765
+Garden,scene,,100,54,0.92807,0.9314,0.94622
+Park,scene,,69,38,0.9738,0.96342,0.97521
+Desert,scene,,61,38,0.97454,0.97876,0.9799
+Snow,scene,,387,115,0.9034,0.8877,0.9933
+Sky,scene,,2095,923,0.99743,0.99869,0.99995
+Cloud,scene,,1411,229,0.95891,0.96148,0.99469
+Sunset,scene,,100,58,0.97922,0.98034,0.9876
+Sunrise,scene,,41,50,0.99961,0.99921,0.99838
+Night,scene,,87,58,0.98512,0.98583,0.99193
+Road,scene,,361,250,0.98732,0.98772,0.99224
+Street,scene,,123,65,0.97674,0.97631,0.99152
+City,scene,,135,98,0.93798,0.92717,0.963
+Town,scene,,104,51,0.96431,0.97023,0.98935
+Skyline,scene,,101,37,0.98397,0.98397,0.97168
+Bridge (structure),scene,,102,54,0.99195,0.99024,0.98763
+Temple,scene,,100,36,0.97606,0.97827,0.98327
+Church,scene,,101,37,0.932,0.93191,0.98464
+Room,scene,,157,224,0.97926,0.97943,0.99078
+Kitchen,scene,,102,54,0.99825,0.99825,0.99861
+Bedroom,scene,,100,37,0.99929,0.99929,1.0
+Living room,scene,,100,39,0.74727,0.75569,0.90063
+Restaurant,scene,,87,58,0.94277,0.94987,0.97202
+Stadium,scene,,100,48,0.69272,0.74878,0.97322
+Wedding,scene,,100,36,0.9913,0.9922,0.99468
+Party,scene,,73,39,0.95508,0.96266,0.93421
+Concert,scene,,220,37,0.96219,0.95581,0.99704
+Festival,scene,,59,37,0.85558,0.87977,0.92762
+Crowd,scene,,104,51,0.97627,0.97758,0.99287
+Selfie,scene,,100,36,0.9733,0.97415,0.98885
+Portrait,scene,,100,56,0.93345,0.92141,0.96286
+Smile,scene,,844,45,0.89124,0.8837,0.97262
+Text,scene,,108,176,0.99798,0.99699,0.99592
+Document,scene,,44,37,0.99405,0.99405,0.99091
+Landscape,scene,,113,94,,,

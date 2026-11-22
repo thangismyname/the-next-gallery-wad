@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { KeyRound, LogOut, Shield, UserRound } from "lucide-react";
+import { KeyRound, LogOut, Shield, SquareTerminal, UserRound } from "lucide-react";
 import {
   Dialog,
   DialogBody,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { authClient } from "@/services/authClient";
+import { useDeveloperMode } from "@/hooks/useDeveloperMode";
 import { useLogout } from "@/features/navigation/useLogout";
 import { ProfileSummary } from "@/features/profile/components/ProfileSummary";
 import { EditProfileForm } from "@/features/profile/components/EditProfileForm";
@@ -29,11 +30,12 @@ import { DeveloperGroup } from "./DeveloperGroup";
  * Account & settings content — same structure as the mobile account sheet:
  * account card + stats · Account (edit profile / change password in dialogs,
  * admin dashboard) · Appearance · Storage + trash · AI processing · Developer
- * Mode · signed-in devices · sign out. Used by the `/settings` page and the
+ * Mode · signed-in devices · sign out. Used by the
  * avatar's bottom sheet (`AccountSheet`).
  */
 export function AccountPanel() {
   const { t } = useTranslation();
+  const { isDeveloper } = useDeveloperMode();
   const { logout } = useLogout();
   const { data: session, isPending, refetch } = authClient.useSession();
   const user = session?.user;
@@ -106,6 +108,18 @@ export function AccountPanel() {
               trailing={
                 <Button variant="outline" size="sm" className="shrink-0" asChild>
                   <Link to="/admin">{t("common.open")}</Link>
+                </Button>
+              }
+            />
+          )}
+          {/* Khu Developer: developer đã duyệt, hoặc admin (chỉ xem) — cùng quyền với route /dev */}
+          {(isDeveloper || user?.role === "admin") && (
+            <SettingsRow
+              icon={SquareTerminal}
+              title={t("dev.workspace")}
+              trailing={
+                <Button variant="outline" size="sm" className="shrink-0" asChild>
+                  <Link to="/dev">{t("common.open")}</Link>
                 </Button>
               }
             />

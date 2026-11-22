@@ -1,0 +1,2212 @@
+{
+  "profile": {
+    "edit": "编辑",
+    "avatarCropTitle": "调整头像",
+    "avatarCropDesc": "拖动以移动，缩放以选择圆圈内显示的部分。",
+    "avatarNext": "下一步",
+    "zoom": "缩放",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "title": "个人资料",
+    "subtitle": "你的账户信息",
+    "admin": "管理员",
+    "verified": "邮箱已验证",
+    "unverified": "邮箱未验证",
+    "joined": "加入于 {{date}}",
+    "stats": {
+      "photos": "照片",
+      "videos": "视频",
+      "favorites": "收藏",
+      "friends": "好友",
+      "moments": "瞬间",
+      "storage": "存储空间"
+    },
+    "infoTitle": "个人信息",
+    "infoDesc": "好友看到的显示名称和头像。",
+    "name": "显示名称",
+    "email": "邮箱",
+    "emailHint": "登录邮箱暂时无法更改。",
+    "avatarChoose": "从图库选择",
+    "avatarRemove": "移除",
+    "avatarPickTitle": "选择头像",
+    "avatarPickDesc": "从图库中选择一张照片。",
+    "avatarUse": "使用这张照片",
+    "save": "保存更改",
+    "reset": "撤销",
+    "cancel": "取消",
+    "saved": "个人资料已保存。",
+    "saveFailed": "无法保存个人资料，请重试。",
+    "passwordTitle": "修改密码",
+    "passwordDesc": "新密码至少需要 8 个字符。",
+    "currentPassword": "当前密码",
+    "revokeOthers": "退出其他设备",
+    "changePassword": "修改密码",
+    "passwordChanged": "密码已修改。",
+    "passwordFailed": "无法修改密码 — 请检查当前密码。",
+    "noPassword": "此账户通过 Google/GitHub 登录，没有可修改的单独密码。"
+  },
+  "header": {
+    "accountSettings": "账户与设置",
+    "toggleTheme": "切换主题",
+    "toggleSidebar": "切换侧边栏",
+    "userAvatarAlt": "用户头像",
+    "search": "搜索",
+    "profile": "个人资料",
+    "settings": "设置",
+    "logout": "退出登录",
+    "openSidebar": "打开菜单",
+    "account": "账户",
+    "admin": "管理后台",
+    "toggleLanguage": "切换语言",
+    "guest": "访客",
+    "greeting": "你好，"
+  },
+  "app": {
+    "name": "The Next Gallery",
+    "tagline": "AI 照片图库"
+  },
+  "notFound": {
+    "title": "404 - 页面未找到",
+    "description": "你要找的页面不存在或已被移动。",
+    "backHome": "返回首页"
+  },
+  "navigation": {
+    "camera": "相机",
+    "aiEdit": "AI 工作室",
+    "bottomBar": {
+      "ariaLabel": "模式导航栏"
+    }
+  },
+  "camera": {
+    "title": "相机",
+    "back": "退出相机",
+    "flip": "切换摄像头",
+    "mirror": "镜像",
+    "settings": "设置",
+    "grid": "网格 (3x3)",
+    "timer": "定时器",
+    "ratio": {
+      "free": "自由",
+      "1:1": "方形",
+      "4:3": "4:3",
+      "3:4": "3:4",
+      "16:9": "16:9",
+      "9:16": "9:16"
+    },
+    "opening": "正在打开相机...",
+    "permissionDenied": "相机访问被拒绝",
+    "permissionDeniedHint": "请在浏览器中允许访问相机和麦克风，然后重试。",
+    "unsupported": "不支持相机",
+    "unsupportedHint": "请使用现代浏览器（Chrome、Edge 或 Safari）拍摄照片和视频。",
+    "retry": "重试",
+    "photoMode": "照片",
+    "videoMode": "视频",
+    "momentsMode": "拍摄瞬间",
+    "hintPhoto": "点按拍照",
+    "hintPhotoTimer": "{{seconds}} 秒后拍照",
+    "countdownHint": "保持不动，正在倒计时...",
+    "hintVideo": "点按开始 / 停止录制",
+    "hintVideoRecording": "点按停止录制",
+    "hintMoments": "点按拍照 · 长按录制 5 秒",
+    "hintMomentsRecording": "松开即停止 — 最长 5 秒",
+    "recording": "录制中",
+    "retake": "重拍",
+    "save": "保存到图库",
+    "saveMoment": "发布到瞬间",
+    "saving": "正在保存...",
+    "saved": "已保存",
+    "savedMoment": "已发布到瞬间",
+    "photoShort": "照片",
+    "videoShort": "视频",
+    "momentsShort": "瞬间",
+    "keyHint": "空格 拍照/录制 · F 切换 · G 网格 · Esc 退出",
+    "close": "关闭",
+    "permissionHintMobile": "允许 The Next Gallery 使用相机拍照，并直接上传到你的图库。",
+    "allow": "允许访问相机",
+    "openSettings": "打开设置",
+    "flash": "闪光灯",
+    "flashOff": "关闭闪光灯",
+    "flashAuto": "自动闪光",
+    "flashOn": "开启闪光灯",
+    "torch": "手电筒",
+    "shutter": "拍照",
+    "startRecording": "开始录制",
+    "stopRecording": "停止录制",
+    "lastCapture": "上一次拍摄",
+    "captureFailed": "无法拍摄，请重试",
+    "saveFailed": "无法保存，请重试",
+    "momentFailed": "已保存到图库，但瞬间未发布",
+    "zoom": "缩放",
+    "resetZoom": "恢复 1×",
+    "timerOff": "关闭定时器",
+    "timerSeconds": "{{seconds}} 秒定时",
+    "gridOn": "显示网格",
+    "gridOff": "隐藏网格",
+    "cancelTimer": "取消定时",
+    "aspectRatio": "画面比例",
+    "captionPlaceholder": "添加说明…",
+    "posting": "正在发布…"
+  },
+  "sidebar": {
+    "gallery": "图库",
+    "albums": "相册",
+    "friends": "好友",
+    "moments": "瞬间",
+    "favorites": "收藏",
+    "share": "快速发送",
+    "trash": "回收站",
+    "home": "首页",
+    "photos": "我的照片",
+    "ai": "AI",
+    "social": "分享",
+    "admin": "管理",
+    "developer": "开发者"
+  },
+  "hero": {
+    "eyebrow": "AI 驱动的照片图库",
+    "titleLine1": "重新找回",
+    "titleLine2": "每一个瞬间",
+    "subcopy": "只需上传一次 — AI 会识别物体、标记内容，并理解越南语、英语和日语的搜索。描述你要找的那一刻即可。",
+    "stack": "YOLO26 · CLIP ViT-B/32 · DINOv3",
+    "cta": "浏览图库"
+  },
+  "auth": {
+    "email": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "password": "密码",
+    "login": "登录",
+    "loggingIn": "正在登录...",
+    "forgotPassword": "忘记密码？",
+    "orContinueWith": "或使用以下方式继续",
+    "loginError": "登录失败，请重试。",
+    "noAccount": "还没有账户？",
+    "signUp": "注册",
+    "name": "全名",
+    "namePlaceholder": "张三",
+    "confirmPassword": "确认密码",
+    "passwordMismatch": "两次输入的密码不一致",
+    "register": "创建账户",
+    "registering": "正在创建账户...",
+    "alreadyHaveAccount": "已有账户？",
+    "welcomeBack": "欢迎回来",
+    "createAccount": "创建账户",
+    "loginDescription": "登录以使用 The Next Gallery",
+    "registerDescription": "创建账户即可开始",
+    "forgotPasswordError": "无法发送重置密码链接",
+    "resetPasswordError": "无法重置密码",
+    "forgotPasswordTitle": "忘记密码",
+    "forgotPasswordDescription": "输入你的邮箱，我们会发送重置密码的链接。",
+    "sendResetLink": "发送重置链接",
+    "sending": "正在发送...",
+    "forgotPasswordSent": "如果 {{email}} 已注册，你将收到一封包含重置链接的邮件。",
+    "backToLogin": "返回登录",
+    "connecting": "正在连接...",
+    "invalidEmail": "邮箱地址无效",
+    "passwordTooShort": "密码至少需要 8 个字符",
+    "nameRequired": "请输入你的名字",
+    "invalidCredentials": "邮箱或密码错误",
+    "emailExists": "该邮箱已被注册",
+    "oauthError": "无法通过 {{provider}} 登录，请重试。",
+    "networkError": "无法连接服务器，请检查网络后重试。",
+    "showPassword": "显示密码",
+    "hidePassword": "隐藏密码"
+  },
+  "admin": {
+    "title": "管理后台",
+    "badge": "管理员",
+    "loading": "正在加载...",
+    "header": {
+      "backToGallery": "返回图库",
+      "backToApp": "返回 The Next Gallery"
+    },
+    "table": {
+      "role": "角色",
+      "status": "状态",
+      "actions": "操作",
+      "user": "用户",
+      "media": "媒体",
+      "storage": "存储",
+      "joined": "加入时间",
+      "lastActive": "最近活动"
+    },
+    "role": {
+      "user": "用户",
+      "admin": "管理员",
+      "developer": "开发者"
+    },
+    "status": {
+      "banned": "已封禁",
+      "active": "正常"
+    },
+    "action": {
+      "ban": "封禁账户",
+      "unban": "解除封禁",
+      "delete": "删除账户",
+      "deleteTitle": "删除账户",
+      "deleteConfirm": "永久删除 {{name}} 及其 {{n}} 张照片/视频、所有相册和瞬间。此操作无法撤销。",
+      "makeAdmin": "设为管理员",
+      "makeUser": "降为普通用户",
+      "revokeSessions": "退出所有设备",
+      "banTitle": "封禁账户",
+      "banConfirm": "{{name}} 将被退出登录，解除封禁前无法再次登录。",
+      "banReason": "原因（可选）",
+      "banReasonPlaceholder": "例如：违反条款"
+    },
+    "error": {
+      "loadFailed": "无法加载管理数据。"
+    },
+    "nav": {
+      "dashboard": "概览",
+      "users": "用户",
+      "developer": "开发者申请"
+    },
+    "chart": {
+      "activity": "最近 30 天",
+      "uploads": "上传",
+      "signups": "新用户"
+    },
+    "developer": {
+      "title": "开发者申请",
+      "empty": "暂无申请。",
+      "approve": "批准",
+      "reject": "拒绝",
+      "status": {
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝"
+      },
+      "desc": "申请开启开发者模式的用户（YOLO 框、AI 分数）",
+      "all": "全部",
+      "message": "留言",
+      "sentAt": "发送时间"
+    },
+    "overviewDesc": "系统状态、30 天活动和 AI",
+    "kpi": {
+      "users": "用户",
+      "newUsers": "新用户（7 天）",
+      "photos": "照片",
+      "videos": "视频",
+      "storage": "存储",
+      "pendingRequests": "待处理"
+    },
+    "system": {
+      "title": "AI 系统",
+      "online": "在线",
+      "offline": "离线",
+      "offlineHint": "无法连接 ai-service — 上传仍可使用，但新照片暂时不会被 AI 处理。",
+      "coverage": "{{n}} 张照片的处理进度"
+    },
+    "recentUsers": "最新用户",
+    "viewAll": "查看全部",
+    "you": "你",
+    "users": {
+      "count": "{{n}} 位用户",
+      "search": "按名称或邮箱搜索…",
+      "allRoles": "全部角色",
+      "allStatus": "全部状态",
+      "empty": "没有符合筛选条件的用户。",
+      "range": "第 {{from}}–{{to}} 个，共 {{total}} 个",
+      "prev": "上一页",
+      "next": "下一页"
+    },
+    "detail": {
+      "title": "用户详情",
+      "albums": "相册",
+      "moments": "瞬间",
+      "trashed": "回收站",
+      "banReason": "封禁原因：{{reason}}",
+      "joined": "加入于 {{date}}",
+      "lastActive": "{{time}} 活跃",
+      "ai": "AI 处理",
+      "sessions": "会话",
+      "noSessions": "没有活跃的会话。",
+      "revoke": "退出此会话"
+    },
+    "search": {
+      "placeholder": "搜索用户、申请、页面…",
+      "empty": "未找到结果。",
+      "pages": "页面",
+      "allUsers": "查看与“{{q}}”匹配的全部 {{n}} 位用户"
+    },
+    "switch": "前往管理后台"
+  },
+  "developer": {
+    "menuItem": "开发者模式",
+    "title": "开发者模式",
+    "description": "申请开启开发者模式（显示物体检测标签和边界框）。管理员会审核你的申请。",
+    "currentStatus": "当前状态",
+    "messagePlaceholder": "你为什么想要开发者模式？（可选）...",
+    "pendingHint": "你的申请正在等待管理员批准。",
+    "rejectedHint": "你之前的申请被拒绝了，可以再次申请。",
+    "apply": "申请",
+    "close": "关闭",
+    "error": "无法发送申请，请重试。",
+    "toggleLabel": "开启开发者模式",
+    "toggleHint": "显示内部工具（标签 + 边界框）。",
+    "toggleOn": "已开启",
+    "toggleOff": "已关闭",
+    "status": {
+      "none": "未申请",
+      "pending": "待处理",
+      "approved": "已批准",
+      "rejected": "已拒绝"
+    }
+  },
+  "gallery": {
+    "loading": "正在加载图库...",
+    "loadingMore": "正在加载更多照片...",
+    "empty": "图库中还没有媒体。",
+    "error": {
+      "loadFailed": "无法从服务器加载图库。",
+      "uploadFailed": "上传失败，请重试。"
+    },
+    "allPhotos": {
+      "title": "所有照片",
+      "itemCount": "{{count}} 项",
+      "itemCount_other": "{{count}} 项"
+    },
+    "upload": {
+      "button": "上传",
+      "uploading": "正在上传...",
+      "files": "照片和视频",
+      "folder": "整个文件夹",
+      "takeout": "从 Google Takeout 导入",
+      "takeoutSoon": "Google Takeout 导入功能即将推出。目前请先解压 Takeout，再选择“整个文件夹”（日期取自 EXIF）。",
+      "dropHere": "松开即可上传",
+      "dropHint": "照片、视频或整个文件夹，其他文件会被跳过。",
+      "noMedia": "所选内容中没有照片或视频",
+      "someFailed": "{{n}} 个文件无法上传（文件损坏或网络错误）"
+    },
+    "selection": {
+      "select": "选择",
+      "cancel": "取消选择",
+      "selectGroup": "选择 {{group}} 的所有照片"
+    },
+    "sort": {
+      "newest": "最新",
+      "oldest": "最早",
+      "nameAsc": "名称 A → Z",
+      "nameDesc": "名称 Z → A",
+      "label": "排序"
+    },
+    "group": {
+      "today": "今天",
+      "yesterday": "昨天",
+      "thisWeek": "本周",
+      "thisMonth": "本月",
+      "undated": "无日期"
+    },
+    "imageLoadError": "图片加载失败",
+    "noImage": "没有图片",
+    "photo": "照片",
+    "emptyHint": "上传照片或视频，AI 就会开始分类和打标签。"
+  },
+  "selection": {
+    "cancel": "取消",
+    "count": "已选择 {{count}} 项",
+    "favorite": "加入收藏",
+    "share": "分享",
+    "download": "下载",
+    "delete": "删除",
+    "deleteConfirmTitle": "移到回收站？",
+    "deleteConfirmDesc": "{{count}} 项将被移到回收站，你可以随时从回收站恢复。",
+    "moveToTrash": "移到回收站",
+    "saving": "正在保存 {{done}}/{{total}}…",
+    "savedMany": "已将 {{count}} 项保存到照片",
+    "trashedMany": "已将 {{count}} 项移到回收站",
+    "shareOne": "目前一次只能分享一张照片",
+    "unfavorite": "取消收藏",
+    "selectAll": "全选",
+    "hint": "点按选择 · 横向拖动可多选"
+  },
+  "lightbox": {
+    "photo": "照片",
+    "video": "视频",
+    "close": "关闭",
+    "prev": "上一张",
+    "next": "下一张",
+    "favorite": "加入收藏",
+    "delete": "删除",
+    "jumpTo": "跳到第 {{index}} 张",
+    "counter": "{{current}} / {{total}}",
+    "detail": "详情",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "resetZoom": "重置缩放",
+    "detailTitle": "名称",
+    "detailType": "类型",
+    "detailResolution": "分辨率",
+    "detailSize": "大小",
+    "detailDuration": "时长",
+    "detailDate": "添加时间",
+    "detailObjects": "检测到的物体",
+    "similar": "相似照片",
+    "similarLoading": "正在查找相似照片…",
+    "similarEmpty": "暂无相似照片",
+    "detailFavorite": "收藏",
+    "detailFavoriteYes": "已收藏",
+    "detailFavoriteNo": "未收藏",
+    "viewOriginal": "原图",
+    "loadingOriginal": "正在加载原图…",
+    "detailTaken": "拍摄时间",
+    "detailTags": "内容标签",
+    "lowConfidence": "置信度 {{pct}}% — 偏低，搜索不使用",
+    "lowConfidenceNote": "淡色标签 = YOLO 不确定（< {{pct}}%），搜索会忽略它们。",
+    "download": "下载原图",
+    "tagBelowThreshold": "{{pct}}% — 低于 {{thr}}% 阈值，未采用",
+    "hints": {
+      "zoomOut": "缩小。也可以使用鼠标滚轮或双指捏合。",
+      "zoomLevelLabel": "当前缩放",
+      "zoomLevel": "点击回到 100%（适应屏幕）。",
+      "zoomIn": "放大。也可以滚动、双击 / 双点或双指张开；放大后可拖动平移。",
+      "resetZoom": "适应屏幕并重新居中。",
+      "viewOriginal": "加载全分辨率原图以查看细节。默认显示较小的副本（≤ 2048 px）以提高速度。",
+      "detail": "打开侧边栏：照片信息、AI 标签、YOLO 物体、你的标签、包含它的相册和相似照片。",
+      "detailClose": "关闭详情",
+      "favorite": "点亮爱心 — 照片会出现在收藏中。",
+      "unfavoriteLabel": "取消收藏",
+      "unfavorite": "取消爱心 — 照片会离开收藏（除非它有标签）。",
+      "addToAlbum": "选择一个相册（或新建）来添加这张照片。",
+      "download": "下载与上传时完全一致的原始文件。",
+      "delete": "移到回收站 — 之后可以恢复。",
+      "close": "关闭查看器。",
+      "edit": "调整光线、色彩… — 原图会被保留，随时可以恢复。"
+    },
+    "unfavorite": "取消收藏",
+    "saved": "已保存到照片",
+    "savePermission": "保存需要照片访问权限，请在设置中开启。",
+    "actionFailed": "出了点问题，请重试",
+    "trashed": "已移到回收站",
+    "edit": "编辑",
+    "more": "更多操作",
+    "addedToAlbum": "已添加到“{{name}}”",
+    "labeled": "已标记为“{{name}}”",
+    "noAlbums": "还没有相册",
+    "similarNotLoaded": "这张照片尚未在图库中加载 — 请继续滚动后重试",
+    "live": "实况",
+    "detailLocation": "位置",
+    "openMap": "打开地图",
+    "player": {
+      "speed": "播放速度",
+      "volume": "音量",
+      "mute": "静音",
+      "unmute": "取消静音",
+      "seek": "跳转",
+      "play": "播放",
+      "pause": "暂停",
+      "fullscreen": "全屏",
+      "showControls": "显示视频控件"
+    }
+  },
+  "favorites": {
+    "title": "收藏",
+    "subtitle": "已保存 {{count}} 张照片",
+    "empty": "还没有保存任何内容\n为照片点亮爱心或添加标签（查看器 → 详情，或选择多张照片）即可保存在这里。",
+    "emptyHearts": "还没有点亮爱心的照片。",
+    "emptyLabel": "还没有标记为“{{name}}”的照片。\n可在查看器 → 详情中添加标签，或在图库中选择照片。",
+    "filters": {
+      "all": "全部",
+      "favorites": "已点爱心"
+    },
+    "labels": {
+      "title": "标签",
+      "add": "添加标签",
+      "manage": "管理标签",
+      "manageDesc": "用标签记住要对照片做什么。带标签的照片总会出现在收藏中，即使没有点爱心。",
+      "namePlaceholder": "标签名称…",
+      "create": "添加",
+      "delete": "删除标签",
+      "deleteConfirm": "删除？",
+      "empty": "还没有标签 — 在下方创建第一个吧。",
+      "color": "颜色",
+      "exists": "已存在同名标签。",
+      "limit": "标签数量已达上限（30 个）。",
+      "failed": "无法保存，请稍后重试。",
+      "colors": {
+        "slate": "灰色",
+        "rose": "粉色",
+        "amber": "黄色",
+        "emerald": "绿色",
+        "sky": "蓝色",
+        "violet": "紫色"
+      },
+      "suggested": {
+        "edit": "待编辑",
+        "print": "待打印",
+        "family": "发给家人"
+      }
+    }
+  },
+  "mediaPicker": {
+    "title": "从图库选择",
+    "description": "选择账户中已有的照片和视频。按住 Shift 可选择一个范围。",
+    "descriptionOne": "从图库中选择一张照片。",
+    "searchPlaceholder": "用 AI 搜索，或输入标签 / 相册 / AI 标签 / 颜色...",
+    "clearSearch": "清除搜索",
+    "searchHint": "AI 搜索结果（前 20 个匹配）。",
+    "filter": {
+      "all": "全部",
+      "photos": "照片",
+      "videos": "视频",
+      "favorites": "收藏",
+      "selected_other": "已选择（{{count}}）",
+      "album": "相册"
+    },
+    "empty": "没有照片",
+    "noResults": "没有匹配的照片",
+    "clear_other": "清除 {{count}} 项",
+    "confirm_other": "完成（{{count}}）",
+    "loadMore": "加载更多",
+    "searchInScope": "在此范围内搜索...",
+    "clearScope": "移除范围",
+    "kindTag": "AI 标签",
+    "loadFailed": "无法加载照片。",
+    "retry": "重试",
+    "scopeHint": "此范围内最多显示 60 张照片 — 输入文字可缩小范围。",
+    "searchMobile": "用 AI 搜索，例如“海滩上的狗”"
+  },
+  "trash": {
+    "title": "回收站",
+    "subtitle": "回收站中有 {{count}} 项",
+    "empty": "回收站是空的，删除的照片会显示在这里。",
+    "restore": "恢复",
+    "restoreAll": "全部恢复",
+    "deleteForever": "永久删除",
+    "emptyTrash": "清空回收站",
+    "selectAll": "全选",
+    "deselectAll": "取消全选",
+    "retry": "重试",
+    "deleteForeverTitle": "永久删除？",
+    "deleteForeverDesc": "此项将被永久删除，无法恢复。",
+    "deleteForeverBatchDesc": "{{count}} 项将被永久删除，无法恢复。",
+    "deleteForeverAllDesc": "回收站中的全部 {{count}} 项将被永久删除，无法恢复。",
+    "hint": "长按照片或点按“选择”，即可一次恢复 / 删除多项。",
+    "restoredMany_other": "已恢复 {{count}} 项",
+    "deletedMany_other": "已永久删除 {{count}} 项"
+  },
+  "review": {
+    "title": "滑动清理",
+    "cardSubtitle": "左滑删除 · 右滑保留 · 上滑喜欢",
+    "stats": "已删除 {{trashed}} · 已保留 {{kept}} · 已喜欢 {{liked}}",
+    "trash": "删除",
+    "keep": "保留",
+    "undo": "撤销",
+    "hint": "← 删除 · → 保留 · ↑ 喜欢 · Ctrl+Z 撤销",
+    "swipeHint": "左滑删除，右滑保留，上滑喜欢",
+    "done": "你已经浏览完整个图库",
+    "doneDesc": "删除的照片在回收站中，仍可恢复。",
+    "openTrash": "打开回收站",
+    "restart": "重新开始",
+    "empty": "你的图库中还没有照片。",
+    "loadFailed": "无法加载照片。",
+    "writeFailed": "无法删除或恢复这张照片，已保持原样。",
+    "favorite": "喜欢"
+  },
+  "friends": {
+    "title": "好友",
+    "subtitle": "管理你的好友圈",
+    "addPlaceholder": "输入名字或邮箱...",
+    "search": "搜索",
+    "searching": "正在搜索...",
+    "add": "添加",
+    "sendRequest": "发送请求",
+    "sending": "正在发送...",
+    "empty": "还没有好友。通过名字或邮箱添加你的第一位好友吧！",
+    "emptyHint": "在上方输入名字或邮箱即可发送好友请求",
+    "alreadyFriends": "你和 {{name}} 已经是好友",
+    "notFound": "没有匹配的人",
+    "self": "不能添加自己",
+    "invalidEmail": "请输入有效的名字或邮箱",
+    "deleteTitle": "删除好友？",
+    "deleteDesc": "你将不再是 {{name}} 的好友",
+    "deleteConfirm": "删除好友",
+    "deleteCancel": "保留",
+    "sendMedia": "发送照片",
+    "unfriend": "删除好友",
+    "deleted": "已将 {{name}} 从好友中移除",
+    "retry": "重试",
+    "loadFailed": "无法加载好友列表",
+    "friendsTab": "好友",
+    "requestsTab": "请求",
+    "sent": "已向 {{name}} 发送好友请求",
+    "pendingInbound": "{{name}} 向你发送了请求 — 请查看“请求”标签页",
+    "pendingOutbound": "你已向 {{name}} 发送好友请求，等待对方接受",
+    "requestsLoadFailed": "无法加载好友请求",
+    "requestsEmpty": "没有待处理的请求",
+    "accept": "接受",
+    "decline": "拒绝",
+    "inviteTitle": "快速邀请",
+    "inviteHint": "好友扫描二维码或打开链接，即可立刻向你发送好友请求",
+    "copyInvite": "复制邀请链接",
+    "copy": "复制",
+    "copied": "已复制",
+    "inviteProcessing": "正在处理邀请链接...",
+    "inviteInvalid": "邀请链接无效或已过期",
+    "inviteExpired": "邀请链接已过期",
+    "inviteExpiresIn": "{{time}} 后过期",
+    "resetInvite": "生成新代码",
+    "inviteSent": "已向 {{name}} 发送好友请求",
+    "inviteAlreadyFriends": "你和 {{name}} 已经是好友",
+    "invitePendingInbound": "{{name}} 已向你发送请求 — 请在“请求”标签页中接受",
+    "invitePendingOutbound": "你已向 {{name}} 发送请求，等待对方接受",
+    "goToFriends": "前往好友",
+    "summary_other": "{{count}} 位好友 · {{online}} 位在线",
+    "addTab": "添加",
+    "addTitle": "添加好友",
+    "addFirst": "添加你的第一位好友",
+    "addHint": "输入名字（2 个字符以上）或完整邮箱来查找用户。",
+    "searchHint": "继续输入 — 至少 2 个字符。",
+    "filterPlaceholder": "按名字或邮箱筛选好友...",
+    "noMatch": "没有匹配的好友",
+    "sort": {
+      "online": "在线优先",
+      "name": "A → Z",
+      "recent": "最新"
+    },
+    "onlineNow_other": "当前在线 · {{count}}",
+    "since": "{{date}} 成为好友",
+    "more": "更多操作",
+    "copyEmail": "复制邮箱",
+    "sendTo": "向 {{name}} 发送照片",
+    "incoming_other": "收到的 · {{count}}",
+    "outgoing_other": "发出的 · {{count}}",
+    "cancelRequest": "取消请求",
+    "relation": {
+      "none": "不是好友",
+      "friends": "好友",
+      "pending_inbound": "邀请了你 — 接受吗？",
+      "pending_outbound": "已发送请求"
+    },
+    "nowFriends": "你和 {{name}} 现在是好友了",
+    "actionFailed": "出了点问题，请稍后重试",
+    "shareInvite": "分享邀请链接",
+    "toastRequestTitle": "好友请求",
+    "toastRequestBody": "{{name}} 想加你为好友",
+    "toastAcceptedTitle": "新好友",
+    "toastAcceptedBody": "{{name}} 接受了你的请求",
+    "viewRequests": "查看请求",
+    "count_other": "{{count}} 位好友",
+    "shareEmail": "分享邮箱"
+  },
+  "search": {
+    "placeholder": "搜索照片、好友、相册...",
+    "searching": "正在搜索...",
+    "noResults": "未找到匹配结果",
+    "error": "搜索时出错",
+    "friendResults": "好友",
+    "albumResults": "相册",
+    "mediaResults": "照片",
+    "objectResults": "物体",
+    "sendToFriend": "发送照片",
+    "photos": "张照片",
+    "hint": "输入文字搜索照片、好友或相册 — 例如“日落”、“2026”、“3 月”或“19/11”。输入“favorite”、标签或相册名（或“favorite.dog”）可在其中搜索。",
+    "resizeHandle": "拖动调整大小 · 双击重置",
+    "resetHint": "双击重置",
+    "dragHint": "拖动以移动",
+    "scope": {
+      "edited": "已编辑的照片",
+      "remove": "移除范围",
+      "placeholder": "在此范围内搜索…（留空 = 显示全部）",
+      "searchIn": "搜索范围",
+      "soon": "即将推出",
+      "results": "{{name}} 中的照片",
+      "kind": {
+        "favorites": "收藏",
+        "label": "标签",
+        "album": "相册",
+        "edited": "AI 工作室"
+      }
+    },
+    "recent": "最近搜索",
+    "clearRecent": "清除",
+    "explore": "用 AI 探索",
+    "objectsExplore": "照片中的物体",
+    "mobileHint": "按描述搜索，例如“海滩上的狗”、“日落”、“2 个人”、“2026 年 3 月”。"
+  },
+  "moments": {
+    "title": "瞬间",
+    "subtitle": "你和好友的快照 — 按时间排序",
+    "back": "返回",
+    "newMoment": "发布瞬间",
+    "selectPhoto": "从图库选择照片/视频",
+    "captionPlaceholder": "写一段说明...",
+    "visibility": "可见范围",
+    "visibilityCircle": "好友",
+    "visibilityPrivate": "仅自己",
+    "post": "发布",
+    "cancel": "取消",
+    "empty": "还没有瞬间",
+    "emptyHint": "发布第一张照片，与好友分享瞬间。",
+    "loadFailed": "无法加载瞬间",
+    "retry": "重试",
+    "you": "你",
+    "delete": "删除瞬间",
+    "deleteConfirm": "删除这个瞬间？",
+    "deleteFailed": "无法删除瞬间，请重试。",
+    "leave": "退出瞬间",
+    "leaveConfirm": "从这个瞬间中移除你的照片？它将回到等待照片的状态。",
+    "leaveFailed": "无法退出瞬间，请重试。",
+    "open": "查看 {{name}} 的瞬间",
+    "video": "视频",
+    "close": "关闭",
+    "timeJustNow": "刚刚",
+    "react": "回应",
+    "customEmoji": "输入一个表情…",
+    "templateSingle": "1 张照片",
+    "templateSingleDesc": "竖版，只有你",
+    "templateDuo": "2 张照片",
+    "templateDuoDesc": "方形，2 个人",
+    "templateTrio": "3 张照片",
+    "templateTrioDesc": "宽幅，3 个人",
+    "modeCollab": "与好友一起",
+    "modeSelf": "自己填满",
+    "selectFriends": "选择 {{n}} 位好友来填充剩余位置",
+    "noFriends": "你还没有好友。添加好友即可一起创建瞬间。",
+    "collabHint": "受邀好友会为自己的位置挑选照片。所有位置都有照片后瞬间才会显示；若 24 小时内未完成会自动过期。",
+    "noPhoto": "还没有照片",
+    "mediaDeleted": "照片已删除",
+    "loadMore": "加载更多",
+    "yourPhotoSlots": "你的照片（{{total}} 个位置中的 1–{{max}} 个）",
+    "invitations": "瞬间邀请",
+    "noInvitations": "还没有邀请",
+    "inviteToastTitle": "照片合作邀请",
+    "inviteToastBody": "{{name}} 邀请你参与一个{{template}}瞬间",
+    "yourSlotPending": "轮到你添加照片了",
+    "yourSlotsPending": "轮到你添加 {{n}} 张照片了",
+    "waitingForFriends": "等待 {{n}} 位好友添加照片",
+    "selectFriendsRange": "选择 1-{{max}} 位好友来填充剩余位置",
+    "collabSplitHint": "3 张照片时：你可以添加 1-2 张自己的照片，其余由受邀好友填充（每人至少 1 张）。",
+    "fillSlot": "添加照片",
+    "fillSlotTitle": "向瞬间添加 {{n}} 张照片",
+    "fillSlotDesc": "选择 {{n}} 张你的照片，与 {{user}} 一起组成瞬间",
+    "confirmFill": "提交",
+    "photoCount": "{{n}} 张照片",
+    "editDraft": "编辑",
+    "saveChanges": "保存更改",
+    "cancelDraft": "取消草稿",
+    "collabMembers": "{{name}} +{{count}}",
+    "memeTitle": "表情包",
+    "memeAdd": "来个表情包",
+    "memeBack": "返回卡片",
+    "memeEmpty": "还没有表情包",
+    "memeEmptyHint": "第一个为这张照片配上表情包吧",
+    "memeSearch": "搜索模板…",
+    "memeSearchEmpty": "未找到模板",
+    "memePick": "来个表情包",
+    "memePickDesc": "选择模板并输入文字 — 图片会自动生成",
+    "memeTemplateFailed": "无法加载表情包模板",
+    "memeTextPlaceholder": "输入第 {{n}} 行",
+    "memeCaptionPlaceholder": "添加备注（可选）",
+    "memeCreate": "生成表情包",
+    "memeTextOptional": "文字可选 — 留空则使用原始表情包",
+    "memeDelete": "删除表情包",
+    "memeDeleteConfirm": "删除这个表情包？",
+    "memeDeleteFailed": "无法删除表情包",
+    "memeReact": "赞",
+    "memeUnreact": "取消赞",
+    "memeLoadFailed": "无法加载表情包",
+    "createDesc": "选择布局、照片以及可见范围。",
+    "sectionLayout": "布局",
+    "sectionFriends": "与好友一起",
+    "sectionPhotos": "照片 / 视频",
+    "sectionCaption": "说明",
+    "more": "更多",
+    "prev": "上一个瞬间",
+    "next": "下一个瞬间",
+    "deleteConfirmDesc": "这个瞬间将被永久删除，包括其回应和表情包。",
+    "flipToMeme": "翻转查看 {{name}} 的表情包",
+    "editCaption": "编辑说明",
+    "mute": "静音",
+    "unmute": "取消静音",
+    "memeCreateFailed": "无法生成表情包，请重试",
+    "filter": "显示来自以下用户的瞬间",
+    "filterAll": "全部",
+    "new": "新",
+    "emptyFiltered": "这里还没有瞬间",
+    "flipToMemes": "翻转查看表情包",
+    "doubleTapHint": "双击发送爱心",
+    "reactHint": "点按发送爱心 · 长按选择其他表情",
+    "recent": "最近的瞬间",
+    "seeAll": "查看全部",
+    "framer": {
+      "title": "取景与顺序",
+      "hint": "在框内拖动照片以选择显示的部分，双指捏合（触屏或触控板）可缩放。点击空白框可将选中的照片移过去。发布前不会保存任何内容。",
+      "slot": "第 {{n}} 框",
+      "friendSlot": "好友的框",
+      "editing": "正在编辑第 {{n}} 框",
+      "zoom": "缩放",
+      "moveUp": "上移",
+      "moveDown": "下移",
+      "reset": "重置",
+      "hintMobile": "拖动以选择显示的部分，双指捏合缩放。",
+      "placeHere": "把照片放在这里"
+    },
+    "fromAccountMenu": "从图库发布瞬间",
+    "fromDeviceMenu": "从本设备发布瞬间",
+    "fromAccountHint": "选择图库中已有的照片或视频 — 直接发布，无需重新上传。",
+    "multiMenu": "多张照片 / 与好友一起",
+    "pickPhotos": "选择照片",
+    "donePicking": "完成",
+    "pickMax": "最多选择 {{n}} 张照片 / 视频。",
+    "accept": "添加照片",
+    "decline": "拒绝",
+    "declineConfirm": "拒绝这个邀请？",
+    "declineConfirmDesc": "创建者会收到通知，可以邀请其他人或删除这个瞬间。",
+    "declineFailed": "无法拒绝，请重试。",
+    "deleteShared": "删除共享瞬间",
+    "deleteSharedDesc": "这个瞬间将对所有参与者删除。",
+    "progress": "已完成 {{done}}/{{total}} 框",
+    "slotFilled": "已添加",
+    "slotWaiting": "等待中",
+    "slotDeclined": "已拒绝",
+    "yourDrafts": "你正在进行的瞬间"
+  },
+  "common": {
+    "open": "打开",
+    "cancel": "取消",
+    "comingSoon": "即将推出",
+    "back": "返回",
+    "retry": "重试",
+    "close": "关闭"
+  },
+  "settings": {
+    "accountSubtitle": "个人资料、外观、存储、AI 处理和设备",
+    "title": "设置",
+    "subtitle": "外观、设备、AI 处理和存储",
+    "appearance": {
+      "title": "外观",
+      "desc": "保存在此浏览器中",
+      "theme": "主题",
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随系统",
+      "language": "语言",
+      "fontSize": "文字大小",
+      "fontSmall": "小",
+      "fontDefault": "默认",
+      "fontLarge": "大",
+      "fontXLarge": "特大",
+      "density": "照片网格密度",
+      "compact": "小",
+      "comfortable": "中",
+      "large": "大",
+      "layout": "照片布局",
+      "layoutGrid": "方形网格",
+      "layoutJustified": "保持原始比例"
+    },
+    "sessions": {
+      "title": "已登录的设备",
+      "desc": "当前登录你账户的会话",
+      "current": "本设备",
+      "unknownDevice": "未知设备",
+      "revoke": "退出此设备",
+      "revokeOthers": "退出所有其他设备",
+      "loadFailed": "无法加载设备"
+    },
+    "ai": {
+      "title": "AI 处理",
+      "desc": "新照片会在上传时自动处理。缺少处理结果的旧照片可以在这里处理。",
+      "tags": {
+        "name": "内容分类",
+        "desc": "17 个带置信度的标签（AI 工作室）"
+      },
+      "clip": {
+        "name": "语义搜索（CLIP）",
+        "desc": "按描述查找照片"
+      },
+      "yolo": {
+        "name": "物体检测（YOLO26）",
+        "desc": "为照片中的物体打标签"
+      },
+      "dino": {
+        "name": "相似照片（DINOv3）",
+        "desc": "在查看器中推荐相似的照片"
+      },
+      "progress": "已处理 {{done}}/{{total}} 张照片",
+      "process": "处理 {{n}} 张照片",
+      "stop": "停止",
+      "complete": "已完成",
+      "stalled": "没有照片能被处理 — 请检查 ai-service 或已启用的模型。",
+      "failed": "处理失败，请稍后重试。",
+      "manage": "管理"
+    },
+    "storage": {
+      "title": "存储空间",
+      "desc": "你上传的原始文件大小",
+      "used": "已使用",
+      "photos": "照片",
+      "videos": "视频",
+      "trash": "回收站",
+      "trashCount": "回收站中有 {{n}} 项",
+      "viewTrash": "查看",
+      "emptyTrash": "清空回收站",
+      "emptyTitle": "清空回收站？",
+      "emptyDesc": "{{n}} 项（{{size}}）将被永久删除，无法恢复。",
+      "emptyConfirm": "永久删除",
+      "emptyFailed": "无法清空回收站，请稍后重试。"
+    }
+  },
+  "studio": {
+    "title": "AI 工作室",
+    "subtitle": "AI 辅助的照片分类和编辑",
+    "tabClassify": "分类",
+    "tabEdit": "编辑",
+    "comingSoon": "即将推出",
+    "groups": {
+      "object": {
+        "title": "主体",
+        "desc": "基于 CLIP 的线性探针，在 COCO 上训练"
+      },
+      "scene": {
+        "title": "场景",
+        "desc": "基于 CLIP 的线性探针，在 Places365 上训练"
+      },
+      "attribute": {
+        "title": "属性",
+        "desc": "CLIP 零样本 — 暂无训练数据"
+      }
+    },
+    "photoCount": "{{n}} 张照片",
+    "pendingTitle": "{{n}} 张照片尚未分类",
+    "classifyNow": "立即分类",
+    "loadFailed": "无法加载分类",
+    "emptyTag": "没有照片达到此置信度阈值",
+    "back": "返回分类",
+    "threshold": "置信度阈值",
+    "thresholdAuto": "自动",
+    "thresholdAutoHint": "标签自己的阈值，在训练时于验证集上选定",
+    "tags": {
+      "portrait": "人像",
+      "group": "多人合影",
+      "pets": "宠物",
+      "animals": "动物",
+      "food": "美食",
+      "vehicles": "交通工具",
+      "sports": "运动",
+      "beach": "海滩与大海",
+      "mountain": "山",
+      "nature": "自然",
+      "street": "街道与城市",
+      "architecture": "建筑",
+      "indoor": "室内",
+      "night": "夜晚",
+      "sunset": "日落 / 日出",
+      "event": "活动与聚会",
+      "document": "文档与截图"
+    },
+    "createAlbum": "创建智能相册",
+    "albumFailed": "无法创建相册，请稍后重试。",
+    "sections": {
+      "people": "人物",
+      "animals": "动物",
+      "food": "食物与饮品",
+      "nature": "自然",
+      "beach": "海洋与岛屿",
+      "sky": "天空与天气",
+      "city": "街道与城市",
+      "architecture": "建筑",
+      "vehicles": "交通工具",
+      "sports": "运动",
+      "events": "活动与娱乐",
+      "home": "家居与生活",
+      "tech": "电子产品",
+      "fashion": "时尚与配饰",
+      "documents": "文档与文字"
+    },
+    "labels": {
+      "title": "详细标签",
+      "desc": "{{used}}/{{n}} 个标签有照片 · 基于 CLIP 的线性探针，在 Open Images 上训练",
+      "precision": "精确率 ≈ {{pct}}%",
+      "filter": "筛选标签…",
+      "showAll": "显示空标签",
+      "hideEmpty": "隐藏空标签",
+      "noMatch": "没有匹配的标签",
+      "none": "还没有照片达到任何详细标签的阈值"
+    }
+  },
+  "albums": {
+    "coverSet": "设为封面",
+    "removed": "已从相册中移除",
+    "addHint": "从图库添加照片：选择照片 → ⋯ → 添加到相册。",
+    "title": "相册",
+    "subtitle": "你的相册、智能相册以及与你共享的相册",
+    "newAlbum": "新建相册",
+    "create": "创建相册",
+    "save": "保存",
+    "saveFailed": "无法保存相册，请稍后重试。",
+    "createTitle": "创建相册",
+    "editTitle": "编辑相册",
+    "createDesc": "普通相册：由你自己挑选照片。",
+    "kind": "相册类型",
+    "kindManual": "普通相册",
+    "kindSmart": "智能相册",
+    "name": "相册名称",
+    "namePlaceholder": "例如：京都 2026",
+    "description": "描述（可选）",
+    "photoCount": "{{n}} 张照片",
+    "memberCount": "{{n}} 位成员",
+    "smartBadge": "AI",
+    "smartSection": "智能相册",
+    "mine": "我的相册",
+    "sharedWithMe": "与我共享",
+    "invitations": "邀请",
+    "sharedBy": "由 {{name}} 共享 · {{role}}",
+    "empty": "你还没有相册。创建一个来整理照片，或让 AI 帮你分组。",
+    "emptyAlbum": "这个相册还没有照片。",
+    "loadFailed": "无法加载相册",
+    "notFound": "该相册不存在，或你没有访问权限。",
+    "accept": "加入",
+    "decline": "拒绝",
+    "addTo": "添加到相册",
+    "addToDesc": "为 {{n}} 张照片选择一个相册",
+    "addPhotos": "添加照片",
+    "addPhotosDesc": "从图库中选择照片",
+    "addCount": "添加 {{n}} 张照片",
+    "share": "分享",
+    "shareTitle": "分享相册",
+    "shareDesc": "邀请好友查看或添加照片，或为没有账户的人创建链接。",
+    "members": "成员",
+    "more": "更多操作",
+    "edit": "编辑相册",
+    "convert": "转为普通相册",
+    "leave": "退出相册",
+    "delete": "删除相册",
+    "setCover": "设为封面",
+    "removeFromAlbum": "从相册中移除",
+    "removeOnlyOwn": "你只能移除自己添加的照片",
+    "saveSearch": "保存为相册",
+    "role": "权限",
+    "roles": {
+      "owner": "所有者",
+      "editor": "可添加照片",
+      "viewer": "仅查看"
+    },
+    "roleHint": {
+      "editor": "可添加自己的照片，并移除自己添加的照片。",
+      "viewer": "只能查看照片。"
+    },
+    "inviteFriends": "邀请好友",
+    "noFriendsToInvite": "没有更多可邀请的好友。",
+    "invite": "邀请 {{n}} 位",
+    "removeMember": "从相册中移除",
+    "pendingInvite": "已邀请",
+    "inviteToastTitle": "相册邀请",
+    "inviteToastBody": "{{name}} 邀请你加入相册“{{album}}”",
+    "viewInvitation": "查看邀请",
+    "smart": {
+      "desc": "智能相册会自动更新：符合条件的新照片会自动出现。",
+      "ruleType": "照片分组依据",
+      "byTags": "内容标签",
+      "byQuery": "搜索语句",
+      "tagsHint": "照片必须具有所有选中的标签（最多 {{max}} 个）。",
+      "query": "搜索语句",
+      "queryPlaceholder": "例如：海滩上的两只狗",
+      "queryHint": "使用与搜索框相同的混合搜索：能理解标签、物体和数量。",
+      "rule": "条件",
+      "empty": "还没有照片符合此相册的条件。",
+      "labelFilter": "添加详细标签 — 在 {{n}} 个标签中搜索（咖啡、瀑布…）",
+      "selected": "已选择 {{n}}/{{max}}",
+      "removeTag": "移除 {{name}}",
+      "noneSelected": "还没有标签 — 点按下方的分类或标签。",
+      "maxReached": "最多 {{max}} 个标签 — 先移除一个再选择其他。",
+      "threshold": "置信度",
+      "thresholdHint": "自动 = 使用每个标签自己的阈值。照片太少时可调低，混入错误照片时可调高。",
+      "previewLoading": "正在查找匹配的照片…",
+      "previewCount": "当前有 {{n}} 张照片匹配",
+      "previewFailed": "无法预览（AI 服务是否在运行？）",
+      "previewEmptyTags": "还没有照片同时具有这些标签 — 试试减少标签或降低置信度。",
+      "previewEmptyQuery": "还没有照片匹配 — 试试更短的句子。"
+    },
+    "links": {
+      "title": "公开链接",
+      "permission": "链接权限",
+      "view": "仅查看",
+      "download": "查看并下载",
+      "expiry": "过期时间",
+      "never": "永不",
+      "days": "{{n}} 天",
+      "maxViews": "查看次数上限",
+      "unlimited": "无限制",
+      "create": "创建并复制链接",
+      "active": "有效链接",
+      "none": "还没有链接。",
+      "copy": "复制链接",
+      "revoke": "撤销链接",
+      "until": "至 {{date}}",
+      "views": "{{n}}/{{max}} 次查看",
+      "expired": "已失效"
+    },
+    "confirm": {
+      "delete": {
+        "title": "删除相册？",
+        "desc": "“{{name}}”将被删除，其中的照片仍保留在你的图库中。",
+        "action": "删除相册"
+      },
+      "leave": {
+        "title": "退出相册？",
+        "desc": "你将无法再看到“{{name}}”。你添加的照片会保留在相册中。",
+        "action": "退出"
+      },
+      "convert": {
+        "title": "转为普通相册？",
+        "desc": "当前照片会作为固定列表保留；新照片不会再自动添加。",
+        "action": "转换"
+      },
+      "remove": {
+        "title": "从相册中移除照片？",
+        "desc": "{{n}} 张照片将从相册中移除（仍保留在你的图库中）。",
+        "action": "移除"
+      }
+    },
+    "public": {
+      "sharedBy": "由 {{name}} 共享",
+      "download": "下载这张照片",
+      "notFound": "此链接不存在或已被撤销。",
+      "expired": "此链接已过期。",
+      "exhausted": "此链接已达到查看次数上限。"
+    },
+    "inAlbums": "所在相册",
+    "reorder": {
+      "button": "重新排序",
+      "hint": "拖动以更改顺序（键盘：空格拿起，方向键移动）。",
+      "save": "保存顺序",
+      "item": "照片 {{n}}：{{title}}"
+    },
+    "auto": {
+      "groups": {
+        "type": "媒体类型",
+        "content": "按内容",
+        "time": "按时间",
+        "objects": "按物体"
+      },
+      "groupHints": {
+        "type": "所有照片和视频都在这里",
+        "content": "按 AI 标签分组（17 类分类）— 无标签的照片归入“其他”",
+        "time": "按月份，以及活动 = 拍摄时间相近的照片（EXIF 拍摄日期）",
+        "objects": "按 YOLO 检测到的物体分组"
+      },
+      "type": {
+        "photos": "照片",
+        "videos": "视频",
+        "screenshots": "截图"
+      },
+      "otherTag": "其他",
+      "event": "活动 {{date}}",
+      "objects": {
+        "person": "人物",
+        "vehicle": "交通工具",
+        "outdoor": "户外",
+        "animal": "动物",
+        "accessory": "配饰",
+        "sports": "运动",
+        "kitchen": "厨具",
+        "food": "食物",
+        "furniture": "家具",
+        "electronic": "电子产品",
+        "appliance": "家电",
+        "indoor": "家居用品"
+      },
+      "readOnly": "自动相册 · 自动更新",
+      "save": "保存为相册",
+      "showAll": "显示全部（{{n}}）",
+      "showLess": "收起"
+    },
+    "collections": "收藏集"
+  },
+  "nav": {
+    "gallery": "图库",
+    "albums": "相册",
+    "studio": "AI 工作室",
+    "login": "登录",
+    "openGallery": "打开图库",
+    "download": "获取应用",
+    "menu": "菜单"
+  },
+  "capabilities": {
+    "pipelineTitle": "处理流程",
+    "pipelineBody": "结果会被保存，所以搜索、打标签和相册都是即时的 — 每次搜索都不会重新处理照片。",
+    "semanticSearch": "语义搜索",
+    "objectDetection": "物体检测",
+    "visualSimilarity": "相似照片",
+    "autoClassification": "自动分类",
+    "smartAlbums": "智能相册",
+    "sharing": "P2P 分享与共享相册",
+    "pipelineHeadline": "三个视觉模型，上传时只运行一次。",
+    "stats": {
+      "models": "AI 模型",
+      "tags": "内容标签",
+      "objects": "物体类别",
+      "languages": "搜索语言"
+    },
+    "desc": {
+      "semanticSearch": "输入“海滩上的两只狗”：语句会被拆分为物体、数量和场景，再由 CLIP + 标签 + YOLO 共同打分。",
+      "objectDetection": "在每张照片中检测 80 类物体，并给出边界框和置信度 — 还能数出有多少人或多少辆车。",
+      "visualSimilarity": "打开一张照片，立刻看到相似的照片：同样的角度、同样的场景、同样的主体。",
+      "autoClassification": "17 个标签，如人像、美食、海滩、夜晚… 每个都有自己的置信度和阈值，在 AI 工作室中显示。",
+      "smartAlbums": "将一次搜索或一组标签保存为相册 — 符合条件的新照片会自动出现。",
+      "sharing": "设备之间直接发送照片，邀请好友加入共享相册，或创建会过期的链接。"
+    }
+  },
+  "closing": {
+    "statement": "别再在成千上万张照片中翻找了。描述那一刻 — 图库会帮你找到它。",
+    "eyebrow": "开始使用",
+    "cta": "免费创建账户",
+    "note": "无需安装 · 在浏览器中运行"
+  },
+  "footer": {
+    "tagline": "一个理解每张照片的图库 — 搜索、分类并分享你的瞬间。",
+    "sections": {
+      "explore": "探索",
+      "account": "账户",
+      "tech": "技术"
+    },
+    "rights": "保留所有权利",
+    "madeWith": "毕业论文项目"
+  },
+  "preview": {
+    "query": "街上的两个人"
+  },
+  "workflow": {
+    "eyebrow": "工作流程",
+    "title": "从上传到找到。",
+    "subtitle": "所有繁重的分析都在后台一次完成。搜索时，系统只需理解你的文字。",
+    "steps": {
+      "upload": {
+        "label": "上传",
+        "title": "把照片放进图库",
+        "desc": "照片、视频和 iPhone HEIC。预览图会提前生成，即使原图很大，图库也依然流畅。"
+      },
+      "analyze": {
+        "label": "分析",
+        "title": "AI 查看每一张照片",
+        "desc": "CLIP 理解含义，YOLO26 找出物体，DINOv3 记住视觉特征 — 全部在后台进行，无需等待。"
+      },
+      "find": {
+        "label": "查找与整理",
+        "title": "按描述搜索",
+        "desc": "输入你记得的内容，按标签筛选，打开相似照片，或让智能相册替你收集照片。"
+      }
+    }
+  },
+  "download": {
+    "eyebrow": "移动应用 · 即将推出",
+    "title": "整个图库，尽在掌中。",
+    "subtitle": "iOS 和 Android 应用正在开发中 — 同一个账户、同样的 AI，与网页版同步。",
+    "features": {
+      "backup": "自动备份手机中的照片",
+      "search": "用日常语言搜索照片 — 越南语、英语、日语",
+      "moments": "用瞬间与好友分享正在发生的事",
+      "send": "设备之间直接发送照片，不经过服务器"
+    },
+    "comingOn": "即将登陆",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "soon": "即将推出",
+    "web": "或者现在就在网页上使用",
+    "qr": "扫码在手机上打开",
+    "mockTitle": "图库",
+    "mockToday": "今天"
+  },
+  "transfer": {
+    "title": "快速发送",
+    "subtitle": "向好友或任何人发送照片和视频 — 设备之间直接传输，端到端加密",
+    "tabSend": "发送",
+    "tabInbox": "已接收",
+    "tabSent": "已发送",
+    "shareTitle": "分享",
+    "filesCount_other": "{{count}} 个文件",
+    "selected_other": "{{count}} 个文件 · {{size}}",
+    "pickPrompt": "选择要发送的照片 / 视频",
+    "pickFiles": "从本设备",
+    "pickFromLibrary": "从图库",
+    "filesEmpty": "点击选择照片和视频（大文件也可以）",
+    "fromLibrary": "图库",
+    "remove": "移除",
+    "libraryTitle": "从图库选择",
+    "libraryDescription": "账户中已有的照片和视频 — 由服务器直接发送",
+    "libraryConfirm_other": "完成（{{count}}）",
+    "toFriends": "好友",
+    "toAnyone": "链接 / 二维码 / 代码",
+    "noFriends": "还没有好友",
+    "searchFriends": "搜索名字或邮箱...",
+    "online": "在线",
+    "offline": "离线",
+    "offlineRelay": "离线 — 稍后通过服务器接收（已加密）",
+    "offlineWillRelay_other": "{{count}} 人离线：文件将被加密并上传到服务器（保留 1 天），以便他们稍后接收。",
+    "offlineTooBig": "离线好友只能在此页面保持打开时接收（超过 {{size}} 的文件无法经过服务器）。",
+    "linkExplain": "任何拥有链接 / 二维码 / 代码的人都可以接收 — 无需账户。链接中带有解密密钥，服务器无法读取你的文件。",
+    "linkExplainLibrary": "任何拥有链接 / 二维码 / 代码的人都可以查看和下载原图 — 无需账户。1 天后过期，可随时撤销。",
+    "libraryCopyHint": "照片会直接进入好友的图库（即使他们离线），包括 AI 结果。",
+    "maxReceivers": "最多接收人数",
+    "unlimited": "无限制",
+    "keepOpenHint": "保持此页面打开即可直接发送（P2P）— 最快。",
+    "createLink": "创建链接",
+    "sendToFriends_other": "发送给 {{count}} 人",
+    "sendFailed": "发送失败，请稍后重试",
+    "sentToLibraries_other": "已添加到 {{count}} 人的图库。",
+    "done": "完成",
+    "newTransfer": "新的发送",
+    "linkTitle_other": "分享链接 · {{count}} 个文件",
+    "directTitle_other": "发给好友 · {{count}} 个文件",
+    "expiresIn": "{{time}} 后过期",
+    "closed": "已关闭",
+    "hosting": "正在 P2P 分享",
+    "notHosting": "未在分享（页面已关闭）",
+    "e2eHint": "端到端加密：密钥在链接中，服务器无法读取。",
+    "copyLink": "复制链接",
+    "shareLink": "分享",
+    "linkOtherDevice": "带密钥的链接只能在创建它的设备上再次显示。请使用 6 位代码。",
+    "codeLabel": "接收代码（10 分钟）",
+    "newCode": "新代码",
+    "codeHint": "接收方打开 {{origin}}/r 并输入代码。",
+    "relayTitle": "服务器备用",
+    "relayStart": "上传到服务器（加密）",
+    "relayUploading": "正在上传...",
+    "relayHint": "上传后，即使你关闭此页面或直连失败，接收方仍能获取文件。保留 1 天。",
+    "relayReady": "已在服务器上（加密）— 即使你离线，接收方也能下载。",
+    "relayTooBig": "超过 {{size}} 上限 — 只能直接传输。",
+    "reopenToHost": "本设备上的文件已不在（页面已刷新）— 接收方只能获取服务器上已有的内容。",
+    "recipients_other": "接收方（{{count}}）",
+    "noRecipientsYet": "还没有人打开链接。",
+    "guest": "访客",
+    "someone": "接收方",
+    "status": {
+      "pending": "等待中",
+      "receiving": "接收中",
+      "done": "已接收",
+      "failed": "失败",
+      "declined": "已拒绝",
+      "queued": "排队中"
+    },
+    "via": {
+      "p2p": "P2P",
+      "turn": "TURN",
+      "relay": "服务器",
+      "server": "服务器",
+      "copy": "复制",
+      "p2pHint": "设备之间直接传输（WebRTC）",
+      "turnHint": "通过 TURN 中继服务器的 WebRTC",
+      "relayHint": "经过服务器，端到端加密",
+      "serverHint": "从服务器上的图库下载",
+      "copyHint": "服务器复制到接收方的图库"
+    },
+    "revoke": "撤销",
+    "sentEmpty": "还没有发送过。",
+    "inboxEmpty": "还没有收到过。",
+    "receivedBy": "已接收 {{done}}/{{total}}",
+    "fromSender_other": "{{name}} · {{count}} 个文件",
+    "receiveByCode": "使用代码接收",
+    "codePlaceholder": "6 位代码",
+    "codeSubmit": "接收",
+    "codeFailed": "无法打开该代码，请重试",
+    "receiveTitle": "接收文件",
+    "receiveCodeHint": "输入发送方屏幕上显示的 6 位代码",
+    "backToApp": "返回应用",
+    "unavailable": "无法打开此次传输",
+    "sentYou_other": "{{name}} 向你发送了 {{count}} 个文件",
+    "copiedToLibrary_other": "{{count}} 张照片已在你的图库中",
+    "allInLibrary_other": "{{count}} 张照片已添加到你的图库。",
+    "openGallery": "打开图库",
+    "conn": {
+      "p2p": "直接连接（P2P）",
+      "turn": "已通过 TURN 连接",
+      "relay": "无法直接连接 — 正通过服务器接收",
+      "senderOffline": "发送方离线 — 正在接收服务器上已有的内容",
+      "connecting": "正在连接发送方..."
+    },
+    "key": {
+      "ready": "端到端加密",
+      "missing": "还没有解密密钥 — 需要发送方在线",
+      "requesting": "正在从发送方获取密钥..."
+    },
+    "receiveAll": "全部接收",
+    "receiving": "正在接收...",
+    "saveDevice_other": "保存到设备（{{count}}）",
+    "saveFolder": "保存到文件夹",
+    "saveLibrary": "保存到图库",
+    "savedToLibrary_other": "已将 {{count}} 个文件保存到你的图库。",
+    "saveFailed": "保存失败",
+    "guestHint": "无需账户。收到的文件会保留在此浏览器中，直到你保存它们。",
+    "incomingTitle": "{{name}} 发给你",
+    "incomingLibrary_other": "{{count}} 张照片已添加到你的图库。",
+    "incomingFiles_other": "{{count}} 个文件等待你接收。",
+    "receive": "接收",
+    "export": {
+      "title": "导出整个图库",
+      "description": "将所有原始照片和视频连同拍摄日期、收藏、说明、位置和相册，打包成一个 Google Takeout 格式的 zip 下载 — 可迁移到 Google 相册、Immich… 或重新导入到这里。",
+      "button": "导出（.zip）",
+      "descriptionMobile": "原始照片和视频 + 拍摄日期、收藏、相册 → 一个 Google Takeout 格式的 zip，便于迁移平台。下载期间请保持应用打开。",
+      "progress": "已下载 {{size}} — 点按取消",
+      "noSpace": "此设备没有足够的可用空间来导出。",
+      "failed": "无法导出图库，请稍后重试。"
+    }
+  },
+  "upload": {
+    "progress": "正在上传 {{done}}/{{total}}",
+    "done": "已上传 {{count}} 项",
+    "failed": "{{count}} 项上传失败",
+    "retry": "重试",
+    "badFile": "不支持的文件",
+    "networkError": "网络错误",
+    "fromDevice": "从照片图库",
+    "takePhoto": "拍照",
+    "pickFailed": "无法打开照片图库",
+    "fromFiles": "从“文件”",
+    "pickFilesFailed": "无法打开文件选择器"
+  },
+  "welcome": {
+    "next": "下一步",
+    "skip": "跳过",
+    "slide": "第 {{n}} 页，共 {{total}} 页",
+    "getStarted": "开始使用"
+  },
+  "editor": {
+    "title": "编辑",
+    "back": "返回",
+    "undo": "撤销",
+    "redo": "重做",
+    "compare": "按住查看原图",
+    "reset": "重置",
+    "revertOriginal": "恢复原图",
+    "revertConfirm": "放弃所有编辑并恢复原图？",
+    "save": "保存",
+    "saving": "正在保存…",
+    "saved": "已保存 — 原图仍被保留。",
+    "saveFailed": "无法保存，请重试。",
+    "loadFailed": "无法加载要编辑的照片。",
+    "noWebgl": "此浏览器不支持 WebGL2，无法在这里编辑照片。",
+    "cancel": "取消",
+    "unsavedConfirm": "你有未保存的编辑，仍要离开吗？",
+    "preview": "编辑后的照片",
+    "showingOriginal": "原图",
+    "groups": {
+      "light": "光线",
+      "color": "色彩",
+      "effects": "效果"
+    },
+    "adjust": {
+      "exposure": "曝光",
+      "contrast": "对比度",
+      "highlights": "高光",
+      "shadows": "阴影",
+      "whites": "白色",
+      "blacks": "黑色",
+      "temperature": "色温",
+      "tint": "色调",
+      "vibrance": "自然饱和度",
+      "saturation": "饱和度",
+      "vignette": "暗角"
+    }
+  },
+  "lab": {
+    "desc": "ai-service 基准测试 / 实验结果（E1–E6）的图表",
+    "unavailable": "没有结果 — 仅在有数据集文件夹（$TNG_DATASETS/Results）的机器上可用，生产环境中不可用。",
+    "offline": "ai-service 没有响应。",
+    "latest": "最新",
+    "summary": "摘要",
+    "tabs": {
+      "result": "结果",
+      "files": "CSV 文件",
+      "history": "版本历史",
+      "log": "日志与配置"
+    },
+    "top": "前 {{count}}",
+    "bottom": "后 {{count}}",
+    "ofRows": "按 {{metric}} · 共 {{total}} 行",
+    "pickMetric": "请至少选择一个指标。",
+    "showTable": "数据表（{{count}} 行）",
+    "noResult": "此运行还没有 result.json。",
+    "noFiles": "此运行没有 CSV 文件。",
+    "noNumbers": "此文件没有数值列。",
+    "noHistory": "还没有存档的版本。",
+    "truncated": "仅显示前 {{count}} 行。",
+    "events": "事件",
+    "config": "配置",
+    "details": "详情",
+    "exp": {
+      "select": {
+        "short": "挑选实验使用的 Open Images 子集。",
+        "long": "第 0 步（数据）。挑选 Open Images V7 图片，使 174 个类别中的每一类都有足够的正样本：val 3,000、test 5,000、train 15,000 张（seed 0）。按轮次挑选，稀有类别优先，这样常见类别不会挤掉稀有类别。旋转过的图片会被排除。\n输出：下载列表以及每个类别的正 / 负样本数。仍然缺少图片的类别会列在结果中（例如 Hair dryer、Toaster）。\n文件：train_selection.csv。"
+      },
+      "build": {
+        "short": "检查已下载的图片，并构建标签、边界框和描述。",
+        "long": "第 0 步（数据），在 select + 下载之后运行。检查每张图片（缺失、损坏、EXIF 旋转），然后仅根据人工验证的标签构建图片标签 Y ∈ {1, 0, −1}。−1 = 未验证，在所有指标中被屏蔽。应用类别层级（Dog → Animal）、边界框（含 group-of）以及 Localized Narratives 描述。\n输出：各 split 的图片数、缺失 / 损坏的图片、已知标签对、有边界框 / 描述的图片。没有模型指标。"
+      },
+      "e1": {
+        "short": "健全性检查：应用的 CLIP 流程能否复现论文的数字？",
+        "long": "在 Flickr30k 1K 和 MSCOCO 5K 上运行 CLIP ViT-L/14@336（OpenAI），并将 Recall@1/5/10（文本→图像和图像→文本）与 CLIP 论文的表 13 比较。|Δ R@1| ≤ 2 个百分点即为通过。与生产环境相同的流程：L2 归一化，像 pgvector 一样按余弦排序。\n还加入了应用模型（ViT-B-32 laion2b）和后端预处理（WebP ≤512），以显示应用流程使数字偏移了多少（这些行不做 Δ 检查）。\n文件：retrieval.csv（pub_* = 论文数字，delta_* = 差值）。"
+      },
+      "e2": {
+        "short": "RQ1：零样本 CLIP 给照片打标签的效果如何（无训练）？",
+        "long": "用零样本 CLIP 为 174 个 Open Images 类别打标签。提示模板（7 个模板 + 集成）、每类阈值（最大 F1）和 isotonic 校准都在 val 上选择。test 只运行一次，仅用于报告。\n指标：mAP、macro / micro-F1、micro-precision、校准前 / 后的 ECE、95% bootstrap CI；按全部 / 物体 / 场景 / 旧标签划分。reliability_test = 可靠性图数据。\n文件：per_class.csv（每类的 AP、F1、阈值），summary.csv（按组），templates.csv（模板比较）。"
+      },
+      "e3": {
+        "short": "RQ1：零样本 CLIP 搜索照片的效果如何？",
+        "long": "四种查询类型：\n(a) 按类别，“a photo of a {class}”：strict = 未标注的图片算作错误，known = 去掉这些图片；\n(b) Localized Narratives 描述：R@1/5/10、MRR、中位排名；\n(c) 组合式越南语 / 英语查询（例如“海滩上的两只狗”），在 judge.html 中人工评判：P@10/20、nDCG；\n(d) 越南语：直接使用 / 翻译成英语 / 多语言 CLIP。\n文件：a_per_class.csv、a_fp_review.csv（待复查的误报）、b_captions.csv、c_*_per_query.csv。"
+      },
+      "e4": {
+        "short": "YOLO26 基线：检测 + 打标签，以及 YOLO 缺少的类别。",
+        "long": "在 Open Images 上运行 YOLO26n（80 个 COCO 类别）。按 Open Images 协议（仅已验证的图片，group-of 框）测量 mAP@0.5，并用在 val 上选择的阈值测量图片级标签，与应用默认值（0.25 / 0.4）比较。列出 YOLO 未覆盖的类别（gap），以便在 E5 中由 CLIP 补充。\n文件：detection_ap.csv（每类 AP）、tag_summary.csv、tag_per_class.csv、gap_classes.csv。"
+      },
+      "yolo_ft": {
+        "short": "在 Open Images 边界框上微调 YOLO26n（128 个物体类别）。",
+        "long": "在 128 个带框类别上真正训练 YOLO26n 的全部权重（从 COCO 预训练开始），以补充 47 个非 COCO 类别。最佳 epoch 在 val 上选择。可选伪标签：对未验证的 COCO 类别使用基础 YOLO 的框，并由 CLIP 检查。\n基础 vs 微调：mAP@50 / mAP@50-95（Ultralytics）、OI 协议下的 AP@0.5、图片级标签。配对 CI 显示 81 个旧 COCO 类别是否被遗忘。还报告延迟、参数量和文件大小。\n文件：per_class.csv（基础 vs ft）、detection_ap.csv、pseudo_labels.csv、ultralytics_per_class.csv。"
+      },
+      "e5": {
+        "short": "RQ2：按标签融合 YOLO + CLIP 是否优于单一来源？",
+        "long": "对每个标签，在校准后的概率上尝试 4 种规则：clip、yolo、or = 最大值、and = 最小值。保留在 precision ≥ 目标值（默认 0.9）时 val F1 最好的规则。\n在 test 上比较 6 种策略：clip_only、yolo_only、or、and、group_baseline（物体 → YOLO，场景 → CLIP）、per_tag。paired_ci95 = 改进幅度的 bootstrap CI。\n文件：strategies.csv、per_class.csv、rule_choice.csv（每组标签应使用哪个来源：主要结论）。"
+      },
+      "probe": {
+        "short": "有训练的打标签：CLIP / DINO / CLIP+DINO+YOLO 线性探针 vs 零样本。",
+        "long": "在 15,000 张 train 图片上训练线性探针，共 4 种配置：lp_clip（应用的 CLIP）、lp_dino（DINOv3）、lp_clip_dino、fused_learned（CLIP ⊕ DINO ⊕ YOLO 特征，即学习式融合）。未训练基线：zs_clip（E2）、e5_per_tag（E5）。每一行都使用相同的 val 阈值 + 校准流程，因此可以直接比较。\nL2 和 unknown_weight（未验证对的权重）在 val 上选择（selected）。paired_ci95 = 各级改进。\n文件：summary.csv、per_class.csv（每类 × 配置的 AP）、grid_val.csv（超参数网格）。"
+      },
+      "e6": {
+        "short": "RQ2：标签对搜索有多大帮助（混合搜索）？",
+        "long": "将纯 CLIP 搜索与以下方式比较：filter（硬性标签过滤）、boost（cos + λ·匹配标签比例）、boost_prob（cos + λ·标签概率）。标签来自多个来源：yolo / clip / fused（E5）、lp_* / fused_learned（probe）、yolo_ft，以及 oracle = 人工验证的标签，即上限（完美的标签；从不算作“最佳”）。λ 在 val 描述上选择。\n两组查询：Localized Narratives 描述（R@k、MRR；named_* = 提到某个类别的查询）和人工评判的组合式查询（P@10/20、nDCG）。*_pairwise = 两种配置之间差值的 CI。\n文件：captions.csv、compositional.csv、*_pairwise.csv、lambda_val.csv。"
+      },
+      "export_tags": {
+        "short": "将 174 个 Open Images 标签交付给应用：以开放世界方式重新训练 CLIP 线性探针（lp_clip），并保存到 app/tagging/probes。",
+        "long": "在 Lab 中没有结果页 — 用 `uv run python -m experiments export_tags` 运行。应用只存储 CLIP 向量，因此只导出 lp_clip；概率经过 isotonic 校准，每个标签有自己的阈值（val 上 precision ≥ 0.9），每张照片约 1.5 个标签。"
+      }
+    },
+    "overview": {
+      "tab": "概览",
+      "intro": "论文的主要结果，取自每个实验最新的正式运行。每个卡片上的小折线是它在 History 各版本中的数值。点击卡片或图表可打开该实验。",
+      "noRun": "尚未运行",
+      "open": "详情",
+      "pass": "通过",
+      "fail": "未通过",
+      "ceiling": "上限",
+      "kpi": {
+        "e1": {
+          "title": "CLIP 复现论文 · Flickr 文本→图像 R@1 (%)",
+          "sub": "论文 {{paper}} · Δ {{delta}} 个百分点"
+        },
+        "e2": {
+          "title": "零样本 CLIP 打标签 · mAP",
+          "sub": "95% CI {{lo}}–{{hi}} · ECE {{ece}}"
+        },
+        "e3": {
+          "title": "按类别名搜索 · P@10",
+          "sub": "组合式 P@10：英语 {{en}} · 越南语 {{vi}} · 越南语多语言 {{multi}}"
+        },
+        "e4": {
+          "title": "YOLO26 检测 · mAP@0.5",
+          "sub": "YOLO 覆盖 {{covered}}/{{total}} 个类别"
+        },
+        "yolo_ft": {
+          "title": "YOLO 微调 · 新类别上的 AP@0.5",
+          "sub": "{{n}} 个非 COCO 类别 · COCO 类别 {{base}} → {{ft}}"
+        },
+        "e5": {
+          "title": "按标签的 YOLO + CLIP 融合 · macro-F1",
+          "sub": "仅 CLIP {{clip}} · {{delta}}（CI {{lo}}…{{hi}}）"
+        },
+        "probe": {
+          "title": "有训练的打标签（最佳）· mAP",
+          "sub": "{{config}} · 相比零样本 {{delta}}"
+        },
+        "e6": {
+          "title": "混合搜索 · MRR",
+          "sub": "{{config}} · CLIP {{clip}} · 上限 {{oracle}} · 缩小了 {{gap}}% 的差距"
+        }
+      },
+      "charts": {
+        "ladder": {
+          "title": "打标签：未训练 → 有训练",
+          "caption": "每一行都经过相同的 val 阈值 + 校准流程，因此可以直接比较。实心条 = precision ≥ 0.9 时的 macro-F1（应用自动打标签的方式），浅色条 = mAP。"
+        },
+        "search": {
+          "title": "标签对搜索的帮助",
+          "caption": "在 5,000 条描述上相对纯 CLIP 的 ΔMRR，取每个标签来源较好的模式（boost / boost_prob）。oracle = 完美标签，即上限。"
+        },
+        "fusion": {
+          "title": "YOLO + CLIP 融合策略",
+          "caption": "所有类别上的 macro-F1，阈值按 precision ≥ 0.9 设定。per_tag = 每个标签在 val 上选择自己的规则。"
+        },
+        "paper": {
+          "title": "CLIP：与论文的差距",
+          "caption": "Δ R@1（百分点）= 实测值 − CLIP 论文表 13。灰色带 = 通过区（±容差）；红色条 = 超出。"
+        }
+      },
+      "series": {
+        "f1p": "macro-F1 @P≥0.9",
+        "mAP": "mAP",
+        "delta": "ΔMRR",
+        "macro_f1": "macro-F1",
+        "ours": "实测",
+        "paper": "论文",
+        "deltaR1": "Δ R@1（百分点）"
+      },
+      "groups": {
+        "baseline": {
+          "title": "基线检查",
+          "question": "CLIP 流程是否与论文一致，原版 YOLO26 在 Open Images 上表现如何（E1、E4）？"
+        },
+        "rq1": {
+          "title": "RQ1 · 零样本 CLIP",
+          "question": "不经过任何训练，CLIP 打标签和搜索照片的效果如何（E2、E3）？"
+        },
+        "improve": {
+          "title": "改进标签",
+          "question": "YOLO + CLIP 融合（E5）、线性探针（probe）和 YOLO 微调（yolo_ft）各带来多少提升？"
+        },
+        "rq2": {
+          "title": "RQ2 · 标签用于搜索",
+          "question": "带标签的混合搜索比纯 CLIP 好多少（E6）？"
+        }
+      },
+      "kinds": {
+        "clip": "CLIP",
+        "yolo": "YOLO",
+        "dino": "DINOv3",
+        "fusion": "多来源融合",
+        "reference": "参考（论文、oracle）"
+      }
+    },
+    "digest": {
+      "build": {
+        "health": {
+          "title": "数据健康",
+          "question": "各 split 共 {{total}} 张图片，合并自所有正式 build 运行（每次运行构建部分 split）。通过 = 没有缺失、损坏或因旋转而排除的图片。",
+          "images": "可用图片",
+          "sub": "缺失 {{missing}} · 损坏 {{broken}} · 因旋转排除 {{rotated}} · 运行 {{run}}"
+        },
+        "labels": {
+          "title": "标签与标注",
+          "question": "后续实验能评分的内容：有多少（图片，类别）对经过人工验证，多少图片有边界框（E4、yolo_ft）和描述（E3b、E6）。",
+          "pairs": {
+            "title": "已验证的（图片，类别）对",
+            "caption": "只有这些对计入指标；未验证的对（−1）被屏蔽。",
+            "known": "已验证",
+            "positive": "正样本"
+          },
+          "coverage": {
+            "title": "标注覆盖率（图片占比 %）",
+            "caption": "train 不需要描述（描述只用于在 val/test 上评估），因此 0% 是正常的。",
+            "boxes": "有边界框",
+            "captions": "有描述"
+          },
+          "rate": "已验证对中正样本的比例",
+          "rateSub": "{{groupOf}} 个 group-of 框（每个算作 1 个 GT）"
+        }
+      },
+      "e1": {
+        "checks": {
+          "title": "与论文对照检查",
+          "question": "论文设置（原始图片，“a photo of”前缀）。|Δ R@1| ≤ {{tol}} 个百分点即通过 · {{passed}}/{{total}} 项检查通过。",
+          "t2i": "文本 → 图像 R@1 (%)",
+          "i2t": "图像 → 文本 R@1 (%)",
+          "sub": "论文 {{paper}} · Δ {{delta}} 个百分点",
+          "chart": "与论文相比的 Δ R@1",
+          "caption": "Δ = 实测值 − 论文（百分点）。落在灰色 ±{{tol}} 带内的条即通过。重新运行 E1 越接近论文，条就越缩向 0。"
+        },
+        "recall": {
+          "title": "Recall@K 表",
+          "question": "论文设置下双向的 R@1/5/10。只检查 R@1；R@5/10 用于论文。",
+          "cols": {
+            "dataset": "数据集",
+            "metric": "指标",
+            "ours": "实测",
+            "paper": "论文",
+            "delta": "Δ"
+          }
+        },
+        "pipeline": {
+          "title": "应用流程使 R@1 偏移了多少",
+          "question": "与同一数据集、同一方向的论文设置（原始图片 + “a photo of”）比较。不判断通过与否 — 只显示应用是否让 CLIP 变差。",
+          "chart": "与论文设置相比的 Δ R@1",
+          "caption": "灰色 ±{{tol}} 百分点带作参考：落在其中的影响可以忽略。",
+          "variants": {
+            "noPrefix": "无前缀",
+            "backend": "WebP 后端",
+            "both": "WebP + 无前缀"
+          }
+        },
+        "legend": {
+          "within": "在 ±{{tol}} 个百分点内（通过）",
+          "outside": "偏差超过 ±{{tol}} 个百分点",
+          "band": "通过区 ±{{tol}}"
+        }
+      },
+      "e2": {
+        "test": {
+          "title": "测试结果",
+          "question": "零样本 CLIP 为 174 个 Open Images 类别打标签；提示、阈值和校准在 val 上选择，test 只运行一次。",
+          "mAP": "mAP（排序，无阈值）",
+          "ci": "95% CI {{lo}}–{{hi}} · {{classes}} 个类别",
+          "ciShort": "95% CI {{lo}}–{{hi}}",
+          "f1": "macro-F1（每类阈值）",
+          "precision": "micro-precision",
+          "microF1": "micro-F1 {{f1}}",
+          "ece": "校准后的 ECE（越低越可信）",
+          "eceRaw": "校准前 {{raw}}"
+        },
+        "groups": {
+          "title": "按组",
+          "question": "物体和场景哪个更容易，应用的 17 个旧标签离平均值有多远。",
+          "main": "物体 vs 场景",
+          "mainCaption": "all = test 上同时有正负样本的 170 个类别。",
+          "tags": "应用的 17 个旧标签",
+          "tagsCaption": "与全类平均值（{{all}}）相比的 Δ mAP。蓝色 = 高于平均，灰色 = 低于平均。"
+        },
+        "calibration": {
+          "title": "概率可靠性",
+          "question": "CLIP 的概率是否与它实际正确的频率一致（可靠性图）？",
+          "chart": "可靠性图（test）",
+          "caption": "X = 预测概率，Y = 实际准确率。虚线对角线 = 完美。isotonic 校准后 ECE {{raw}} → {{cal}}。",
+          "raw": "校准前",
+          "calibrated": "校准后"
+        },
+        "classes": {
+          "title": "按类别",
+          "question": "{{count}} 个类别的 AP 如何分布，CLIP 在哪里最弱。",
+          "histogram": "AP 分布",
+          "histogramCaption": "test 上每个 AP 区间的类别数。",
+          "count": "类别",
+          "worst": "AP 最低的 12 个类别",
+          "worstCaption": "E5（YOLO 融合）和 probe（有训练）的候选。"
+        },
+        "templates": {
+          "title": "提示模板选择",
+          "question": "哪个模板的 val mAP 最好（从不使用 test 来选择）。",
+          "chart": "与所选模板相比的 Δ val mAP",
+          "caption": "已选：“{{chosen}}”（蓝色条，Δ = 0）。Ensemble = 多个模板的平均。"
+        }
+      },
+      "e3": {
+        "classes": {
+          "title": "(a) 按类别名搜索",
+          "question": "{{queries}} 条查询“a photo of a {class}”（后端模板）。known = 去掉未标注的图片；strict = 未标注的图片算作错误。",
+          "knownAP": "AP（known）",
+          "strictAP": "AP（strict）",
+          "strictSub": "下限：许多正确的图片只是没有被标注",
+          "curve": "Precision@k",
+          "curveCaption": "前 k 个中正确图片的比例。known − strict 的差距 ≈ Open Images 从未标注的正确图片（见 a_fp_review.csv）。",
+          "groups": "按组的 AP",
+          "groupsCaption": "物体 vs 场景。"
+        },
+        "captions": {
+          "title": "(b) 用长描述搜索",
+          "question": "{{queries}} 条 Localized Narratives 描述，每条恰好有一张正确图片。",
+          "r1": "R@1（正确图片排第一）",
+          "mrr": "MRR",
+          "median": "中位排名",
+          "medianSub": "共 {{collection}} 张图片",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "chart": "完整描述 vs 第一句",
+          "caption": "CLIP 会在 77 个 token 处截断描述；只保留第一句会丢失信息，效果更差。",
+          "full": "完整描述",
+          "first": "仅第一句"
+        },
+        "compositional": {
+          "title": "(c) 组合式查询 + 越南语",
+          "question": "多概念查询（“海滩上的两只狗”）在 judge.html 中人工评判，英语 vs 越南语。",
+          "chart": "按语言 × 模型的 P@10 / nDCG@10",
+          "caption": "实心 = P@10，浅色 = nDCG@10。红色 = 越南语直接输入应用的 CLIP（CLIP 只学过英语）。",
+          "models": {
+            "app": "应用 CLIP",
+            "multilingual": "多语言 CLIP",
+            "translated": "翻译成英语"
+          },
+          "unjudged": "尚未评判的对",
+          "unjudgedSub": "0 = 前 20 张图片都已评判，因此 P@k 是可靠的。"
+        }
+      },
+      "e4": {
+        "coverage": {
+          "title": "原版 YOLO26 覆盖了什么",
+          "question": "YOLO26n（80 个 COCO 类别）在 Open Images 上：画框的效果如何，又缺少多少类别需要 CLIP 在 E5 中补充。",
+          "det": "检测 mAP@0.5（test）",
+          "detSub": "Open Images 协议：仅已验证的图片，一个 group-of 框算作 1 个 GT",
+          "tag": "图片级标签 mAP（来自边界框）",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "gap": "YOLO 缺少的类别",
+          "gapSub": "YOLO 覆盖 {{covered}}/{{total}} 个类别",
+          "chart": "类别覆盖",
+          "caption": "绿色 = YOLO 具备的类别（COCO）。灰色 = 缺少的类别 — E5 使用 CLIP，yolo_ft 再微调 47 个物体类别。",
+          "classes": "类别",
+          "rows": {
+            "covered": "YOLO 具备（COCO）",
+            "gap_object": "非 COCO 物体",
+            "gap_scene": "场景 / 概念"
+          }
+        },
+        "classes": {
+          "title": "每类检测 AP",
+          "question": "{{count}} 个 COCO 类别在 test 上的 AP@0.5。",
+          "histogram": "AP@0.5 分布",
+          "histogramCaption": "每个 AP 区间的类别数。",
+          "worst": "AP 最低的 12 个类别",
+          "worstCaption": "通常是 Open Images 中较小或较少见的物体。"
+        },
+        "thresholds": {
+          "title": "应用阈值 vs 调优阈值",
+          "question": "来自 YOLO 的图片级标签：在 val 上选择的阈值 vs 应用使用的固定阈值。",
+          "chart": "按阈值选择的 macro-F1 和 precision",
+          "caption": "阈值越高 precision 越高，但 F1 越低。mAP（{{mAP}}）与阈值无关。",
+          "rows": {
+            "tuned_on_val": "每类，在 val 上调优",
+            "app_conf_0.25": "应用：conf 0.25（检测）",
+            "app_min_conf_0.4": "应用：0.4（搜索）"
+          }
+        }
+      },
+      "e5": {
+        "strategies": {
+          "title": "所有类别上的融合策略",
+          "question": "每个标签选择在 precision ≥ {{target}} 时 val F1 最好的规则（clip / yolo / or / and）。",
+          "perTag": "per_tag macro-F1",
+          "vsClip": "相比仅 CLIP {{delta}}（CI {{lo}}…{{hi}}）",
+          "vsYoloTitle": "相比仅 YOLO 的 Δ macro-F1（YOLO 覆盖的类别）",
+          "vsYoloSub": "配对 95% CI — 不包含 0 = 真正的提升",
+          "mAP": "per_tag mAP",
+          "mAPSub": "相比仅 CLIP：CI {{lo}}…{{hi}}",
+          "chart": "test 上的策略（所有类别）",
+          "caption": "实心 = macro-F1（precision ≥ 目标），浅色 = mAP。按来源着色：CLIP / YOLO / 融合。"
+        },
+        "sets": {
+          "title": "按类别集合",
+          "question": "哪个来源在哪里更强：COCO 类别（YOLO 具备）、非 COCO、物体、场景。",
+          "chart": "按类别集合的 macro-F1",
+          "caption": "YOLO 在场景和非 COCO 类别上为 0，因为它没有这些类别；per_tag 保留了两者的优势。"
+        },
+        "rules": {
+          "title": "每组标签选择的来源",
+          "question": "E5 的主要结论：每组中有多少标签选择了各个规则。",
+          "chart": "所选规则（原版 YOLO）",
+          "caption": "or = 最大值（相信更有把握的一方），and = 最小值（两者必须一致）。",
+          "chartFt": "所选规则（微调 YOLO）",
+          "captionFt": "yolo_ft 增加了 47 个物体类别，因此非 COCO 组并入物体组。",
+          "rows": {
+            "object·coco": "物体 · YOLO 具备",
+            "object·non_coco": "物体 · 非 COCO",
+            "scene": "场景"
+          }
+        },
+        "ft": {
+          "title": "用微调 YOLO 替代原版",
+          "question": "将 YOLO 来源换成 yolo_ft（多 47 个类别）：每种策略变化了多少。",
+          "chart": "所有类别上的 Δ macro-F1（_ft − 原版）",
+          "caption": "yolo_only 大幅提升，因为现在覆盖了更多类别。per_tag：CI {{lo}}…{{hi}}。"
+        }
+      },
+      "e6": {
+        "captions": {
+          "title": "标签用于描述搜索",
+          "question": "{{queries}} 条 Localized Narratives 描述：混合搜索（CLIP + 标签）vs 纯 CLIP，以 MRR 衡量。",
+          "clip": "纯 CLIP MRR",
+          "clipSub": "基线",
+          "best": "最佳混合 MRR",
+          "bestSub": "相比纯 CLIP {{delta}}",
+          "oracle": "上限 MRR（oracle）",
+          "oracleSub": "完美标签 = 人工验证的标签",
+          "gap": "缩小的差距比例",
+          "gapSub": "（最佳 − CLIP）÷（上限 − CLIP）",
+          "chart": "按标签来源的 Δ MRR",
+          "caption": "每个来源较好的模式（boost / boost_prob）。颜色 = 标签来源；灰色 = oracle（上限）。"
+        },
+        "modes": {
+          "chart": "按模式",
+          "caption": "各模式在真实来源上的最佳值。红色 = 比纯 CLIP 差（硬过滤会丢掉正确的图片）。",
+          "better": "优于纯 CLIP",
+          "worse": "差于纯 CLIP"
+        },
+        "compositional": {
+          "title": "标签用于组合式查询",
+          "question": "{{queries}} 条在 judge.html 中人工评判的多概念查询，以 P@10 衡量。",
+          "chart": "按标签来源的 Δ P@10",
+          "caption": "查询数量少，差异波动很大 — 请看第 3 步中的 CI。",
+          "unjudged": "尚未评判的对",
+          "unjudgedSub": "> 0 = 有未评判的新图片进入前 20 → P@k 不完整；请在 judge.html 中评判。"
+        },
+        "pairwise": {
+          "title": "具有统计意义的比较",
+          "question": "配对 bootstrap：不包含 0 的 95% CI 表示真实差异。",
+          "captions": "描述 · {{metric}}",
+          "compositional": "组合式 · {{metric}}",
+          "caption": "彩色 = 显著差异；灰色 = CI 包含 0（无定论）。",
+          "lambdaEdge": "λ 位于网格边缘（重新运行时请扩大网格）：{{list}}"
+        }
+      },
+      "probe": {
+        "ladder": {
+          "title": "有训练 vs 未训练的打标签",
+          "question": "在 {{images}} 张 train 图片上训练的线性探针；每一行都在 val 上使用相同的阈值（precision ≥ {{target}}）+ 校准。",
+          "best": "最佳 mAP",
+          "bestSub": "相比零样本 CLIP {{delta}}",
+          "f1p": "precision ≥ 目标时的 macro-F1",
+          "f1pSub": "零样本：{{zs}}",
+          "ece": "ECE（已校准）",
+          "eceSub": "零样本：{{zs}}"
+        },
+        "steps": {
+          "title": "每一级改进",
+          "question": "每一级用配对 bootstrap 比较 2 种配置（precision 下的 macro-F1）。",
+          "chart": "每级的 Δ macro-F1@P",
+          "caption": "彩色 = 显著（95% CI 不包含 0）；灰色 = 无定论。"
+        },
+        "sets": {
+          "title": "按类别集合",
+          "question": "训练在哪里帮助最大：物体、场景、YOLO 具备 / 缺少的类别。",
+          "chart": "按类别集合的 macro-F1@P",
+          "caption": "浅色 = 未训练（zs_clip、e5_per_tag），实心 = 有训练（lp_clip、fused_learned）。"
+        },
+        "selected": {
+          "title": "所选超参数（val）",
+          "question": "L2 和未验证对的权重，按 val mAP 选择。",
+          "edge": "网格边缘：{{params}}"
+        }
+      },
+      "yolo_ft": {
+        "result": {
+          "title": "微调结果",
+          "question": "在 {{classes}} 个 Open Images 物体类别上训练的 YOLO26n：补充了 {{gap}} 个非 COCO 类别 — 是否遗忘了旧的 COCO 类别？",
+          "gapAP": "新（非 COCO）类别上的 AP@0.5",
+          "gapAPSub": "{{n}} 个类别 — 原版 YOLO = 0",
+          "coco": "COCO 类别上的 Δ AP@0.5（遗忘？）",
+          "cocoSub": "{{base}} → {{ft}} · CI {{lo}}…{{hi}}",
+          "ultra": "Ultralytics mAP@50-95（test）",
+          "ultraSub": "COCO {{coco}} · 新类别 {{gap}}",
+          "latency": "延迟（毫秒/张，应用流程）",
+          "latencySub": "原版 {{base}} · {{params}}M 参数 · {{mb}} MB"
+        },
+        "tags": {
+          "title": "图片级标签：原版 vs 微调",
+          "question": "每个类别集合在 precision ≥ 目标时的 macro-F1。",
+          "chart": "按类别集合的 macro-F1@P",
+          "caption": "coco = 原版 YOLO 具备的 78 个类别；gap = 新类别；objects = 该模型具备的所有物体类别。",
+          "base": "原版 YOLO",
+          "ft": "微调 YOLO"
+        },
+        "classes": {
+          "title": "按类别",
+          "question": "微调后哪些 COCO 类别提升 / 下降，新类别达到多少 AP。",
+          "deltas": "COCO 类别上的 Δ AP@0.5（ft − 原版）",
+          "deltasCaption": "提升最大的 8 个和下降最大的 8 个。红色 = 被遗忘。",
+          "gap": "新类别的 AP@0.5 分布",
+          "gapCaption": "微调后每个 AP 区间的非 COCO 类别数。",
+          "count": "类别"
+        },
+        "pseudo": {
+          "title": "伪标签",
+          "question": "对未验证的 COCO 类别使用原版 YOLO 的框（val 上 precision ≥ {{target}}），不确定时由 CLIP 复查。",
+          "boxes": "伪标签框",
+          "boxesSub": "对比 {{human}} 个人工框",
+          "images": "有伪标签框的图片",
+          "classes": "达到 precision 目标的类别",
+          "classesSub": "其余类别没有伪标签",
+          "clip": "经 CLIP 确认",
+          "clipSub": "CLIP 拒绝了 {{rejected}} 个"
+        }
+      },
+      "select": {
+        "splits": {
+          "title": "已选图片",
+          "question": "各 split 共 {{total}} 张图片，合并自所有正式 select 运行（每次运行挑选部分 split）。",
+          "selected": "已选图片",
+          "sub": "来自 {{candidates}} 个候选 · 排除 {{rotated}} 张旋转图片 · 运行 {{run}}",
+          "chart": "每类正样本数",
+          "caption": "按轮次挑选，稀有类别优先，直到每类都有 ≥ min_pos 个正样本（图片足够时）。",
+          "min": "min_pos（目标）",
+          "median": "中位数"
+        },
+        "short": {
+          "title": "仍然缺少图片的类别",
+          "question": "正样本少于 min_pos 一半的类别 — 它们的指标可靠性较低。",
+          "none": "没有缺少图片的类别。"
+        }
+      }
+    },
+    "ci": {
+      "pair": "比较",
+      "significant": "显著",
+      "noDiff": "无定论",
+      "legendSignificant": "{{source}} · 显著",
+      "legendNoDiff": "无定论（CI 包含 0）"
+    },
+    "runner": {
+      "title": "运行基准测试",
+      "desc": "在界面中运行 python -m experiments — 结果与在终端运行一样保存到 Results/ 和 History/",
+      "build": "新建任务",
+      "stepCount_other": "{{count}} 个步骤",
+      "command": "命令",
+      "moreParams": "更多参数（{{count}}）",
+      "saveAs": "将 run id 保存为变量（可选）",
+      "saveAsHint": "后续步骤在参数中使用 \"$名称\"（例如 e4_ft_run = $E4_A）即可获取此步骤创建的 run id。",
+      "addStep": "添加步骤",
+      "queue": "队列",
+      "queueEmpty": "还没有步骤 — 请添加预设或单条命令。",
+      "clear": "清空",
+      "remove": "移除步骤",
+      "missingVars": "未被之前步骤保存的变量：{{vars}}",
+      "label": "任务名称（可选）",
+      "start_other": "运行 {{count}} 个步骤",
+      "notDeveloper": "只有已批准的开发者才能运行基准测试（管理员只能查看）。",
+      "busy": "有任务正在运行 — 请等待或点击停止。",
+      "externalShort": "终端正在运行 experiments。",
+      "externalTitle": "终端正在运行 experiments",
+      "external": "界面之外有一个 python -m experiments 进程正在运行。请等它结束后再在这里启动（避免争用 GPU 和写入同一文件夹）— 它的结果仍会显示在 Lab 中。",
+      "noJob": "还没有任务。",
+      "noLog": "还没有日志。",
+      "cancel": "停止",
+      "history": "最近的任务",
+      "state": {
+        "queued": "排队中",
+        "running": "运行中",
+        "done": "已完成",
+        "failed": "失败",
+        "cancelled": "已停止",
+        "lost": "进程丢失"
+      },
+      "deleteRun": "删除运行",
+      "deleteLatest": "latest 运行无法删除（后续实验会读取它）",
+      "deleteTitle": "删除此运行？",
+      "deleteDesc": "从 Results/ 中删除文件夹 {{run}}。History/ 中保存的副本会保留。",
+      "tabs": {
+        "suite": "按步骤",
+        "single": "单条命令"
+      },
+      "suite": {
+        "title": "按步骤运行",
+        "steps": "步骤",
+        "customize": "自定义",
+        "models": "模型",
+        "clip": "CLIP（E2、E3、probe、E6）",
+        "dino": "DINOv3（probe）",
+        "yolo": "基础 YOLO（E4、probe、yolo_ft）",
+        "e1": "E1 用的 CLIP（健全性检查）",
+        "ft": "YOLO 微调 — 每个模型 = 一条 E4 → E5 → probe → E6 的变体链",
+        "ftMode": {
+          "eval": "重新评估",
+          "train": "新训练",
+          "skip": "跳过 yolo_ft"
+        },
+        "ftHint": {
+          "eval": "对每个选中的模型运行 yolo_ft --eval-only（不训练）。",
+          "train": "训练一个新模型（参数在 yolo_ft 步骤的“自定义”中），然后像选中的模型一样使用它。",
+          "skip": "不运行 yolo_ft；选中的模型仍用于 E4 / E5 / probe / E6。"
+        },
+        "newModel": "新训练的模型（yolo_ft）",
+        "main": "主",
+        "common": "所有步骤共用",
+        "smokeHint": "smoke > 0 = 每个 split 用 N 张图片试运行，结果单独保存，不会覆盖 latest。",
+        "preview": "预览（{{count}} 个步骤）"
+      }
+    }
+  },
+  "dev": {
+    "badge": "开发者",
+    "nav": {
+      "lab": "实验室",
+      "experiments": "实验",
+      "run": "运行"
+    },
+    "switch": "前往开发者区",
+    "search": {
+      "placeholder": "搜索实验或页面…",
+      "experiments": "实验"
+    },
+    "workspace": "开发者工作区",
+    "jump": "跳转到实验",
+    "prev": "上一个",
+    "next": "下一个",
+    "prep": {
+      "title": "数据准备",
+      "question": "选择类别并构建后续步骤使用的 Open Images 子集（select、build）。"
+    },
+    "view": {
+      "steps": "按步骤",
+      "pipeline": "运行顺序"
+    },
+    "needs": "需要：{{list}}",
+    "notRun": "未运行",
+    "part": "第 {{part}} 部分"
+  },
+  "takeout": {
+    "menu": "从 Google Takeout",
+    "title": "从 Google Takeout 导入",
+    "intro": "把你的 Google 相册图库搬到这里，并保留拍摄日期、收藏和相册。",
+    "step1": "前往 takeout.google.com，只选择 Google 相册并下载 zip。",
+    "step2": "解压：打开“文件”应用并点按 zip（如果有多个 zip，请解压到同一个文件夹）。",
+    "step3": "点按下方按钮，选择解压后的文件夹（“Takeout”或“Google Photos”）。",
+    "pickFolder": "选择文件夹",
+    "pickAnother": "选择其他文件夹",
+    "scanning": "正在扫描… {{n}} 个文件",
+    "stats": {
+      "photos": "照片",
+      "videos": "视频",
+      "albums": "相册",
+      "duplicates": "重复（已跳过）",
+      "missingJson": "无 JSON（使用 EXIF）",
+      "skipped": "其他文件（已跳过）",
+      "existing": "已在你的图库中（已跳过）",
+      "livePhotos": "实况照片（照片 + 视频）",
+      "edited": "编辑过的副本（-edited）"
+    },
+    "readyHint": "出现在多个相册中的照片只上传一次。与你现有相册同名的相册会被复用。",
+    "import": "导入 {{n}} 项",
+    "checking": "正在检查图库中已有的内容…",
+    "runningHint": "你可以离开此页面；只要应用开着，导入就会继续。",
+    "steps": {
+      "metadata": "正在读取元数据 {{done}}/{{total}}",
+      "albums": "正在创建相册 {{done}}/{{total}}",
+      "upload": "正在上传 {{done}}/{{total}}"
+    },
+    "errors": {
+      "scanFailed": "无法读取你选择的内容。",
+      "noMedia": "没有找到照片或视频。",
+      "checkFailed": "无法与服务器核对，请稍后重试。",
+      "startFailed": "无法开始导入，请稍后重试。"
+    },
+    "finished": {
+      "done": "导入完成",
+      "cancelled": "导入已停止",
+      "failed": "导入失败"
+    },
+    "report": {
+      "imported": "已导入",
+      "duplicates": "内容相同（使用已有照片）",
+      "skippedExisting": "已存在（已跳过）",
+      "failed": "失败"
+    },
+    "reasons": {
+      "badFile": "无效文件",
+      "network": "网络错误",
+      "unreadable": "无法读取文件"
+    },
+    "moreFailures": "… 还有 {{n}} 个",
+    "retryFailed": "重试 {{n}} 个失败的文件",
+    "done": "完成",
+    "history": "以往的导入",
+    "historyLine": "已导入 {{imported}} · 重复 {{duplicates}} · 失败 {{failed}}",
+    "status": {
+      "running": "进行中",
+      "done": "已完成",
+      "cancelled": "已停止",
+      "failed": "失败"
+    },
+    "pickZip": "选择 zip 文件",
+    "sourceHint": "选择 Takeout 的 .zip 文件（无需解压）或解压后的文件夹，也可以直接拖放到这里。",
+    "webStep2": "在下方选择所有 zip 文件（或解压后的文件夹）。",
+    "downloadFailures": "下载失败列表（CSV）",
+    "openGallery": "打开图库",
+    "editedMode": {
+      "label": "在 Google 相册中编辑过的照片",
+      "both": "两者都导入",
+      "original": "仅原图",
+      "edited": "仅编辑版"
+    }
+  },
+  "notifications": {
+    "title": "通知",
+    "clearAll": "全部清除",
+    "delete": "删除通知",
+    "someone": "某人",
+    "momentDeleted": "{{name}} 删除了你们一起发布的瞬间。",
+    "momentDeletedCaption": "{{name}} 删除了你们一起发布的瞬间：“{{caption}}”。",
+    "generic": "{{name}} 有新动态。",
+    "momentDeclined": "{{name}} 拒绝为你的瞬间添加照片。",
+    "momentDeclinedCaption": "{{name}} 拒绝为你的瞬间添加照片：“{{caption}}”。"
+  }
+}

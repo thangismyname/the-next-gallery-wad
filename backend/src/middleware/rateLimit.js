@@ -35,8 +35,15 @@ function limiter(name, { windowMs = 60_000, limit }) {
 
 /** Spotlight: ~1 lần gõ / giây (debounce 400 ms gọi tối đa 4 nguồn song song). */
 export const searchLimit = limiter("search", { limit: 240 });
-/** Upload: mỗi request ≤ 20 file. */
-export const uploadLimit = limiter("upload", { limit: 30 });
+/**
+ * Upload: mỗi request ≤ 20 file → 120 request ≈ 1.200–2.400 file / phút (đủ cho import Google Takeout;
+ * tốc độ thật bị chặn bởi sharp / ffmpeg trên server trước khi chạm ngưỡng này).
+ */
+export const uploadLimit = limiter("upload", { limit: 120 });
+/** Phần 8 MiB của upload chia nhỏ: 1 GB ≈ 128 phần — ~400 MB/s mới chạm. */
+export const uploadChunkLimit = limiter("upload-chunk", { limit: 3000 });
+/** Phiên import (tạo / cập nhật tiến độ ~ mỗi vài giây). */
+export const importWriteLimit = limiter("import-write", { limit: 120 });
 /** Backfill AI (CLIP / YOLO / DINO / tag / thumbnail) theo lô. */
 export const backfillLimit = limiter("backfill", { limit: 120 });
 /** Tải zip nhiều ảnh. */

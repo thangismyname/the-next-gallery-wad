@@ -1,6 +1,6 @@
 import { LANGUAGES, toLanguageCode, type LanguageCode } from "@tng/shared";
 import { router } from "expo-router";
-import { KeyRound, Languages, LogOut, Palette, ShieldCheck, UserRound, Users, X } from "lucide-react-native";
+import { KeyRound, Languages, LogOut, Palette, ShieldCheck, SquareTerminal, Type, UserRound, Users, X } from "lucide-react-native";
 import { Pressable, ScrollView, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,6 +12,8 @@ import { Text } from "@/components/ui/text";
 import { signOut, useSession } from "@/features/auth/session";
 import { useIncomingRequestCount } from "@/features/friends/useFriends";
 import { THEME_MODES, useThemeMode } from "@/hooks/useThemeMode";
+import { FONT_SCALE_OPTIONS, useFontScale, type FontScale } from "@/hooks/useFontScale";
+import { useDeveloperMode } from "@/hooks/useDeveloperMode";
 import { setLanguage } from "@/lib/i18n";
 
 import { AiProcessingGroup } from "./components/AiProcessingGroup";
@@ -29,14 +31,20 @@ import { useAccountProviders } from "./useProfile";
  * (edit profile, change password) · appearance (theme, language) · storage +
  * trash · AI processing · signed-in devices · sign out.
  */
+const FONT_KEY: Record<FontScale, string> = { small: "fontSmall", default: "fontDefault", large: "fontLarge", xlarge: "fontXLarge" };
+
 export function AccountSheet() {
   const { t, i18n } = useTranslation();
+  const { isDeveloper } = useDeveloperMode();
   const incoming = useIncomingRequestCount();
   const insets = useSafeAreaInsets();
   const user = useSession().data?.user;
+  const isAdmin = (user as { role?: string | null } | undefined)?.role === "admin";
   const { data: providers = [] } = useAccountProviders(user?.id);
   const mode = useThemeMode((s) => s.mode);
   const setMode = useThemeMode((s) => s.setMode);
+  const fontScale = useFontScale((s) => s.scale);
+  const setFontScale = useFontScale((s) => s.setScale);
   const hasPassword = providers.includes("credential");
 
   return (
@@ -111,6 +119,13 @@ export function AccountSheet() {
               options={THEME_MODES.map((m) => ({ value: m, label: t(`settings.appearance.${m}`) }))}
             />
           </SettingsRow>
+          <SettingsRow icon={Type} title={t("settings.appearance.fontSize")}>
+            <Segmented<FontScale>
+              value={fontScale}
+              onChange={setFontScale}
+              options={FONT_SCALE_OPTIONS.map((v) => ({ value: v, label: t(`settings.appearance.${FONT_KEY[v]}`) }))}
+            />
+          </SettingsRow>
           <SettingsRow icon={Languages} title={t("settings.appearance.language")}>
             <Segmented<LanguageCode>
               value={toLanguageCode(i18n.language)}
@@ -123,9 +138,13 @@ export function AccountSheet() {
         <StorageGroup />
         <AiProcessingGroup />
         <DeveloperGroup />
-        {(user as { role?: string | null } | undefined)?.role === "admin" ? (
+        {/* Admin · khu Developer (developer đã duyệt, hoặc admin chỉ xem — cùng quyền với /api/lab) */}
+        {isAdmin || isDeveloper ? (
           <SettingsGroup>
-            <SettingsRow icon={ShieldCheck} title={t("header.admin")} subtitle={t("admin.overviewDesc")} chevron onPress={() => router.replace("/admin")} />
+            {isAdmin ? (
+              <SettingsRow icon={ShieldCheck} title={t("header.admin")} subtitle={t("admin.overviewDesc")} chevron onPress={() => router.replace("/admin")} />
+            ) : null}
+            <SettingsRow icon={SquareTerminal} title={t("dev.workspace")} subtitle={t("lab.desc")} chevron onPress={() => router.replace("/dev")} />
           </SettingsGroup>
         ) : null}
         <SessionsGroup />

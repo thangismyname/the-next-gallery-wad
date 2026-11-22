@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -9,15 +8,18 @@ import {
 import { authClient } from "@/services/authClient";
 import { getInitials } from "@tng/shared";
 import { AccountSheet } from "@/features/settings/AccountSheet";
+import { useAccountSheet } from "@/features/settings/useAccountSheet";
 
 /**
  * Header avatar → account sheet (slides up like the mobile app): profile +
  * settings + Developer Mode + admin + sign out in one place (`AccountSheet`).
+ * Same component in the app, Admin and Developer headers; `/settings` opens it too.
  */
 export function UserMenu() {
   const { t } = useTranslation();
   const { data: session, isPending } = authClient.useSession();
-  const [open, setOpen] = useState(false);
+  const open = useAccountSheet((s) => s.open);
+  const setOpen = useAccountSheet((s) => s.setOpen);
   const user = session?.user;
 
   return (

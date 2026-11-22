@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app import __version__
-from app.api import embed, health, object_detect, similarity, tags
+from app.api import embed, health, lab, lab_runner, object_detect, similarity, tags
 from app.config import get_settings
 from app.providers import (
     get_embedding_provider,
@@ -52,6 +52,8 @@ app.include_router(embed.router, prefix="/api/v1", tags=["embedding"])
 app.include_router(object_detect.router, prefix="/api/v1", tags=["object-detection"])
 app.include_router(similarity.router, prefix="/api/v1", tags=["similarity"])
 app.include_router(tags.router, prefix="/api/v1", tags=["tagging"])
+app.include_router(lab.router, prefix="/api/v1", tags=["lab"])
+app.include_router(lab_runner.router, prefix="/api/v1", tags=["lab"])
 
 
 @app.get("/")

@@ -11,7 +11,9 @@ export function errorHandler(err, req, res, _next) {
   // Lỗi tự ném (httpError, multer…) mang status 4xx → trả message cho client.
   // Lỗi 5xx / không rõ (Postgres, MinIO, ai-service) → chỉ trả câu chung,
   // chi tiết nằm trong log — tránh lộ câu SQL, tên bảng, đường dẫn nội bộ.
-  const status = Number.isInteger(err.status) && err.status >= 400 ? err.status : 500;
+  // MulterError không có status: file quá lớn = 413, còn lại (quá nhiều file, field lạ…) = 400.
+  const multerStatus = err.name === "MulterError" ? (err.code === "LIMIT_FILE_SIZE" ? 413 : 400) : null;
+  const status = multerStatus ?? (Number.isInteger(err.status) && err.status >= 400 ? err.status : 500);
   const expose = status < 500;
 
   res.status(status).json({
@@ -19,6 +21,8 @@ export function errorHandler(err, req, res, _next) {
     error: {
       code: expose ? (typeof err.code === "string" ? err.code : "BAD_REQUEST") : "INTERNAL_ERROR",
       message: expose ? err.message || "Yêu cầu không hợp lệ" : "Lỗi server không xác định",
+      // Dữ liệu cho client tự xử lý (vd upload chia nhỏ: offset server đang có) — chỉ với 4xx.
+      ...(expose && err.details ? { details: err.details } : {}),
     },
   });
 }

@@ -10,7 +10,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SIGNAL } from "@/services/signaling";
 import { useSignaling } from "@/hooks/useSignaling";
 import { useMomentInviteStore } from "@/features/moments/useMomentInviteStore";
-import { MomentTemplate, momentInvitationsQueryKey } from "@tng/shared";
+import { MomentTemplate, momentInvitationsQueryKey, notificationsQueryKey } from "@tng/shared";
+import { notificationText } from "@/features/notifications/notificationText";
 
 interface MomentCollabInvite {
   momentId?: string;
@@ -22,9 +23,19 @@ interface MomentCollabInvite {
   expiresIn?: number;
 }
 
+/** `notification:new` (backend `notifications.service.js::notify`). */
+interface NotificationNew {
+  id?: string;
+  type?: string;
+  actorName?: string | null;
+  payload?: Record<string, unknown>;
+}
+
 interface Toast {
   key: string;
   invite: MomentCollabInvite;
+  /** Thông báo thường (vd bạn đã xoá moment) — chỉ có nút đóng, không có "Điền ảnh". */
+  notice?: NotificationNew;
   /** Mốc hết hạn tuyệt đối — toast mới KHÔNG reset timer của toast cũ. */
   expiresAt: number;
 }
@@ -66,6 +77,18 @@ export const MomentInviteToast: React.FC = () => {
     });
   }, [signaling, queryClient]);
 
+  useEffect(() => {
+    return signaling.on(SIGNAL.NOTIFICATION_NEW, (payload) => {
+      const notice = payload as NotificationNew;
+      void queryClient.invalidateQueries({ queryKey: notificationsQueryKey });
+      if (!notice.id) return;
+      setToasts((prev) => [
+        ...prev,
+        { key: notice.id as string, invite: {}, notice, expiresAt: Date.now() + TOAST_TTL_MS },
+      ]);
+    });
+  }, [signaling, queryClient]);
+
   // Dọn theo hạn RIÊNG của từng toast (1 interval chung), không đặt lại timer
   // của toast cũ mỗi khi có toast mới.
   useEffect(() => {
@@ -91,7 +114,34 @@ export const MomentInviteToast: React.FC = () => {
   return (
     <div className="fixed right-4 bottom-4 z-40 flex flex-col gap-2 items-end">
       {toasts.map((toast) => {
-        const { invite } = toast;
+        const { invite, notice } = toast;
+        const dismiss = () => setToasts((prev) => prev.filter((x) => x.key !== toast.key));
+        if (notice) {
+          return (
+            <Alert
+              key={toast.key}
+              data-slot="notification-toast"
+              className="w-[calc(100vw-2rem)] max-w-sm gap-3 border-border/60 p-4 shadow-lg"
+            >
+              <div className="flex items-start gap-3">
+                <BellRing className="mt-0.5 size-4 shrink-0 text-primary" />
+                <div className="min-w-0 flex-1">
+                  <AlertTitle>{t("notifications.title")}</AlertTitle>
+                  <AlertDescription className="mt-0.5">
+                    {notificationText(
+                      { type: notice.type ?? "", payload: notice.payload },
+                      notice.actorName || t("notifications.someone"),
+                      t,
+                    )}
+                  </AlertDescription>
+                </div>
+                <Button variant="ghost" size="icon-sm" onClick={dismiss} aria-label={t("moments.cancel")}>
+                  <X className="size-4" />
+                </Button>
+              </div>
+            </Alert>
+          );
+        }
         const name = invite.inviterName || t("moments.you");
         return (
           <Alert

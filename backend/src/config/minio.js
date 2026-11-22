@@ -8,6 +8,8 @@ export const minioClient = new Client({
     process.env.MINIO_SECURE === "true" || process.env.MINIO_USE_SSL === "true",
   accessKey: process.env.MINIO_ACCESS_KEY || "minioadmin",
   secretKey: process.env.MINIO_SECRET_KEY || "minioadmin",
+  // S3 ngoài: R2 cần "auto"; trống = client tự hỏi region của bucket.
+  region: process.env.MINIO_REGION || undefined,
 });
 
 export const BUCKET_NAME = process.env.MINIO_BUCKET || "the-next-gallery";

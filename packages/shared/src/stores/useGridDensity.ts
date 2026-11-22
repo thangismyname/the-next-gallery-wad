@@ -5,8 +5,14 @@
 import { create } from "zustand";
 
 export type GridDensity = "compact" | "comfortable" | "large";
+/** Kiểu lưới Thư viện: `grid` = ô vuông cắt ảnh (hiện tại) · `justified` = giữ tỉ lệ ảnh, hàng cao bằng nhau
+ *  (CHƯA LÀM — chỗ chờ sẵn; item đã có width/height để tính hàng). */
+export type GalleryLayout = "grid" | "justified";
+/** Layout đã làm xong — option khác hiện "Sắp có" và không chọn được. */
+export const GALLERY_LAYOUTS_READY: readonly GalleryLayout[] = ["grid"];
 
 const STORAGE_KEY = "tng.gridDensity";
+const LAYOUT_KEY = "tng.galleryLayout";
 const DENSITIES: GridDensity[] = ["compact", "comfortable", "large"];
 
 /** Số cột Gallery theo bề rộng: [<640, <1024, <1440, ≥1440]. */
@@ -48,12 +54,36 @@ function readStored(): GridDensity {
   }
 }
 
+const isReadyLayout = (value: unknown): value is GalleryLayout =>
+  GALLERY_LAYOUTS_READY.includes(value as GalleryLayout);
+
+function readLayout(): GalleryLayout {
+  try {
+    const value = storage?.getItem(LAYOUT_KEY);
+    return isReadyLayout(value) ? value : "grid";
+  } catch {
+    return "grid";
+  }
+}
+
 interface GridDensityState {
   density: GridDensity;
   setDensity: (density: GridDensity) => void;
+  layout: GalleryLayout;
+  setLayout: (layout: GalleryLayout) => void;
 }
 
 export const useGridDensity = create<GridDensityState>((set) => ({
+  layout: readLayout(),
+  setLayout: (layout) => {
+    if (!isReadyLayout(layout)) return; // layout chưa làm → giữ nguyên
+    try {
+      void storage?.setItem(LAYOUT_KEY, layout);
+    } catch {
+      /* storage có thể bị chặn — bỏ qua */
+    }
+    set({ layout });
+  },
   density: readStored(),
   setDensity: (density) => {
     try {
@@ -71,6 +101,8 @@ export async function setGridDensityStorage(next: GridDensityStorage): Promise<v
   try {
     const value = await next.getItem(STORAGE_KEY);
     if (isDensity(value)) useGridDensity.setState({ density: value });
+    const layout = await next.getItem(LAYOUT_KEY);
+    if (isReadyLayout(layout)) useGridDensity.setState({ layout });
   } catch {
     /* giữ giá trị mặc định */
   }

@@ -46,6 +46,7 @@ const LayoutContent: React.FC = () => {
     closeDeleteDialog,
     deleteDialogOpen,
     deleteBusy,
+    deleteFailed,
     pendingDeleteIds,
     shareDialogOpen,
     setShareDialogOpen,
@@ -85,6 +86,7 @@ const LayoutContent: React.FC = () => {
         open={deleteDialogOpen}
         count={pendingDeleteIds.length}
         busy={deleteBusy}
+        failed={deleteFailed}
         onConfirm={confirmDelete}
         onCancel={closeDeleteDialog}
       />

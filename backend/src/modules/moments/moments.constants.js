@@ -44,7 +44,7 @@ export const slotFilledSql = (alias = "mc") => `(
 // meme_count: correlated subquery (index moment_memes(moment_id)) — gộp vào
 // query chính để feed không phải chạy thêm 1 round-trip (P2.8).
 export const MOMENT_JOIN = `
-    SELECT m.id, m.user_id, m.caption, m.visibility, m.created_at, m.template,
+    SELECT m.id, m.user_id, m.caption, m.visibility, m.created_at, m.template, m.framing,
            m.media_id, med.media_type, med.width, med.height, med.duration_seconds,
            u.name AS user_name, u.image AS user_avatar,
            (SELECT COUNT(*)::int FROM moment_memes mm

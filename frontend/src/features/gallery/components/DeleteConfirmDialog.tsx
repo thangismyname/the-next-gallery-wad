@@ -16,6 +16,8 @@ interface DeleteConfirmDialogProps {
   open: boolean;
   count: number;
   busy: boolean;
+  /** Last attempt failed (some photos may already be in the Trash). */
+  failed?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -24,6 +26,7 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
   open,
   count,
   busy,
+  failed = false,
   onConfirm,
   onCancel,
 }) => {
@@ -38,6 +41,11 @@ export const DeleteConfirmDialog: React.FC<DeleteConfirmDialogProps> = ({
             {t("selection.deleteConfirmDesc", { count: String(count) })}
           </DialogDescription>
         </DialogHeader>
+        {failed && (
+          <p role="alert" className="px-6 text-sm text-destructive">
+            {t("lightbox.actionFailed")}
+          </p>
+        )}
         <DialogFooter>
           <Button variant="outline" onClick={onCancel} disabled={busy}>
             {t("common.cancel")}

@@ -3,7 +3,8 @@ import { Router } from "express";
 import multer from "multer";
 import { requireAuth } from "../../middleware/auth.js";
 import { validate } from "../../middleware/validate.js";
-import { uploadLimit } from "../../middleware/rateLimit.js";
+import { uploadChunkLimit, uploadLimit } from "../../middleware/rateLimit.js";
+import { httpError } from "../../middleware/errorHandler.js";
 import {
   listMediaQuerySchema,
   listAlbumsQuerySchema,
@@ -12,6 +13,11 @@ import {
   mediaIdsSchema,
   favoriteSchema,
   lookupMediaSchema,
+  parseUploadMeta,
+  startChunkedSchema,
+  chunkParamsSchema,
+  chunkQuerySchema,
+  completeChunkedSchema,
 } from "./media.schema.js";
 import {
   listMedia,
@@ -21,6 +27,7 @@ import {
   getMediaItemsByIds,
 } from "./media.list.service.js";
 import { uploadMedia } from "./media.upload.service.js";
+import { appendChunk, completeChunkedUpload, MAX_CHUNK_BYTES, startChunkedUpload } from "./media.chunked.service.js";
 import { classifyUpload } from "./media.sources.js";
 import {
   softDeleteMedia,
@@ -48,11 +55,12 @@ const router = Router();
 // uploadMedia stream từ đĩa lên MinIO; route xoá file tạm khi xong.
 const upload = multer({
   storage: multer.diskStorage({}),
+  defParamCharset: "utf8", // mặc định latin1 → tên file có dấu bị lỗi font ("BaÌ\u0089n sao")
   limits: { fileSize: 500 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
     // Theo MIME, fallback theo đuôi (HEIC/MOV từ Windows/Android hay thiếu MIME).
     if (!classifyUpload(file).mediaType) {
-      return cb(new Error("Chỉ chấp nhận file ảnh hoặc video"));
+      return cb(httpError(400, "UNSUPPORTED_MEDIA", "Chỉ chấp nhận file ảnh hoặc video"));
     }
     cb(null, true);
   },
@@ -144,7 +152,9 @@ router.post(
           error: { code: "NO_FILES", message: "Không có file nào được gửi lên" },
         });
       }
-      const uploaded = await uploadMedia(req.user.id, req.files);
+      // Optional `meta` text field (JSON array, index ↔ file) — see media.schema.js::parseUploadMeta.
+      const meta = parseUploadMeta(req.body?.meta, req.files.length);
+      const uploaded = await uploadMedia(req.user.id, req.files, meta);
       res.status(201).json({ success: true, data: { uploaded } });
     } catch (error) {
       next(error);
@@ -154,6 +164,38 @@ router.post(
       );
     }
   },
+);
+
+// ============ UPLOAD CHIA NHỎ (resumable) — file lớn, xem media.chunked.service.js ============
+const chunkUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_CHUNK_BYTES, files: 1 },
+});
+
+router.post("/uploads", requireAuth, uploadLimit, validate(startChunkedSchema), respond((req) =>
+  startChunkedUpload(req.user.id, req.body),
+));
+
+router.post(
+  "/uploads/:id/chunk",
+  requireAuth,
+  uploadChunkLimit,
+  validate(chunkParamsSchema, "params"),
+  validate(chunkQuerySchema, "query"),
+  chunkUpload.single("chunk"),
+  respond((req) => appendChunk(req.user.id, req.params.id, req.query.offset, req.file?.buffer)),
+);
+
+router.post(
+  "/uploads/:id/complete",
+  requireAuth,
+  uploadLimit,
+  validate(chunkParamsSchema, "params"),
+  validate(completeChunkedSchema),
+  asyncHandler(async (req, res) => {
+    const item = await completeChunkedUpload(req.user.id, req.params.id, req.body.meta);
+    res.status(201).json({ success: true, data: { uploaded: [item] } });
+  }),
 );
 
 router.use(streamRoutes);

@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { deleteMoment } from "@/services/moments";
+import { declineMoment, deleteMoment } from "@/services/moments";
 import type { Moment } from "@tng/shared";
 import { cn } from "@/lib/utils";
 import { useMomentInviteStore } from "../useMomentInviteStore";
@@ -23,6 +23,8 @@ import { useMomentEditStore } from "../useMomentEditStore";
 import { useMomentInvitations } from "../useMomentInvitations";
 import { MomentInvitationItem } from "./MomentInvitationItem";
 import { MomentFillDialog } from "./MomentFillDialog";
+import { NotificationList } from "@/features/notifications/components/NotificationList";
+import { useNotifications } from "@/features/notifications/useNotifications";
 
 type Props = {
   onFeedChanged: () => void;
@@ -41,11 +43,15 @@ type Props = {
 export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = false }) => {
   const { t } = useTranslation();
   const invitations = useMomentInvitations(onFeedChanged);
-  const { items, total, isPending, refetch } = invitations;
+  const { items, total: inviteTotal, isPending, isFetching, refetch } = invitations;
+  // Thông báo đã lưu (vd bạn đã xoá moment mình cùng đăng) — chung chuông với lời mời.
+  const notifications = useNotifications();
+  const total = inviteTotal + notifications.items.length;
 
   const [open, setOpen] = useState(false);
   const [fillTarget, setFillTarget] = useState<Moment | null>(null);
-  const [cancelTarget, setCancelTarget] = useState<Moment | null>(null);
+  // Xác nhận xoá moment chung (người tạo / người tham gia) hoặc từ chối lời mời.
+  const [confirm, setConfirm] = useState<{ kind: "delete" | "decline"; moment: Moment } | null>(null);
   const [cancelling, setCancelling] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const setEditDraft = useMomentEditStore((s) => s.setEditDraft);
@@ -65,23 +71,30 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
   useEffect(() => {
     if (!pendingFillId) return;
     const target = items.find((m) => m.id === pendingFillId);
-    if (target && (target.myPendingSlots?.length ?? 0) > 0) openFill(target);
-    setPendingFillId(null);
-  }, [pendingFillId, items, openFill, setPendingFillId]);
+    if (target && (target.myPendingSlots?.length ?? 0) > 0) {
+      openFill(target);
+      setPendingFillId(null);
+    } else if (!isPending && !isFetching) {
+      // Chỉ bỏ khi danh sách đã tải xong mà vẫn không có (lời mời hết hạn / đã điền). Trước đây
+      // bỏ ngay lần đầu — lúc danh sách còn là bản cũ chưa có lời mời mới → bấm toast không mở gì.
+      setPendingFillId(null);
+    }
+  }, [pendingFillId, items, isPending, isFetching, openFill, setPendingFillId]);
 
-  // "Undo" draft của mình — xoá trước khi bạn kịp điền ảnh.
-  const handleCancelDraft = async () => {
-    if (!cancelTarget || cancelling) return;
+  // Xoá moment chung (người tạo hoặc người tham gia) / từ chối lời mời.
+  const handleConfirm = async () => {
+    if (!confirm || cancelling) return;
     setCancelling(true);
     try {
-      await deleteMoment(cancelTarget.id);
+      if (confirm.kind === "delete") await deleteMoment(confirm.moment.id);
+      else await declineMoment(confirm.moment.id);
       onFeedChanged();
       void refetch();
     } catch {
-      setNotice(t("moments.deleteFailed"));
+      setNotice(t(confirm.kind === "delete" ? "moments.deleteFailed" : "moments.declineFailed"));
     } finally {
       setCancelling(false);
-      setCancelTarget(null);
+      setConfirm(null);
     }
   };
 
@@ -107,7 +120,7 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
             <Button
               variant={floating ? "secondary" : "outline"}
               size="icon"
-              className={cn("relative shrink-0", floating && "glass size-12 rounded-full hover:bg-background")}
+              className={cn("relative shrink-0", floating && "glass pointer-events-auto size-12 rounded-full hover:bg-background")}
               aria-label={t("moments.invitations")}
               title={t("moments.invitations")}
             >
@@ -123,6 +136,8 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
             sideOffset={8}
             className="max-h-[min(70svh,32rem)] w-[min(20rem,calc(100vw-2rem))] gap-2 overflow-y-auto p-2"
           >
+            <NotificationList items={notifications.items} onDelete={notifications.remove} onClear={notifications.clear} />
+
             <div className="flex items-center gap-2 px-1 py-0.5 text-xs font-semibold uppercase">
               <Users className="size-3.5 text-primary" />
               {t("moments.invitations")}
@@ -134,7 +149,9 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
                 <Skeleton className="h-10 w-full rounded-md bg-muted/40" />
               </div>
             ) : items.length === 0 ? (
-              <p className="px-1 py-3 text-center text-xs text-muted-foreground">{t("moments.noInvitations")}</p>
+              notifications.items.length === 0 && (
+                <p className="px-1 py-3 text-center text-xs text-muted-foreground">{t("moments.noInvitations")}</p>
+              )
             ) : (
               <ul className="flex flex-col gap-0.5">
                 {items.map((moment) => (
@@ -143,7 +160,8 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
                     moment={moment}
                     onFill={closeThen(openFill)}
                     onEdit={closeThen(setEditDraft)}
-                    onCancel={closeThen(setCancelTarget)}
+                    onDecline={closeThen((m) => setConfirm({ kind: "decline", moment: m }))}
+                    onDelete={closeThen((m) => setConfirm({ kind: "delete", moment: m }))}
                   />
                 ))}
               </ul>
@@ -188,11 +206,15 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
       />
 
       {/* Xác nhận huỷ draft — thay cho window.confirm */}
-      <AlertDialog open={Boolean(cancelTarget)} onOpenChange={(next) => !next && setCancelTarget(null)}>
+      <AlertDialog open={Boolean(confirm)} onOpenChange={(next) => !next && setConfirm(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("moments.deleteConfirm")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("moments.deleteConfirmDesc")}</AlertDialogDescription>
+            <AlertDialogTitle>
+              {t(confirm?.kind === "decline" ? "moments.declineConfirm" : "moments.deleteShared")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(confirm?.kind === "decline" ? "moments.declineConfirmDesc" : "moments.deleteSharedDesc")}
+            </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={cancelling}>{t("moments.cancel")}</AlertDialogCancel>
@@ -201,10 +223,14 @@ export const MomentInviteButton: React.FC<Props> = ({ onFeedChanged, floating = 
               disabled={cancelling}
               onClick={(e) => {
                 e.preventDefault();
-                void handleCancelDraft();
+                void handleConfirm();
               }}
             >
-              {cancelling ? <Loader2 className="size-4 animate-spin" /> : t("moments.delete")}
+              {cancelling ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                t(confirm?.kind === "decline" ? "moments.decline" : "moments.delete")
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

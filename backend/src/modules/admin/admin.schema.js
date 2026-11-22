@@ -7,7 +7,8 @@ export const userParamsSchema = z.object({
 
 export const listUsersQuerySchema = z.object({
   q: z.string().trim().max(120).optional(),
-  role: z.enum(["user", "admin"]).optional(),
+  // Account kind like `userKind`: admin wins · developer = approved Developer Mode · user = neither.
+  role: z.enum(["user", "developer", "admin"]).optional(),
   status: z.enum(["active", "banned"]).optional(),
   sort: z.enum(["createdAt", "name", "mediaCount", "storage", "lastActive"]).default("createdAt"),
   dir: z.enum(["asc", "desc"]).default("desc"),

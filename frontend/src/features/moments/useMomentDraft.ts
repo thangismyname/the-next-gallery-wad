@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { createMoment, updateDraftMoment } from "@/services/moments";
-import { Moment, MomentTemplate, MomentVisibility } from "@tng/shared";
+import { framingOrNull, moveInCells, toggleInCells, Moment, MomentFraming, MomentTemplate, MomentVisibility, type MediaListItem } from "@tng/shared";
 import type { MomentCreateMode } from "./components/MomentTemplatePicker";
+import type { FramerPhoto } from "./components/MomentFramer";
 
 const SLOT_COUNT: Record<MomentTemplate, number> = {
   single: 1,
@@ -29,7 +30,11 @@ export function useMomentDraft({
   const isEditing = Boolean(editMoment);
   const [template, setTemplate] = useState<MomentTemplate>("single");
   const [mode, setMode] = useState<MomentCreateMode>("collab");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // Ảnh của mình theo ô: cells[i] = mediaId ở ô i (null = ô trống / của bạn bè).
+  const [cells, setCells] = useState<(string | null)[]>([]);
+  // Ảnh đã chọn (để vẽ bộ chỉnh khung) + khung từng ảnh — chỉ gửi lên khi Đăng.
+  const [photos, setPhotos] = useState<Record<string, FramerPhoto>>({});
+  const [framings, setFramings] = useState<Record<string, MomentFraming>>({});
   const [friendIds, setFriendIds] = useState<string[]>([]);
   const [caption, setCaption] = useState("");
   const [visibility, setVisibility] = useState<MomentVisibility>("circle");
@@ -38,6 +43,14 @@ export function useMomentDraft({
 
   const slotCount = SLOT_COUNT[template];
   const isCollabTemplate = template !== "single";
+  const slotCells = useMemo(
+    () => Array.from({ length: slotCount }, (_, i) => cells[i] ?? null),
+    [cells, slotCount],
+  );
+  /** Ảnh đã chọn theo thứ tự ô (trên → dưới). */
+  const selectedIds = useMemo(() => slotCells.filter((id): id is string => Boolean(id)), [slotCells]);
+  /** Đặt danh sách ảnh vào các ô đầu (vd xoá hết khi đổi template). */
+  const setSelectedIds = (ids: string[]) => setCells(ids);
 
   // Khi mở dialog: seed dữ liệu từ draft (edit mode) hoặc reset (tạo mới).
   useEffect(() => {
@@ -57,9 +70,21 @@ export function useMomentDraft({
       const ownPhotoIds = (editMoment.slots ?? [])
         .filter((s) => s.userId === editMoment.userId && s.mediaId)
         .map((s) => s.mediaId as string);
+      const ownSlots = (editMoment.slots ?? []).filter((s) => s.userId === editMoment.userId && s.mediaId);
+      setPhotos(
+        Object.fromEntries(
+          ownSlots.map((s) => [
+            s.mediaId!,
+            { id: s.mediaId!, src: s.displayUrl ?? s.thumbnailUrl ?? "", mediaType: s.mediaType },
+          ]),
+        ),
+      );
+      setFramings(Object.fromEntries(ownSlots.filter((s) => s.framing).map((s) => [s.mediaId!, s.framing!])));
       setTemplate(editMoment.template !== "single" ? editMoment.template : "duo_square");
       setMode("collab");
-      setSelectedIds(ownPhotoIds);
+      const seeded: (string | null)[] = [];
+      for (const slot of ownSlots) seeded[slot.slotIndex] = slot.mediaId;
+      setCells(Array.from(seeded, (id) => id ?? null));
       setFriendIds(
         collaborators.slice(
           0,
@@ -72,7 +97,9 @@ export function useMomentDraft({
     } else {
       setTemplate("single");
       setMode("collab");
-      setSelectedIds([]);
+      setCells([]);
+      setPhotos({});
+      setFramings({});
       setFriendIds([]);
       setCaption("");
       setVisibility("circle");
@@ -99,22 +126,34 @@ export function useMomentDraft({
     setTemplate("single");
     setMode("collab");
     setSelectedIds([]);
+    setPhotos({});
+    setFramings({});
     setFriendIds([]);
     setCaption("");
     setVisibility("circle");
     setError(null);
   };
 
-  const toggleMedia = (id: string) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((x) => x !== id);
-      }
-      // Chọn 1 ảnh (single / collab chừa đúng 1 slot): bấm ảnh khác sẽ thay thế.
-      if (photoLimit === 1) return [id];
-      return prev.length >= photoLimit ? prev : [...prev, id];
-    });
+  const toggleMedia = (item: MediaListItem) => {
+    const { id } = item;
+    setPhotos((prev) => ({
+      ...prev,
+      [id]: { id, src: item.displayUrl ?? item.thumbnailUrl, mediaType: item.mediaType },
+    }));
+    setCells((prev) => toggleInCells(prev, id, slotCount, photoLimit));
   };
+
+  const setFraming = (id: string, framing: MomentFraming) => setFramings((prev) => ({ ...prev, [id]: framing }));
+
+  /** Chuyển ảnh ở ô `from` sang ô `to` (đổi chỗ nếu ô đó có ảnh / trống thì dời sang). */
+  const moveCell = (from: number, to: number) => setCells((prev) => moveInCells(prev, from, to, slotCount));
+
+  const framedPhotos = selectedIds.map((id) => photos[id]).filter((p): p is FramerPhoto => Boolean(p));
+  const framingPayload = selectedIds.map((id) => framingOrNull(framings[id]));
+  /** Ô của từng ảnh mình (khớp `selectedIds`). */
+  const creatorSlots = slotCells.flatMap((id, i) => (id ? [i] : []));
+  /** Bố cục cho MomentFramer: số = index trong framedPhotos. */
+  const framerLayout = slotCells.map((id) => (id ? selectedIds.indexOf(id) : null));
 
   const toggleFriend = (id: string) => {
     setFriendIds((prev) => {
@@ -143,6 +182,8 @@ export function useMomentDraft({
         await updateDraftMoment(editMoment.id, {
           template,
           mediaIds: selectedIds,
+          framings: framingPayload,
+          creatorSlots,
           collaboratorIds: friendIds,
           caption: caption.trim() || undefined,
           visibility,
@@ -151,6 +192,8 @@ export function useMomentDraft({
         await createMoment({
           template,
           mediaIds: selectedIds,
+          framings: framingPayload,
+          creatorSlots,
           collaboratorIds: friendIds,
           caption: caption.trim() || undefined,
           visibility,
@@ -159,6 +202,7 @@ export function useMomentDraft({
         await createMoment({
           template,
           mediaIds: selectedIds,
+          framings: framingPayload,
           caption: caption.trim() || undefined,
           visibility,
         });
@@ -166,6 +210,7 @@ export function useMomentDraft({
         await createMoment({
           template: "single",
           mediaId: selectedIds[0],
+          framings: framingPayload,
           caption: caption.trim() || undefined,
           visibility,
         });
@@ -203,6 +248,11 @@ export function useMomentDraft({
     reset,
     toggleMedia,
     toggleFriend,
+    framedPhotos,
+    framerLayout,
+    framings,
+    setFraming,
+    moveCell,
     canPost,
     handlePost,
   };

@@ -31,7 +31,7 @@ import { GlassButton } from "@/components/shared/GlassButton";
 import { GlassPanel } from "@/components/shared/GlassPanel";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
-import { BOTTOM_BAR_HEIGHT, HEADER_ROW, bottomBarOffset } from "@/features/navigation/layout";
+import { HEADER_ROW, tabBarSpace } from "@/features/navigation/layout";
 import { useUploadQueue } from "@/features/upload/useUploadQueue";
 import { APP_DURATION, EASE_OUT, fadeIn, fadeOut, riseIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -56,7 +56,7 @@ const MODES: { mode: CaptureMode; label: string }[] = [
 const FLASH_LABEL = { off: "camera.flashOff", auto: "camera.flashAuto", on: "camera.flashOn", screen: "camera.flash" } as const;
 
 /**
- * Camera tab: full-screen live preview under the glass BottomBar. Modes Photo ·
+ * Camera tab: full-screen live preview under the native tab bar. Modes Photo ·
  * Video · Moment (tap = photo, hold = video ≤ 5 s → review + caption → posted to
  * friends). Flash (photo) or torch (video), grid, self-timer (photo), aspect
  * ratio (photos are cropped to the frame drawn on the preview; videos stay full),
@@ -174,7 +174,7 @@ export function CameraScreen() {
 
   const lastItem = useUploadQueue((s) => s.items.find((it) => it.id === capture.last?.uploadId));
 
-  const controlsBottom = bottomBarOffset(insets.bottom) + BOTTOM_BAR_HEIGHT + 18;
+  const controlsBottom = tabBarSpace(insets.bottom) + 18;
   const onScreenLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
     setScreen((s) => (s.width === width && s.height === height ? s : { width, height }));

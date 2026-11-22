@@ -1,0 +1,75 @@
+{
+  "exp": "e6",
+  "run_id": "20261120-125633",
+  "started": "2026-11-20T05:56:33Z",
+  "params": {
+    "data_root": "/Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets",
+    "device": "auto",
+    "smoke": 0,
+    "note": "",
+    "latest": true,
+    "clip": "ViT-B-32:laion2b_s34b_b79k",
+    "preprocess": "backend",
+    "sources": [
+      "yolo",
+      "clip",
+      "fused",
+      "yolo_ft",
+      "fused_ft",
+      "lp_clip",
+      "lp_dino",
+      "lp_clip_dino",
+      "fused_learned",
+      "fused_learned_ft",
+      "oracle"
+    ],
+    "modes": [
+      "filter",
+      "boost",
+      "boost_prob"
+    ],
+    "lambdas": [
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ],
+    "query_sets": [
+      "captions",
+      "compositional"
+    ],
+    "caption_variant": "full",
+    "lang": "en",
+    "top_k": 20,
+    "e5_run": "",
+    "probe_run": "",
+    "probe_ft_run": "20261120-122042",
+    "compare": [
+      "boost_prob:fused_learned,boost_prob:yolo",
+      "boost_prob:lp_clip,boost_prob:clip",
+      "boost_prob:lp_dino,boost_prob:lp_clip",
+      "boost_prob:fused_learned,boost_prob:lp_clip",
+      "boost_prob:fused_learned,boost:fused_learned",
+      "filter:fused_learned,boost_prob:fused_learned",
+      "boost_prob:yolo_ft,boost_prob:yolo",
+      "boost_prob:fused_ft,boost_prob:fused",
+      "boost_prob:fused_learned_ft,boost_prob:fused_learned"
+    ],
+    "bootstrap": 500,
+    "batch_size": 64
+  },
+  "environment": {
+    "chip": "Apple M1 Pro",
+    "cpu_cores": "8P+2E",
+    "ram_gb": "32",
+    "os": "macOS 27.2.1",
+    "python": "3.12.15",
+    "torch": "2.14.1",
+    "git_commit": "15024d8",
+    "ultralytics": "8.4.184"
+  }
+}

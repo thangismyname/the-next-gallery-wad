@@ -5,7 +5,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { LANGUAGES, isLabelTag, tagSummaryQueryKey, type MediaFilter } from "@tng/shared";
+import { LANGUAGES, isLabelTag, tagSummaryQueryKey, type MediaFilter, type PickAlbum } from "@tng/shared";
 import { fetchTagSummary } from "@/services/media";
 import { useTagCatalog } from "@/features/studio/useTagCatalog";
 import { normalize, suggestScopes, type SearchScope } from "@/features/search/searchScope";
@@ -15,6 +15,8 @@ export type Lens =
   | { kind: "filter"; filter: MediaFilter }
   | { kind: "scope"; scope: SearchScope }
   | { kind: "tag"; tag: string; name: string }
+  /** Album thường hoặc album tự động — chọn từ menu "Album ▾". */
+  | { kind: "album"; album: PickAlbum }
   | { kind: "selected" };
 
 
@@ -25,10 +27,12 @@ export const lensKey = (lens: Lens) =>
       ? lens.scope.key
       : lens.kind === "tag"
         ? `tag:${lens.tag}`
-        : "selected";
+        : lens.kind === "album"
+          ? lens.album.key
+          : "selected";
 
 export const lensName = (lens: Lens) =>
-  lens.kind === "scope" ? lens.scope.name : lens.kind === "tag" ? lens.name : "";
+  lens.kind === "scope" ? lens.scope.name : lens.kind === "tag" ? lens.name : lens.kind === "album" ? lens.album.name : "";
 
 export interface TagOption {
   tag: string;

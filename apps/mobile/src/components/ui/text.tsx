@@ -3,7 +3,10 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@rn-primitives/slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { Platform, Text as RNText, type Role } from 'react-native';
+import { cssInterop } from 'nativewind';
+import { Platform, StyleSheet, Text as RNText, type Role } from 'react-native';
+
+import { FONT_SCALES, useFontScale } from '@/hooks/useFontScale';
 
 const textVariants = cva(
   cn(
@@ -65,6 +68,20 @@ const ARIA_LEVEL: Partial<Record<TextVariant, string>> = {
 
 const TextClassContext = React.createContext<string | undefined>(undefined);
 
+/** RN Text that multiplies the resolved fontSize / lineHeight by the app's text size (`useFontScale`).
+ *  Registered with cssInterop so `className` is already turned into `style` when it gets here. */
+function ScaledText({ style, ...props }: React.ComponentProps<typeof RNText>) {
+  const factor = FONT_SCALES[useFontScale((s) => s.scale)];
+  if (factor === 1) return <RNText style={style} {...props} />;
+  const flat = StyleSheet.flatten(style) ?? {};
+  const scaled = {
+    fontSize: (flat.fontSize ?? 14) * factor,
+    ...(typeof flat.lineHeight === 'number' ? { lineHeight: flat.lineHeight * factor } : {}),
+  };
+  return <RNText style={[style, scaled]} {...props} />;
+}
+cssInterop(ScaledText, { className: 'style' });
+
 function Text({
   className,
   asChild = false,
@@ -77,7 +94,7 @@ function Text({
   }) {
   const textClass = React.useContext(TextClassContext);
   const japanese = useJapaneseFonts();
-  const Component = asChild ? Slot : RNText;
+  const Component = asChild ? Slot : ScaledText;
   const merged = cn(textVariants({ variant }), textClass, className);
   return (
     <Component

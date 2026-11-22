@@ -37,7 +37,7 @@ type Props = {
   /** A friend's moment newer than the "seen" mark. */
   unseen?: boolean;
   onReact: (moment: Moment, emoji: string) => void;
-  onRemove: (moment: Moment) => Promise<void>;
+  onRemove: (moment: Moment, action?: "delete" | "leave") => Promise<void>;
   /** The card turned to its meme side (the pager stops paging so the list can scroll). */
   onFlipChange?: (momentId: string, flipped: boolean) => void;
 };
@@ -112,16 +112,21 @@ export const MomentCard = memo(function MomentCard({ moment, size, active, unsee
   const singleTap = Gesture.Tap().onEnd(() => scheduleOnRN(flip));
   const pictureGesture = Gesture.Exclusive(doubleTap, singleTap);
 
+  const run = (action: "delete" | "leave") =>
+    void onRemove(moment, action).catch(() => Alert.alert(t(action === "delete" ? "moments.deleteFailed" : "moments.leaveFailed")));
   const confirmRemove = () => {
-    const own = moment.isOwn;
-    Alert.alert(t(own ? "moments.deleteConfirm" : "moments.leave"), t(own ? "moments.deleteConfirmDesc" : "moments.leaveConfirm"), [
+    if (moment.isOwn) {
+      Alert.alert(t("moments.deleteConfirm"), t(moment.template === "single" ? "moments.deleteConfirmDesc" : "moments.deleteSharedDesc"), [
+        { text: t("moments.cancel"), style: "cancel" },
+        { text: t("moments.delete"), style: "destructive", onPress: () => run("delete") },
+      ]);
+      return;
+    }
+    // Người tham gia: gỡ ảnh của mình, hoặc xoá cả moment chung.
+    Alert.alert(t("moments.leave"), t("moments.leaveConfirm"), [
       { text: t("moments.cancel"), style: "cancel" },
-      {
-        text: t(own ? "moments.delete" : "moments.leave"),
-        style: "destructive",
-        onPress: () =>
-          void onRemove(moment).catch(() => Alert.alert(t(own ? "moments.deleteFailed" : "moments.leaveFailed"))),
-      },
+      { text: t("moments.leave"), onPress: () => run("leave") },
+      { text: t("moments.deleteShared"), style: "destructive", onPress: () => run("delete") },
     ]);
   };
 

@@ -1,5 +1,5 @@
 // hooks/useGalleryActions.ts
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import { downloadMedia, moveToTrash, setFavorite } from "@/services/media";
 import { storageQueryKey, trashQueryKey, useSelectionStore, type MediaListItem, type MediaPage } from "@tng/shared";
@@ -116,9 +116,14 @@ export function useGalleryActions() {
     [queryClient],
   );
 
+  const [deleteFailed, setDeleteFailed] = useState(false);
+  useEffect(() => {
+    if (deleteDialogOpen) setDeleteFailed(false);
+  }, [deleteDialogOpen]);
   const confirmDelete = useCallback(async () => {
     if (pendingDeleteIds.length === 0) return;
     setDeleteBusy(true);
+    setDeleteFailed(false);
     try {
       await moveToTrash(pendingDeleteIds);
       clear();
@@ -140,20 +145,21 @@ export function useGalleryActions() {
         }));
         return { ...old, pages };
       });
-
-      await queryClient.invalidateQueries({ queryKey: galleryQueryPrefix });
-      await queryClient.invalidateQueries({ queryKey: ["favorites"] });
+    } catch (err) {
+      // Gửi theo lô 100 — các lô đầu có thể đã vào thùng rác: vẫn làm mới bên dưới.
+      console.error("Xóa thất bại:", err);
+      setDeleteFailed(true);
+    } finally {
+      setDeleteBusy(false);
+      void queryClient.invalidateQueries({ queryKey: galleryQueryPrefix });
+      void queryClient.invalidateQueries({ queryKey: ["favorites"] });
       // Số ảnh / ảnh bìa của nhãn không tính ảnh trong thùng rác.
-      await queryClient.invalidateQueries({ queryKey: ["labels"] });
+      void queryClient.invalidateQueries({ queryKey: ["labels"] });
       // Album (cả album tự động) đếm / hiện ảnh vừa xoá → làm mới.
-      await queryClient.invalidateQueries({ queryKey: ["albums"] });
+      void queryClient.invalidateQueries({ queryKey: ["albums"] });
       // Thùng rác (trang + thẻ trong Albums) có thêm ảnh vừa xoá.
       void queryClient.invalidateQueries({ queryKey: trashQueryKey });
       void queryClient.invalidateQueries({ queryKey: storageQueryKey });
-    } catch (err) {
-      console.error("Xóa thất bại:", err);
-    } finally {
-      setDeleteBusy(false);
     }
   }, [pendingDeleteIds, clear, queryClient, setDeleteBusy, setDeleteDialogOpen]);
 
@@ -166,6 +172,7 @@ export function useGalleryActions() {
     closeDeleteDialog,
     deleteDialogOpen,
     deleteBusy,
+    deleteFailed,
     pendingDeleteIds,
     shareDialogOpen,
     setShareDialogOpen,

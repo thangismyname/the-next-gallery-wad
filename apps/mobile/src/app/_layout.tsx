@@ -70,6 +70,10 @@ export default function RootLayout() {
             <Stack.Screen name="albums/auto/[key]" />
             <Stack.Screen name="album-form" options={{ presentation: "modal" }} />
             <Stack.Screen name="moment-memes" options={{ presentation: "modal" }} />
+            <Stack.Screen name="moment-library" options={{ presentation: "modal" }} />
+            <Stack.Screen name="moment-create" options={{ presentation: "modal" }} />
+            <Stack.Screen name="moment-inbox" options={{ presentation: "modal" }} />
+            <Stack.Screen name="moment-fill" options={{ presentation: "modal" }} />
             {/* Avatar → account sheet (Google Photos style): native form sheet, 65 % → full. */}
             <Stack.Screen
               name="account"
@@ -83,8 +87,11 @@ export default function RootLayout() {
             <Stack.Screen name="profile-edit" options={{ presentation: "modal" }} />
             <Stack.Screen name="change-password" options={{ presentation: "modal" }} />
             <Stack.Screen name="trash" />
+            <Stack.Screen name="review" />
+            <Stack.Screen name="import-takeout" />
             <Stack.Screen name="admin" />
             <Stack.Screen name="admin-user" />
+            <Stack.Screen name="dev" />
           </Stack.Protected>
           {/* Signed out: welcome carousel (= web landing) first; it pushes auth (slides in). */}
           <Stack.Protected guard={!isSignedIn}>

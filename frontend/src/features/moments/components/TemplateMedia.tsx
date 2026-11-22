@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ImageOff, Pause, Play } from "lucide-react";
 import { Moment, MomentSlot } from "@tng/shared";
+import { framingStyle } from "../framing";
 import { cn } from "@/lib/utils";
 import { getInitials } from "@tng/shared";
 import { resolveMediaUrl } from "@tng/shared";
@@ -31,20 +32,22 @@ function FrameImage({
   src,
   displaySrc,
   alt,
+  framing,
 }: {
   src: string;
   displaySrc?: string | null;
   alt: string;
+  framing?: MomentSlot["framing"];
 }) {
   if (!src) return null;
   return (
     <img
-      src={src}
-      srcSet={displaySrc ? `${src} 400w, ${displaySrc} 1600w` : undefined}
-      sizes="(min-width: 768px) 400px, 90vw"
+      // Card rộng tới 560px (×2 retina) → luôn dùng bản display; bản "med" 400px bị mờ.
+      src={displaySrc || src}
       alt={alt}
       loading="lazy"
       className="absolute inset-0 size-full object-cover"
+      style={framingStyle(framing)}
       onError={(e) => {
         e.currentTarget.style.display = "none";
       }}
@@ -65,10 +68,12 @@ function FrameVideo({
   paused,
   label,
   onOpen,
+  framing,
   children,
 }: {
   src: string;
   poster?: string;
+  framing?: MomentSlot["framing"];
   paused?: boolean;
   label: string;
   onOpen: () => void;
@@ -118,6 +123,7 @@ function FrameVideo({
         loop
         preload="none"
         className="size-full object-cover"
+        style={framingStyle(framing)}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onError={(e) => {
@@ -162,11 +168,13 @@ function FrameMedia({
   paused,
   label,
   onOpen,
+  framing,
   children,
 }: {
   src: string;
   displaySrc?: string | null;
   poster?: string;
+  framing?: MomentSlot["framing"];
   isVideo: boolean;
   alt: string;
   paused?: boolean;
@@ -182,6 +190,7 @@ function FrameMedia({
         paused={paused}
         label={label}
         onOpen={onOpen}
+        framing={framing}
       >
         {children}
       </FrameVideo>
@@ -190,7 +199,7 @@ function FrameMedia({
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <FrameImage src={src} displaySrc={displaySrc} alt={alt} />
+      <FrameImage src={src} displaySrc={displaySrc} alt={alt} framing={framing} />
       <button
         type="button"
         onClick={onOpen}
@@ -270,6 +279,7 @@ export function TemplateMedia({ moment, t, onImageClick, paused }: TemplateMedia
               : (moment.thumbnailUrl ?? "")
           }
           displaySrc={!isVideo ? moment.displayUrl : null}
+          framing={moment.framing}
           poster={moment.thumbnailUrl ?? undefined}
           isVideo={isVideo}
           alt={moment.caption ?? moment.userName}
@@ -328,6 +338,8 @@ export function TemplateMedia({ moment, t, onImageClick, paused }: TemplateMedia
                   ? (cell.url ?? cell.thumbnailUrl ?? "")
                   : (cell.thumbnailUrl ?? "")
               }
+              displaySrc={!isVideo ? cell.displayUrl : null}
+              framing={cell.framing}
               poster={cell.thumbnailUrl ?? undefined}
               isVideo={isVideo}
               alt={cell.userName}

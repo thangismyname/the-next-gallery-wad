@@ -58,6 +58,37 @@ export async function ensureSchema() {
        ON media_embeddings USING hnsw (embedding vector_cosine_ops)`,
     // ── AI phase: YOLO26 object detection ──
     `ALTER TABLE media ADD COLUMN IF NOT EXISTS yolo_processed_at TIMESTAMPTZ`,
+    // ── Chống upload / import trùng ──
+    `ALTER TABLE media ADD COLUMN IF NOT EXISTS content_sha256 CHAR(64)`,
+    `CREATE INDEX IF NOT EXISTS idx_media_content_sha256
+       ON media (user_id, content_sha256) WHERE content_sha256 IS NOT NULL`,
+    // ── Import: vị trí chụp + video Live Photo ──
+    `ALTER TABLE media ADD COLUMN IF NOT EXISTS latitude DOUBLE PRECISION`,
+    `ALTER TABLE media ADD COLUMN IF NOT EXISTS longitude DOUBLE PRECISION`,
+    `ALTER TABLE media ADD COLUMN IF NOT EXISTS motion_object TEXT`,
+    // ── Import (Google Takeout…): phiên + ảnh của phiên (báo cáo / lịch sử) ──
+    `CREATE TABLE IF NOT EXISTS import_sessions (
+       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+       user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+       source VARCHAR(20) NOT NULL,
+       client VARCHAR(10) NOT NULL,
+       status VARCHAR(10) NOT NULL DEFAULT 'running'
+         CHECK (status IN ('running', 'done', 'cancelled', 'failed')),
+       plan JSONB NOT NULL DEFAULT '{}'::jsonb,
+       skipped_existing INT NOT NULL DEFAULT 0,
+       failures JSONB NOT NULL DEFAULT '[]'::jsonb,
+       started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+       finished_at TIMESTAMPTZ,
+       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+     )`,
+    `CREATE INDEX IF NOT EXISTS idx_import_sessions_user ON import_sessions (user_id, started_at DESC)`,
+    `CREATE TABLE IF NOT EXISTS import_session_media (
+       session_id UUID NOT NULL REFERENCES import_sessions (id) ON DELETE CASCADE,
+       media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
+       duplicate BOOLEAN NOT NULL DEFAULT false,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+       PRIMARY KEY (session_id, media_id)
+     )`,
     `CREATE TABLE IF NOT EXISTS media_detections (
        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
        media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
@@ -267,6 +298,18 @@ export async function ensureSchema() {
        created_at TIMESTAMPTZ DEFAULT now()
      )`,
     `ALTER TABLE moment_memes ADD COLUMN IF NOT EXISTS image_object TEXT`,
+    `ALTER TABLE moments ADD COLUMN IF NOT EXISTS framing JSONB`,
+    `ALTER TABLE moment_collab ADD COLUMN IF NOT EXISTS framing JSONB`,
+    `ALTER TABLE moment_collab ADD COLUMN IF NOT EXISTS declined_at TIMESTAMPTZ`,
+    `CREATE TABLE IF NOT EXISTS notifications (
+       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+       user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+       type VARCHAR(40) NOT NULL,
+       actor_id TEXT REFERENCES "user" (id) ON DELETE SET NULL,
+       payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+     )`,
+    `CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications (user_id, created_at DESC)`,
     // Meme mới lưu object MinIO (`moments/<momentId>/memes/<memeId>.<ext>`) →
     // image_url chỉ còn là nguồn gốc/fallback (P2.2).
     `ALTER TABLE moment_memes ALTER COLUMN image_url DROP NOT NULL`,

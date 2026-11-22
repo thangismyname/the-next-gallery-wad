@@ -58,6 +58,8 @@ export function useMomentInvitations(onFeedChanged: () => void) {
     // Tổng số lời mời: count từ server (đúng cả khi list mới tải trang đầu).
     total: count ?? items.length,
     isPending: list.isPending,
+    /** Đang tải lại (vd vừa có lời mời mới) — danh sách hiện tại có thể chưa có nó. */
+    isFetching: list.isFetching,
     refetch,
     invalidate,
     fetchNextPage: list.fetchNextPage,

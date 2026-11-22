@@ -1,0 +1,28 @@
+{
+  "exp": "e5",
+  "run_id": "20261120-121016",
+  "started": "2026-11-20T05:10:16Z",
+  "params": {
+    "data_root": "/Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets",
+    "device": "auto",
+    "smoke": 0,
+    "note": "",
+    "latest": true,
+    "precision_target": 0.9,
+    "calib_min_count": 10,
+    "e2_run": "",
+    "e4_run": "",
+    "e4_ft_run": "20261120-120916",
+    "bootstrap": 500
+  },
+  "environment": {
+    "chip": "Apple M1 Pro",
+    "cpu_cores": "8P+2E",
+    "ram_gb": "32",
+    "os": "macOS 27.2.1",
+    "python": "3.12.15",
+    "torch": "2.14.1",
+    "git_commit": "15024d8",
+    "ultralytics": "8.4.184"
+  }
+}

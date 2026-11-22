@@ -9,6 +9,8 @@ import { useTranslation } from "react-i18next";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { ImageCard } from "./components/ImageCard";
 import { UploadButton } from "./components/UploadButton";
+import { useFileDrop } from "./upload/useFileDrop";
+import { useUploader } from "./upload/useUploader";
 import { Lightbox } from "./components/Lightbox";
 import { SelectionActionBar } from "./components/SelectionActionBar";
 import { Media, toMedia, type GallerySort } from "@tng/shared";
@@ -25,7 +27,7 @@ import { useGalleryActionsStore } from "@/hooks/useGalleryActionsStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Combobox } from "@/components/ui/combobox";
-import { Check, ImagePlus, Loader2 } from "lucide-react";
+import { Check, ImagePlus, Loader2, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RecentMoments } from "@/features/moments/components/RecentMoments";
 import { buildDisplayRows, DisplayRow } from "@/utils/mediaGrouping";
@@ -87,6 +89,8 @@ export const GalleryView: React.FC = () => {
     scrollMargin,
   } = useGridSize(`${isError}-${isPending}`);
   const density = useGridDensity((s) => s.density);
+  // shortcut: `useGridDensity().layout === "justified"` (giữ tỉ lệ ảnh) chưa làm — luôn lưới vuông; khi làm:
+  // tính hàng từ item.width/height trong gridLayout.ts rồi bỏ "justified" khỏi chỗ chờ GALLERY_LAYOUTS_READY.
   const columns = columnsFor(gridWidth, GALLERY_COLUMNS[density]);
   const { gap: gridGap, cell: cellSize, rowHeight: gridRowHeight } = gridMetrics(
     gridWidth,
@@ -158,6 +162,9 @@ export const GalleryView: React.FC = () => {
   const handleUploaded = useCallback(() => {
     void refetch();
   }, [refetch]);
+  // Kéo file / thư mục vào trang → tải lên (cùng hàng + tiến độ với nút "Thêm ảnh").
+  const upload = useUploader((s) => s.upload);
+  const dropping = useFileDrop((files) => void upload(files, { onDone: handleUploaded }));
 
   const openPreview = useCallback(
     (media: Media) => {
@@ -216,6 +223,15 @@ export const GalleryView: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      {dropping && (
+        <div className="pointer-events-none fixed inset-3 z-50 flex items-center justify-center rounded-3xl border-2 border-dashed border-primary bg-background/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <Upload className="size-8 text-primary" />
+            <p className="font-heading text-xl">{t("gallery.upload.dropHere")}</p>
+            <p className="text-xs text-muted-foreground">{t("gallery.upload.dropHint")}</p>
+          </div>
+        </div>
+      )}
       {/* Header — mobile: tiêu đề 1 hàng, nút 1 hàng lấp đầy (ô sắp xếp giãn);
           từ sm: tiêu đề trái, nút phải. Mọi nút cùng cao h-9. */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -294,7 +310,7 @@ export const GalleryView: React.FC = () => {
               </p>
               <p className="mt-1 text-xs">{t("gallery.emptyHint")}</p>
             </div>
-            <UploadButton onUploaded={handleUploaded} />
+            <UploadButton onUploaded={handleUploaded} showStatus={false} />
           </div>
         ) : mediaList.length === 0 ? null : (
           /* Gallery Grid (virtualized theo hàng) */

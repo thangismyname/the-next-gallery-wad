@@ -1,6 +1,7 @@
 import { TAG_ID_RE } from "../ai/tagging.constants.js";
 import { z } from "zod";
 import { SCOPE_PATTERN } from "./media.scope.js";
+import { httpError } from "../../middleware/errorHandler.js";
 
 export const listMediaQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(40),
@@ -95,8 +96,12 @@ export const zipDownloadSchema = z.object({
 });
 
 // Nhóm "Vật thể" của Spotlight — cũng lọc được theo phạm vi.
+// Múi giờ IANA của client — tìm theo ngày ("2026", "19/11") tính theo giờ địa phương như Thư viện.
+const tz = z.string().regex(/^[A-Za-z0-9_+\-/]{1,64}$/).optional();
+
 export const objectSearchQuerySchema = searchQuerySchema.extend({
   scope: z.string().regex(SCOPE_PATTERN).optional(),
+  tz,
 });
 
 // `scope` = favorites | label:<id> | album:<id> (Spotlight chip); có scope thì
@@ -106,6 +111,7 @@ export const mediaSearchQuerySchema = z
     q: z.string().trim().max(120).default(""),
     mode: z.enum(["hybrid", "clip"]).default("hybrid"),
     scope: z.string().regex(SCOPE_PATTERN).optional(),
+    tz,
   })
   .refine((v) => v.q.length > 0 || v.scope, { message: "Thiếu từ khoá" });
 
@@ -143,4 +149,66 @@ export const saveEditBodySchema = z.object({
       }
     })
     .pipe(editRecipeSchema),
+});
+
+/**
+ * Upload metadata — multipart text field `meta` = JSON array aligned with the `media` files
+ * (index i ↔ file i). Used by importers (Google Takeout…): `takenAt` only fills in when the
+ * file has no EXIF / video creation_time, `favorite` sets the heart, `albumIds` = own manual
+ * albums to add the photo to (others are ignored), `bulk` = importer upload (AI on the slow lane,
+ * a duplicate that sits in the Trash stays there), `importId` = import session to count it in
+ * (`modules/imports`). Missing field = no meta.
+ */
+const uploadMetaItemSchema = z
+  .object({
+    takenAt: z.iso
+      .datetime({ offset: true })
+      .refine((v) => {
+        const t = Date.parse(v);
+        return t >= Date.UTC(1900, 0, 1) && t <= Date.now() + 86_400_000;
+      }, "takenAt out of range")
+      .optional(),
+    favorite: z.boolean().optional(),
+    albumIds: z.array(z.uuid()).max(50).optional(),
+    bulk: z.boolean().optional(),
+    importId: z.uuid().optional(),
+    // Từ sidecar Takeout: mô tả → media.caption, geoData → latitude / longitude (chỉ lấp chỗ trống).
+    description: z.string().trim().min(1).max(2000).optional(),
+    location: z.object({ lat: z.number().min(-90).max(90), lng: z.number().min(-180).max(180) }).strict().optional(),
+    // File này là video Live Photo của file thứ `livePhotoOf` (index trong CÙNG request, đứng trước).
+    livePhotoOf: z.number().int().min(0).max(19).optional(),
+  })
+  .strict()
+  .nullable();
+
+/** → one entry (or null) per file; throws 400 INVALID_META on bad input. */
+export function parseUploadMeta(raw, fileCount) {
+  if (raw == null || raw === "") return [];
+  let json;
+  try {
+    json = JSON.parse(raw);
+  } catch {
+    throw httpError(400, "INVALID_META", "meta must be a JSON array");
+  }
+  const result = z.array(uploadMetaItemSchema).max(fileCount).safeParse(json);
+  if (!result.success) throw httpError(400, "INVALID_META", result.error.issues[0]?.message ?? "invalid meta");
+  return result.data;
+}
+
+// Upload chia nhỏ (media.chunked.service.js) — fingerprint = client tự đặt (tên + size + ngày sửa…),
+// cùng fingerprint = tiếp tục phiên cũ.
+export const startChunkedSchema = z.object({
+  name: z.string().trim().min(1).max(255),
+  size: z.number().int().positive().max(8 * 1024 ** 3) /* = MAX_RESUMABLE_BYTES */,
+  mimeType: z.string().max(100).default(""),
+  fingerprint: z.string().min(1).max(500),
+});
+
+export const chunkParamsSchema = z.object({ id: z.string().regex(/^[0-9a-f]{32}$/) });
+
+export const chunkQuerySchema = z.object({ offset: z.coerce.number().int().min(0) });
+
+export const completeChunkedSchema = z.object({
+  // 1 file → meta 1 phần tử, dùng lại đúng validate của upload thường (livePhotoOf không áp dụng).
+  meta: z.unknown().optional().transform((m) => parseUploadMeta(m == null ? null : JSON.stringify([m]), 1)[0] ?? null),
 });

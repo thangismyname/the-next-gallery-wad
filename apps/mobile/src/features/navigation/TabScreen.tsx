@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { AppHeader } from "./AppHeader";
+import { AppHeader, type AddMenuKey } from "./AppHeader";
 import { useTabContentInsets } from "./layout";
 import { useHeaderScroll } from "./useHeaderScroll";
 import { useTabEnterStyle } from "./useTabEnterStyle";
@@ -12,7 +12,7 @@ import { useTabEnterStyle } from "./useTabEnterStyle";
  * the header and the floating BottomBar. For a list (FlashList) use
  * `useHeaderScroll` + `useTabContentInsets` + `<AppHeader>` directly.
  */
-export function TabScreen({ title, children }: { title?: string; children: ReactNode }) {
+export function TabScreen({ title, add, children }: { title?: string; add?: AddMenuKey[]; children: ReactNode }) {
   const { scrollY, onScroll } = useHeaderScroll();
   const insets = useTabContentInsets();
   const enterStyle = useTabEnterStyle();
@@ -32,7 +32,7 @@ export function TabScreen({ title, children }: { title?: string; children: React
       >
         {children}
       </Animated.ScrollView>
-      <AppHeader scrollY={scrollY} title={title} />
+      <AppHeader scrollY={scrollY} title={title} add={add} />
     </View>
   );
 }

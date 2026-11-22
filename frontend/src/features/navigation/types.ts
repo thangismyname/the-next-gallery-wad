@@ -11,4 +11,6 @@ export interface NavMenuItem {
   /** Nhóm trên sidebar; "system" (Thùng rác) ghim dưới cùng. */
   section?: "photos" | "ai" | "social" | "system";
   badge?: number; // Số hiển thị trên item (vd lời mời moment)
+  /** Chỉ sáng khi đúng đường dẫn (vd "/admin" không sáng ở /admin/users). */
+  end?: boolean;
 }

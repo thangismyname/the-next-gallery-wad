@@ -1,6 +1,15 @@
 import type { HttpClient } from "../http";
 import type { Media } from "../types";
 
+/** Múi giờ IANA của máy (auto album, tìm theo ngày) — lỗi Intl → "UTC". */
+export function clientTimeZone(): string {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+  } catch {
+    return "UTC";
+  }
+}
+
 let mediaBaseUrl = "";
 
 /** Configure the base URL used to resolve relative media URLs (web: AUTH_BASE_URL, mobile: API origin). */
@@ -42,6 +51,7 @@ export function mapMediaItem(item: Record<string, unknown>): MediaListItem {
     fullUrl: (item.fullUrl as string | null | undefined)
       ? resolveMediaUrl(item.fullUrl as string)
       : null,
+    motionUrl: item.motionUrl ? resolveMediaUrl(item.motionUrl as string) : null,
   } as MediaListItem;
 }
 
@@ -66,6 +76,12 @@ export interface MediaListItem {
   /** Lần chỉnh gần nhất (basic edit); null = ảnh gốc. */
   editedAt?: string | null;
   score?: number | null;
+  /** Description (Google Takeout import…). */
+  caption?: string | null;
+  /** Where it was taken (WGS84). */
+  location?: { lat: number; lng: number } | null;
+  /** Live Photo video (signed URL) — play it in the lightbox. */
+  motionUrl?: string | null;
   scoreParts?: { clip: number; tag?: number; object?: number; label?: number } | null;
 }
 
@@ -156,7 +172,8 @@ export interface TagSummary {
 export interface TagLabel {
   id: string;
   section: string;
-  names: { en: string; vi: string; ja: string };
+  // Tên từ ai-service labels.csv (vi / en / ja) — ngôn ngữ khác (zh) rơi về en.
+  names: { en: string; vi: string; ja: string } & Partial<Record<string, string>>;
   threshold: number;
 }
 
@@ -194,6 +211,14 @@ export const tagMediaQueryKey = (tag: string, minConfidence: number | null) =>
 export const tagCatalogQueryKey = ["ai", "tags", "catalog"] as const;
 export const mediaTagsQueryKey = (mediaId: string) => ["ai", "tags", "of", mediaId] as const;
 export const trashQueryKey = ["trash", "media"] as const;
+
+/** Max ids per bulk request (backend `mediaIdsSchema` / `favoriteSchema`). */
+export const BULK_IDS_MAX = 100;
+
+/** Run `send` on ≤ `BULK_IDS_MAX` ids at a time, in order (stops at the first error). */
+export async function inChunks(ids: string[], send: (chunk: string[]) => Promise<unknown>): Promise<void> {
+  for (let i = 0; i < ids.length; i += BULK_IDS_MAX) await send(ids.slice(i, i + BULK_IDS_MAX));
+}
 
 export const createMediaService = (http: HttpClient) => ({
   fetchMedia: async (
@@ -317,13 +342,14 @@ export const createMediaService = (http: HttpClient) => ({
     }
   },
 
+  // tz: tìm theo ngày ("2026", "tháng 3", "19/11") tính theo giờ địa phương như Thư viện.
   searchGallerySemantic: async (
     query: string,
     signal?: AbortSignal,
     scope?: string | null,
   ): Promise<MediaListItem[]> => {
     try {
-      const params: Record<string, string> = { q: query };
+      const params: Record<string, string> = { q: query, tz: clientTimeZone() };
       if (scope) params.scope = scope;
       const data = await http.get<Record<string, unknown>[]>(
         `/gallery/media/search`,
@@ -343,7 +369,7 @@ export const createMediaService = (http: HttpClient) => ({
     scope?: string | null,
   ): Promise<MediaListItem[]> => {
     try {
-      const params: Record<string, string> = { q: query };
+      const params: Record<string, string> = { q: query, tz: clientTimeZone() };
       if (scope) params.scope = scope;
       const data = await http.get<Record<string, unknown>[]>(
         `/gallery/media/objects/search`,
@@ -467,17 +493,19 @@ export const createMediaService = (http: HttpClient) => ({
     }
   },
 
+  // Bulk actions: the backend takes ≤ 100 ids per request (`media.schema.js::mediaIdsSchema`) →
+  // "select all" is sent in chunks, one after another.
   setFavorite: (ids: string[], favorite: boolean): Promise<void> =>
-    http.post<void>("/gallery/media/favorite", { ids, favorite }),
+    inChunks(ids, (chunk) => http.post<void>("/gallery/media/favorite", { ids: chunk, favorite })),
 
   moveToTrash: (ids: string[]): Promise<void> =>
-    http.post<void>("/gallery/media/trash", { ids }),
+    inChunks(ids, (chunk) => http.post<void>("/gallery/media/trash", { ids: chunk })),
 
   restoreMedia: (ids: string[]): Promise<void> =>
-    http.post<void>("/gallery/media/restore", { ids }),
+    inChunks(ids, (chunk) => http.post<void>("/gallery/media/restore", { ids: chunk })),
 
   permanentDeleteMedia: (ids: string[]): Promise<void> =>
-    http.post<void>("/gallery/media/trash/permanent", { ids }),
+    inChunks(ids, (chunk) => http.post<void>("/gallery/media/trash/permanent", { ids: chunk })),
 
   emptyTrash: async (): Promise<number> => {
     const data = await http.post<{ deleted?: number }>("/gallery/media/trash/empty");

@@ -2,7 +2,7 @@
 // đối tượng. Mirror embedding.service.js (CLIP) nhưng cho bounding box/class.
 //
 // Luồng:
-//  - Upload ảnh → media.service gọi `detectMediaInBackground` (fire-and-forget).
+//  - Upload ảnh → media.service gọi `ai.queue.js::enqueueMediaAi` (hàng đợi giới hạn).
 //  - Ảnh cũ chưa detect → `backfillDetections` xử lý theo lô.
 //  - Search theo vật thể → `searchByObject` (JOIN media_detections).
 //  - Developer Mode → `getMediaDetections` trả bbox để vẽ overlay.
@@ -87,13 +87,6 @@ export async function detectMediaBuffer({ mediaId, userId, buffer }) {
     [mediaId],
   );
   return result;
-}
-
-/** Fire-and-forget — chạy nền, mọi lỗi chỉ log. */
-export function detectMediaInBackground(args) {
-  detectMediaBuffer(args).catch((err) => {
-    logger.warn({ err }, `Detect media ${args.mediaId} lỗi`);
-  });
 }
 
 /** Lấy object gốc từ MinIO rồi detect — dùng cho backfill ảnh cũ. */

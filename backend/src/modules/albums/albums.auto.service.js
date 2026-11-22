@@ -115,7 +115,7 @@ const MEMBERS = {
 
 // Múi giờ client (IANA) — chỉ nhận tên Postgres biết, sai → UTC.
 const tzCache = new Map();
-async function resolveTimeZone(tz) {
+export async function resolveTimeZone(tz) {
   if (!tz) return "UTC";
   if (!tzCache.has(tz)) {
     const ok = await dbPool.query(`SELECT 1 FROM pg_timezone_names WHERE name = $1`, [tz]);

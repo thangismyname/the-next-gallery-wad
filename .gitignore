@@ -60,6 +60,7 @@ database/datasets/Classes/open-images/*
 !database/datasets/Classes/gallery-gt/
 !database/datasets/Results/oi/build/
 database/datasets/Results/cache/
+database/datasets/Results/runner/
 database/datasets/Results/**/artifacts/*.npz
 # Weights Ultralytics của yolo_ft (best/last.pt, 5–26 MB) — bản dùng được đã chép sang ai-service/models/ (ignore)
 database/datasets/Results/**/*.pt
@@ -72,3 +73,6 @@ database/datasets/Results/pipeline/**/*.npy
 database/datasets/Results/pipeline/**/vis/
 database/datasets/**/judge.html
 database/datasets/**/.DS_Store
+
+# Thesis report (LaTeX) — local only
+docs/thesis/

@@ -10,7 +10,8 @@ import { describeFile, useUploadQueue } from "@/features/upload/useUploadQueue";
 export type CaptureMode = "picture" | "video" | "moments";
 
 /** A moment shot waiting for review (caption → post). */
-export type MomentDraft = { uri: string; video: boolean };
+/** `mediaId` = already in the library (picked from the account) → posted without uploading again. */
+export type MomentDraft = { uri: string; video: boolean; mediaId?: string };
 
 /** Holding the shutter longer than this in Moments = record a video. */
 const HOLD_MS = 250;

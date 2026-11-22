@@ -13,6 +13,7 @@ export const LensIcon: React.FC<{ lens: Lens; className?: string }> = ({ lens, c
     const Icon = describe(lens.tag)?.Icon ?? Sparkles;
     return <Icon className={cn("size-3.5", className)} />;
   }
+  if (lens.kind === "album") return <FolderOpen className={cn("size-3.5", className)} />;
   if (lens.kind !== "scope") return null;
   const { scope } = lens;
   if (scope.kind === "favorites") return <Heart className={cn("size-3.5 text-rose-500", className)} />;

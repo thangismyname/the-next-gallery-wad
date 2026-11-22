@@ -11,6 +11,7 @@ export const {
   patchMoment,
   deleteMoment,
   leaveMoment,
+  declineMoment,
   reactToMoment,
   removeMomentReaction,
   fetchMemeTemplates,

@@ -1,4 +1,4 @@
-import { resolveMediaUrl, type Moment, type MomentSlot } from "@tng/shared";
+import { resolveMediaUrl, type Moment, type MomentFraming, type MomentSlot } from "@tng/shared";
 import { Image } from "expo-image";
 import { useVideoPlayer, VideoView, type VideoPlayer } from "expo-video";
 import { ImageOff, Volume2, VolumeX } from "lucide-react-native";
@@ -10,6 +10,8 @@ import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 
 import { PersonAvatar } from "@/components/shared/PersonAvatar";
+
+import { Framed } from "./Framed";
 
 /**
  * Picture of a moment (web `TemplateMedia`): single = one photo / video filling
@@ -23,9 +25,9 @@ export function MomentMedia({ moment, active }: { moment: Moment; active: boolea
   if (moment.template === "single") {
     if (moment.missingMedia || (!moment.displayUrl && !moment.thumbnailUrl)) return <Missing label={t("moments.mediaDeleted")} />;
     return moment.mediaType === "video" && moment.url ? (
-      <MomentVideo url={moment.url} poster={moment.thumbnailUrl} active={active} />
+      <MomentVideo url={moment.url} poster={moment.thumbnailUrl} active={active} framing={moment.framing} media={moment} />
     ) : (
-      <Photo uri={moment.displayUrl ?? moment.thumbnailUrl} />
+      <Photo uri={moment.displayUrl ?? moment.thumbnailUrl} framing={moment.framing} media={moment} />
     );
   }
   const slots = [...moment.slots].sort((a, b) => a.slotIndex - b.slotIndex);
@@ -47,9 +49,9 @@ function Slot({ slot, active }: { slot: MomentSlot; active: boolean }) {
       {slot.missing || !slot.mediaId ? (
         <Missing label={t(slot.missing ? "moments.mediaDeleted" : "moments.noPhoto")} />
       ) : slot.mediaType === "video" && slot.url ? (
-        <MomentVideo url={slot.url} poster={slot.thumbnailUrl} active={active} />
+        <MomentVideo url={slot.url} poster={slot.thumbnailUrl} active={active} framing={slot.framing} media={slot} />
       ) : (
-        <Photo uri={slot.thumbnailUrl} />
+        <Photo uri={slot.displayUrl ?? slot.thumbnailUrl} framing={slot.framing} media={slot} />
       )}
       <View pointerEvents="none" className="absolute inset-y-0 left-3 justify-center">
         <View className="rounded-full border-2 border-white/90">
@@ -60,20 +62,37 @@ function Slot({ slot, active }: { slot: MomentSlot; active: boolean }) {
   );
 }
 
-function Photo({ uri }: { uri: string | null | undefined }) {
+type Size = { width: number; height: number };
+
+/** Framing = same maths as the web CSS (`Framed` + `@tng/shared` `framingRect`). */
+function Photo({ uri, framing, media }: { uri: string | null | undefined; framing?: MomentFraming | null; media?: Size }) {
   if (!uri) return null;
   return (
-    <Image
-      source={{ uri: resolveMediaUrl(uri) }}
-      contentFit="cover"
-      transition={150}
-      cachePolicy="memory-disk"
-      style={StyleSheet.absoluteFill}
-    />
+    <Framed framing={framing} media={media}>
+      <Image
+        source={{ uri: resolveMediaUrl(uri) }}
+        contentFit="cover"
+        transition={150}
+        cachePolicy="memory-disk"
+        style={StyleSheet.absoluteFill}
+      />
+    </Framed>
   );
 }
 
-function MomentVideo({ url, poster, active }: { url: string; poster: string | null; active: boolean }) {
+function MomentVideo({
+  url,
+  poster,
+  active,
+  framing,
+  media,
+}: {
+  url: string;
+  poster: string | null;
+  active: boolean;
+  framing?: MomentFraming | null;
+  media?: Size;
+}) {
   const { t } = useTranslation();
   const [muted, setMuted] = useState(true);
   const player = useVideoPlayer(resolveMediaUrl(url), (p) => {
@@ -88,8 +107,10 @@ function MomentVideo({ url, poster, active }: { url: string; poster: string | nu
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      {poster ? <Photo uri={poster} /> : null}
-      <VideoView player={player} nativeControls={false} contentFit="cover" style={StyleSheet.absoluteFill} pointerEvents="none" />
+      {poster ? <Photo uri={poster} framing={framing} media={media} /> : null}
+      <Framed framing={framing} media={media}>
+        <VideoView player={player} nativeControls={false} contentFit="cover" style={StyleSheet.absoluteFill} pointerEvents="none" />
+      </Framed>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={t(muted ? "moments.unmute" : "moments.mute")}

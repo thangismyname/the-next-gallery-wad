@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Lock, Loader2, Users } from "lucide-react";
+import { ResizableDialogContent } from "@/components/ResizableDialogContent";
 import {
   Dialog,
   DialogBody,
-  DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -17,6 +17,7 @@ import { Moment, MomentVisibility } from "@tng/shared";
 import { cn } from "@/lib/utils";
 import { MomentTemplatePicker } from "./MomentTemplatePicker";
 import { MomentFriendPicker } from "./MomentFriendPicker";
+import { MomentFramer } from "./MomentFramer";
 import { useMomentDraft } from "../useMomentDraft";
 
 const VISIBILITIES: { value: MomentVisibility; icon: React.ElementType; labelKey: string }[] = [
@@ -40,6 +41,8 @@ const Section: React.FC<{ title: React.ReactNode; hint?: React.ReactNode; childr
     {children}
   </section>
 );
+
+const momentDialogHeight = () => (typeof window === "undefined" ? 720 : Math.min(820, Math.round(window.innerHeight * 0.88)));
 
 type Props = {
   open: boolean;
@@ -81,6 +84,11 @@ export const CreateMomentDialog: React.FC<Props> = ({
     reset,
     toggleMedia,
     toggleFriend,
+    framedPhotos,
+    framerLayout,
+    framings,
+    setFraming,
+    moveCell,
     canPost,
     handlePost,
   } = useMomentDraft({
@@ -95,8 +103,9 @@ export const CreateMomentDialog: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden sm:max-w-lg">
-        <DialogHeader className="pb-4">
+      {/* Kéo header / đổi cỡ ở góc như Spotlight — lưới ảnh cao theo dialog (--panel-h). */}
+      <ResizableDialogContent storageKey="tng.momentCreate" defaultWidth={560} defaultHeight={momentDialogHeight}>
+        <DialogHeader data-drag-handle className="pb-4" title={t("search.dragHint")}>
           <DialogTitle>
             {isEditing ? t("moments.editDraft") : t("moments.newMoment")}
           </DialogTitle>
@@ -159,9 +168,24 @@ export const CreateMomentDialog: React.FC<Props> = ({
               selectedIds={selectedIdSet}
               max={photoLimit}
               showCount={false}
-              onToggle={(item) => toggleMedia(item.id)}
+              gridClassName="h-[max(16rem,calc(var(--panel-h)*0.55))]"
+              onToggle={toggleMedia}
             />
           </Section>
+
+          {/* Chọn xong → căn khung từng ảnh + đổi chỗ; chỉ chốt khi bấm Đăng. */}
+          {framedPhotos.length > 0 && (
+            <Section title={t("moments.framer.title")}>
+              <MomentFramer
+                photos={framedPhotos}
+                layout={framerLayout}
+                framings={framings}
+                onFrame={setFraming}
+                canPlace={(slot) => slot >= 0 && slot < slotCount}
+                onMove={moveCell}
+              />
+            </Section>
+          )}
 
           <Section title={t("moments.sectionCaption")} hint={`${caption.length}/280`}>
             <Textarea
@@ -217,7 +241,7 @@ export const CreateMomentDialog: React.FC<Props> = ({
             )}
           </Button>
         </DialogFooter>
-      </DialogContent>
+      </ResizableDialogContent>
     </Dialog>
   );
 };

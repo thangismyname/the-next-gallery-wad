@@ -1,0 +1,257 @@
+split,class,coco,in_coco,group,AP,n_gt,n_det,tp,fp,verified_images,group_boxes
+validation,Person,person,True,object,0.72289,2799,27163,2397,24766,1431,304
+validation,Bicycle,bicycle,True,object,0.67018,50,525,43,482,256,0
+validation,Car,car,True,object,0.60738,420,4917,358,4559,404,25
+validation,Motorcycle,motorcycle,True,object,0.67331,43,331,39,292,215,3
+validation,Fixed-wing aircraft,airplane,True,object,0.76068,36,509,32,477,219,1
+validation,Bus,bus,True,object,0.66532,31,187,23,164,218,1
+validation,Train,train,True,object,0.67605,28,113,21,92,211,0
+validation,Truck,truck,True,object,0.44941,34,114,20,94,230,0
+validation,Boat,boat,True,object,0.66192,55,1914,48,1866,218,1
+validation,Traffic light,traffic light,True,object,0.67703,65,957,60,897,30,4
+validation,Fire hydrant,fire hydrant,True,object,1.0,15,21,15,6,16,0
+validation,Stop sign,stop sign,True,object,1.0,13,28,13,15,25,0
+validation,Parking meter,parking meter,True,object,0.75,4,13,3,10,4,0
+validation,Bench,bench,True,object,0.07967,4,252,4,248,65,0
+validation,Bird,bird,True,object,0.52081,139,648,92,556,59,5
+validation,Cat,cat,True,object,0.77733,31,113,27,86,464,0
+validation,Dog,dog,True,object,0.69222,45,110,33,77,477,3
+validation,Horse,horse,True,object,0.77477,47,412,41,371,465,2
+validation,Sheep,sheep,True,object,0.66473,66,391,54,337,467,14
+validation,Cattle,cow,True,object,0.72756,50,906,45,861,466,13
+validation,Elephant,elephant,True,object,0.90727,42,369,40,329,452,3
+validation,Bear,bear,True,object,0.76538,55,328,50,278,466,2
+validation,Zebra,zebra,True,object,0.87922,44,251,43,208,456,2
+validation,Giraffe,giraffe,True,object,0.9155,25,161,25,136,444,0
+validation,Backpack,backpack,True,object,0.68691,29,124,23,101,288,1
+validation,Umbrella,umbrella,True,object,0.42758,21,203,17,186,355,3
+validation,Handbag,handbag,True,object,0.61324,24,157,18,139,354,1
+validation,Tie,tie,True,object,0.81138,30,124,26,98,356,0
+validation,Suitcase,suitcase,True,object,0.72963,33,173,27,146,287,5
+validation,Flying disc,frisbee,True,object,1.0,1,34,1,33,70,0
+validation,Ski,skis,True,object,0.28992,74,1517,51,1466,76,0
+validation,Snowboard,snowboard,True,object,0.56103,22,193,15,178,63,0
+validation,Ball (Object),sports ball,True,object,0.54453,39,254,25,229,87,5
+validation,Kite,kite,True,object,0.86493,29,682,28,654,42,3
+validation,Baseball bat,baseball bat,True,object,0.50037,22,506,19,487,69,1
+validation,Baseball glove,baseball glove,True,object,0.64191,37,861,34,827,399,0
+validation,Skateboard,skateboard,True,object,0.80568,34,473,32,441,67,0
+validation,Surfboard,surfboard,True,object,0.58054,24,534,23,511,71,0
+validation,Tennis racket,tennis racket,True,object,0.75015,29,252,24,228,68,0
+validation,Bottle,bottle,True,object,0.40268,119,976,75,901,79,25
+validation,Wine glass,wine glass,True,object,0.66702,51,1026,47,979,55,3
+validation,Mug,cup,True,object,0.3076,20,80,12,68,44,2
+validation,Coffee cup,cup,True,object,0.88905,54,163,50,113,63,0
+validation,Fork,fork,True,object,0.39889,18,183,17,166,53,1
+validation,Knife,knife,True,object,0.86064,23,87,23,64,39,0
+validation,Spoon,spoon,True,object,0.37185,23,220,19,201,62,2
+validation,Bowl,bowl,True,object,0.44265,19,153,14,139,56,0
+validation,Banana,banana,True,object,0.68765,26,461,23,438,154,14
+validation,Apple,apple,True,object,0.78159,34,307,34,273,159,9
+validation,Sandwich,sandwich,True,object,0.78082,63,272,53,219,160,1
+validation,Orange (fruit),orange,True,object,0.84707,29,801,29,772,159,8
+validation,Broccoli,broccoli,True,object,0.64296,34,1018,32,986,177,6
+validation,Carrot,carrot,True,object,0.37044,89,1075,75,1000,177,12
+validation,Hot dog,hot dog,True,object,0.69394,16,45,13,32,142,1
+validation,Pizza,pizza,True,object,0.96075,23,354,23,331,137,0
+validation,Doughnut,donut,True,object,0.74271,43,212,41,171,156,6
+validation,Cake,cake,True,object,0.54883,49,216,36,180,201,3
+validation,Chair,chair,True,object,0.61641,173,4191,145,4046,149,24
+validation,Couch,couch,True,object,0.64478,60,164,43,121,92,3
+validation,Houseplant,potted plant,True,object,0.47489,79,653,55,598,596,9
+validation,Bed,bed,True,object,0.60049,65,307,45,262,103,1
+validation,Kitchen & dining room table,dining table,True,object,0.19214,50,372,26,346,128,1
+validation,Toilet,toilet,True,object,0.7405,26,277,25,252,35,0
+validation,Television,tv,True,object,0.72394,17,258,16,242,35,1
+validation,Laptop,laptop,True,object,0.73989,22,131,19,112,42,0
+validation,Computer mouse,mouse,True,object,0.82743,24,143,24,119,22,0
+validation,Remote control,remote,True,object,0.88889,9,40,8,32,12,0
+validation,Computer keyboard,keyboard,True,object,0.70854,27,285,27,258,33,0
+validation,Mobile phone,cell phone,True,object,0.79911,37,100,35,65,33,0
+validation,Microwave oven,microwave,True,object,0.5339,30,217,26,191,47,0
+validation,Oven,oven,True,object,0.44026,32,220,22,198,47,1
+validation,Toaster,toaster,True,object,0.25,1,8,1,7,11,0
+validation,Sink,sink,True,object,0.52431,30,630,26,604,61,1
+validation,Refrigerator,refrigerator,True,object,0.91886,19,144,19,125,43,0
+validation,Book,book,True,object,0.43118,211,1181,132,1049,33,163
+validation,Clock,clock,True,object,0.47298,28,45,19,26,26,0
+validation,Vase,vase,True,object,0.5972,43,123,31,92,26,3
+validation,Scissors,scissors,True,object,1.0,1,39,1,38,17,0
+validation,Teddy bear,teddy bear,True,object,0.30909,30,183,15,168,471,1
+validation,Hair dryer,hair drier,True,object,,0,0,0,0,8,0
+validation,Toothbrush,toothbrush,True,object,0.8716,16,203,16,187,22,1
+validation,Human face,,False,object,0.81331,410,3261,374,2887,430,21
+validation,Tree,,False,object,0.36307,1353,35311,1044,34267,1213,504
+validation,Flower,,False,object,0.24788,266,5020,143,4877,706,83
+validation,Building,,False,object,0.55564,640,8439,543,7896,516,54
+validation,House,,False,object,0.50355,125,1189,106,1083,277,5
+validation,Skyscraper,,False,object,0.36637,65,377,44,333,142,7
+validation,Tower,,False,object,0.30579,88,437,52,385,184,5
+validation,Castle,,False,object,0.61622,30,58,21,37,135,2
+validation,Lighthouse,,False,object,0.23232,11,31,4,27,122,0
+validation,Fountain,,False,object,0.20664,24,57,10,47,26,0
+validation,Sunglasses,,False,object,0.07707,46,304,14,290,367,0
+validation,Hat,,False,object,0.38572,55,377,39,338,364,0
+validation,Footwear,,False,object,0.4259,699,10082,516,9566,537,2
+validation,Dress,,False,object,0.1867,151,1187,79,1108,345,3
+validation,Guitar,,False,object,0.19009,33,246,17,229,53,1
+validation,Camera,,False,object,0.65273,28,98,22,76,37,0
+validation,Balloon,,False,object,0.46785,61,244,39,205,50,5
+validation,Christmas tree,,False,object,0.0,61,1,0,1,741,3
+validation,Swimming pool,,False,object,0.59425,31,167,22,145,49,1
+validation,Tent,,False,object,0.22196,13,92,6,86,26,1
+validation,Flag,,False,object,0.15561,33,184,16,168,32,0
+validation,Street light,,False,object,0.03419,94,1602,37,1565,44,2
+validation,Traffic sign,,False,object,0.43679,45,427,35,392,39,0
+validation,Taxi,,False,object,0.38468,64,212,39,173,211,2
+validation,Van,,False,object,0.27106,34,275,26,249,286,0
+validation,Helicopter,,False,object,0.86949,22,115,21,94,202,0
+validation,Monkey,,False,object,0.5925,25,76,18,58,450,0
+validation,Duck,,False,object,0.59045,47,195,35,160,37,0
+validation,Fish,,False,object,0.22817,86,533,31,502,43,5
+validation,Butterfly,,False,object,0.82227,22,56,21,35,36,0
+validation,Tiger,,False,object,0.50215,23,35,13,22,456,0
+validation,Lion,,False,object,0.79067,26,74,22,52,456,0
+validation,Goat,,False,object,0.46119,38,35,18,17,460,1
+validation,Pig,,False,object,0.8021,31,150,29,121,449,2
+validation,Deer,,False,object,0.91296,33,122,33,89,455,4
+validation,Ice cream,,False,object,0.18913,47,231,25,206,191,2
+validation,Coffee (drink),,False,object,0.39224,37,1374,36,1338,83,0
+validation,Wine,,False,object,0.03992,88,731,21,710,88,18
+validation,Beer,,False,object,0.317,43,277,32,245,89,1
+validation,Cocktail,,False,object,0.52096,40,274,37,237,99,0
+validation,Salad,,False,object,0.54085,50,119,34,85,190,2
+validation,Sushi,,False,object,0.50914,39,258,31,227,139,13
+validation,Bread,,False,object,0.34786,61,137,29,108,171,5
+validation,Cookie,,False,object,0.71246,89,648,83,565,199,9
+validation,Hamburger,,False,object,0.77422,40,201,35,166,151,0
+validation,French fries,,False,object,0.82378,28,123,27,96,154,15
+validation,Pasta,,False,object,0.84154,26,31,22,9,138,1
+test,Person,person,True,object,0.71072,5173,51604,4474,47130,2391,488
+test,Bicycle,bicycle,True,object,0.71176,65,877,62,815,416,3
+test,Car,car,True,object,0.63332,664,8557,576,7981,726,58
+test,Motorcycle,motorcycle,True,object,0.77748,56,646,52,594,364,2
+test,Fixed-wing aircraft,airplane,True,object,0.84787,59,897,56,841,370,2
+test,Bus,bus,True,object,0.76254,67,341,56,285,375,5
+test,Train,train,True,object,0.78089,38,210,33,177,362,0
+test,Truck,truck,True,object,0.32991,54,198,25,173,385,0
+test,Boat,boat,True,object,0.46354,110,2610,81,2529,374,5
+test,Traffic light,traffic light,True,object,0.5055,58,1519,51,1468,53,0
+test,Fire hydrant,fire hydrant,True,object,0.96228,35,52,34,18,38,0
+test,Stop sign,stop sign,True,object,0.96596,33,62,33,29,52,1
+test,Parking meter,parking meter,True,object,0.86,5,22,5,17,6,0
+test,Bench,bench,True,object,0.02296,3,364,2,362,102,0
+test,Bird,bird,True,object,0.5191,200,1164,140,1024,110,7
+test,Cat,cat,True,object,0.89872,49,141,45,96,703,0
+test,Dog,dog,True,object,0.78289,68,162,56,106,716,0
+test,Horse,horse,True,object,0.80518,72,613,64,549,699,14
+test,Sheep,sheep,True,object,0.6628,76,712,72,640,696,27
+test,Cattle,cow,True,object,0.59991,76,1461,65,1396,711,7
+test,Elephant,elephant,True,object,0.83069,66,417,62,355,675,5
+test,Bear,bear,True,object,0.682,81,710,65,645,709,4
+test,Zebra,zebra,True,object,0.79195,89,408,77,331,677,6
+test,Giraffe,giraffe,True,object,0.87073,58,465,53,412,681,0
+test,Backpack,backpack,True,object,0.5884,36,195,31,164,500,1
+test,Umbrella,umbrella,True,object,0.28464,57,432,39,393,586,2
+test,Handbag,handbag,True,object,0.50313,39,185,29,156,591,0
+test,Tie,tie,True,object,0.80215,41,213,37,176,590,0
+test,Suitcase,suitcase,True,object,0.69279,40,236,37,199,496,0
+test,Flying disc,frisbee,True,object,0.68992,3,58,3,55,96,0
+test,Ski,skis,True,object,0.26616,149,3359,107,3252,104,0
+test,Snowboard,snowboard,True,object,0.57017,50,627,39,588,89,2
+test,Ball (Object),sports ball,True,object,0.49594,77,462,55,407,135,8
+test,Kite,kite,True,object,0.77577,51,840,48,792,81,6
+test,Baseball bat,baseball bat,True,object,0.61875,38,814,32,782,93,1
+test,Baseball glove,baseball glove,True,object,0.72086,61,1454,59,1395,652,1
+test,Skateboard,skateboard,True,object,0.77586,45,674,40,634,85,0
+test,Surfboard,surfboard,True,object,0.60186,46,973,40,933,90,1
+test,Tennis racket,tennis racket,True,object,0.79814,43,331,37,294,82,0
+test,Bottle,bottle,True,object,0.48773,144,1994,112,1882,158,14
+test,Wine glass,wine glass,True,object,0.64712,75,1264,61,1203,89,17
+test,Mug,cup,True,object,0.26064,36,191,22,169,70,1
+test,Coffee cup,cup,True,object,0.8414,92,323,86,237,104,0
+test,Fork,fork,True,object,0.45184,12,367,9,358,88,0
+test,Knife,knife,True,object,0.5185,37,127,26,101,72,0
+test,Spoon,spoon,True,object,0.39435,21,286,14,272,103,3
+test,Bowl,bowl,True,object,0.29699,11,208,6,202,116,0
+test,Banana,banana,True,object,0.7754,75,772,70,702,225,33
+test,Apple,apple,True,object,0.50563,86,1513,77,1436,230,16
+test,Sandwich,sandwich,True,object,0.69492,119,369,91,278,244,3
+test,Orange (fruit),orange,True,object,0.51592,60,2507,48,2459,244,4
+test,Broccoli,broccoli,True,object,0.74986,74,986,71,915,256,22
+test,Carrot,carrot,True,object,0.49934,75,1057,60,997,246,19
+test,Hot dog,hot dog,True,object,0.66568,42,191,34,157,219,0
+test,Pizza,pizza,True,object,0.96037,45,591,45,546,194,1
+test,Doughnut,donut,True,object,0.63184,66,348,55,293,234,15
+test,Cake,cake,True,object,0.47765,65,504,45,459,321,6
+test,Chair,chair,True,object,0.53993,360,7901,326,7575,249,39
+test,Couch,couch,True,object,0.48983,73,291,46,245,150,3
+test,Houseplant,potted plant,True,object,0.32634,112,1091,73,1018,958,11
+test,Bed,bed,True,object,0.59621,95,523,66,457,164,3
+test,Kitchen & dining room table,dining table,True,object,0.1735,121,566,53,513,180,3
+test,Toilet,toilet,True,object,0.72625,24,265,24,241,53,0
+test,Television,tv,True,object,0.4751,29,255,28,227,56,1
+test,Laptop,laptop,True,object,0.58312,40,291,31,260,72,0
+test,Computer mouse,mouse,True,object,0.88194,33,234,32,202,38,0
+test,Remote control,remote,True,object,0.55996,14,71,13,58,37,0
+test,Computer keyboard,keyboard,True,object,0.84652,35,648,35,613,49,1
+test,Mobile phone,cell phone,True,object,0.83593,49,130,47,83,49,0
+test,Microwave oven,microwave,True,object,0.49557,46,492,41,451,63,0
+test,Oven,oven,True,object,0.51099,47,568,41,527,74,0
+test,Toaster,toaster,True,object,0.35,4,11,2,9,13,0
+test,Sink,sink,True,object,0.41485,44,920,36,884,91,0
+test,Refrigerator,refrigerator,True,object,0.79033,35,254,31,223,71,1
+test,Book,book,True,object,0.45018,218,2236,170,2066,54,87
+test,Clock,clock,True,object,0.47413,40,92,27,65,45,1
+test,Vase,vase,True,object,0.64641,48,162,37,125,56,2
+test,Scissors,scissors,True,object,0.86869,6,112,6,106,50,1
+test,Teddy bear,teddy bear,True,object,0.22523,51,455,28,427,727,4
+test,Hair dryer,hair drier,True,object,0.66667,3,3,2,1,8,0
+test,Toothbrush,toothbrush,True,object,0.7582,20,187,20,167,29,1
+test,Human face,,False,object,0.75336,741,5474,645,4829,666,25
+test,Tree,,False,object,0.36447,2186,67514,1784,65730,2213,832
+test,Flower,,False,object,0.26319,499,9290,280,9010,1138,150
+test,Building,,False,object,0.51226,1339,13457,1038,12419,1029,145
+test,House,,False,object,0.45722,226,1982,174,1808,494,15
+test,Skyscraper,,False,object,0.2199,214,548,82,466,262,28
+test,Tower,,False,object,0.22109,186,741,83,658,329,10
+test,Castle,,False,object,0.65622,38,81,28,53,240,0
+test,Lighthouse,,False,object,0.28475,36,91,17,74,234,0
+test,Fountain,,False,object,0.23488,31,71,13,58,40,1
+test,Sunglasses,,False,object,0.10095,66,305,16,289,615,2
+test,Hat,,False,object,0.31506,98,640,62,578,609,1
+test,Footwear,,False,object,0.44319,1245,16812,890,15922,919,6
+test,Dress,,False,object,0.29761,211,1793,131,1662,601,7
+test,Guitar,,False,object,0.22251,54,557,26,531,98,0
+test,Camera,,False,object,0.64159,30,129,25,104,58,0
+test,Balloon,,False,object,0.26817,116,462,57,405,89,5
+test,Christmas tree,,False,object,0.0,45,3,0,3,1210,4
+test,Swimming pool,,False,object,0.6528,42,314,33,281,73,0
+test,Tent,,False,object,0.56522,22,148,19,129,61,5
+test,Flag,,False,object,0.3016,43,327,30,297,54,1
+test,Street light,,False,object,0.03602,107,1904,38,1866,62,0
+test,Traffic sign,,False,object,0.36658,96,752,63,689,71,1
+test,Taxi,,False,object,0.36667,49,295,38,257,360,5
+test,Van,,False,object,0.31665,56,438,39,399,494,4
+test,Helicopter,,False,object,0.80932,36,200,33,167,339,0
+test,Monkey,,False,object,0.77273,42,175,36,139,676,0
+test,Duck,,False,object,0.44169,72,404,56,348,75,3
+test,Fish,,False,object,0.38006,72,966,42,924,84,7
+test,Butterfly,,False,object,0.43777,41,96,23,73,81,0
+test,Tiger,,False,object,0.48788,29,116,19,97,685,0
+test,Lion,,False,object,0.44548,43,116,26,90,690,0
+test,Goat,,False,object,0.26715,86,76,30,46,694,9
+test,Pig,,False,object,0.8024,53,250,50,200,674,3
+test,Deer,,False,object,0.71164,65,377,59,318,689,2
+test,Ice cream,,False,object,0.21605,46,398,33,365,302,1
+test,Coffee (drink),,False,object,0.20707,63,1722,61,1661,123,0
+test,Wine,,False,object,0.08218,103,807,49,758,133,10
+test,Beer,,False,object,0.3744,81,414,49,365,127,4
+test,Cocktail,,False,object,0.5776,73,472,69,403,142,0
+test,Salad,,False,object,0.68857,58,227,55,172,272,2
+test,Sushi,,False,object,0.39997,76,597,61,536,191,17
+test,Bread,,False,object,0.30187,119,312,64,248,270,19
+test,Cookie,,False,object,0.57459,122,1434,113,1321,327,23
+test,Hamburger,,False,object,0.73118,64,307,56,251,220,0
+test,French fries,,False,object,0.78573,52,180,45,135,233,26
+test,Pasta,,False,object,0.83079,48,72,40,32,204,1

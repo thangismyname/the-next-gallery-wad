@@ -13,7 +13,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Globe } from "lucide-react";
+import { Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { LANGUAGES, toLanguageCode } from "@tng/shared";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ interface LanguageToggleProps {
   className?: string;
 }
 
-/** Nút quả địa cầu → menu sổ xuống chọn ngôn ngữ (danh sách ở lib/languages). */
+/** Nút biểu tượng dịch (文A) → menu sổ xuống chọn ngôn ngữ (danh sách ở @tng/shared LANGUAGES). */
 export function LanguageToggle({ className }: LanguageToggleProps) {
   const { t, i18n } = useTranslation();
   const current = toLanguageCode(i18n.resolvedLanguage ?? i18n.language);
@@ -38,7 +38,7 @@ export function LanguageToggle({ className }: LanguageToggleProps) {
               className={cn("hidden sm:inline-flex", className)}
               aria-label={t("header.toggleLanguage")}
             >
-              <Globe className="h-4 w-4" />
+              <Languages className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>

@@ -1,7 +1,7 @@
 // Embedding service — lưu/backfill CLIP embeddings và semantic search qua pgvector.
 //
 // Luồng:
-//  - Upload ảnh → media.service gọi `embedMediaInBackground` (fire-and-forget),
+//  - Upload ảnh → media.service gọi `ai.queue.js::enqueueMediaAi` (hàng đợi giới hạn),
 //    embed xong thì gắn tag nội dung (tagging.service).
 //  - Ảnh cũ chưa có embedding → `backfillEmbeddings` xử lý theo lô.
 //  - Search → `semanticSearch`: embed câu truy vấn rồi so cosine trong DB.
@@ -73,18 +73,6 @@ export async function embedMediaBuffer({ mediaId, userId, buffer }) {
   if (!result?.embedding?.length) return null;
   await saveEmbedding(mediaId, userId, result.model, result.embedding);
   return result;
-}
-
-/**
- * Fire-and-forget: chạy nền, không chặn response upload. Mọi lỗi chỉ log.
- */
-export function embedMediaInBackground(args) {
-  embedMediaBuffer(args)
-    // Có vector CLIP rồi → gắn tag nội dung luôn (không cần đọc lại ảnh).
-    .then((result) => result && tagMediaIds(args.userId, [args.mediaId]))
-    .catch((err) => {
-      logger.warn({ err }, `Embed/tag media ${args.mediaId} lỗi`);
-    });
 }
 
 /**

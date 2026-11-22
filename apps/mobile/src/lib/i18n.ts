@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import en from "@tng/shared/i18n/locales/en/translation.json";
 import ja from "@tng/shared/i18n/locales/ja/translation.json";
 import vi from "@tng/shared/i18n/locales/vi/translation.json";
+import zh from "@tng/shared/i18n/locales/zh/translation.json";
 import { LANGUAGES, toLanguageCode, type LanguageCode } from "@tng/shared";
 import i18n, { changeLanguage, use as registerPlugin } from "i18next";
 import { initReactI18next } from "react-i18next";
@@ -13,6 +14,7 @@ void registerPlugin(initReactI18next).init({
     vi: { translation: vi },
     en: { translation: en },
     ja: { translation: ja },
+    zh: { translation: zh },
   },
   supportedLngs: LANGUAGES.map((l) => l.code),
   lng: "vi",

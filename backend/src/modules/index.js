@@ -7,10 +7,13 @@ import friendsRoutes from "./friends/friends.routes.js";
 import transfersRoutes from "./transfers/transfers.routes.js";
 import momentsRoutes from "./moments/moments.routes.js";
 import developerRoutes from "./developer/developer.routes.js";
+import labRoutes from "./lab/lab.routes.js";
 import profileRoutes from "./profile/profile.routes.js";
 import albumsRoutes from "./albums/albums.routes.js";
 import albumsPublicRoutes from "./albums/albums.public.routes.js";
 import labelsRoutes from "./labels/labels.routes.js";
+import importsRoutes from "./imports/imports.routes.js";
+import notificationsRoutes from "./notifications/notifications.routes.js";
 
 const router = Router();
 
@@ -23,9 +26,12 @@ router.use("/api/friends", friendsRoutes);
 router.use("/api/transfers", transfersRoutes);
 router.use("/api/moments", momentsRoutes);
 router.use("/api/developer", developerRoutes);
+router.use("/api/lab", labRoutes);
 router.use("/api/profile", profileRoutes);
 router.use("/api/albums", albumsRoutes);
 router.use("/api/public", albumsPublicRoutes);
 router.use("/api/labels", labelsRoutes);
+router.use("/api/imports", importsRoutes);
+router.use("/api/notifications", notificationsRoutes);
 
 export default router;

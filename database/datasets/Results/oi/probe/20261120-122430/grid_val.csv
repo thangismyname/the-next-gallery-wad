@@ -1,0 +1,13 @@
+config,l2,unknown_weight,val_mAP
+fused_learned,0.0001,0.0,0.93348
+fused_learned,0.0001,0.1,0.93522
+fused_learned,0.0001,1.0,0.93658
+fused_learned,0.001,0.0,0.93873
+fused_learned,0.001,0.1,0.94197
+fused_learned,0.001,1.0,0.94449
+fused_learned,0.01,0.0,0.94293
+fused_learned,0.01,0.1,0.94841
+fused_learned,0.01,1.0,0.94882
+fused_learned,0.1,0.0,0.94823
+fused_learned,0.1,0.1,0.94863
+fused_learned,0.1,1.0,0.93784

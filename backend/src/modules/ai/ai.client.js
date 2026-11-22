@@ -168,4 +168,25 @@ export async function currentModels() {
   return { clipModel: clip?.model ?? null, tagModel: tagger?.model ?? null };
 }
 
+/**
+ * /api/v1/lab/* — khu Developer Lab (kết quả + runner experiments trên ai-service).
+ * 4xx của ai-service giữ nguyên status; message = `detail` (câu do lab.py / lab_runner.py tự viết, không lộ nội bộ).
+ */
+export async function labRequest(path, { method = "GET", body } = {}) {
+  const response = await fetchWithTimeout(`${AI_SERVICE_URL}/api/v1/lab${path}`, {
+    method,
+    ...(body ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {}),
+  });
+  if (response.status >= 400 && response.status < 500) {
+    const detail = (await response.json().catch(() => null))?.detail;
+    const message = typeof detail === "string" ? detail : "Yêu cầu không hợp lệ";
+    const code = { 404: "NOT_FOUND", 409: "CONFLICT" }[response.status] ?? "BAD_REQUEST";
+    throw Object.assign(new Error(message), { status: response.status, code });
+  }
+  if (!response.ok) throw new Error(`AI lab ${method} ${path} failed (${response.status})`);
+  return response.json();
+}
+
+export const getLab = (path) => labRequest(path);
+
 export { AI_SERVICE_URL };

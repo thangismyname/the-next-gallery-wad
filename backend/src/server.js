@@ -15,6 +15,7 @@ import { setupWebSocket } from "./ws/index.js";
 import { startTransferJobs } from "./modules/transfers/transfers.jobs.js";
 import { startMomentsJobs } from "./modules/moments/moments.jobs.js";
 import { startAuthJobs } from "./modules/auth/auth.jobs.js";
+import { resumePendingAi } from "./modules/ai/ai.queue.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 
 const app = express();
@@ -94,6 +95,8 @@ async function startServer() {
   startTransferJobs();
   startMomentsJobs();
   startAuthJobs();
+  // Ảnh upload ngay trước khi server tắt (hàng đợi AI chỉ nằm trong RAM).
+  resumePendingAi().catch((err) => logger.warn({ err }, "Resume AI queue lỗi"));
 
   // Create http.Server and attach WebSocket server
   const server = http.createServer(app);

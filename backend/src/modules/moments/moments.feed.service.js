@@ -160,6 +160,7 @@ export async function listMomentInvitations(userId, { limit = 20, offset = 0 } =
         OR EXISTS (
           SELECT 1 FROM moment_collab mc3
           WHERE mc3.moment_id = m.id AND mc3.user_id = $1
+            AND mc3.declined_at IS NULL
             AND NOT ${slotFilledSql("mc3")}
         )
       )
@@ -175,7 +176,7 @@ export async function listMomentInvitations(userId, { limit = 20, offset = 0 } =
 
   // Gắn thông tin "tôi đang giữ slot trống nào / tôi là creator chờ ai"
   for (const item of items) {
-    const mySlots = item.slots.filter((s) => s.userId === userId && !s.filled);
+    const mySlots = item.slots.filter((s) => s.userId === userId && !s.filled && !s.declined);
     item.myPendingSlots = mySlots.map((s) => s.slotIndex);
     item.myPendingSlot = item.myPendingSlots[0] ?? null;
     item.pendingCount = item.slots.filter((s) => !s.filled).length;
@@ -205,6 +206,7 @@ export async function countMomentInvitations(userId) {
         OR EXISTS (
           SELECT 1 FROM moment_collab mc3
           WHERE mc3.moment_id = m.id AND mc3.user_id = $1
+            AND mc3.declined_at IS NULL
             AND NOT ${slotFilledSql("mc3")}
         )
       )`,

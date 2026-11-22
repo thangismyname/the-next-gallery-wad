@@ -50,9 +50,10 @@ export function useMomentsFeed() {
     [queryClient, resync, user],
   );
 
+  /** Creator: delete · participant: "leave" (take my photo back) or "delete" the shared moment. */
   const remove = useCallback(
-    async (moment: Moment) => {
-      if (moment.isOwn) await momentsApi.deleteMoment(moment.id);
+    async (moment: Moment, action: "delete" | "leave" = moment.isOwn ? "delete" : "leave") => {
+      if (action === "delete") await momentsApi.deleteMoment(moment.id);
       else await momentsApi.leaveMoment(moment.id);
       removeFeedMoment(queryClient, moment.id);
       void queryClient.invalidateQueries({ queryKey: momentInvitationsQueryKey });

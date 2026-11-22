@@ -22,7 +22,7 @@ import {
   useTabEnterStyle,
   type HeaderAction,
 } from "@/features/navigation";
-import { BOTTOM_BAR_HEIGHT, HEADER_ROW, bottomBarOffset } from "@/features/navigation/layout";
+import { FLOATING_BAR_HEIGHT, HEADER_ROW, floatingBarOffset, tabBarSpace } from "@/features/navigation/layout";
 import { useTheme } from "@/hooks/useTheme";
 import { fadeIn } from "@/lib/motion";
 
@@ -178,7 +178,7 @@ export function GalleryScreen() {
     getOffset: () => scrollY.get(),
     getMaxOffset: () => contentHeight.current - height,
     scrollTo: (offset) => listRef.current?.scrollToOffset({ offset, animated: false }),
-    edges: { top: safe.top + HEADER_ROW, bottom: height - bottomBarOffset(safe.bottom) - BOTTOM_BAR_HEIGHT },
+    edges: { top: safe.top + HEADER_ROW, bottom: height - floatingBarOffset(safe.bottom) - FLOATING_BAR_HEIGHT },
   };
   const { gesture: selectGesture, dragging: dragSelecting, swallowTap } = useDragSelect({ items, tiles, scroller });
 
@@ -191,7 +191,7 @@ export function GalleryScreen() {
     return map;
   }, [rows]);
   const visibleTop = safe.top + HEADER_ROW;
-  const visibleBottom = height - bottomBarOffset(safe.bottom) - BOTTOM_BAR_HEIGHT;
+  const visibleBottom = height - tabBarSpace(safe.bottom);
   const measureTile = useCallback(
     (id: string) =>
       new Promise<Rect | null>((resolve) => {

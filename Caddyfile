@@ -7,7 +7,8 @@
     # auto_https off
 }
 
-:80 {
+# SITE_ADDRESS từ docker-compose.prod.yml (domain → HTTPS tự động, mặc định :80)
+{$SITE_ADDRESS::80} {
     encode zstd gzip
 
     # ai-service KHÔNG mở ra ngoài (không có auth) — chỉ backend gọi qua mạng

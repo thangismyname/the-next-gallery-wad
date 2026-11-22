@@ -1,11 +1,13 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Navigate, Routes, Route, useLocation } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { RouteFallback } from "@/components/layout/RouteFallback";
 import { NotFoundView } from "@/features/not-found/NotFoundView";
 import { FAVORITES_PATH, favoritesPath } from "@/features/favorites/favoritesPath";
 import { TRASH_PATH } from "@/features/trash/trashPath";
-import { AdminRoute, ProtectedRoute } from "./ProtectedRoutes";
+import { REVIEW_PATH } from "@/features/review/reviewPath";
+import { useAccountSheet } from "@/features/settings/useAccountSheet";
+import { AdminRoute, DeveloperRoute, ProtectedRoute } from "./ProtectedRoutes";
 
 // Mỗi trang là 1 chunk riêng (tải khi vào route) — trang landing / link chia sẻ
 // công khai không phải tải admin (recharts), camera, engine P2P… Layout (MainLayout,
@@ -31,7 +33,8 @@ const FriendInviteHandler = named(
 );
 const MomentsView = named(() => import("@/features/moments/MomentsView"), "MomentsView");
 const TrashView = named(() => import("@/features/trash/TrashView"), "TrashView");
-const AccountView = named(() => import("@/features/settings/AccountView"), "AccountView");
+const SwipeReviewView = named(() => import("@/features/review/SwipeReviewView"), "SwipeReviewView");
+const ImportView = named(() => import("@/features/import/ImportView"), "ImportView");
 const StudioView = named(() => import("@/features/studio/StudioView"), "StudioView");
 const EditorView = named(() => import("@/features/editor/EditorView"), "EditorView");
 const AlbumsView = named(() => import("@/features/albums/AlbumsView"), "AlbumsView");
@@ -41,14 +44,24 @@ const CameraView = named(() => import("@/features/camera/CameraView"), "CameraVi
 const SendView = named(() => import("@/features/share/SendView"), "SendView");
 
 const AdminLayout = named(() => import("@/components/layout/AdminLayout"), "AdminLayout");
-const AdminDashboard = named(() => import("@/features/admin/AdminDashboard"), "AdminDashboard");
-const AdminUsersView = named(() => import("@/features/admin/AdminUsersView"), "AdminUsersView");
-const AdminDeveloperView = named(() => import("@/features/admin/AdminDeveloperView"), "AdminDeveloperView");
+const AdminDashboard = named(() => import("@/features/admin/dashboard/AdminDashboard"), "AdminDashboard");
+const AdminUsersView = named(() => import("@/features/admin/users/AdminUsersView"), "AdminUsersView");
+const AdminDeveloperView = named(() => import("@/features/admin/developer/AdminDeveloperView"), "AdminDeveloperView");
+const DevLayout = named(() => import("@/components/layout/DevLayout"), "DevLayout");
+const LabView = named(() => import("@/features/lab/LabView"), "LabView");
+const RunnerView = named(() => import("@/features/lab/runner/RunnerView"), "RunnerView");
 
 /** Chuyển route cũ sang route mới, giữ nguyên query (?filter=…). */
 const RedirectKeepingSearch: React.FC<{ to: string }> = ({ to }) => {
   const { search } = useLocation();
   return <Navigate to={`${to}${search}`} replace />;
+};
+
+/** /settings, /profile: không còn trang riêng → về Thư viện và mở bảng tài khoản. */
+const OpenAccountSheet: React.FC = () => {
+  const setOpen = useAccountSheet((s) => s.setOpen);
+  useEffect(() => setOpen(true), [setOpen]);
+  return <Navigate to="/gallery" replace />;
 };
 
 export const AppRoutes: React.FC = () => {
@@ -77,13 +90,15 @@ export const AppRoutes: React.FC = () => {
             <Route path="/friends/invite" element={<FriendInviteHandler />} />
             {/* Thùng rác cũng nằm trong Albums (như Yêu thích) */}
             <Route path="/trash" element={<Navigate to={TRASH_PATH} replace />} />
-            {/* Profile + settings = one page (like the mobile account sheet). */}
-            <Route path="/profile" element={<RedirectKeepingSearch to="/settings" />} />
-            <Route path="/settings" element={<AccountView />} />
+            {/* Profile + settings = bảng trượt từ avatar (cùng ở app · Admin · Developer); link cũ mở bảng đó. */}
+            <Route path="/profile" element={<OpenAccountSheet />} />
+            <Route path="/settings" element={<OpenAccountSheet />} />
             <Route path="/studio" element={<StudioView />} />
             <Route path="/albums" element={<AlbumsView />} />
             <Route path={FAVORITES_PATH} element={<FavoritesView />} />
             <Route path={TRASH_PATH} element={<TrashView />} />
+            <Route path={REVIEW_PATH} element={<SwipeReviewView />} />
+            <Route path="/import" element={<ImportView />} />
             {/* Album tự động "Yêu thích" cũ → trang Yêu thích, lọc ảnh thả tim */}
             <Route
               path="/albums/auto/type-favorites"
@@ -110,6 +125,17 @@ export const AppRoutes: React.FC = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsersView />} />
             <Route path="/admin/developer" element={<AdminDeveloperView />} />
+            {/* Lab đã chuyển sang khu Developer */}
+            <Route path="/admin/lab" element={<Navigate to="/dev/lab" replace />} />
+          </Route>
+        </Route>
+
+        {/* Khu Developer: admin hoặc Developer đã duyệt — layout giống Admin */}
+        <Route element={<DeveloperRoute />}>
+          <Route element={<DevLayout />}>
+            <Route path="/dev" element={<Navigate to="/dev/lab" replace />} />
+            <Route path="/dev/lab" element={<LabView />} />
+            <Route path="/dev/run" element={<RunnerView />} />
           </Route>
         </Route>
 

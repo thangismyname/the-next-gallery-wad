@@ -1,0 +1,50 @@
+{"t": "2026-11-20T05:22:37Z", "type": "log", "message": "run probe/20261120-122237 → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/probe/20261120-122237"}
+{"t": "2026-11-20T05:22:37Z", "type": "log", "message": "── load subset"}
+{"t": "2026-11-20T05:22:37Z", "type": "stage", "stage": "load subset"}
+{"t": "2026-11-20T05:22:37Z", "type": "log", "message": "  train 15000 · val 3000 · test 5000 ảnh · 174 lớp · train: 91,393 cặp đã xác minh (41,066 positive)"}
+{"t": "2026-11-20T05:22:37Z", "type": "log", "message": "── CLIP train"}
+{"t": "2026-11-20T05:22:37Z", "type": "stage", "stage": "CLIP train"}
+{"t": "2026-11-20T05:22:38Z", "type": "log", "message": "── DINOv3 train"}
+{"t": "2026-11-20T05:22:38Z", "type": "stage", "stage": "DINOv3 train"}
+{"t": "2026-11-20T05:22:38Z", "type": "log", "message": "── YOLO train"}
+{"t": "2026-11-20T05:22:38Z", "type": "stage", "stage": "YOLO train"}
+{"t": "2026-11-20T05:22:41Z", "type": "log", "message": "── CLIP val"}
+{"t": "2026-11-20T05:22:41Z", "type": "stage", "stage": "CLIP val"}
+{"t": "2026-11-20T05:22:41Z", "type": "log", "message": "── DINOv3 val"}
+{"t": "2026-11-20T05:22:41Z", "type": "stage", "stage": "DINOv3 val"}
+{"t": "2026-11-20T05:22:41Z", "type": "log", "message": "── YOLO val"}
+{"t": "2026-11-20T05:22:41Z", "type": "stage", "stage": "YOLO val"}
+{"t": "2026-11-20T05:22:41Z", "type": "log", "message": "── CLIP test"}
+{"t": "2026-11-20T05:22:41Z", "type": "stage", "stage": "CLIP test"}
+{"t": "2026-11-20T05:22:42Z", "type": "log", "message": "── DINOv3 test"}
+{"t": "2026-11-20T05:22:42Z", "type": "stage", "stage": "DINOv3 test"}
+{"t": "2026-11-20T05:22:42Z", "type": "log", "message": "── YOLO test"}
+{"t": "2026-11-20T05:22:42Z", "type": "stage", "stage": "YOLO test"}
+{"t": "2026-11-20T05:22:42Z", "type": "log", "message": "── train fused_learned"}
+{"t": "2026-11-20T05:22:42Z", "type": "stage", "stage": "train fused_learned"}
+{"t": "2026-11-20T05:22:52Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 0 → val mAP 0.9324"}
+{"t": "2026-11-20T05:23:01Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 0.1 → val mAP 0.9354"}
+{"t": "2026-11-20T05:23:11Z", "type": "log", "message": "  fused_learned: l2 0.0001 · unknown_weight 1 → val mAP 0.9370"}
+{"t": "2026-11-20T05:23:20Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 0 → val mAP 0.9370"}
+{"t": "2026-11-20T05:23:29Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 0.1 → val mAP 0.9418"}
+{"t": "2026-11-20T05:23:38Z", "type": "log", "message": "  fused_learned: l2 0.001 · unknown_weight 1 → val mAP 0.9444"}
+{"t": "2026-11-20T05:23:47Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 0 → val mAP 0.9406"}
+{"t": "2026-11-20T05:23:53Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 0.1 → val mAP 0.9478"}
+{"t": "2026-11-20T05:23:59Z", "type": "log", "message": "  fused_learned: l2 0.01 · unknown_weight 1 → val mAP 0.9487"}
+{"t": "2026-11-20T05:24:07Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 0 → val mAP 0.9465"}
+{"t": "2026-11-20T05:24:11Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 0.1 → val mAP 0.9478"}
+{"t": "2026-11-20T05:24:14Z", "type": "log", "message": "  fused_learned: l2 0.1 · unknown_weight 1 → val mAP 0.9378"}
+{"t": "2026-11-20T05:24:14Z", "type": "log", "message": "  → fused_learned: l2 0.01, unknown_weight 1 (val mAP 0.9487) · ! nằm ở biên lưới ['unknown_weight'] — cân nhắc mở rộng lưới"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "── mốc không train (E2 zero-shot, E5 quy tắc)"}
+{"t": "2026-11-20T05:24:15Z", "type": "stage", "stage": "mốc không train (E2 zero-shot, E5 quy tắc)"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "── đánh giá test"}
+{"t": "2026-11-20T05:24:15Z", "type": "stage", "stage": "đánh giá test"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "  zs_clip        mAP 0.8841 · macro-F1 0.8257 · macro-F1@P≥0.9 0.7003 · ECE 0.0309"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "  e5_per_tag     mAP 0.8880 · macro-F1 0.8484 · macro-F1@P≥0.9 0.7637 · ECE 0.0262"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "  fused_learned  mAP 0.9452 · macro-F1 0.8729 · macro-F1@P≥0.9 0.8145 · ECE 0.0227"}
+{"t": "2026-11-20T05:24:15Z", "type": "log", "message": "── bootstrap ghép cặp 300×"}
+{"t": "2026-11-20T05:24:15Z", "type": "stage", "stage": "bootstrap ghép cặp 300×"}
+{"t": "2026-11-20T05:24:30Z", "type": "log", "message": "── artifacts cho E6"}
+{"t": "2026-11-20T05:24:30Z", "type": "stage", "stage": "artifacts cho E6"}
+{"t": "2026-11-20T05:24:30Z", "type": "log", "message": "  --no-latest: không ghi latest.json (dùng run id 20261120-122237 ở thí nghiệm sau)"}
+{"t": "2026-11-20T05:24:30Z", "type": "log", "message": "xong sau 113s → /Users/thang_ismyname/Documents/Study/Thesis/The_Next_Gallery/database/datasets/Results/oi/probe/20261120-122237"}

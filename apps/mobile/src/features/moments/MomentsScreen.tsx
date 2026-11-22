@@ -1,6 +1,6 @@
 import { MOMENT_ASPECT, feedPeople, filterMoments, isMomentUnseen, type Moment, type MomentFilter } from "@tng/shared";
 import { router, useIsFocused, useLocalSearchParams } from "expo-router";
-import { Camera, Clock3, RotateCw } from "lucide-react-native";
+import { Bell, Camera, Clock3, RotateCw } from "lucide-react-native";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -23,13 +23,7 @@ import { Icon } from "@/components/ui/icon";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { AppHeader, useHeaderScroll, useTabContentInsets, useTabEnterStyle } from "@/features/navigation";
-import {
-  BOTTOM_BAR_HEIGHT,
-  HEADER_COLLAPSE_DISTANCE,
-  HEADER_ROW,
-  HEADER_TITLE_ROW,
-  bottomBarOffset,
-} from "@/features/navigation/layout";
+import { HEADER_COLLAPSE_DISTANCE, HEADER_ROW, HEADER_TITLE_ROW, tabBarSpace } from "@/features/navigation/layout";
 import { useTheme } from "@/hooks/useTheme";
 import { fadeIn } from "@/lib/motion";
 
@@ -37,14 +31,13 @@ import { useSession } from "@/features/auth/session";
 
 import { CARD_CHROME, MomentCard } from "./components/MomentCard";
 import { FILTER_BAR_HEIGHT, MomentFilterBar } from "./components/MomentFilterBar";
+import { openMomentCamera } from "./newMoment";
+import { useMomentInbox } from "./useMomentInbox";
 import { useMomentsFeed } from "./useMomentsFeed";
 import { useMomentsSeen } from "./useMomentsSeen";
 
 const CARD_MAX = 520;
 const NOT_LOADED = "9999-12-31T00:00:00.000Z";
-
-/** Opens the Camera tab straight in Moment mode (tap = photo, hold = 5 s video). */
-const openMomentCamera = () => router.navigate({ pathname: "/camera", params: { mode: "moments" } });
 
 /**
  * Moments tab (web `MomentsView`): a vertical **pager** — one swipe = one moment
@@ -52,8 +45,9 @@ const openMomentCamera = () => router.navigate({ pathname: "/camera", params: { 
  * Each page = the full screen; the card sits centered between the header + the
  * filter row (All · Me · friends, rose ring = new) and the BottomBar. Only the
  * current page plays its video; viewing a page moves the "seen" mark. New
- * moments are shot from the BottomBar Camera (Moment mode). Polled every 30 s
- * while open (no WebSocket on mobile yet). Not yet: collab templates.
+ * moments: header Add menu ("+") → Camera (Moment mode) or one photo / video from the library → `MomentReview`. Polled every 30 s
+ * while open (no WebSocket on mobile yet). Multi-photo / with friends = `/moment-create`; bell under
+ * the avatar = `/moment-inbox` (invitations + notifications, polled) → `/moment-fill`.
  */
 export function MomentsScreen() {
   const { t } = useTranslation();
@@ -66,6 +60,8 @@ export function MomentsScreen() {
   const feed = useMomentsFeed();
   const { moments: allMoments, isPending, isError, refetch, hasNextPage, isFetchingNextPage, fetchNextPage, toggleReaction, remove } = feed;
   const user = useSession().data?.user;
+  // Bell under the avatar (like Gallery's sort): invitations + saved notifications, polled.
+  const inbox = useMomentInbox();
   const meId = user?.id ?? null;
 
   // Who to watch + "new since last time" (baseline = the mark at app start).
@@ -97,10 +93,10 @@ export function MomentsScreen() {
   }, [openId, openIndex, pageHeight]);
 
   // Space for the card on a page: under the header (its big "The Next Gallery"
-  // title row while at the top) + the filter row, above the BottomBar.
+  // title row while at the top) + the filter row, above the tab bar.
   const filterTop = safe.top + HEADER_ROW;
   const top = filterTop + HEADER_TITLE_ROW + (showFilter ? FILTER_BAR_HEIGHT : 0) + 4;
-  const bottom = bottomBarOffset(safe.bottom) + BOTTOM_BAR_HEIGHT + 16;
+  const bottom = tabBarSpace(safe.bottom) + 16;
   const pageBottom = bottom;
   const available = pageHeight - top - pageBottom - CARD_CHROME;
   const size = Math.max(160, Math.min(CARD_MAX, width - insets.left - insets.right - 32, Math.floor(available / MOMENT_ASPECT)));
@@ -114,6 +110,7 @@ export function MomentsScreen() {
     }
   }, [refetch]);
   const { scrollY, onScroll } = useHeaderScroll({
+    hideTabBar: false, // pager pages are sized around the tab bar
     onPullRefresh: Platform.OS === "ios" ? () => void refresh() : undefined,
   });
 
@@ -241,7 +238,16 @@ export function MomentsScreen() {
         </Animated.View>
       ) : null}
 
-      <AppHeader scrollY={scrollY} />
+      <AppHeader
+        scrollY={scrollY}
+        add={["moment-camera", "moment-multi", "moment-account", "moment-device"]}
+        action={{
+          icon: Bell,
+          label: t("moments.invitations"),
+          badge: inbox.count,
+          onPress: () => router.push("/moment-inbox"),
+        }}
+      />
     </View>
   );
 }

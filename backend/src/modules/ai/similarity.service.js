@@ -1,7 +1,7 @@
 // Similarity service — DINOv3 descriptor cho tính năng "Ảnh tương tự" (Lightbox).
 //
 // Luồng:
-//  - Upload ảnh → media.upload.service gọi `embedDinoInBackground` (fire-and-forget).
+//  - Upload ảnh → media.upload.service gọi `ai.queue.js::enqueueMediaAi` (hàng đợi giới hạn).
 //  - Ảnh cũ chưa có descriptor → `backfillDinoEmbeddings` theo lô, hoặc tạo
 //    on-demand lần đầu mở "Ảnh tương tự" của ảnh đó.
 //  - `findSimilarMedia`: cosine (pgvector `<=>`) giữa ảnh nguồn và ảnh khác của
@@ -64,13 +64,6 @@ export async function embedDinoBuffer({ mediaId, userId, buffer }) {
   if (!result?.embedding?.length || result.provider === "stub") return null;
   await saveDinoEmbedding(mediaId, userId, result.model, result.embedding);
   return result;
-}
-
-/** Fire-and-forget: chạy nền, không chặn response upload. Mọi lỗi chỉ log. */
-export function embedDinoInBackground(args) {
-  embedDinoBuffer(args).catch((err) => {
-    logger.warn({ err }, `DINOv3 embed media ${args.mediaId} lỗi`);
-  });
 }
 
 /** Lấy object từ MinIO rồi tạo descriptor — dùng cho backfill / on-demand. */

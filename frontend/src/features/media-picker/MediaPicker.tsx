@@ -16,6 +16,7 @@ import { PickerLensBar } from "./components/PickerLensBar";
 import { PickerSearchBar } from "./components/PickerSearchBar";
 import { lensKey, usePickerSuggestions, type Lens } from "./lens";
 import { useMediaPickerQuery } from "./useMediaPickerQuery";
+import { usePickAlbums } from "./usePickAlbums";
 
 export interface MediaPickerProps {
   selectedIds: ReadonlySet<string>;
@@ -54,7 +55,8 @@ export const MediaPicker: React.FC<MediaPickerProps> = ({
   const showingSelected = lens.kind === "selected" && selectedItems;
   const items = showingSelected ? selectedItems : query.items;
   const locked = max !== undefined && max > 1 && selectedIds.size >= max;
-  const chip = lens.kind === "scope" || lens.kind === "tag" ? lens : null;
+  const chip = lens.kind === "scope" || lens.kind === "tag" || lens.kind === "album" ? lens : null;
+  const albums = usePickAlbums();
 
   // Hết ảnh đã chọn khi đang xem "Đã chọn" → quay về tất cả.
   useEffect(() => {
@@ -123,6 +125,7 @@ export const MediaPicker: React.FC<MediaPickerProps> = ({
         selectedCount={selectedIds.size}
         canShowSelected={Boolean(selectedItems)}
         labels={scopes.filter((s) => s.kind === "label")}
+        albums={albums}
         tags={tags}
         compact={searching}
         counter={

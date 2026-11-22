@@ -116,7 +116,8 @@ export function Segmented<T extends string>({
 }: {
   value: T;
   onChange: (value: T, origin: HTMLElement) => void;
-  options: { value: T; label: string; icon?: LucideIcon }[];
+  /** `disabled` = hiện nhưng chưa chọn được (vd tính năng sắp có, `hint` = tooltip). */
+  options: { value: T; label: string; icon?: LucideIcon; disabled?: boolean; hint?: string }[];
   label: string;
 }) {
   return (
@@ -126,7 +127,7 @@ export function Segmented<T extends string>({
       className="grid gap-2"
       style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}
     >
-      {options.map(({ value: v, label: optionLabel, icon: Icon }) => {
+      {options.map(({ value: v, label: optionLabel, icon: Icon, disabled, hint }) => {
         const active = v === value;
         return (
           <button
@@ -134,12 +135,14 @@ export function Segmented<T extends string>({
             type="button"
             role="radio"
             aria-checked={active}
+            disabled={disabled}
+            title={hint}
             onClick={(e) => onChange(v, e.currentTarget)}
             className={cn(
-              "flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-lg border px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-primary",
+              "flex h-9 min-w-0 items-center justify-center gap-1.5 rounded-lg border px-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50",
               active
                 ? "border-primary bg-primary/10 font-medium text-foreground"
-                : "border-border/60 text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                : "border-border/60 text-muted-foreground enabled:hover:bg-muted/50 enabled:hover:text-foreground",
             )}
           >
             {Icon && <Icon className="size-4 shrink-0" />}

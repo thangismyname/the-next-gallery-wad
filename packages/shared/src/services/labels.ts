@@ -1,5 +1,5 @@
 import type { HttpClient } from "../http";
-import { mapMediaItem, resolveMediaUrl, type MediaListItem } from "./media";
+import { inChunks, mapMediaItem, resolveMediaUrl, type MediaListItem } from "./media";
 
 export const LABEL_COLORS = ["slate", "rose", "amber", "emerald", "sky", "violet"] as const;
 export type LabelColor = (typeof LABEL_COLORS)[number];
@@ -61,10 +61,9 @@ export const createLabelsService = (http: HttpClient) => ({
   deleteLabel: (id: string): Promise<null> =>
     http.del<null>(`/labels/${encodeURIComponent(id)}`),
 
+  // ≤ 500 ids per request on the backend → chunks (`inChunks`).
   setLabelMedia: (id: string, mediaIds: string[], labeled: boolean): Promise<unknown> =>
-    http.post<unknown>(`/labels/${id}/media${labeled ? "" : "/remove"}`, {
-      mediaIds,
-    }),
+    inChunks(mediaIds, (chunk) => http.post<unknown>(`/labels/${id}/media${labeled ? "" : "/remove"}`, { mediaIds: chunk })),
 
   fetchMediaLabels: (mediaId: string): Promise<{ editable: boolean; labelIds: string[] }> =>
     http.get<{ editable: boolean; labelIds: string[] }>(`/labels/media/${encodeURIComponent(mediaId)}`),

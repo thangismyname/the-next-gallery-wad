@@ -158,7 +158,9 @@
     "home": "ホーム",
     "photos": "マイフォト",
     "ai": "AI",
-    "social": "共有"
+    "social": "共有",
+    "admin": "管理",
+    "developer": "開発者"
   },
   "hero": {
     "eyebrow": "AI フォトライブラリ",
@@ -215,8 +217,7 @@
     "loading": "読み込み中...",
     "header": {
       "backToGallery": "ギャラリーに戻る",
-      "openSidebar": "メニューを開く",
-      "closeSidebar": "メニューを閉じる"
+      "backToApp": "The Next Gallery に戻る"
     },
     "table": {
       "role": "ロール",
@@ -230,7 +231,8 @@
     },
     "role": {
       "user": "ユーザー",
-      "admin": "管理者"
+      "admin": "管理者",
+      "developer": "Developer"
     },
     "status": {
       "banned": "利用停止",
@@ -325,7 +327,8 @@
       "empty": "結果が見つかりません。",
       "pages": "ページ",
       "allUsers": "「{{q}}」に一致する {{n}} 人のユーザーをすべて表示"
-    }
+    },
+    "switch": "管理画面へ"
   },
   "developer": {
     "menuItem": "開発者モード",
@@ -364,7 +367,15 @@
     },
     "upload": {
       "button": "アップロード",
-      "uploading": "アップロード中..."
+      "uploading": "アップロード中...",
+      "files": "写真と動画",
+      "folder": "フォルダごと",
+      "takeout": "Google Takeout から取り込む",
+      "takeoutSoon": "Google Takeout の取り込みは準備中です。今は Takeout を解凍して「フォルダごと」を選んでください（撮影日は EXIF から取得）。",
+      "dropHere": "ドロップしてアップロード",
+      "dropHint": "写真、動画、フォルダに対応。その他のファイルはスキップされます。",
+      "noMedia": "選んだ中に写真や動画がありません",
+      "someFailed": "{{n}} 件のファイルをアップロードできませんでした（ファイル破損またはネットワークエラー）"
     },
     "selection": {
       "select": "選択",
@@ -471,7 +482,21 @@
     "addedToAlbum": "「{{name}}」に追加しました",
     "labeled": "「{{name}}」ラベルを付けました",
     "noAlbums": "アルバムがありません",
-    "similarNotLoaded": "この写真はまだライブラリに読み込まれていません。さらにスクロールしてから再試行してください"
+    "similarNotLoaded": "この写真はまだライブラリに読み込まれていません。さらにスクロールしてから再試行してください",
+    "live": "Live",
+    "detailLocation": "撮影場所",
+    "openMap": "地図を開く",
+    "player": {
+      "speed": "再生速度",
+      "volume": "音量",
+      "mute": "ミュート",
+      "unmute": "ミュート解除",
+      "seek": "シーク",
+      "play": "再生",
+      "pause": "一時停止",
+      "fullscreen": "全画面",
+      "showControls": "動画の操作を表示"
+    }
   },
   "favorites": {
     "title": "お気に入り",
@@ -524,7 +549,8 @@
       "photos": "写真",
       "videos": "動画",
       "favorites": "お気に入り",
-      "selected_other": "選択中（{{count}}）"
+      "selected_other": "選択中（{{count}}）",
+      "album": "アルバム"
     },
     "empty": "写真がありません",
     "noResults": "一致する写真がありません",
@@ -536,7 +562,8 @@
     "kindTag": "AI タグ",
     "loadFailed": "写真を読み込めませんでした。",
     "retry": "再試行",
-    "scopeHint": "この範囲の最大 60 枚 — 入力して絞り込めます。"
+    "scopeHint": "この範囲の最大 60 枚 — 入力して絞り込めます。",
+    "searchMobile": "AIで検索（例：「ビーチの犬」）"
   },
   "trash": {
     "title": "ゴミ箱",
@@ -556,6 +583,24 @@
     "hint": "写真を長押しするか「選択」をタップすると、まとめて復元・削除できます。",
     "restoredMany": "{{count}} 件を復元しました",
     "deletedMany": "{{count}} 件を完全に削除しました"
+  },
+  "review": {
+    "title": "スワイプで整理",
+    "cardSubtitle": "左で削除・右で残す・上でお気に入り",
+    "stats": "削除 {{trashed}} · 保持 {{kept}} · お気に入り {{liked}}",
+    "trash": "削除",
+    "keep": "残す",
+    "undo": "元に戻す",
+    "hint": "← 削除 · → 残す · ↑ お気に入り · Ctrl+Z 元に戻す",
+    "swipeHint": "左で削除、右で残す、上にスワイプでお気に入り",
+    "done": "ライブラリをすべて確認しました",
+    "doneDesc": "削除した写真はゴミ箱にあり、まだ復元できます。",
+    "openTrash": "ゴミ箱を開く",
+    "restart": "最初からやり直す",
+    "empty": "ライブラリにまだ写真がありません。",
+    "loadFailed": "写真を読み込めませんでした。",
+    "writeFailed": "写真を削除または復元できなかったため、そのまま残しました。",
+    "favorite": "お気に入り"
   },
   "friends": {
     "title": "友達",
@@ -654,7 +699,7 @@
     "objectResults": "物体",
     "sendToFriend": "写真を送る",
     "photos": "枚",
-    "hint": "写真・友達・アルバムを検索 — 例:「夕日」。「お気に入り」やラベル名・アルバム名（または「favorite.dog」）でその中を検索できます。",
+    "hint": "写真・友達・アルバムを検索 — 例:「夕日」、日付なら「2026」「3月」「2026年11月19日」。「お気に入り」やラベル名・アルバム名（または「favorite.dog」）でその中を検索できます。",
     "resizeHandle": "ドラッグでサイズ変更 · ダブルクリックでリセット",
     "resetHint": "ダブルクリックでリセット",
     "dragHint": "ドラッグで移動",
@@ -676,7 +721,7 @@
     "clearRecent": "消去",
     "explore": "AIで探す",
     "objectsExplore": "写真の中の物体",
-    "mobileHint": "「ビーチの犬」「夕焼け」「2人」のように説明で検索できます。"
+    "mobileHint": "「ビーチの犬」「夕焼け」「2人」「2026年3月」のように説明や日付で検索できます。"
   },
   "moments": {
     "title": "モーメント",
@@ -782,7 +827,39 @@
     "doubleTapHint": "ダブルタップでハート",
     "reactHint": "タップでハート · 長押しで別の絵文字",
     "recent": "最近のモーメント",
-    "seeAll": "すべて見る"
+    "seeAll": "すべて見る",
+    "framer": {
+      "title": "フレームと順番",
+      "hint": "枠の中で写真をドラッグして表示位置を選び、2本指（タッチ / トラックパッド）でピンチして拡大します。空いている枠をクリックすると選択中の写真をそこへ移動します。投稿するまで保存されません。",
+      "slot": "枠 {{n}}",
+      "friendSlot": "友だちの枠",
+      "editing": "枠 {{n}} を編集中",
+      "zoom": "拡大",
+      "moveUp": "上へ",
+      "moveDown": "下へ",
+      "reset": "リセット",
+      "hintMobile": "ドラッグで表示位置を選び、ピンチで拡大します。",
+      "placeHere": "ここに配置"
+    },
+    "fromAccountMenu": "ライブラリからモーメント",
+    "fromDeviceMenu": "端末の写真からモーメント",
+    "fromAccountHint": "ライブラリにある写真や動画を1つ選びます。再アップロードせずにそのまま投稿します。",
+    "multiMenu": "複数写真 / 友だちと",
+    "pickPhotos": "写真を選ぶ",
+    "donePicking": "完了",
+    "pickMax": "写真・動画を最大 {{n}} 件選べます。",
+    "accept": "写真を追加",
+    "decline": "辞退",
+    "declineConfirm": "この招待を辞退しますか？",
+    "declineConfirmDesc": "作成者に通知され、別の人を招待するかモーメントを削除できます。",
+    "declineFailed": "辞退できませんでした。もう一度お試しください。",
+    "deleteShared": "共有モーメントを削除",
+    "deleteSharedDesc": "このモーメントは参加者全員から削除されます。",
+    "progress": "{{done}}/{{total}} 枠 完了",
+    "slotFilled": "追加済み",
+    "slotWaiting": "待機中",
+    "slotDeclined": "辞退",
+    "yourDrafts": "進行中のモーメント"
   },
   "common": {
     "open": "開く",
@@ -804,10 +881,18 @@
       "dark": "ダーク",
       "system": "システム",
       "language": "言語",
+      "fontSize": "文字サイズ",
+      "fontSmall": "小",
+      "fontDefault": "標準",
+      "fontLarge": "大",
+      "fontXLarge": "特大",
       "density": "写真グリッドの密度",
       "compact": "小",
       "comfortable": "中",
-      "large": "大"
+      "large": "大",
+      "layout": "写真のレイアウト",
+      "layoutGrid": "正方形グリッド",
+      "layoutJustified": "縦横比を保持"
     },
     "sessions": {
       "title": "ログイン中のデバイス",
@@ -1345,7 +1430,16 @@
     "incomingTitle": "{{name}} さんから",
     "incomingLibrary_other": "{{count}} 枚の写真がライブラリに追加されました。",
     "incomingFiles_other": "{{count}} 件のファイルが受信待ちです。",
-    "receive": "受信"
+    "receive": "受信",
+    "export": {
+      "title": "ライブラリ全体をエクスポート",
+      "description": "すべての元の写真・動画を撮影日、お気に入り、説明、位置情報、アルバムとともに Google Takeout 形式の zip でダウンロードします。Google フォトや Immich などへの移行、またはここへの再インポートに使えます。",
+      "button": "エクスポート (.zip)",
+      "descriptionMobile": "元の写真・動画＋撮影日・お気に入り・アルバム → Google Takeout 形式の zip 1 つ（他サービスへの移行用）。ダウンロード中はアプリを開いたままにしてください。",
+      "progress": "{{size}} ダウンロード済み — タップでキャンセル",
+      "noSpace": "エクスポートを保存する空き容量が足りません。",
+      "failed": "ライブラリをエクスポートできませんでした。後でもう一度お試しください。"
+    }
   },
   "upload": {
     "progress": "アップロード中 {{done}}/{{total}}",
@@ -1354,9 +1448,11 @@
     "retry": "再試行",
     "badFile": "対応していないファイル",
     "networkError": "ネットワークエラー",
-    "fromDevice": "端末からアップロード",
+    "fromDevice": "写真ライブラリから",
     "takePhoto": "写真を撮る",
-    "pickFailed": "写真ライブラリを開けません"
+    "pickFailed": "写真ライブラリを開けません",
+    "fromFiles": "ファイルアプリから",
+    "pickFilesFailed": "ファイル選択を開けませんでした"
   },
   "welcome": {
     "next": "次へ",
@@ -1401,5 +1497,717 @@
       "saturation": "彩度",
       "vignette": "周辺減光"
     }
+  },
+  "lab": {
+    "desc": "ai-service のベンチマーク／実験結果（E1–E6）をグラフで表示",
+    "unavailable": "結果がありません — データセットフォルダ（$TNG_DATASETS/Results）がある環境のみ利用できます（本番環境では利用不可）。",
+    "offline": "ai-service が応答しません。",
+    "latest": "最新",
+    "summary": "概要",
+    "tabs": {
+      "result": "結果",
+      "files": "CSV ファイル",
+      "history": "バージョン履歴",
+      "log": "ログと設定"
+    },
+    "top": "上位 {{count}}",
+    "bottom": "下位 {{count}}",
+    "ofRows": "{{metric}} 順 · {{total}} 行",
+    "pickMetric": "指標を 1 つ以上選んでください。",
+    "showTable": "数値表（{{count}} 行）",
+    "noResult": "この実行には result.json がまだありません。",
+    "noFiles": "この実行には CSV ファイルがありません。",
+    "noNumbers": "このファイルには数値列がありません。",
+    "noHistory": "保存されたバージョンはまだありません。",
+    "truncated": "先頭 {{count}} 行のみ表示しています。",
+    "events": "イベント",
+    "config": "設定",
+    "details": "詳細",
+    "exp": {
+      "select": {
+        "short": "実験に使う Open Images のサブセットを選ぶ。",
+        "long": "ステップ 0（データ）。174 クラスすべてに十分な正例が集まるよう Open Images V7 から画像を選ぶ：val 3,000 枚、test 5,000 枚、train 15,000 枚（seed 0）。ラウンドごとに珍しいクラスを優先して選ぶため、よくあるクラスが珍しいクラスを押しのけない。回転画像は除外。\n出力：ダウンロード一覧とクラスごとの正例／負例数。画像が足りないクラスは result に列挙（例：Hair dryer、Toaster）。\nファイル：train_selection.csv。"
+      },
+      "build": {
+        "short": "ダウンロード済み画像を検査し、ラベル・ボックス・キャプションを構築する。",
+        "long": "ステップ 0（データ）、select とダウンロードの後に実行。各画像を検査（欠損・破損・EXIF 回転）し、人手で確認されたラベルだけから画像ラベル Y ∈ {1, 0, −1} を作る。−1 = 未確認で、指標計算から除外。クラス階層（Dog → Animal）、ボックス（group-of を含む）、Localized Narratives のキャプションも適用。\n出力：split ごとの画像数、欠損／破損画像、既知のラベル組数、ボックス／キャプション付き画像数。モデル指標はなし。"
+      },
+      "e1": {
+        "short": "健全性チェック：アプリの CLIP パイプラインは論文の数値を再現できるか。",
+        "long": "CLIP ViT-L/14@336（OpenAI）を Flickr30k 1K と MSCOCO 5K で実行し、Recall@1/5/10（テキスト→画像、画像→テキスト）を CLIP 論文の Table 13 と比較。|Δ R@1| ≤ 2 ポイントで合格。本番と同じパイプライン：L2 正規化、pgvector と同じコサイン順位。\nアプリのモデル（ViT-B-32 laion2b）とバックエンドの前処理（WebP ≤512）も加え、アプリのパイプラインで数値がどれだけ変わるかを示す（これらの行は Δ 判定なし）。\nファイル：retrieval.csv（pub_* = 論文値、delta_* = 差）。"
+      },
+      "e2": {
+        "short": "RQ1：ゼロショット CLIP のタグ付け精度は（学習なし）。",
+        "long": "ゼロショット CLIP で Open Images の 174 クラスをタグ付け。プロンプトテンプレート（7 種 + アンサンブル）、クラスごとのしきい値（F1 最大）、isotonic キャリブレーションはすべて val で選択。test は報告のために 1 回だけ実行。\n指標：mAP、macro／micro-F1、micro-precision、キャリブレーション前後の ECE、95% ブートストラップ CI。all／object／scene／旧タグ別。reliability_test = 信頼性図のデータ。\nファイル：per_class.csv（クラスごとの AP・F1・しきい値）、summary.csv（グループ別）、templates.csv（テンプレート比較）。"
+      },
+      "e3": {
+        "short": "RQ1：ゼロショット CLIP の画像検索精度は。",
+        "long": "4 種類のクエリ：\n(a) クラス別、\"a photo of a {class}\"：strict = 未ラベル画像を不正解とする、known = その画像を除外；\n(b) Localized Narratives のキャプション：R@1/5/10、MRR、順位の中央値；\n(c) vi／en の複合クエリ（例：「ビーチにいる 2 匹の犬」）、judge.html で手動判定：P@10/20、nDCG；\n(d) ベトナム語：そのまま／英訳／多言語 CLIP。\nファイル：a_per_class.csv、a_fp_review.csv（確認用の誤検出）、b_captions.csv、c_*_per_query.csv。"
+      },
+      "e4": {
+        "short": "YOLO26 ベースライン：検出 + タグ付け、および YOLO にないクラス。",
+        "long": "YOLO26n（COCO 80 クラス）を Open Images で実行。Open Images の手順（確認済み画像のみ、group-of ボックス）で mAP@0.5 を測り、val で選んだしきい値による画像レベルのタグをアプリの既定値（0.25／0.4）と比較。YOLO がカバーしないクラス（gap）を列挙し、E5 で CLIP が補う。\nファイル：detection_ap.csv（クラス別 AP）、tag_summary.csv、tag_per_class.csv、gap_classes.csv。"
+      },
+      "yolo_ft": {
+        "short": "Open Images のボックスで YOLO26n をファインチューニング（物体 128 クラス）。",
+        "long": "YOLO26n の全重みを（COCO 事前学習から）ボックス付き 128 クラスで実際に学習し、COCO 外の 47 クラスを補う。最良エポックは val で選択。任意で疑似ラベル：未確認の COCO クラスに元の YOLO が出したボックスを CLIP で再確認して使う。\n元モデルとファインチューニング後を比較：mAP@50／mAP@50-95（Ultralytics）、OI 手順の AP@0.5、画像レベルのタグ。対応ありの CI で旧 COCO 81 クラスを忘れたかを確認。レイテンシ、パラメータ数、ファイルサイズも報告。\nファイル：per_class.csv（base と ft）、detection_ap.csv、pseudo_labels.csv、ultralytics_per_class.csv。"
+      },
+      "e5": {
+        "short": "RQ2：タグごとに YOLO + CLIP を統合すると単一ソースより良いか。",
+        "long": "タグごとに、キャリブレーション済み確率に 4 つのルールを試す：clip、yolo、or = max、and = min。precision ≥ 目標値（既定 0.9）の条件で val の F1 が最大のルールを採用。\ntest で 6 つの戦略を比較：clip_only、yolo_only、or、and、group_baseline（物体 → YOLO、シーン → CLIP）、per_tag。paired_ci95 = 改善幅のブートストラップ CI。\nファイル：strategies.csv、per_class.csv、rule_choice.csv（タグのグループごとにどのソースを使うべきか：主な結論）。"
+      },
+      "probe": {
+        "short": "学習ありのタグ付け：CLIP／DINO／CLIP+DINO+YOLO の線形プローブとゼロショットの比較。",
+        "long": "train 画像 15,000 枚で 4 構成の線形プローブを学習：lp_clip（アプリの CLIP）、lp_dino（DINOv3）、lp_clip_dino、fused_learned（CLIP ⊕ DINO ⊕ YOLO 特徴、つまり学習による統合）。学習なしの基準：zs_clip（E2）、e5_per_tag（E5）。全行が val での同じしきい値 + キャリブレーション手順を通るので、直接比較できる。\nL2 と unknown_weight（未確認ペアの重み）は val で選択（selected）。paired_ci95 = 改善の段階。\nファイル：summary.csv、per_class.csv（クラス × 構成ごとの AP）、grid_val.csv（ハイパーパラメータのグリッド）。"
+      },
+      "e6": {
+        "short": "RQ2：タグは検索にどれだけ役立つか（ハイブリッド検索）。",
+        "long": "CLIP だけの検索と次を比較：filter（タグで厳密に絞り込み）、boost（cos + λ·一致タグの割合）、boost_prob（cos + λ·タグ確率）。タグのソースは複数：yolo／clip／fused（E5）、lp_*／fused_learned（probe）、yolo_ft、そして oracle = 人手確認ラベル、つまり上限（完全なタグ。「最良」には数えない）。λ は val のキャプションで選択。\n2 つのクエリセット：Localized Narratives のキャプション（R@k、MRR。named_* = クラスに言及するクエリ）と手動判定の複合クエリ（P@10/20、nDCG）。*_pairwise = 2 構成間の差の CI。\nファイル：captions.csv、compositional.csv、*_pairwise.csv、lambda_val.csv。"
+      },
+      "export_tags": {
+        "short": "Open Images の 174 ラベルをアプリへ: CLIP 線形プローブ (lp_clip) を open-world で再学習し app/tagging/probes に保存します。",
+        "long": "Lab に結果ページはありません — `uv run python -m experiments export_tags` で実行します。アプリには CLIP ベクトルしかないため lp_clip のみ出力。確率は isotonic で校正し、ラベルごとに閾値 (val で precision ≥ 0.9)、1 枚あたり平均約 1.5 ラベル。"
+      }
+    },
+    "overview": {
+      "tab": "概要",
+      "intro": "各実験の最新の正式な実行から取った、論文の主な結果です。各カードの小さな線は History に保存されたバージョンごとの値です。カードやグラフをクリックするとその実験を開きます。",
+      "noRun": "実行がまだありません",
+      "open": "詳細",
+      "pass": "合格",
+      "fail": "未達",
+      "ceiling": "上限",
+      "kpi": {
+        "e1": {
+          "title": "CLIP 論文の再現 · Flickr テキスト→画像 R@1 (%)",
+          "sub": "論文 {{paper}} · Δ {{delta}} ポイント"
+        },
+        "e2": {
+          "title": "ゼロショット CLIP タグ付け · mAP",
+          "sub": "95% CI {{lo}}–{{hi}} · ECE {{ece}}"
+        },
+        "e3": {
+          "title": "クラス名で検索 · P@10",
+          "sub": "複合クエリ P@10：en {{en}} · vi {{vi}} · vi 多言語 {{multi}}"
+        },
+        "e4": {
+          "title": "YOLO26 検出 · mAP@0.5",
+          "sub": "YOLO がカバーするクラス {{covered}}/{{total}}"
+        },
+        "yolo_ft": {
+          "title": "YOLO ファインチューニング · 新クラスの AP@0.5",
+          "sub": "COCO 外 {{n}} クラス · COCO クラス {{base}} → {{ft}}"
+        },
+        "e5": {
+          "title": "タグごとの YOLO + CLIP 統合 · macro-F1",
+          "sub": "CLIP のみ {{clip}} · {{delta}}（CI {{lo}}…{{hi}}）"
+        },
+        "probe": {
+          "title": "学習ありタグ付け（最良）· mAP",
+          "sub": "{{config}} · ゼロショット比 {{delta}}"
+        },
+        "e6": {
+          "title": "ハイブリッド検索 · MRR",
+          "sub": "{{config}} · CLIP {{clip}} · 上限 {{oracle}} · 差の {{gap}}% を縮小"
+        }
+      },
+      "charts": {
+        "ladder": {
+          "title": "タグ付け：学習なし → 学習あり",
+          "caption": "全行が val での同じしきい値 + キャリブレーション手順を通るので直接比較できる。濃い棒 = precision ≥ 0.9 での macro-F1（アプリの自動タグ付けと同じ）、薄い棒 = mAP。"
+        },
+        "search": {
+          "title": "タグは検索にどれだけ役立つか",
+          "caption": "5,000 件のキャプションでの CLIP のみとの ΔMRR。各タグソースの良い方のモード（boost / boost_prob）を使用。oracle = 完全なタグ、つまり上限。"
+        },
+        "fusion": {
+          "title": "YOLO + CLIP の統合戦略",
+          "caption": "全クラスの macro-F1。precision ≥ 0.9 になるようしきい値を設定。per_tag = タグごとに val でルールを選択。"
+        },
+        "paper": {
+          "title": "CLIP：論文との差",
+          "caption": "Δ R@1（ポイント）= 測定値 − CLIP 論文 Table 13。灰色の帯 = 合格範囲（±しきい値）、赤い棒 = 範囲外。"
+        }
+      },
+      "series": {
+        "f1p": "macro-F1 @P≥0.9",
+        "mAP": "mAP",
+        "delta": "ΔMRR",
+        "macro_f1": "macro-F1",
+        "ours": "測定値",
+        "paper": "論文",
+        "deltaR1": "Δ R@1（ポイント）"
+      },
+      "groups": {
+        "baseline": {
+          "title": "基盤の検証",
+          "question": "CLIP パイプラインは論文どおりか、元の YOLO26 は Open Images でどの程度か（E1、E4）。"
+        },
+        "rq1": {
+          "title": "RQ1 · ゼロショット CLIP",
+          "question": "学習なしで CLIP はどれだけ正確にタグ付け・画像検索できるか（E2、E3）。"
+        },
+        "improve": {
+          "title": "タグの改善",
+          "question": "YOLO + CLIP の統合（E5）、線形プローブ（probe）、YOLO のファインチューニング（yolo_ft）でどれだけ上がるか。"
+        },
+        "rq2": {
+          "title": "RQ2 · タグによる検索改善",
+          "question": "タグを使うハイブリッド検索は CLIP のみよりどれだけ良いか（E6）。"
+        }
+      },
+      "kinds": {
+        "clip": "CLIP",
+        "yolo": "YOLO",
+        "dino": "DINOv3",
+        "fusion": "複数ソースの統合",
+        "reference": "基準（論文、oracle）"
+      }
+    },
+    "digest": {
+      "build": {
+        "health": {
+          "title": "データの健全性",
+          "question": "全 split で {{total}} 枚。正式な build 実行をすべて統合（各実行は一部の split を構築）。合格 = 欠損・破損・回転による除外がない。",
+          "images": "使用可能な画像",
+          "sub": "欠損 {{missing}} · 破損 {{broken}} · 回転で除外 {{rotated}} · 実行 {{run}}"
+        },
+        "labels": {
+          "title": "ラベルとアノテーション",
+          "question": "後の実験で評価できる範囲：人手確認済みの（画像, クラス）組の数、ボックス付き（E4、yolo_ft）とキャプション付き（E3b、E6）の画像数。",
+          "pairs": {
+            "title": "確認済みの（画像, クラス）組",
+            "caption": "指標に使うのはこの組だけ。未確認の組（−1）はマスク。",
+            "known": "確認済み",
+            "positive": "正例"
+          },
+          "coverage": {
+            "title": "アノテーションのカバー率（画像の %）",
+            "caption": "train にキャプションは不要（評価は val/test のみ）なので 0% で正常。",
+            "boxes": "ボックスあり",
+            "captions": "キャプションあり"
+          },
+          "rate": "確認済みの組に占める正例の割合",
+          "rateSub": "group-of ボックス {{groupOf}} 個（それぞれ 1 GT として数える）"
+        }
+      },
+      "e1": {
+        "checks": {
+          "title": "論文との比較",
+          "question": "論文と同じ設定（元画像、接頭辞 \"a photo of\"）。|Δ R@1| ≤ {{tol}} ポイントで合格 · {{passed}}/{{total}} 件合格。",
+          "t2i": "テキスト → 画像 R@1 (%)",
+          "i2t": "画像 → テキスト R@1 (%)",
+          "sub": "論文 {{paper}} · Δ {{delta}} ポイント",
+          "chart": "論文との Δ R@1",
+          "caption": "Δ = 測定値 − 論文（% ポイント）。灰色の帯 ±{{tol}} に収まれば合格。論文に近づけて E1 を再実行すると棒は 0 に縮む。"
+        },
+        "recall": {
+          "title": "Recall@K の表",
+          "question": "論文設定の R@1/5/10（両方向）。判定は R@1 のみ。R@5/10 は論文用。",
+          "cols": {
+            "dataset": "データセット",
+            "metric": "指標",
+            "ours": "測定値",
+            "paper": "論文",
+            "delta": "Δ"
+          }
+        },
+        "pipeline": {
+          "title": "アプリのパイプラインで R@1 はどれだけ変わるか",
+          "question": "同じデータセット・方向の論文設定（元画像 + \"a photo of\"）との比較。合否判定はせず、アプリで CLIP が悪化するかを見るだけ。",
+          "chart": "論文設定との Δ R@1",
+          "caption": "灰色の帯 ±{{tol}} ポイントは参考：帯の中なら影響は無視できる。",
+          "variants": {
+            "noPrefix": "接頭辞なし",
+            "backend": "WebP バックエンド",
+            "both": "WebP + 接頭辞なし"
+          }
+        },
+        "legend": {
+          "within": "±{{tol}} ポイント以内（合格）",
+          "outside": "±{{tol}} ポイントを超える差",
+          "band": "合格範囲 ±{{tol}}"
+        }
+      },
+      "e2": {
+        "test": {
+          "title": "test の結果",
+          "question": "ゼロショット CLIP で Open Images の 174 クラスをタグ付け。プロンプト・しきい値・キャリブレーションは val で選び、test は 1 回だけ実行。",
+          "mAP": "mAP（順位、しきい値不要）",
+          "ci": "95% CI {{lo}}–{{hi}} · {{classes}} クラス",
+          "ciShort": "95% CI {{lo}}–{{hi}}",
+          "f1": "macro-F1（クラスごとのしきい値）",
+          "precision": "micro-precision",
+          "microF1": "micro-F1 {{f1}}",
+          "ece": "キャリブレーション後の ECE（低いほど信頼できる）",
+          "eceRaw": "キャリブレーション前 {{raw}}"
+        },
+        "groups": {
+          "title": "グループ別",
+          "question": "物体とシーンのどちらが簡単か、アプリの旧タグ 17 個は平均からどれだけ離れているか。",
+          "main": "物体 vs シーン",
+          "mainCaption": "all = test で正例・負例がそろう 170 クラス。",
+          "tags": "アプリの旧タグ 17 個",
+          "tagsCaption": "全クラス平均（{{all}}）との Δ mAP。青 = 平均より上、灰色 = 下。"
+        },
+        "calibration": {
+          "title": "確率の信頼性",
+          "question": "CLIP の確率は実際の正解率と一致しているか（信頼性図）。",
+          "chart": "信頼性図（test）",
+          "caption": "横軸 = 予測確率、縦軸 = 実際の正解率。破線の対角線 = 完全。isotonic キャリブレーションで ECE {{raw}} → {{cal}}。",
+          "raw": "キャリブレーション前",
+          "calibrated": "キャリブレーション後"
+        },
+        "classes": {
+          "title": "クラス別",
+          "question": "{{count}} クラスの AP の分布と、CLIP が最も弱いクラス。",
+          "histogram": "AP の分布",
+          "histogramCaption": "test での AP 範囲ごとのクラス数。",
+          "count": "クラス数",
+          "worst": "AP が低い 12 クラス",
+          "worstCaption": "E5（YOLO 統合）と probe（学習あり）で改善する候補。"
+        },
+        "templates": {
+          "title": "プロンプトテンプレートの選択",
+          "question": "val mAP が最も高いテンプレート（test は選択に使わない）。",
+          "chart": "選択したテンプレートとの Δ val mAP",
+          "caption": "選択：\"{{chosen}}\"（青い棒、Δ = 0）。アンサンブル = 複数テンプレートの平均。"
+        }
+      },
+      "e3": {
+        "classes": {
+          "title": "(a) クラス名で検索",
+          "question": "{{queries}} 件のクエリ \"a photo of a {class}\"（バックエンドと同じテンプレート）。known = 未ラベル画像を除外、strict = 未ラベル画像を不正解とする。",
+          "knownAP": "AP（known）",
+          "strictAP": "AP（strict）",
+          "strictSub": "下限：正しい画像の多くは単にラベルがない",
+          "curve": "Precision@k",
+          "curveCaption": "上位 k 件に占める正解画像の割合。known − strict の差 ≈ Open Images が未ラベルの正解画像（a_fp_review.csv 参照）。",
+          "groups": "グループ別 AP",
+          "groupsCaption": "物体 vs シーン。"
+        },
+        "captions": {
+          "title": "(b) 長いキャプションで検索",
+          "question": "Localized Narratives のキャプション {{queries}} 件。各キャプションの正解画像は 1 枚。",
+          "r1": "R@1（正解画像が 1 位）",
+          "mrr": "MRR",
+          "median": "順位の中央値",
+          "medianSub": "{{collection}} 枚中",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "chart": "キャプション全文 vs 最初の 1 文",
+          "caption": "CLIP はキャプションを 77 トークンで切る。最初の 1 文だけだと情報が減り、精度が下がる。",
+          "full": "キャプション全文",
+          "first": "最初の 1 文のみ"
+        },
+        "compositional": {
+          "title": "(c) 複合クエリ + ベトナム語",
+          "question": "複数の概念を含むクエリ（「ビーチにいる 2 匹の犬」）を judge.html で手動判定し、英語とベトナム語を比較。",
+          "chart": "言語 × モデル別の P@10 / nDCG@10",
+          "caption": "濃い棒 = P@10、薄い棒 = nDCG@10。赤 = ベトナム語をそのままアプリの CLIP に入力（CLIP は英語のみ学習）。",
+          "models": {
+            "app": "アプリの CLIP",
+            "multilingual": "多言語 CLIP",
+            "translated": "英訳"
+          },
+          "unjudged": "未判定の組",
+          "unjudgedSub": "0 = 上位 20 件がすべて判定済みで、P@k は信頼できる。"
+        }
+      },
+      "e4": {
+        "coverage": {
+          "title": "元の YOLO26 がカバーする範囲",
+          "question": "Open Images での YOLO26n（COCO 80 クラス）：ボックス検出の精度と、E5 で CLIP が補う YOLO にないクラスの数。",
+          "det": "検出 mAP@0.5（test）",
+          "detSub": "Open Images の手順：確認済み画像のみ、group-of ボックスは 1 GT",
+          "tag": "画像レベルのタグ mAP（ボックスから）",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "gap": "YOLO にないクラス",
+          "gapSub": "YOLO がカバー {{covered}}/{{total}} クラス",
+          "chart": "クラスのカバー範囲",
+          "caption": "緑 = YOLO にあるクラス（COCO）。灰色 = ないクラス — E5 は CLIP を使い、yolo_ft は物体 47 クラスを追加学習。",
+          "classes": "クラス数",
+          "rows": {
+            "covered": "YOLO にある（COCO）",
+            "gap_object": "COCO 外の物体",
+            "gap_scene": "シーン／概念"
+          }
+        },
+        "classes": {
+          "title": "クラス別の検出 AP",
+          "question": "test での COCO {{count}} クラスの AP@0.5。",
+          "histogram": "AP@0.5 の分布",
+          "histogramCaption": "AP 範囲ごとのクラス数。",
+          "worst": "AP が低い 12 クラス",
+          "worstCaption": "多くは Open Images で小さい、または珍しい物体。"
+        },
+        "thresholds": {
+          "title": "アプリのしきい値 vs 調整したしきい値",
+          "question": "YOLO からの画像レベルのタグ：val で選んだしきい値とアプリの固定しきい値の比較。",
+          "chart": "しきい値の決め方ごとの macro-F1 と precision",
+          "caption": "しきい値を上げると precision は上がるが F1 は下がる。mAP（{{mAP}}）はしきい値に依存しない。",
+          "rows": {
+            "tuned_on_val": "クラスごとに val で調整",
+            "app_conf_0.25": "アプリ：conf 0.25（検出）",
+            "app_min_conf_0.4": "アプリ：0.4（検索）"
+          }
+        }
+      },
+      "e5": {
+        "strategies": {
+          "title": "全クラスでの統合戦略",
+          "question": "各タグは precision ≥ {{target}} の条件で val の F1 が最大のルール（clip／yolo／or／and）を選ぶ。",
+          "perTag": "per_tag macro-F1",
+          "vsClip": "CLIP のみ比 {{delta}}（CI {{lo}}…{{hi}}）",
+          "vsYoloTitle": "YOLO のみとの Δ macro-F1（YOLO にあるクラス）",
+          "vsYoloSub": "対応ありの 95% CI — 0 を含まなければ本当の改善",
+          "mAP": "per_tag mAP",
+          "mAPSub": "CLIP のみ比：CI {{lo}}…{{hi}}",
+          "chart": "test での戦略（全クラス）",
+          "caption": "濃い棒 = macro-F1（precision ≥ 目標値）、薄い棒 = mAP。色はソース：CLIP／YOLO／統合。"
+        },
+        "sets": {
+          "title": "クラス集合別",
+          "question": "どのソースがどこで強いか：COCO クラス（YOLO にある）、COCO 外、物体、シーン。",
+          "chart": "クラス集合ごとの macro-F1",
+          "caption": "シーンと COCO 外のクラスは YOLO にないので 0。per_tag は両方の強みを保つ。"
+        },
+        "rules": {
+          "title": "タグのグループごとに選ばれたソース",
+          "question": "E5 の主な結論：各グループで各ルールを選んだタグの数。",
+          "chart": "選ばれたルール（元の YOLO）",
+          "caption": "or = max（確信度の高い方）、and = min（両方が一致する必要あり）。",
+          "chartFt": "選ばれたルール（ファインチューニング後の YOLO）",
+          "captionFt": "yolo_ft は物体 47 クラスを追加するため、COCO 外のグループは物体に統合される。",
+          "rows": {
+            "object·coco": "物体 · YOLO にある",
+            "object·non_coco": "物体 · COCO 外",
+            "scene": "シーン"
+          }
+        },
+        "ft": {
+          "title": "元の YOLO の代わりにファインチューニング版を使う",
+          "question": "YOLO のソースを yolo_ft（47 クラス追加）に替えると各戦略がどれだけ変わるか。",
+          "chart": "全クラスの Δ macro-F1（_ft − 元）",
+          "caption": "yolo_only はカバーするクラスが増えるので大きく上がる。per_tag：CI {{lo}}…{{hi}}。"
+        }
+      },
+      "e6": {
+        "captions": {
+          "title": "キャプション検索へのタグの効果",
+          "question": "Localized Narratives のキャプション {{queries}} 件：ハイブリッド検索（CLIP + タグ）と CLIP のみを MRR で比較。",
+          "clip": "CLIP のみの MRR",
+          "clipSub": "基準",
+          "best": "ハイブリッド検索の最良 MRR",
+          "bestSub": "CLIP のみ比 {{delta}}",
+          "oracle": "上限 MRR（oracle）",
+          "oracleSub": "完全なタグ = 人手確認ラベル",
+          "gap": "上限までの到達度",
+          "gapSub": "（最良 − CLIP）÷（上限 − CLIP）",
+          "chart": "タグソース別の Δ MRR",
+          "caption": "各ソースの良い方のモード（boost／boost_prob）。色 = タグソース、灰色 = oracle（上限）。"
+        },
+        "modes": {
+          "chart": "モード別",
+          "caption": "実際のソースでの各モードの最良値。赤 = CLIP のみより悪い（厳密な絞り込みで正解画像が落ちる）。",
+          "better": "CLIP のみより良い",
+          "worse": "CLIP のみより悪い"
+        },
+        "compositional": {
+          "title": "複合クエリへのタグの効果",
+          "question": "複数概念のクエリ {{queries}} 件を judge.html で手動判定し、P@10 で測定。",
+          "chart": "タグソース別の Δ P@10",
+          "caption": "クエリが少ないため差のばらつきが大きい — ステップ 3 の CI を参照。",
+          "unjudged": "未判定の組",
+          "unjudgedSub": "> 0 = 未判定の新しい画像が上位 20 に入った → P@k は不完全。judge.html で判定する。"
+        },
+        "pairwise": {
+          "title": "統計的に意味のある比較",
+          "question": "対応ありブートストラップ：95% CI が 0 を含まなければ本当の差。",
+          "captions": "キャプション · {{metric}}",
+          "compositional": "複合クエリ · {{metric}}",
+          "caption": "色 = 有意な差、灰色 = CI が 0 を含む（判断不可）。",
+          "lambdaEdge": "λ がグリッドの端（再実行時にグリッドを広げる）：{{list}}"
+        }
+      },
+      "probe": {
+        "ladder": {
+          "title": "学習ありと学習なしのタグ付け",
+          "question": "train 画像 {{images}} 枚で線形プローブを学習。全行が val での同じしきい値（precision ≥ {{target}}）+ キャリブレーション。",
+          "best": "最良の mAP",
+          "bestSub": "ゼロショット CLIP 比 {{delta}}",
+          "f1p": "macro-F1 @ precision ≥ 目標値",
+          "f1pSub": "ゼロショット：{{zs}}",
+          "ece": "ECE（キャリブレーション済み）",
+          "eceSub": "ゼロショット：{{zs}}"
+        },
+        "steps": {
+          "title": "改善の各段階",
+          "question": "各段階で 2 構成を対応ありブートストラップで比較（macro-F1 @ precision）。",
+          "chart": "段階ごとの Δ macro-F1@P",
+          "caption": "色 = 有意（95% CI が 0 を含まない）、灰色 = 判断不可。"
+        },
+        "sets": {
+          "title": "クラス集合別",
+          "question": "学習が最も効く所：物体、シーン、YOLO にある／ないクラス。",
+          "chart": "クラス集合ごとの macro-F1@P",
+          "caption": "薄い = 学習なし（zs_clip、e5_per_tag）、濃い = 学習あり（lp_clip、fused_learned）。"
+        },
+        "selected": {
+          "title": "選択したハイパーパラメータ（val）",
+          "question": "L2 と未確認ペアの重みを val mAP で選択。",
+          "edge": "グリッドの端：{{params}}"
+        }
+      },
+      "yolo_ft": {
+        "result": {
+          "title": "ファインチューニングの結果",
+          "question": "Open Images の物体 {{classes}} クラスで YOLO26n を学習：COCO 外の {{gap}} クラスを補う — 旧 COCO クラスを忘れるか。",
+          "gapAP": "新クラス（COCO 外）の AP@0.5",
+          "gapAPSub": "{{n}} クラス — 元の YOLO = 0",
+          "coco": "COCO クラスの Δ AP@0.5（忘却？）",
+          "cocoSub": "{{base}} → {{ft}} · CI {{lo}}…{{hi}}",
+          "ultra": "Ultralytics mAP@50-95（test）",
+          "ultraSub": "COCO {{coco}} · 新クラス {{gap}}",
+          "latency": "レイテンシ（ms/枚、アプリのパイプライン）",
+          "latencySub": "元 {{base}} · {{params}}M パラメータ · {{mb}} MB"
+        },
+        "tags": {
+          "title": "画像レベルのタグ：元 vs ファインチューニング",
+          "question": "クラス集合ごとの macro-F1 @ precision ≥ 目標値。",
+          "chart": "クラス集合ごとの macro-F1@P",
+          "caption": "coco = 元の YOLO にある 78 クラス、gap = 新クラス、objects = そのモデルにある全物体クラス。",
+          "base": "元の YOLO",
+          "ft": "ファインチューニング後の YOLO"
+        },
+        "classes": {
+          "title": "クラス別",
+          "question": "ファインチューニングで上がる／下がる COCO クラスと、新クラスの AP。",
+          "deltas": "COCO クラスの Δ AP@0.5（ft − 元）",
+          "deltasCaption": "上がった上位 8 と下がった上位 8。赤 = 忘却。",
+          "gap": "新クラスの AP@0.5 の分布",
+          "gapCaption": "ファインチューニング後、AP 範囲ごとの COCO 外クラス数。",
+          "count": "クラス数"
+        },
+        "pseudo": {
+          "title": "疑似ラベル",
+          "question": "未確認の COCO クラスに元の YOLO が出したボックス（val で precision ≥ {{target}}）。不確かな時は CLIP で再確認。",
+          "boxes": "疑似ボックス",
+          "boxesSub": "人手ボックス {{human}} 個に対して",
+          "images": "疑似ボックスのある画像",
+          "classes": "precision 目標に達したクラス",
+          "classesSub": "残りのクラスは疑似ラベルなし",
+          "clip": "CLIP が確認",
+          "clipSub": "CLIP が除外 {{rejected}}"
+        }
+      },
+      "select": {
+        "splits": {
+          "title": "選んだ画像",
+          "question": "全 split で {{total}} 枚。正式な select 実行をすべて統合（各実行は一部の split を選ぶ）。",
+          "selected": "選んだ画像",
+          "sub": "候補 {{candidates}} 枚から · 回転画像 {{rotated}} 枚を除外 · 実行 {{run}}",
+          "chart": "クラスごとの正例数",
+          "caption": "ラウンドごとに珍しいクラスを優先し、各クラスが min_pos 個以上の正例を持つまで選ぶ（画像が足りる場合）。",
+          "min": "min_pos（目標）",
+          "median": "中央値"
+        },
+        "short": {
+          "title": "画像が足りないクラス",
+          "question": "正例が min_pos の半分未満のクラス — 指標の信頼性が低い。",
+          "none": "不足しているクラスはありません。"
+        }
+      }
+    },
+    "ci": {
+      "pair": "比較",
+      "significant": "有意",
+      "noDiff": "判断不可",
+      "legendSignificant": "{{source}} · 有意",
+      "legendNoDiff": "判断不可（CI が 0 を含む）"
+    },
+    "runner": {
+      "title": "ベンチマーク実行",
+      "desc": "python -m experiments を画面から実行 — 結果はターミナル実行と同じく Results/ と History/ に保存されます",
+      "build": "ジョブ作成",
+      "stepCount": "{{count}} ステップ",
+      "command": "コマンド",
+      "moreParams": "その他のパラメータ ({{count}})",
+      "saveAs": "run id を変数に保存（任意）",
+      "saveAsHint": "後のステップでパラメータに \"$名前\"（例: e4_ft_run = $E4_A）を使うと、このステップの run id が入ります。",
+      "addStep": "ステップを追加",
+      "queue": "キュー",
+      "queueEmpty": "ステップがありません — プリセットかコマンドを追加してください。",
+      "clear": "すべて削除",
+      "remove": "ステップを削除",
+      "missingVars": "前のステップで保存されていない変数: {{vars}}",
+      "label": "ジョブ名（任意）",
+      "start_one": "{{count}} ステップを実行",
+      "start_other": "{{count}} ステップを実行",
+      "notDeveloper": "承認済みの Developer のみ実行できます（管理者は閲覧のみ）。",
+      "busy": "ジョブ実行中です — 終了を待つか停止してください。",
+      "externalShort": "ターミナルで experiments が実行中です。",
+      "externalTitle": "ターミナルで experiments が実行中",
+      "external": "画面外で python -m experiments が動いています。終わってからここで実行してください（GPU の取り合いと同じフォルダへの書き込みを避けるため）。結果は Lab に表示されます。",
+      "noJob": "ジョブはまだありません。",
+      "noLog": "ログはまだありません。",
+      "cancel": "停止",
+      "history": "最近のジョブ",
+      "state": {
+        "queued": "待機中",
+        "running": "実行中",
+        "done": "完了",
+        "failed": "失敗",
+        "cancelled": "停止済み",
+        "lost": "プロセス消失"
+      },
+      "deleteRun": "run を削除",
+      "deleteLatest": "latest の run は削除できません（後の実験が読み込みます）",
+      "deleteTitle": "この run を削除しますか？",
+      "deleteDesc": "Results/ からフォルダ {{run}} を削除します。History/ に保存済みのものは残ります。",
+      "tabs": {
+        "suite": "ステップ別",
+        "single": "単一コマンド"
+      },
+      "suite": {
+        "title": "ステップ別に実行",
+        "steps": "ステップ",
+        "customize": "カスタマイズ",
+        "models": "モデル",
+        "clip": "CLIP（E2・E3・probe・E6）",
+        "dino": "DINOv3（probe）",
+        "yolo": "ベース YOLO（E4・probe・yolo_ft）",
+        "e1": "E1 用 CLIP（サニティチェック）",
+        "ft": "YOLO ファインチューン — モデルごとに E4 → E5 → probe → E6 の派生チェーン",
+        "ftMode": {
+          "eval": "再評価",
+          "train": "新規学習",
+          "skip": "yolo_ft をスキップ"
+        },
+        "ftHint": {
+          "eval": "選択した各モデルで yolo_ft --eval-only（学習なし）。",
+          "train": "新しいモデルを 1 つ学習（パラメータは yolo_ft ステップのカスタマイズ）し、選択モデルと同様に使います。",
+          "skip": "yolo_ft は実行しません。選択モデルは E4 / E5 / probe / E6 に使われます。"
+        },
+        "newModel": "新しく学習したモデル（yolo_ft）",
+        "main": "メイン",
+        "common": "全ステップ共通",
+        "smokeHint": "smoke > 0 = 各 split N 枚で試し実行。結果は別扱いで latest を上書きしません。",
+        "preview": "プレビュー（{{count}} ステップ）"
+      }
+    }
+  },
+  "dev": {
+    "badge": "Developer",
+    "nav": {
+      "lab": "ラボ",
+      "experiments": "実験",
+      "run": "実行"
+    },
+    "switch": "開発者エリアへ",
+    "search": {
+      "placeholder": "実験またはページを検索…",
+      "experiments": "実験"
+    },
+    "workspace": "開発者エリア",
+    "jump": "実験を選ぶ",
+    "prev": "前へ",
+    "next": "次へ",
+    "prep": {
+      "title": "データ準備",
+      "question": "クラスを選び、以降のステップで使う Open Images サブセットを構築します (select, build)。"
+    },
+    "view": {
+      "steps": "ステップ別",
+      "pipeline": "実行順"
+    },
+    "needs": "必要: {{list}}",
+    "notRun": "未実行",
+    "part": "Part {{part}}"
+  },
+  "takeout": {
+    "menu": "Google Takeout から",
+    "title": "Google Takeout から取り込む",
+    "intro": "Google フォトのライブラリを、撮影日・お気に入り・アルバムごと移行します。",
+    "step1": "takeout.google.com で Google フォトだけを選び、zip をダウンロードします。",
+    "step2": "解凍します：ファイルアプリで zip をタップ（複数ある場合は同じフォルダに解凍）。",
+    "step3": "下のボタンを押し、解凍したフォルダ（「Takeout」または「Google Photos」）を選びます。",
+    "pickFolder": "フォルダを選ぶ",
+    "pickAnother": "別のフォルダを選ぶ",
+    "scanning": "スキャン中… {{n}} ファイル",
+    "stats": {
+      "photos": "写真",
+      "videos": "動画",
+      "albums": "アルバム",
+      "duplicates": "重複（スキップ）",
+      "missingJson": "JSON なし（EXIF を使用）",
+      "skipped": "その他のファイル（スキップ）",
+      "existing": "ライブラリに既にある（スキップ）",
+      "livePhotos": "Live Photo（写真 + 動画）",
+      "edited": "編集済みのコピー (-edited)"
+    },
+    "readyHint": "複数のアルバムにある写真は 1 回だけアップロードされます。同じ名前のアルバムは再利用されます。",
+    "import": "{{n}} 件を取り込む",
+    "checking": "ライブラリに既にある写真を確認中…",
+    "runningHint": "この画面を離れても、アプリが開いている間は取り込みが続きます。",
+    "steps": {
+      "metadata": "メタデータを読み込み中 {{done}}/{{total}}",
+      "albums": "アルバムを作成中 {{done}}/{{total}}",
+      "upload": "アップロード中 {{done}}/{{total}}"
+    },
+    "errors": {
+      "scanFailed": "選んだものを読み込めませんでした。",
+      "noMedia": "写真や動画が見つかりません。",
+      "checkFailed": "サーバーと確認できませんでした。後でもう一度お試しください。",
+      "startFailed": "取り込みを開始できませんでした。後でもう一度お試しください。"
+    },
+    "finished": {
+      "done": "取り込み完了",
+      "cancelled": "取り込みを停止しました",
+      "failed": "取り込みに失敗しました"
+    },
+    "report": {
+      "imported": "取り込み済み",
+      "duplicates": "同じ内容（既存の写真を使用）",
+      "skippedExisting": "既にある（スキップ）",
+      "failed": "失敗"
+    },
+    "reasons": {
+      "badFile": "無効なファイル",
+      "network": "ネットワークエラー",
+      "unreadable": "ファイルを読み込めません"
+    },
+    "moreFailures": "… ほか {{n}} 件",
+    "retryFailed": "失敗した {{n}} 件を再試行",
+    "done": "完了",
+    "history": "過去の取り込み",
+    "historyLine": "取り込み {{imported}} · 重複 {{duplicates}} · 失敗 {{failed}}",
+    "status": {
+      "running": "実行中",
+      "done": "完了",
+      "cancelled": "停止",
+      "failed": "失敗"
+    },
+    "pickZip": "zip ファイルを選ぶ",
+    "sourceHint": "Takeout の .zip ファイル（解凍不要）または解凍したフォルダを選んでください。ここにドロップもできます。",
+    "webStep2": "下ですべての zip ファイル（または解凍したフォルダ）を選びます。",
+    "downloadFailures": "失敗一覧をダウンロード（CSV）",
+    "openGallery": "ライブラリを開く",
+    "editedMode": {
+      "label": "Google フォトで編集した写真",
+      "both": "両方を取り込む",
+      "original": "オリジナルのみ",
+      "edited": "編集済みのみ"
+    }
+  },
+  "notifications": {
+    "title": "お知らせ",
+    "clearAll": "すべて削除",
+    "delete": "お知らせを削除",
+    "someone": "だれか",
+    "momentDeleted": "{{name}}さんが一緒に投稿したモーメントを削除しました。",
+    "momentDeletedCaption": "{{name}}さんが一緒に投稿したモーメントを削除しました：「{{caption}}」",
+    "generic": "{{name}}さんから新しいお知らせがあります。",
+    "momentDeclined": "{{name}}さんがモーメントへの参加を辞退しました。",
+    "momentDeclinedCaption": "{{name}}さんがモーメントへの参加を辞退しました：「{{caption}}」"
   }
 }

@@ -8,6 +8,8 @@ import {
   FolderOpen,
   Image,
   Send,
+  ShieldCheck,
+  SquareTerminal,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -15,6 +17,8 @@ import type { NavMenuItem } from "./types";
 import { fetchFriendRequests } from "@/services/friends";
 import { friendsKeys } from "@/features/friends/useFriends";
 import { fetchMomentInvitationCount } from "@/services/moments";
+import { useSession } from "@/services/authClient";
+import { useDeveloperMode } from "@/hooks/useDeveloperMode";
 
 /**
  * Mục điều hướng dùng chung cho Sidebar (desktop) và BottomBar (mobile).
@@ -37,6 +41,9 @@ export function useNavItems(): NavMenuItem[] {
     staleTime: 30_000,
   });
   const friendBadge = friendRequests?.length ?? 0;
+  const isAdmin = useSession().data?.user.role === "admin";
+  // Khu Developer: hiện khi Developer Mode đang bật (đã duyệt + công tắc bật); admin vào Lab qua sidebar admin.
+  const { devModeEnabled } = useDeveloperMode();
 
   return useMemo(
     () => [
@@ -53,8 +60,12 @@ export function useNavItems(): NavMenuItem[] {
       { label: t("sidebar.friends"), icon: Users, to: "/friends", section: "social", badge: friendBadge },
       { label: t("sidebar.share"), icon: Send, to: "/share", section: "social" },
 
+      // Ghim đáy sidebar, chỉ admin (route /admin vẫn chặn bằng AdminRoute)
+      ...(devModeEnabled ? [{ label: t("sidebar.developer"), icon: SquareTerminal, to: "/dev", section: "system" as const }] : []),
+      ...(isAdmin ? [{ label: t("sidebar.admin"), icon: ShieldCheck, to: "/admin", section: "system" as const }] : []),
+
     ],
-    [t, momentBadge, friendBadge],
+    [t, momentBadge, friendBadge, isAdmin, devModeEnabled],
   );
 }
 

@@ -69,7 +69,6 @@ export function useViewerGestures(options: {
   /** Fitted size of the current item (`fitRect`). */
   baseWidth: number;
   baseHeight: number;
-  isVideo: boolean;
   onPageChange: (index: number) => void;
   onDismiss: (from: Rect) => void;
   onToggleChrome: () => void;
@@ -80,7 +79,7 @@ export function useViewerGestures(options: {
   onDragChange: (dragging: boolean) => void;
   onInfoChange: (open: boolean) => void;
 }) {
-  const { width, height, count, startIndex, baseWidth, baseHeight, isVideo } = options;
+  const { width, height, count, startIndex, baseWidth, baseHeight } = options;
 
   const index = useSharedValue(startIndex);
   const pagerX = useSharedValue(0);
@@ -264,7 +263,6 @@ export function useViewerGestures(options: {
   });
 
   const pinch = usePinchGesture({
-    enabled: !isVideo,
     onActivate: () => {
       "worklet";
       if (infoOpen.get()) setInfo(false);
@@ -294,7 +292,6 @@ export function useViewerGestures(options: {
   });
 
   const doubleTap = useTapGesture({
-    enabled: !isVideo,
     numberOfTaps: 2,
     onDeactivate: (e) => {
       "worklet";
@@ -318,7 +315,6 @@ export function useViewerGestures(options: {
   });
 
   const singleTap = useTapGesture({
-    enabled: !isVideo,
     onDeactivate: () => {
       "worklet";
       // With the info sheet open a tap closes it; otherwise it toggles the chrome.

@@ -8,7 +8,7 @@ import {
 export async function getMediaById(id) {
   const result = await dbPool.query(
     `SELECT m.id, m.user_id, m.media_type, m.minio_object, m.minio_bucket,
-            m.thumbnail_object, m.thumbnail_small_object, m.display_object, m.full_object,
+            m.thumbnail_object, m.thumbnail_small_object, m.display_object, m.full_object, m.motion_object,
             m.mime_type, m.file_ext, m.original_filename, m.updated_at, m.created_at,
             e.display_object AS edit_display, e.thumbnail_object AS edit_med,
             e.thumbnail_small_object AS edit_small, e.updated_at AS edited_at
@@ -51,23 +51,25 @@ export async function getThumbnailInfo(id, size) {
   return { bucket, objectToStream, etag };
 }
 
-export async function getFileInfo(id) {
+/** `kind` "file" = bản gốc · "motion" = video Live Photo đi kèm ảnh. */
+export async function getFileInfo(id, kind = "file") {
   const item = await getMediaById(id);
   if (!item) return null;
 
   const bucket = item.minio_bucket || BUCKET_NAME;
-  const objectToStream = item.minio_object;
+  const motion = kind === "motion";
+  const objectToStream = motion ? item.motion_object : item.minio_object;
 
   if (!objectToStream) return null;
 
   const timestamp = new Date(item.updated_at || item.created_at).getTime();
-  const etag = `W/"file-${id}-${timestamp}"`;
+  const etag = `W/"${kind}-${id}-${timestamp}"`;
 
   return {
     bucket,
     objectToStream,
     etag,
-    mime: item.mime_type,
+    mime: motion ? (objectToStream.toLowerCase().endsWith(".mov") ? "video/quicktime" : "video/mp4") : item.mime_type,
     filename: item.original_filename || `${id}${item.file_ext ? `.${item.file_ext}` : ""}`,
   };
 }

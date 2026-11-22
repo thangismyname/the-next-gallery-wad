@@ -45,6 +45,8 @@ class OpenClipEmbeddingProvider(EmbeddingProvider):
             model_name,
             pretrained=pretrained,
             device=self._device,
+            # OpenAI weights were trained with QuickGELU; open_clip ≥3 only warns instead of switching it on.
+            force_quick_gelu=open_clip.get_pretrained_cfg(model_name, pretrained).get("quick_gelu", False),
         )
         model.eval()
 

@@ -1,8 +1,16 @@
 // 2 hàng chip dưới ô tìm: loại (tất cả / ảnh / video / yêu thích / đã chọn) +
 // nhãn cá nhân & tag AI (kèm số ảnh) — bấm là lọc, không cần nhớ tên.
-import { type MediaFilter } from "@tng/shared";
+import { type MediaFilter, type PickAlbum } from "@tng/shared";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { ChevronDown, FolderOpen } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { SearchScope } from "@/features/search/searchScope";
 import { lensKey, type Lens, type TagOption } from "../lens";
@@ -12,11 +20,12 @@ const FILTERS: MediaFilter[] = ["all", "photos", "videos", "favorites"];
 
 const Chip: React.FC<{
   active: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
-}> = ({ active, onClick, children }) => (
+} & React.ComponentProps<"button">> = ({ active, onClick, children, ...rest }) => (
   <button
     type="button"
+    {...rest}
     onClick={onClick}
     className={cn(
       "flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition-colors",
@@ -36,6 +45,8 @@ interface PickerLensBarProps {
   /** Có danh sách ảnh đã chọn để xem lại không. */
   canShowSelected: boolean;
   labels: SearchScope[];
+  /** Album thường (của mình + được chia sẻ) + album tự động — menu "Album ▾". */
+  albums: PickAlbum[];
   tags: TagOption[];
   /** Ẩn hàng nhãn / tag (vd đang gõ tìm). */
   compact: boolean;
@@ -48,6 +59,7 @@ export const PickerLensBar: React.FC<PickerLensBarProps> = ({
   selectedCount,
   canShowSelected,
   labels,
+  albums,
   tags,
   compact,
   counter,
@@ -63,6 +75,46 @@ export const PickerLensBar: React.FC<PickerLensBarProps> = ({
               {t(`mediaPicker.filter.${f}`)}
             </Chip>
           ))}
+          {albums.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Chip active={lens.kind === "album" || (lens.kind === "scope" && lens.scope.kind === "album")}>
+                  <FolderOpen className="size-3.5" />
+                  <span className="max-w-32 truncate">
+                    {lens.kind === "album"
+                      ? lens.album.name
+                      : lens.kind === "scope" && lens.scope.kind === "album"
+                        ? lens.scope.name
+                        : t("mediaPicker.filter.album")}
+                  </span>
+                  <ChevronDown className="size-3 opacity-60" />
+                </Chip>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="max-h-80 w-60 overflow-y-auto">
+                {albums.map((album, i) => {
+                  const group = album.group ?? "regular";
+                  const heading = i === 0 || (albums[i - 1].group ?? "regular") !== group;
+                  return (
+                    <React.Fragment key={album.key}>
+                      {heading && (
+                        <DropdownMenuLabel className="text-[11px] font-medium text-muted-foreground">
+                          {group === "regular" ? t("albums.mine") : t(`albums.auto.groups.${group}`)}
+                        </DropdownMenuLabel>
+                      )}
+                      <DropdownMenuItem
+                        onSelect={() => onLens({ kind: "album", album })}
+                        className={cn(activeKey === album.key && "font-medium")}
+                      >
+                        <FolderOpen className="size-3.5" />
+                        <span className="min-w-0 flex-1 truncate">{album.name}</span>
+                        <span className="text-[11px] text-muted-foreground tabular-nums">{album.count}</span>
+                      </DropdownMenuItem>
+                    </React.Fragment>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           {canShowSelected && selectedCount > 0 && (
             <Chip active={activeKey === "selected"} onClick={() => onLens({ kind: "selected" })}>
               {t("mediaPicker.filter.selected", { count: selectedCount })}

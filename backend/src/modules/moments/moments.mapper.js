@@ -17,6 +17,7 @@ export function toMomentItem(row, userId) {
     mediaId,
     mediaType: row.media_type ?? cover?.mediaType ?? "photo",
     caption: row.caption || null,
+    framing: row.framing ?? null,
     visibility: row.visibility,
     // Bản thumbnail cho card moment (400px "med") — thay vì "small" (200px)
     // để card vừa khít theo thiết kế card bo cong 2xl.
@@ -59,6 +60,8 @@ export function toSlotItem(row) {
     // Bản thumbnail nhỏ dùng cho slot card (200px "small") — khớp với
     // thumbnailUrl trên moment item nhưng dùng cho ô slot thu hẹp.
     thumbnailUrl: mediaId ? mediaThumbUrl(mediaId, "small") : null,
+    // Bản lớn (≤2048px) để vẽ ô ảnh trên card — "small" 200px bị mờ khi phóng ra.
+    displayUrl: mediaId ? mediaThumbUrl(mediaId, "display") : null,
     url: mediaId ? mediaFileUrl(mediaId) : null,
     width: row.width ?? 800,
     height: row.height ?? 600,
@@ -66,6 +69,9 @@ export function toSlotItem(row) {
       row.duration_seconds != null ? Number(row.duration_seconds) : null,
     // Slot chỉ "đã điền" khi có ảnh còn tồn tại. filled_at còn nhưng ảnh mất
     // (xoá vĩnh viễn / thùng rác) → missing = true để FE hiện placeholder.
+    framing: row.framing ?? null,
+    // Người được mời đã từ chối ô này (vẫn trống — người tạo sửa lại / xoá).
+    declined: Boolean(row.declined_at) && !(row.filled_at && mediaId),
     filled: Boolean(row.filled_at && mediaId),
     missing: Boolean(row.filled_at && !mediaId),
     filledAt: row.filled_at ?? null,

@@ -72,7 +72,8 @@ export type AdminUserSort =
 
 export interface AdminUserQuery {
   q?: string;
-  role?: AdminRole;
+  /** Account kind (= `userKind`): developer = approved Developer Mode, not admin; user = neither. */
+  role?: AdminRole | "developer";
   status?: "active" | "banned";
   sort: AdminUserSort;
   dir: "asc" | "desc";

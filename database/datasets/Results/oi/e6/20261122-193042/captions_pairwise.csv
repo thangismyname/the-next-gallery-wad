@@ -1,0 +1,9 @@
+a,b,metric,queries,a_mean,b_mean,diff,diff_ci_lo,diff_ci_hi
+boost_prob:fused_learned,boost_prob:yolo,MRR,5000,0.37265,0.37275,-0.0001,-0.00445,0.00388
+boost_prob:lp_clip,boost_prob:clip,MRR,5000,0.36372,0.3601,0.00362,0.00078,0.00658
+boost_prob:lp_dino,boost_prob:lp_clip,MRR,5000,0.37223,0.36372,0.00851,0.00563,0.01113
+boost_prob:fused_learned,boost_prob:lp_clip,MRR,5000,0.37265,0.36372,0.00893,0.00629,0.01164
+boost_prob:fused_learned,boost:fused_learned,MRR,5000,0.37265,0.36699,0.00566,0.00309,0.00825
+filter:fused_learned,boost_prob:fused_learned,MRR,5000,0.30557,0.37265,-0.06708,-0.07336,-0.0607
+boost_prob:yolo_ft,boost_prob:yolo,MRR,5000,0.36944,0.37275,-0.00331,-0.00737,0.0006
+boost_prob:fused_ft,boost_prob:fused,MRR,5000,0.36579,0.3628,0.003,0.00027,0.00573

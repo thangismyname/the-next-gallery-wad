@@ -1,0 +1,82 @@
+class,coco,group,threshold,test_AP,test_precision,test_recall,test_f1,test_pos
+Person,person,object,0.12422,0.98868,0.95466,0.94381,0.94921,1584
+Bicycle,bicycle,object,0.07834,0.89903,0.80769,0.84,0.82353,50
+Car,car,object,0.20129,0.94638,0.9625,0.82206,0.88676,281
+Motorcycle,motorcycle,object,0.50213,0.98432,1.0,0.88095,0.93671,42
+Fixed-wing aircraft,airplane,object,0.58461,0.88862,0.75806,0.94,0.83929,50
+Bus,bus,object,0.65962,0.98018,0.90909,0.90909,0.90909,44
+Train,train,object,0.39753,0.87505,0.88235,0.76923,0.82192,39
+Truck,truck,object,0.2823,0.82253,0.80645,0.96154,0.87719,52
+Boat,boat,object,0.18213,0.85614,0.84906,0.7377,0.78947,61
+Traffic light,traffic light,object,0.13022,0.9887,0.94872,0.90244,0.925,41
+Fire hydrant,fire hydrant,object,0.64802,0.99856,1.0,0.94595,0.97222,37
+Stop sign,stop sign,object,0.88051,0.94861,0.96774,0.90909,0.9375,33
+Parking meter,parking meter,object,0.0,,1.0,1.0,1.0,6
+Bench,bench,object,0.08559,0.92119,0.87879,0.64444,0.74359,45
+Bird,bird,object,0.05177,0.96591,0.91045,0.82432,0.86525,74
+Cat,cat,object,0.38267,0.95945,0.89796,0.91667,0.90722,48
+Dog,dog,object,0.53434,0.905,0.90741,0.89091,0.89908,55
+Horse,horse,object,0.58219,0.92485,0.95556,0.93478,0.94505,46
+Sheep,sheep,object,0.61881,0.82196,0.81818,0.72973,0.77143,37
+Cattle,cow,object,0.09608,0.84285,0.78431,0.85106,0.81633,47
+Elephant,elephant,object,0.46635,0.9163,0.94286,0.89189,0.91667,37
+Bear,bear,object,0.51495,0.39827,0.89474,0.27419,0.41975,62
+Zebra,zebra,object,0.61507,0.89008,1.0,0.7561,0.86111,41
+Giraffe,giraffe,object,0.19273,0.94804,0.97059,0.89189,0.92958,37
+Backpack,backpack,object,0.01638,0.80738,0.7381,0.79487,0.76543,39
+Umbrella,umbrella,object,0.19847,0.74751,0.6875,0.57895,0.62857,38
+Handbag,handbag,object,0.15416,0.51842,0.76471,0.30952,0.44068,42
+Tie,tie,object,0.37301,0.95614,0.91429,0.8,0.85333,40
+Suitcase,suitcase,object,0.32804,0.87844,0.84375,0.71053,0.77143,38
+Flying disc,frisbee,object,0.83004,1.0,1.0,0.4,0.57143,5
+Ski,skis,object,0.00126,0.95437,0.85714,0.88889,0.87273,54
+Snowboard,snowboard,object,0.00119,0.95591,0.89744,0.94595,0.92105,37
+Ball (Object),sports ball,object,0.01009,0.85516,0.71642,0.78689,0.75,61
+Kite,kite,object,0.61279,0.89869,0.88235,0.81081,0.84507,37
+Baseball bat,baseball bat,object,0.10291,0.97642,0.96875,0.83784,0.89855,37
+Baseball glove,baseball glove,object,0.12632,0.95245,0.88462,0.90196,0.8932,51
+Skateboard,skateboard,object,0.00283,0.97387,0.925,0.94872,0.93671,39
+Surfboard,surfboard,object,0.15936,0.91047,0.91176,0.79487,0.84932,39
+Tennis racket,tennis racket,object,0.35191,1.0,1.0,0.91667,0.95652,36
+Bottle,bottle,object,0.03111,0.95089,0.86598,0.90323,0.88421,93
+Wine glass,wine glass,object,0.04066,0.82264,0.73333,0.93617,0.82243,47
+Mug,cup,object,0.14735,0.88447,0.82609,0.92683,0.87356,41
+Coffee cup,cup,object,0.09641,0.92771,0.86667,0.90278,0.88435,72
+Fork,fork,object,0.01341,0.98143,0.90909,0.95238,0.93023,42
+Knife,knife,object,0.00392,0.98315,0.93478,0.93478,0.93478,46
+Spoon,spoon,object,0.03138,0.94372,0.93333,0.76364,0.84,55
+Bowl,bowl,object,0.00422,0.96365,0.91011,0.93103,0.92045,87
+Banana,banana,object,0.34925,0.9386,1.0,0.77778,0.875,36
+Apple,apple,object,0.10064,0.90297,0.7551,0.925,0.83146,40
+Sandwich,sandwich,object,0.20231,0.92844,0.94203,0.79268,0.86093,82
+Orange (fruit),orange,object,0.63108,0.56501,0.9375,0.3,0.45455,50
+Broccoli,broccoli,object,0.17562,0.98887,0.91304,0.97674,0.94382,43
+Carrot,carrot,object,0.35024,0.90274,0.85294,0.80556,0.82857,36
+Hot dog,hot dog,object,0.11551,0.91221,0.84615,0.89189,0.86842,37
+Pizza,pizza,object,0.56042,0.99187,0.97436,0.97436,0.97436,39
+Doughnut,donut,object,0.56882,0.89328,0.82857,0.80556,0.8169,36
+Cake,cake,object,0.25684,0.87549,0.74242,0.84483,0.79032,58
+Chair,chair,object,0.15515,0.95839,0.88514,0.88514,0.88514,148
+Couch,couch,object,0.00155,0.92839,0.81818,0.85135,0.83444,74
+Houseplant,potted plant,object,0.24621,0.82896,0.84444,0.65517,0.73786,58
+Bed,bed,object,0.12109,0.90151,0.93651,0.66292,0.77632,89
+Kitchen & dining room table,dining table,object,0.23477,0.84993,0.80488,0.825,0.81481,40
+Toilet,toilet,object,0.26666,0.94871,0.88571,0.83784,0.86111,37
+Television,tv,object,0.0,0.82793,0.82143,1.0,0.90196,46
+Laptop,laptop,object,0.0,0.95183,0.79167,1.0,0.88372,57
+Computer mouse,mouse,object,0.10067,,1.0,0.89474,0.94444,38
+Remote control,remote,object,0.0,,1.0,1.0,1.0,37
+Computer keyboard,keyboard,object,0.02228,0.98103,0.93182,0.97619,0.95349,42
+Mobile phone,cell phone,object,0.0,0.9451,0.85714,1.0,0.92308,42
+Microwave oven,microwave,object,0.0,0.95286,0.79365,1.0,0.88496,50
+Oven,oven,object,0.0,0.89806,0.77027,1.0,0.87023,57
+Toaster,toaster,object,0.00624,0.84091,0.6,0.75,0.66667,4
+Sink,sink,object,0.01953,0.94738,0.8125,0.92857,0.86667,56
+Refrigerator,refrigerator,object,0.16862,0.94674,0.95349,0.80392,0.87234,51
+Book,book,object,0.0,0.99818,0.98148,1.0,0.99065,53
+Clock,clock,object,0.0,0.98064,0.91111,1.0,0.95349,41
+Vase,vase,object,0.00189,0.87243,0.82,0.93182,0.87234,44
+Scissors,scissors,object,0.64204,0.84878,0.83333,0.19231,0.3125,26
+Teddy bear,teddy bear,object,0.54995,0.8934,0.96154,0.67568,0.79365,37
+Hair dryer,hair drier,object,inf,0.27579,,0.0,0.0,3
+Toothbrush,toothbrush,object,0.02394,1.0,1.0,1.0,1.0,12

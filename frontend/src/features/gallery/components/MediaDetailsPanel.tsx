@@ -11,6 +11,7 @@ import {
   Tags,
   Images,
   Loader2,
+  MapPin,
 } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { popIn } from "@/lib/motion";
@@ -107,6 +108,7 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
             <p className="text-sm text-foreground wrap-break-word">{media.title}</p>
           </div>
         )}
+        {media.caption && <p className="text-sm whitespace-pre-line text-foreground/80">{media.caption}</p>}
 
         <div className="space-y-2.5">
           <DetailRow
@@ -148,6 +150,21 @@ export const MediaDetailsPanel: React.FC<MediaDetailsPanelProps> = ({
               label={t("lightbox.detailDate")}
               value={createdAt}
             />
+          )}
+          {media.location && (
+            <a
+              href={`https://www.openstreetmap.org/?mlat=${media.location.lat}&mlon=${media.location.lng}#map=15/${media.location.lat}/${media.location.lng}`}
+              target="_blank"
+              rel="noreferrer"
+              className="block rounded-md hover:bg-foreground/5"
+              title={t("lightbox.openMap")}
+            >
+              <DetailRow
+                icon={<MapPin size={14} />}
+                label={t("lightbox.detailLocation")}
+                value={`${media.location.lat.toFixed(5)}, ${media.location.lng.toFixed(5)}`}
+              />
+            </a>
           )}
         </div>
 

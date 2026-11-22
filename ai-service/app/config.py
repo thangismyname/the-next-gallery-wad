@@ -1,5 +1,7 @@
 from functools import lru_cache
+from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -55,6 +57,15 @@ class Settings(BaseSettings):
     # → zero-shot cho nhóm tag đó / bỏ nhãn chi tiết.
     tag_models_dir: str = "app/tagging/probes"
     tag_config: str = "lp_clip"
+
+    # Thư mục dataset thesis (Results/ + History/ của experiments) — admin Lab chỉ đọc.
+    # Cùng biến + quy ước với bench/common.py: TNG_DATASETS, path tương đối tính từ gốc repo.
+    # Docker prod không mount → không tồn tại → Lab báo "không khả dụng".
+    datasets_dir: str = Field("database/datasets", validation_alias="TNG_DATASETS")
+
+    def datasets_path(self) -> Path:
+        path = Path(self.datasets_dir or "database/datasets").expanduser()  # "TNG_DATASETS=" rỗng = mặc định
+        return path if path.is_absolute() else Path(__file__).resolve().parents[2] / path
 
     model_config = SettingsConfigDict(
         env_prefix="AI_",

@@ -15,6 +15,7 @@ Hiện thực phần lõi trong "The Next Gallery: kế hoạch thực nghiệm 
 | 6 | `e6` | RQ2: tag giúp search được bao nhiêu (+ trần `oracle`, nguồn tag có train) | E5 (+ probe, E3 c) |
 
 Mọi lệnh chạy từ `ai-service/`: `uv run python -m experiments <lệnh> [--help]`.
+**Chạy từ giao diện**: khu Developer → **Chạy** (`/dev/run`, web + mobile) — tạo job (preset hoặc từng lệnh), xem log, Dừng, xoá run; cần ai-service chạy native (`experiments/jobs.py`). Cả bộ E1→E6 + 3 YOLO fine-tune từ terminal: `uv run python -m experiments.jobs preset all` (log ở `Results/runner/<id>/log.txt`).
 **Cần nhóm `bench`**: `uv sync --group bench` (scikit-learn cho calibrator isotonic). `uv sync` mặc định không cài,
 các thí nghiệm sẽ lỗi `ModuleNotFoundError: sklearn`.
 Lệnh nào cũng nhận `--smoke N` để chạy thử trên N ảnh mỗi split. Kết quả smoke được tách riêng và **không** ghi đè `latest`.

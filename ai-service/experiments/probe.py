@@ -61,7 +61,7 @@ class ProbeParams(CommonParams):
     dino: str = opt(APP_DINO, "DINOv3 (thư mục trong ai-service/models/).")
     yolo: str = opt(APP_YOLO, "YOLO (cùng cache detection với E4: conf 0.001, imgsz 640).")
     preprocess: str = opt("backend", "Tiền xử lý ảnh.", choices=["backend", "raw"])
-    l2: list[float] = opt([1e-4, 1e-3, 1e-2, 1e-1], "Lưới hệ số L2 (chọn trên val mAP).")
+    l2: list[float] = opt([1e-4, 1e-3, 1e-2, 1e-1, 1.0], "Lưới hệ số L2 (chọn trên val mAP).")
     unknown_weight: list[float] = opt([0.0, 0.1, 1.0], "Lưới trọng số cặp chưa xác minh (nhãn 0).")
     max_iter: int = opt(300, "Số vòng L-BFGS.")
     precision_target: float = opt(0.9, "Precision tối thiểu khi chọn ngưỡng tag (= E5).")
@@ -175,9 +175,9 @@ def run(p: ProbeParams) -> dict:
                     if best is None or v_map > best[0]:
                         best = (v_map, l2, uw, pr)
             v_map, l2, uw, pr = best
-            # unknown_weight = 0 là giới hạn tự nhiên (không thể âm) → không tính là biên lưới
+            # unknown_weight ∈ [0, 1] là giới hạn tự nhiên (không âm, không nặng hơn nhãn đã xác minh) → không tính là biên lưới
             edge = [n for n, v, grid in (("l2", l2, p.l2), ("unknown_weight", uw, p.unknown_weight))
-                    if len(grid) > 1 and v in (min(grid), max(grid)) and not (n == "unknown_weight" and v == 0)]
+                    if len(grid) > 1 and v in (min(grid), max(grid)) and not (n == "unknown_weight" and v in (0, 1))]
             run.log(f"  → {cfg}: l2 {l2:g}, unknown_weight {uw:g} (val mAP {v_map:.4f})"
                     + (f" · ! nằm ở biên lưới {edge} — cân nhắc mở rộng lưới" if edge else ""))
             results[cfg] = fit_eval(cfg, Xv @ pr["W"] + pr["b"], Xt @ pr["W"] + pr["b"], val.Y,

@@ -1,12 +1,13 @@
 import type { MediaListItem } from "@tng/shared";
 import { Image } from "expo-image";
 import { useVideoPlayer, VideoView } from "expo-video";
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import { DetectionOverlay } from "./DetectionOverlay";
 import { fitRect } from "./geometry";
 import { mediaSources } from "./sources";
+import { useVideoPlayerStore } from "./videoPlayerStore";
 import { PAGE_GAP, type ViewerValues } from "./useViewerGestures";
 
 /** How the current photo moves out of the way of the info sheet: lift + shrink. */
@@ -29,6 +30,8 @@ export const LightboxPage = memo(function LightboxPage({
   values,
   hiRes,
   playing,
+  livePlaying,
+  onLiveEnd,
   infoLayout,
   onLoaded,
   detections,
@@ -42,6 +45,9 @@ export const LightboxPage = memo(function LightboxPage({
   hiRes: boolean;
   /** Current video page → mount the player (one player at a time). */
   playing: boolean;
+  /** Live Photo: play its video over the photo (once). */
+  livePlaying?: boolean;
+  onLiveEnd?: () => void;
   infoLayout: InfoLayout;
   onLoaded: (id: string) => void;
   /** Developer Mode, current page: draw its YOLO boxes. */
@@ -89,16 +95,63 @@ export const LightboxPage = memo(function LightboxPage({
           style={{ width: "100%", height: "100%" }}
         />
       )}
+      {livePlaying && item.motionUrl ? <LiveVideo url={item.motionUrl} onEnd={onLiveEnd} /> : null}
       {detections && item.mediaType !== "video" ? <DetectionOverlay mediaId={item.id} /> : null}
     </Animated.View>
   );
 });
 
-/** Native controls (scrub, mute, fullscreen); starts playing when mounted. */
+/**
+ * Fills the page box like a photo (`fitRect`, so pinch / double-tap zoom move it the same way);
+ * no native controls — `VideoControls` (screen level in `Lightbox.tsx`, above the action bar)
+ * drives it through `videoPlayerStore`, so there is one volume button. Starts playing when mounted.
+ */
 function VideoPlayer({ url }: { url: string }) {
+  const attach = useVideoPlayerStore((s) => s.attach);
+  const nativeUi = useVideoPlayerStore((s) => s.nativeUi);
+  const closeNative = useVideoPlayerStore((s) => s.closeNative);
+  const viewRef = useRef<VideoView>(null);
   const player = useVideoPlayer(url, (p) => {
     p.loop = false;
     p.play();
   });
-  return <VideoView player={player} nativeControls contentFit="contain" style={{ width: "100%", height: "100%" }} />;
+  // Tốc độ / âm lượng đã nhớ áp cho video này; `VideoControls` điều khiển nó.
+  useEffect(() => {
+    attach(player, viewRef);
+    return () => attach(null);
+  }, [player, attach]);
+  return (
+    <VideoView
+      ref={viewRef}
+      player={player}
+      // Điều khiển gốc chỉ khi ở toàn màn hình (nút thoát, tua, AirPlay…); bình thường = `VideoControls`.
+      nativeControls={nativeUi}
+      fullscreenOptions={{ enable: true }}
+      onFullscreenExit={closeNative}
+      contentFit="contain"
+      // Android: SurfaceView doesn't follow the page's scale transform → pinch zoom needs TextureView.
+      surfaceType="textureView"
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
+}
+
+/** Live Photo clip over the photo: no controls, plays once, then back to the photo. */
+function LiveVideo({ url, onEnd }: { url: string; onEnd?: () => void }) {
+  const player = useVideoPlayer(url, (p) => {
+    p.loop = false;
+    p.play();
+  });
+  useEffect(() => {
+    const sub = player.addListener("playToEnd", () => onEnd?.());
+    return () => sub.remove();
+  }, [player, onEnd]);
+  return (
+    <VideoView
+      player={player}
+      nativeControls={false}
+      contentFit="contain"
+      style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%" }}
+    />
+  );
 }

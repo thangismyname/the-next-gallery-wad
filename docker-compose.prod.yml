@@ -1,4 +1,3 @@
-version: "3.9"
 # ==========================================================
 # PRODUCTION COMPOSE — The Next Gallery
 # - Chỉ reverse-proxy expose port ra ngoài (80/443)
@@ -102,12 +101,14 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_POOL_SIZE: 10
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
-      MINIO_ENDPOINT: minio
-      MINIO_PORT: 9000
+      # Mặc định = MinIO trong compose. Đổi sang S3 ngoài (R2/B2/S3): đặt 4 biến này trong .env.
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio}
+      MINIO_PORT: ${MINIO_PORT:-9000}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: ${MINIO_BUCKET}
-      MINIO_SECURE: "false"
+      MINIO_SECURE: ${MINIO_SECURE:-false}
+      MINIO_REGION: ${MINIO_REGION:-}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${PUBLIC_API_BASE_URL_ROOT}
       # CORS_ORIGINS nên gồm cả domain FE web lẫn scheme app mobile nếu cần (vd: capacitor://localhost)
@@ -225,6 +226,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      # Domain thật (vd gallery.example.com) → Caddy tự lấy HTTPS. Trống = HTTP :80.
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data

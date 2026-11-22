@@ -93,6 +93,15 @@ CREATE TABLE
         -- Dùng cho category "Favorites" trên Home / lọc gallery.
         is_favorite BOOLEAN NOT NULL DEFAULT false,
 
+        -- SHA-256 (hex) của file gốc — chống upload / import trùng (NULL = ảnh cũ chưa backfill).
+        content_sha256 CHAR(64),
+
+        -- Vị trí chụp (WGS84) — hiện từ importer (Google Takeout geoData); NULL = không biết.
+        latitude DOUBLE PRECISION,
+        longitude DOUBLE PRECISION,
+        -- Video ngắn đi kèm Live Photo / Motion Photo (object MinIO, không phải 1 media riêng).
+        motion_object TEXT,
+
         UNIQUE (user_id, minio_object),
         CONSTRAINT chk_video_duration CHECK (
             media_type <> 'video' OR duration_seconds IS NOT NULL
@@ -112,6 +121,12 @@ CREATE INDEX IF NOT EXISTS idx_media_deleted_at
 CREATE INDEX IF NOT EXISTS idx_media_is_favorite
     ON media (user_id, is_favorite)
     WHERE is_favorite = true;
+
+CREATE INDEX IF NOT EXISTS idx_media_content_sha256
+    ON media (user_id, content_sha256)
+    WHERE content_sha256 IS NOT NULL;
+
+COMMENT ON COLUMN media.content_sha256 IS 'SHA-256 (hex) của file gốc lúc upload. Upload / import trùng hash (kể cả ảnh trong Thùng rác) trả về ảnh cũ thay vì tạo bản mới. NULL = ảnh cũ chưa chạy npm run backfill:hash. Không UNIQUE vì dữ liệu cũ có thể đã trùng.';
 
 COMMENT ON TABLE media IS 'File gốc (ảnh/video) đã upload lên MinIO. Là bảng trung tâm — mọi bảng khác (album_media, moments, moment_reactions) chỉ tham chiếu media_id, không copy lại thông tin file.';
 COMMENT ON COLUMN media.user_id IS 'Chủ sở hữu file, FK tới bảng "user" của Better Auth. 1 user có nhiều media (1-n).';
@@ -284,6 +299,7 @@ CREATE TABLE
         template VARCHAR(30) NOT NULL DEFAULT 'single',
 
         caption TEXT,
+        framing JSONB, -- khung ảnh single { x, y, zoom } (NULL = giữa, zoom 1)
         visibility VARCHAR(20) NOT NULL DEFAULT 'circle', -- 'circle' (bạn bè) | 'public' | 'private'
         expires_at TIMESTAMPTZ, -- dự phòng: chưa dùng (story mode chưa implement)
 
@@ -303,6 +319,7 @@ COMMENT ON TABLE moments IS 'Khoảnh khắc chụp/quay nhanh gửi cho vòng b
 COMMENT ON COLUMN moments.media_id IS 'Ảnh/video của moment single (duo/trio: NULL). ON DELETE SET NULL: xoá vĩnh viễn ảnh thì moment vẫn còn và card hiện "Ảnh đã bị xoá". Ảnh chỉ vào thùng rác (deleted_at) → moment tự ẩn khỏi feed.';
 COMMENT ON COLUMN moments.template IS 'single = 1 ảnh dọc (cũ). duo_square = 2 ảnh vuông ghép ngang (2 người cùng chụp). trio_wide = 3 ảnh ngang (3 người). Draft chưa đủ slot tự huỷ sau 24h và không hiện ở feed.';
 COMMENT ON COLUMN moments.visibility IS 'circle (chỉ bạn bè trong friendships) | private. public giữ lại cho dữ liệu cũ nhưng hiện xử lý như circle (chưa có feed công khai).';
+COMMENT ON COLUMN moments.framing IS 'Khung ảnh của moment single: { x, y } = tâm vùng hiện (0–1, theo ảnh), zoom 1–3. NULL = cắt giữa, không zoom. duo/trio: nằm ở moment_collab.framing.';
 COMMENT ON COLUMN moments.expires_at IS 'Dự phòng, chưa dùng (story mode chưa implement).';
 
 -- ==========================================================
@@ -316,6 +333,8 @@ CREATE TABLE
         user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
         media_id UUID REFERENCES media (id) ON DELETE SET NULL, -- NULL = chưa điền ảnh
         filled_at TIMESTAMPTZ, -- NULL = chưa filled (draft)
+        framing JSONB, -- khung ảnh trong ô { x, y, zoom } (NULL = giữa, zoom 1)
+        declined_at TIMESTAMPTZ, -- người được mời đã từ chối ô này (NULL = chưa / đã điền)
         created_at TIMESTAMPTZ DEFAULT now (),
         UNIQUE (moment_id, slot_index)
     );
@@ -326,6 +345,8 @@ CREATE INDEX IF NOT EXISTS idx_moment_collab_user ON moment_collab (user_id);
 COMMENT ON TABLE moment_collab IS 'Slot ảnh từng người trong moment template (duo_square/trio_wide). Mỗi row = 1 người + 1 ô ảnh lắp vào template chung. self-fill: creator chiếm mọi slot. collab: vòng bạn được mời điền ảnh của họ.';
 COMMENT ON COLUMN moment_collab.slot_index IS 'Vị trí slot trong template (0 = ảnh trái/trên, sau đó sang phải). Số lượng slot theo template được giữ ở tầng service (moments.collab.service.js::insertMomentSlots); DB chặn slot_index âm + trùng bằng CHECK/UNIQUE.';
 COMMENT ON COLUMN moment_collab.media_id IS 'Ảnh/video người này chọn cho slot. NULL = slot trống (draft). ON DELETE SET NULL: xoá media tự động bỏ slot đó, moment trở về draft.';
+COMMENT ON COLUMN moment_collab.framing IS 'Khung ảnh trong ô: { x, y } = tâm vùng hiện (0–1), zoom 1–3. NULL = cắt giữa. Người điền ô đặt (hiện chỉ creator lúc tạo / sửa draft).';
+COMMENT ON COLUMN moment_collab.declined_at IS 'Người được mời bấm Từ chối: ô giữ nguyên (moment vẫn là draft, không vào feed với ô trống), không còn là lời mời của họ; người tạo thấy "đã từ chối" để sửa / xoá.';
 COMMENT ON COLUMN moment_collab.filled_at IS 'Thời điểm slot được điền ảnh. NULL = đang chờ. Moment chỉ xuất hiện ở feed khi MỌI slot có filled_at.';
 
 -- ==========================================================
@@ -695,3 +716,54 @@ CREATE TABLE
         user_id TEXT PRIMARY KEY REFERENCES "user" (id) ON DELETE CASCADE,
         created_at TIMESTAMPTZ DEFAULT now ()
     );
+
+-- ============================================================
+-- IMPORT (Google Takeout…) — phiên import + ảnh của phiên
+-- ============================================================
+CREATE TABLE IF NOT EXISTS import_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+    source VARCHAR(20) NOT NULL,
+    client VARCHAR(10) NOT NULL,
+    status VARCHAR(10) NOT NULL DEFAULT 'running'
+      CHECK (status IN ('running', 'done', 'cancelled', 'failed')),
+    plan JSONB NOT NULL DEFAULT '{}'::jsonb,
+    skipped_existing INT NOT NULL DEFAULT 0,
+    failures JSONB NOT NULL DEFAULT '[]'::jsonb,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    finished_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_import_sessions_user ON import_sessions (user_id, started_at DESC);
+
+CREATE TABLE IF NOT EXISTS import_session_media (
+    session_id UUID NOT NULL REFERENCES import_sessions (id) ON DELETE CASCADE,
+    media_id UUID NOT NULL REFERENCES media (id) ON DELETE CASCADE,
+    duplicate BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (session_id, media_id)
+);
+
+COMMENT ON TABLE import_sessions IS 'Một lần nhập thư viện (vd Google Takeout) từ web / mobile — báo cáo + lịch sử. Số ảnh đã nhập / trùng đếm từ import_session_media (server ghi khi upload kèm meta.importId); client chỉ báo phần server không thấy: skipped_existing (đã có sẵn, không upload) và failures.';
+COMMENT ON COLUMN import_sessions.plan IS 'Số liệu lúc xem trước (media, videos, albums, duplicates, missingJson, skipped, existing) — để so với kết quả.';
+COMMENT ON COLUMN import_sessions.failures IS 'Tối đa 500 mục [{ path, reason }] (reason: badFile | network | unreadable) — client gửi khi cập nhật / kết thúc.';
+COMMENT ON TABLE import_session_media IS 'Ảnh upload trong một phiên import; duplicate = file trùng hash với ảnh đã có (không tạo bản mới).';
+
+-- ==========================================================
+-- NOTIFICATIONS — thông báo lưu lại (xem khi offline, người nhận tự xoá)
+-- ==========================================================
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL REFERENCES "user" (id) ON DELETE CASCADE,
+  type VARCHAR(40) NOT NULL,
+  actor_id TEXT REFERENCES "user" (id) ON DELETE SET NULL,
+  payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications (user_id, created_at DESC);
+
+COMMENT ON TABLE notifications IS 'Thông báo cho 1 người (modules/notifications). Khác toast WebSocket: còn lại khi offline, xoá được (từng cái / tất cả), tự dọn sau 30 ngày lúc đọc.';
+COMMENT ON COLUMN notifications.type IS 'moment_deleted = ai đó (người tạo / người tham gia) đã xoá moment mình cùng đăng · moment_declined = người được mời từ chối ghép ảnh vào moment của mình. payload { momentId, template, caption }.';
+COMMENT ON COLUMN notifications.actor_id IS 'Người gây ra thông báo (vd người xoá moment). ON DELETE SET NULL: tài khoản đó bị xoá thì thông báo vẫn còn.';

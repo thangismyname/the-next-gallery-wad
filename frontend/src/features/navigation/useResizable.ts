@@ -1,14 +1,15 @@
 import { useState, useCallback, useEffect } from "react";
 
-const STORAGE_KEY = "sidebar-width";
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 400;
-const DEFAULT_WIDTH = 256;
+const DEFAULT_WIDTH = 224;
 
-export function useResizable() {
+/** Kéo mép phải sidebar shadcn để đổi rộng; lưu theo `storageKey` (sidebar chính / admin riêng)
+ *  và ghi `--sidebar-width` lên sidebar-wrapper. */
+export function useResizable(storageKey = "sidebar-width") {
   const [width, setWidth] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? Number(saved) : DEFAULT_WIDTH;
+    const saved = Number(localStorage.getItem(storageKey));
+    return saved >= MIN_WIDTH && saved <= MAX_WIDTH ? saved : DEFAULT_WIDTH;
   });
 
   const onMouseMove = useCallback((e: MouseEvent) => {
@@ -31,8 +32,10 @@ export function useResizable() {
   }, [onMouseMove, onMouseUp]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, String(width));
-  }, [width]);
+    localStorage.setItem(storageKey, String(width));
+    const wrapper = document.querySelector<HTMLElement>('[data-slot="sidebar-wrapper"]');
+    wrapper?.style.setProperty("--sidebar-width", `${width}px`);
+  }, [width, storageKey]);
 
   return { width, onMouseDown };
 }

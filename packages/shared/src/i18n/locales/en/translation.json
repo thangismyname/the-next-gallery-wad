@@ -158,7 +158,9 @@
     "home": "Home",
     "photos": "My photos",
     "ai": "AI",
-    "social": "Sharing"
+    "social": "Sharing",
+    "admin": "Admin",
+    "developer": "Developer"
   },
   "hero": {
     "eyebrow": "AI-powered photo library",
@@ -215,8 +217,7 @@
     "loading": "Loading...",
     "header": {
       "backToGallery": "Back to Gallery",
-      "openSidebar": "Open menu",
-      "closeSidebar": "Close menu"
+      "backToApp": "Back to The Next Gallery"
     },
     "table": {
       "role": "Role",
@@ -230,7 +231,8 @@
     },
     "role": {
       "user": "User",
-      "admin": "Admin"
+      "admin": "Admin",
+      "developer": "Developer"
     },
     "status": {
       "banned": "Banned",
@@ -325,7 +327,8 @@
       "empty": "No results found.",
       "pages": "Pages",
       "allUsers": "See all {{n}} users matching “{{q}}”"
-    }
+    },
+    "switch": "Go to Admin"
   },
   "developer": {
     "menuItem": "Developer Mode",
@@ -364,7 +367,15 @@
     },
     "upload": {
       "button": "Upload",
-      "uploading": "Uploading..."
+      "uploading": "Uploading...",
+      "files": "Photos & videos",
+      "folder": "Whole folder",
+      "takeout": "Import from Google Takeout",
+      "takeoutSoon": "The Google Takeout importer is coming soon. For now, unzip your Takeout and pick \"Whole folder\" (dates come from EXIF).",
+      "dropHere": "Drop to upload",
+      "dropHint": "Photos, videos or whole folders. Other files are skipped.",
+      "noMedia": "No photos or videos in what you picked",
+      "someFailed": "{{n}} files couldn't be uploaded (broken file or network error)"
     },
     "selection": {
       "select": "Select",
@@ -471,7 +482,21 @@
     "addedToAlbum": "Added to “{{name}}”",
     "labeled": "Labeled “{{name}}”",
     "noAlbums": "No albums yet",
-    "similarNotLoaded": "This photo isn't loaded in the Library yet — scroll further and try again"
+    "similarNotLoaded": "This photo isn't loaded in the Library yet — scroll further and try again",
+    "live": "Live",
+    "detailLocation": "Location",
+    "openMap": "Open map",
+    "player": {
+      "speed": "Playback speed",
+      "volume": "Volume",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "seek": "Seek",
+      "play": "Play",
+      "pause": "Pause",
+      "fullscreen": "Full screen",
+      "showControls": "Show video controls"
+    }
   },
   "favorites": {
     "title": "Favorites",
@@ -525,7 +550,8 @@
       "videos": "Videos",
       "favorites": "Favorites",
       "selected_one": "Selected ({{count}})",
-      "selected_other": "Selected ({{count}})"
+      "selected_other": "Selected ({{count}})",
+      "album": "Album"
     },
     "empty": "No photos",
     "noResults": "No matching photos",
@@ -539,7 +565,8 @@
     "kindTag": "AI tag",
     "loadFailed": "Couldn't load photos.",
     "retry": "Retry",
-    "scopeHint": "Up to 60 photos in this scope — type to narrow down."
+    "scopeHint": "Up to 60 photos in this scope — type to narrow down.",
+    "searchMobile": "Search with AI, e.g. “dog on the beach”"
   },
   "trash": {
     "title": "Trash",
@@ -561,6 +588,24 @@
     "restoredMany_other": "Restored {{count}} items",
     "deletedMany_one": "Permanently deleted {{count}} item",
     "deletedMany_other": "Permanently deleted {{count}} items"
+  },
+  "review": {
+    "title": "Swipe to clean",
+    "cardSubtitle": "Left delete · right keep · up like",
+    "stats": "Deleted {{trashed}} · Kept {{kept}} · Liked {{liked}}",
+    "trash": "Delete",
+    "keep": "Keep",
+    "undo": "Undo",
+    "hint": "← delete · → keep · ↑ like · Ctrl+Z undo",
+    "swipeHint": "Swipe left to delete, right to keep, up to like",
+    "done": "You've gone through your whole library",
+    "doneDesc": "Deleted photos are in the Trash and can still be restored.",
+    "openTrash": "Open Trash",
+    "restart": "Start over",
+    "empty": "Your library has no photos yet.",
+    "loadFailed": "Couldn't load photos.",
+    "writeFailed": "Couldn't delete or restore the photo, so it was left as it was.",
+    "favorite": "Like"
   },
   "friends": {
     "title": "Friends",
@@ -664,7 +709,7 @@
     "objectResults": "Objects",
     "sendToFriend": "Send photos",
     "photos": "photos",
-    "hint": "Type to search photos, friends or albums — e.g. \"sunset\". Type \"favorite\", a label or an album name (or \"favorite.dog\") to search inside it.",
+    "hint": "Type to search photos, friends or albums — e.g. \"sunset\", or by date: \"2026\", \"March\", \"2026-11-19\". Type \"favorite\", a label or an album name (or \"favorite.dog\") to search inside it.",
     "resizeHandle": "Drag to resize · Double-click to reset",
     "resetHint": "Double-click to reset",
     "dragHint": "Drag to move",
@@ -686,7 +731,7 @@
     "clearRecent": "Clear",
     "explore": "Explore with AI",
     "objectsExplore": "Objects in your photos",
-    "mobileHint": "Search by description, e.g. \"dog on the beach\", \"sunset\", \"2 people\"."
+    "mobileHint": "Search by description or date, e.g. \"dog on the beach\", \"sunset\", \"2 people\", \"March 2026\"."
   },
   "moments": {
     "title": "Moments",
@@ -792,7 +837,39 @@
     "doubleTapHint": "Double-tap to send a heart",
     "reactHint": "Tap for a heart · Hold for another emoji",
     "recent": "Recent moments",
-    "seeAll": "See all"
+    "seeAll": "See all",
+    "framer": {
+      "title": "Framing & order",
+      "hint": "Drag a photo inside its frame to choose what shows, pinch (touch or trackpad) to zoom. Click an empty frame to move the selected photo there. Nothing is saved until you post.",
+      "slot": "Frame {{n}}",
+      "friendSlot": "Friend's frame",
+      "editing": "Editing frame {{n}}",
+      "zoom": "Zoom",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "reset": "Reset",
+      "hintMobile": "Drag to choose what shows, pinch to zoom.",
+      "placeHere": "Put photo here"
+    },
+    "fromAccountMenu": "Moment from your library",
+    "fromDeviceMenu": "Moment from this device",
+    "fromAccountHint": "Pick a photo or video already in your library — it posts right away, no upload again.",
+    "multiMenu": "Multi-photo / with friends",
+    "pickPhotos": "Pick photos",
+    "donePicking": "Done",
+    "pickMax": "Pick up to {{n}} photos / videos.",
+    "accept": "Add photo",
+    "decline": "Decline",
+    "declineConfirm": "Decline this invitation?",
+    "declineConfirmDesc": "The creator is told and can invite someone else or delete the moment.",
+    "declineFailed": "Couldn't decline, please try again.",
+    "deleteShared": "Delete shared moment",
+    "deleteSharedDesc": "This moment is deleted for everyone in it.",
+    "progress": "{{done}}/{{total}} frames done",
+    "slotFilled": "Added",
+    "slotWaiting": "Waiting",
+    "slotDeclined": "Declined",
+    "yourDrafts": "Your moments in progress"
   },
   "common": {
     "open": "Open",
@@ -814,10 +891,18 @@
       "dark": "Dark",
       "system": "System",
       "language": "Language",
+      "fontSize": "Text size",
+      "fontSmall": "Small",
+      "fontDefault": "Default",
+      "fontLarge": "Large",
+      "fontXLarge": "Extra large",
       "density": "Photo grid density",
       "compact": "Small",
       "comfortable": "Medium",
-      "large": "Large"
+      "large": "Large",
+      "layout": "Photo layout",
+      "layoutGrid": "Square grid",
+      "layoutJustified": "Keep aspect ratio"
     },
     "sessions": {
       "title": "Signed-in devices",
@@ -1372,7 +1457,16 @@
     "incomingLibrary_other": "{{count}} photos were added to your library.",
     "incomingFiles_one": "{{count}} file is waiting for you.",
     "incomingFiles_other": "{{count}} files are waiting for you.",
-    "receive": "Receive"
+    "receive": "Receive",
+    "export": {
+      "title": "Export your whole library",
+      "description": "Download every original photo and video with taken date, favorites, captions, location and albums as one zip in Google Takeout format — move to Google Photos, Immich… or import it back here.",
+      "button": "Export (.zip)",
+      "descriptionMobile": "Original photos and videos + taken date, favorites, albums → one zip in Google Takeout format to move platforms. Keep the app open while it downloads.",
+      "progress": "{{size}} downloaded — tap to cancel",
+      "noSpace": "Not enough free space on this device for the export.",
+      "failed": "Couldn't export your library. Try again later."
+    }
   },
   "upload": {
     "progress": "Uploading {{done}}/{{total}}",
@@ -1381,9 +1475,11 @@
     "retry": "Retry",
     "badFile": "Unsupported file",
     "networkError": "Network error",
-    "fromDevice": "Upload from device",
+    "fromDevice": "From photo library",
     "takePhoto": "Take photo",
-    "pickFailed": "Couldn't open the photo library"
+    "pickFailed": "Couldn't open the photo library",
+    "fromFiles": "From Files",
+    "pickFilesFailed": "Couldn't open the file picker"
   },
   "welcome": {
     "next": "Next",
@@ -1428,5 +1524,718 @@
       "saturation": "Saturation",
       "vignette": "Vignette"
     }
+  },
+  "lab": {
+    "desc": "ai-service benchmark / experiment results (E1–E6) as charts",
+    "unavailable": "No results — only available on a machine with the dataset folder ($TNG_DATASETS/Results), not in production.",
+    "offline": "ai-service is not responding.",
+    "latest": "latest",
+    "summary": "Summary",
+    "tabs": {
+      "result": "Results",
+      "files": "CSV files",
+      "history": "Version history",
+      "log": "Log & config"
+    },
+    "top": "Top {{count}}",
+    "bottom": "Bottom {{count}}",
+    "ofRows": "by {{metric}} · {{total}} rows",
+    "pickMetric": "Pick at least one metric.",
+    "showTable": "Data table ({{count}} rows)",
+    "noResult": "This run has no result.json yet.",
+    "noFiles": "This run has no CSV files.",
+    "noNumbers": "This file has no numeric columns.",
+    "noHistory": "No archived versions yet.",
+    "truncated": "Showing the first {{count}} rows only.",
+    "events": "Events",
+    "config": "Config",
+    "details": "Details",
+    "exp": {
+      "select": {
+        "short": "Pick the Open Images subset used by the experiments.",
+        "long": "Step 0 (data). Picks Open Images V7 images so every one of the 174 classes has enough positives: val 3,000, test 5,000, train 15,000 images (seed 0). Picking goes round by round, rare classes first, so common classes do not crowd out rare ones. Rotated images are excluded.\nOutput: the download lists and positive / negative counts per class. Classes still short of images are listed in the result (e.g. Hair dryer, Toaster).\nFile: train_selection.csv."
+      },
+      "build": {
+        "short": "Check the downloaded images and build labels, boxes and captions.",
+        "long": "Step 0 (data), runs after select + download. Checks every image (missing, broken, EXIF-rotated), then builds image labels Y ∈ {1, 0, −1} from human-verified labels only. −1 = unverified, masked out of every metric. Applies the class hierarchy (Dog → Animal), boxes (incl. group-of) and Localized Narratives captions.\nOutput: per-split image counts, missing / broken images, known label pairs, images with boxes / captions. No model metrics."
+      },
+      "e1": {
+        "short": "Sanity check: does the app's CLIP pipeline reproduce the paper's numbers?",
+        "long": "Runs CLIP ViT-L/14@336 (OpenAI) on Flickr30k 1K and MSCOCO 5K and compares Recall@1/5/10 (text→image and image→text) with Table 13 of the CLIP paper. Passes when |Δ R@1| ≤ 2 points. Same pipeline as production: L2-normalize, cosine ranking like pgvector.\nAlso adds the app model (ViT-B-32 laion2b) and the backend preprocessing (WebP ≤512) to show how much the app pipeline shifts the numbers (these rows get no Δ check).\nFile: retrieval.csv (pub_* = paper numbers, delta_* = difference)."
+      },
+      "e2": {
+        "short": "RQ1: how well does zero-shot CLIP tag photos (no training)?",
+        "long": "Tags the 174 Open Images classes with zero-shot CLIP. The prompt template (7 templates + ensemble), per-class thresholds (max F1) and isotonic calibration are all chosen on val. Test is run once, for reporting only.\nMetrics: mAP, macro / micro-F1, micro-precision, ECE before / after calibration, 95% bootstrap CI; split by all / object / scene / old tag. reliability_test = reliability diagram data.\nFiles: per_class.csv (AP, F1, threshold per class), summary.csv (per group), templates.csv (template comparison)."
+      },
+      "e3": {
+        "short": "RQ1: how well does zero-shot CLIP search photos?",
+        "long": "Four query types:\n(a) per class, \"a photo of a {class}\": strict = unlabeled images count as wrong, known = those images are dropped;\n(b) Localized Narratives captions: R@1/5/10, MRR, median rank;\n(c) compositional vi / en queries (e.g. \"two dogs on a beach\"), hand-judged in judge.html: P@10/20, nDCG;\n(d) Vietnamese: direct / translated to English / multilingual CLIP.\nFiles: a_per_class.csv, a_fp_review.csv (false positives to review), b_captions.csv, c_*_per_query.csv."
+      },
+      "e4": {
+        "short": "YOLO26 baseline: detection + tagging, and the classes YOLO lacks.",
+        "long": "Runs YOLO26n (80 COCO classes) on Open Images. Measures mAP@0.5 with the Open Images protocol (verified images only, group-of boxes) and image-level tags with thresholds chosen on val, compared with the app defaults (0.25 / 0.4). Lists the classes YOLO does not cover (gap) so CLIP can fill them in E5.\nFiles: detection_ap.csv (AP per class), tag_summary.csv, tag_per_class.csv, gap_classes.csv."
+      },
+      "yolo_ft": {
+        "short": "Fine-tune YOLO26n on Open Images boxes (128 object classes).",
+        "long": "Real training of all YOLO26n weights (starting from the COCO pretrain) on 128 boxed classes, to fill 47 non-COCO classes. The best epoch is chosen on val. Optional pseudo labels: boxes from the base YOLO for unverified COCO classes, checked by CLIP.\nBase vs fine-tuned: mAP@50 / mAP@50-95 (Ultralytics), AP@0.5 with the OI protocol, image-level tags. A paired CI shows whether the 81 old COCO classes were forgotten. Also reports latency, parameter count and file size.\nFiles: per_class.csv (base vs ft), detection_ap.csv, pseudo_labels.csv, ultralytics_per_class.csv."
+      },
+      "e5": {
+        "short": "RQ2: does fusing YOLO + CLIP per tag beat a single source?",
+        "long": "For each tag, tries 4 rules on calibrated probabilities: clip, yolo, or = max, and = min. Keeps the rule with the best val F1 at precision ≥ target (default 0.9).\nCompares 6 strategies on test: clip_only, yolo_only, or, and, group_baseline (objects → YOLO, scenes → CLIP), per_tag. paired_ci95 = bootstrap CI of the improvement.\nFiles: strategies.csv, per_class.csv, rule_choice.csv (which source each tag group should use: the main conclusion)."
+      },
+      "probe": {
+        "short": "Trained tagging: CLIP / DINO / CLIP+DINO+YOLO linear probes vs zero-shot.",
+        "long": "Trains linear probes on 15,000 train images with 4 configs: lp_clip (the app's CLIP), lp_dino (DINOv3), lp_clip_dino, fused_learned (CLIP ⊕ DINO ⊕ YOLO features, i.e. learned fusion). Untrained baselines: zs_clip (E2), e5_per_tag (E5). Every row uses the same val threshold + calibration procedure, so they compare directly.\nL2 and unknown_weight (weight of unverified pairs) are chosen on val (selected). paired_ci95 = the improvement steps.\nFiles: summary.csv, per_class.csv (AP per class × config), grid_val.csv (hyper-parameter grid)."
+      },
+      "e6": {
+        "short": "RQ2: how much do tags help search (hybrid search)?",
+        "long": "Compares plain CLIP search with: filter (hard tag filter), boost (cos + λ·share of matching tags), boost_prob (cos + λ·tag probability). Tags come from several sources: yolo / clip / fused (E5), lp_* / fused_learned (probe), yolo_ft, and oracle = human-verified labels, i.e. the ceiling (perfect tags; never counted as \"best\"). λ is chosen on val captions.\nTwo query sets: Localized Narratives captions (R@k, MRR; named_* = queries that mention a class) and hand-judged compositional queries (P@10/20, nDCG). *_pairwise = CI of the difference between two configs.\nFiles: captions.csv, compositional.csv, *_pairwise.csv, lambda_val.csv."
+      },
+      "export_tags": {
+        "short": "Ships the 174 Open Images labels to the app: retrains the CLIP linear probe (lp_clip) open-world and saves it to app/tagging/probes.",
+        "long": "No result page in the Lab — run it with `uv run python -m experiments export_tags`. The app only stores CLIP vectors, so only lp_clip is exported; probabilities are isotonic-calibrated and each label has its own threshold (precision ≥ 0.9 on val), about 1.5 labels per photo."
+      }
+    },
+    "overview": {
+      "tab": "Overview",
+      "intro": "The thesis's headline results, taken from each experiment's latest official run. The small line on each tile is its value across the versions in History. Click a tile or chart to open that experiment.",
+      "noRun": "No run yet",
+      "open": "Details",
+      "pass": "Pass",
+      "fail": "Not passed",
+      "ceiling": "ceiling",
+      "kpi": {
+        "e1": {
+          "title": "CLIP reproduces the paper · Flickr text→image R@1 (%)",
+          "sub": "Paper {{paper}} · Δ {{delta}} pts"
+        },
+        "e2": {
+          "title": "Zero-shot CLIP tagging · mAP",
+          "sub": "95% CI {{lo}}–{{hi}} · ECE {{ece}}"
+        },
+        "e3": {
+          "title": "Search by class name · P@10",
+          "sub": "Compositional P@10: en {{en}} · vi {{vi}} · vi multilingual {{multi}}"
+        },
+        "e4": {
+          "title": "YOLO26 detection · mAP@0.5",
+          "sub": "YOLO covers {{covered}}/{{total}} classes"
+        },
+        "yolo_ft": {
+          "title": "YOLO fine-tune · AP@0.5 on new classes",
+          "sub": "{{n}} non-COCO classes · COCO classes {{base}} → {{ft}}"
+        },
+        "e5": {
+          "title": "Per-tag YOLO + CLIP fusion · macro-F1",
+          "sub": "CLIP only {{clip}} · {{delta}} (CI {{lo}}…{{hi}})"
+        },
+        "probe": {
+          "title": "Trained tagging (best) · mAP",
+          "sub": "{{config}} · {{delta}} vs zero-shot"
+        },
+        "e6": {
+          "title": "Hybrid search · MRR",
+          "sub": "{{config}} · CLIP {{clip}} · ceiling {{oracle}} · {{gap}}% of the gap closed"
+        }
+      },
+      "charts": {
+        "ladder": {
+          "title": "Tagging: untrained → trained",
+          "caption": "Every row goes through the same val threshold + calibration procedure, so they compare directly. Solid bar = macro-F1 at precision ≥ 0.9 (how the app auto-tags), light bar = mAP."
+        },
+        "search": {
+          "title": "How much tags help search",
+          "caption": "ΔMRR vs plain CLIP on 5,000 captions, using the better mode (boost / boost_prob) of each tag source. oracle = perfect tags, i.e. the ceiling."
+        },
+        "fusion": {
+          "title": "YOLO + CLIP fusion strategies",
+          "caption": "macro-F1 over all classes, thresholds set for precision ≥ 0.9. per_tag = each tag picks its own rule on val."
+        },
+        "paper": {
+          "title": "CLIP: gap to the paper",
+          "caption": "Δ R@1 (points) = measured − Table 13 of the CLIP paper. Grey band = passing zone (±tolerance); red bar = outside."
+        }
+      },
+      "series": {
+        "f1p": "macro-F1 @P≥0.9",
+        "mAP": "mAP",
+        "delta": "ΔMRR",
+        "macro_f1": "macro-F1",
+        "ours": "Measured",
+        "paper": "Paper",
+        "deltaR1": "Δ R@1 (pts)"
+      },
+      "groups": {
+        "baseline": {
+          "title": "Baseline checks",
+          "question": "Does the CLIP pipeline match the paper, and how does the stock YOLO26 do on Open Images (E1, E4)?"
+        },
+        "rq1": {
+          "title": "RQ1 · Zero-shot CLIP",
+          "question": "Without any training, how well does CLIP tag and search photos (E2, E3)?"
+        },
+        "improve": {
+          "title": "Improving tags",
+          "question": "How much do YOLO + CLIP fusion (E5), linear probes (probe) and YOLO fine-tuning (yolo_ft) add?"
+        },
+        "rq2": {
+          "title": "RQ2 · Tags for search",
+          "question": "How much better is hybrid search with tags than plain CLIP (E6)?"
+        }
+      },
+      "kinds": {
+        "clip": "CLIP",
+        "yolo": "YOLO",
+        "dino": "DINOv3",
+        "fusion": "Fusion of sources",
+        "reference": "Reference (paper, oracle)"
+      }
+    },
+    "digest": {
+      "build": {
+        "health": {
+          "title": "Data health",
+          "question": "{{total}} images across splits, merged from every official build run (each run builds some splits). Pass = nothing missing, broken or excluded for rotation.",
+          "images": "Usable images",
+          "sub": "missing {{missing}} · broken {{broken}} · rotated out {{rotated}} · run {{run}}"
+        },
+        "labels": {
+          "title": "Labels & annotations",
+          "question": "What later experiments can score: how many (image, class) pairs are human-verified, how many images have boxes (E4, yolo_ft) and captions (E3b, E6).",
+          "pairs": {
+            "title": "Verified (image, class) pairs",
+            "caption": "Only these pairs count in metrics; unverified pairs (−1) are masked.",
+            "known": "Verified",
+            "positive": "Positive"
+          },
+          "coverage": {
+            "title": "Annotation coverage (% of images)",
+            "caption": "Train needs no captions (captions are only for evaluation on val/test), so 0% is expected.",
+            "boxes": "With boxes",
+            "captions": "With captions"
+          },
+          "rate": "Positive share of verified pairs",
+          "rateSub": "{{groupOf}} group-of boxes (each counts as 1 GT)"
+        }
+      },
+      "e1": {
+        "checks": {
+          "title": "Checked against the paper",
+          "question": "Paper setup (raw images, \"a photo of\" prefix). Passes when |Δ R@1| ≤ {{tol}} points · {{passed}}/{{total}} checks pass.",
+          "t2i": "Text → image R@1 (%)",
+          "i2t": "Image → text R@1 (%)",
+          "sub": "paper {{paper}} · Δ {{delta}} pts",
+          "chart": "Δ R@1 vs paper",
+          "caption": "Δ = measured − paper (% points). A bar inside the grey ±{{tol}} band passes. Re-running E1 closer to the paper shrinks the bars toward 0."
+        },
+        "recall": {
+          "title": "Recall@K table",
+          "question": "R@1/5/10 in the paper setup, both directions. Only R@1 is checked; R@5/10 are for the thesis.",
+          "cols": {
+            "dataset": "Dataset",
+            "metric": "Metric",
+            "ours": "Measured",
+            "paper": "Paper",
+            "delta": "Δ"
+          }
+        },
+        "pipeline": {
+          "title": "How much the app pipeline moves R@1",
+          "question": "Compared with the paper setup of the same dataset and direction (raw image + \"a photo of\"). Not pass/fail — only shows whether the app makes CLIP worse.",
+          "chart": "Δ R@1 vs the paper setup",
+          "caption": "Grey ±{{tol}} pts band for reference: an effect inside it is negligible.",
+          "variants": {
+            "noPrefix": "no prefix",
+            "backend": "WebP backend",
+            "both": "WebP + no prefix"
+          }
+        },
+        "legend": {
+          "within": "Within ±{{tol}} pts (pass)",
+          "outside": "Off by more than ±{{tol}} pts",
+          "band": "Passing zone ±{{tol}}"
+        }
+      },
+      "e2": {
+        "test": {
+          "title": "Test results",
+          "question": "Zero-shot CLIP tags the 174 Open Images classes; prompt, thresholds and calibration are chosen on val, test runs once.",
+          "mAP": "mAP (ranking, no threshold)",
+          "ci": "95% CI {{lo}}–{{hi}} · {{classes}} classes",
+          "ciShort": "95% CI {{lo}}–{{hi}}",
+          "f1": "macro-F1 (per-class thresholds)",
+          "precision": "micro-precision",
+          "microF1": "micro-F1 {{f1}}",
+          "ece": "ECE after calibration (lower = more trustworthy)",
+          "eceRaw": "before calibration {{raw}}"
+        },
+        "groups": {
+          "title": "By group",
+          "question": "Are objects or scenes easier, and how far do the app's 17 old tags sit from the average.",
+          "main": "Objects vs scenes",
+          "mainCaption": "all = the 170 classes with both positives and negatives on test.",
+          "tags": "The app's 17 old tags",
+          "tagsCaption": "Δ mAP vs the all-class average ({{all}}). Blue = above average, grey = below."
+        },
+        "calibration": {
+          "title": "Probability reliability",
+          "question": "Do CLIP's probabilities match how often it is actually right (reliability diagram)?",
+          "chart": "Reliability diagram (test)",
+          "caption": "X = predicted probability, Y = observed accuracy. Dashed diagonal = perfect. ECE {{raw}} → {{cal}} after isotonic calibration.",
+          "raw": "Before calibration",
+          "calibrated": "After calibration"
+        },
+        "classes": {
+          "title": "Per class",
+          "question": "How the AP of the {{count}} classes is distributed, and where CLIP is weakest.",
+          "histogram": "AP distribution",
+          "histogramCaption": "Number of classes per AP range on test.",
+          "count": "Classes",
+          "worst": "12 lowest-AP classes",
+          "worstCaption": "Candidates for E5 (YOLO fusion) and probe (trained)."
+        },
+        "templates": {
+          "title": "Prompt template choice",
+          "question": "Which template gives the best val mAP (test is never used to choose).",
+          "chart": "Δ val mAP vs the chosen template",
+          "caption": "Chosen: \"{{chosen}}\" (blue bar, Δ = 0). Ensemble = average of several templates."
+        }
+      },
+      "e3": {
+        "classes": {
+          "title": "(a) Search by class name",
+          "question": "{{queries}} queries \"a photo of a {class}\" (the backend template). known = unlabeled images dropped; strict = unlabeled images count as wrong.",
+          "knownAP": "AP (known)",
+          "strictAP": "AP (strict)",
+          "strictSub": "lower bound: many correct images are simply unlabeled",
+          "curve": "Precision@k",
+          "curveCaption": "Share of correct images in the top k. The known − strict gap ≈ correct images Open Images never labeled (see a_fp_review.csv).",
+          "groups": "AP by group",
+          "groupsCaption": "Objects vs scenes."
+        },
+        "captions": {
+          "title": "(b) Search with long captions",
+          "question": "{{queries}} Localized Narratives captions, each with exactly one correct image.",
+          "r1": "R@1 (correct image ranked first)",
+          "mrr": "MRR",
+          "median": "Median rank",
+          "medianSub": "out of {{collection}} images",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "chart": "Full caption vs first sentence",
+          "caption": "CLIP truncates captions at 77 tokens; keeping only the first sentence loses information and does worse.",
+          "full": "Full caption",
+          "first": "First sentence only"
+        },
+        "compositional": {
+          "title": "(c) Compositional queries + Vietnamese",
+          "question": "Multi-concept queries (\"two dogs on a beach\") judged by hand in judge.html, English vs Vietnamese.",
+          "chart": "P@10 / nDCG@10 by language × model",
+          "caption": "Solid = P@10, light = nDCG@10. Red = Vietnamese fed straight into the app's CLIP (CLIP only learned English).",
+          "models": {
+            "app": "app CLIP",
+            "multilingual": "multilingual CLIP",
+            "translated": "translated to English"
+          },
+          "unjudged": "Pairs not yet judged",
+          "unjudgedSub": "0 = every top-20 image is judged, so P@k is reliable."
+        }
+      },
+      "e4": {
+        "coverage": {
+          "title": "What stock YOLO26 covers",
+          "question": "YOLO26n (80 COCO classes) on Open Images: how well it draws boxes, and how many classes it lacks for CLIP to fill in E5.",
+          "det": "Detection mAP@0.5 (test)",
+          "detSub": "Open Images protocol: verified images only, a group-of box counts as 1 GT",
+          "tag": "Image-level tag mAP (from boxes)",
+          "ci": "95% CI {{lo}}–{{hi}}",
+          "gap": "Classes YOLO lacks",
+          "gapSub": "YOLO covers {{covered}}/{{total}} classes",
+          "chart": "Class coverage",
+          "caption": "Green = classes YOLO has (COCO). Grey = classes it lacks — E5 uses CLIP, yolo_ft fine-tunes 47 more object classes.",
+          "classes": "Classes",
+          "rows": {
+            "covered": "YOLO has (COCO)",
+            "gap_object": "Non-COCO objects",
+            "gap_scene": "Scenes / concepts"
+          }
+        },
+        "classes": {
+          "title": "Detection AP per class",
+          "question": "AP@0.5 of the {{count}} COCO classes on test.",
+          "histogram": "AP@0.5 distribution",
+          "histogramCaption": "Number of classes per AP range.",
+          "worst": "12 lowest-AP classes",
+          "worstCaption": "Usually small or rare objects in Open Images."
+        },
+        "thresholds": {
+          "title": "App thresholds vs tuned thresholds",
+          "question": "Image-level tags from YOLO: thresholds chosen on val vs the fixed thresholds the app uses.",
+          "chart": "macro-F1 and precision by threshold choice",
+          "caption": "Higher thresholds raise precision but lower F1. mAP ({{mAP}}) does not depend on the threshold.",
+          "rows": {
+            "tuned_on_val": "Per-class, tuned on val",
+            "app_conf_0.25": "App: conf 0.25 (detect)",
+            "app_min_conf_0.4": "App: 0.4 (search)"
+          }
+        }
+      },
+      "e5": {
+        "strategies": {
+          "title": "Fusion strategies over all classes",
+          "question": "Each tag picks the rule (clip / yolo / or / and) with the best val F1 at precision ≥ {{target}}.",
+          "perTag": "per_tag macro-F1",
+          "vsClip": "{{delta}} vs CLIP only (CI {{lo}}…{{hi}})",
+          "vsYoloTitle": "Δ macro-F1 vs YOLO only (YOLO-covered classes)",
+          "vsYoloSub": "paired 95% CI — excluding 0 = a real improvement",
+          "mAP": "per_tag mAP",
+          "mAPSub": "vs CLIP only: CI {{lo}}…{{hi}}",
+          "chart": "Strategies on test (all classes)",
+          "caption": "Solid = macro-F1 (precision ≥ target), light = mAP. Color by source: CLIP / YOLO / fusion."
+        },
+        "sets": {
+          "title": "By class set",
+          "question": "Which source is strong where: COCO classes (YOLO has them), non-COCO, objects, scenes.",
+          "chart": "macro-F1 by class set",
+          "caption": "YOLO is 0 on scenes and non-COCO classes because it lacks them; per_tag keeps the strengths of both."
+        },
+        "rules": {
+          "title": "Which source each tag group picks",
+          "question": "E5's main conclusion: how many tags in each group choose each rule.",
+          "chart": "Chosen rules (stock YOLO)",
+          "caption": "or = max (trust whichever is surer), and = min (both must agree).",
+          "chartFt": "Chosen rules (fine-tuned YOLO)",
+          "captionFt": "yolo_ft adds 47 object classes, so the non-COCO group merges into objects.",
+          "rows": {
+            "object·coco": "Objects · YOLO has",
+            "object·non_coco": "Objects · non-COCO",
+            "scene": "Scenes"
+          }
+        },
+        "ft": {
+          "title": "Fine-tuned YOLO instead of stock",
+          "question": "Switching the YOLO source to yolo_ft (47 more classes): how much each strategy changes.",
+          "chart": "Δ macro-F1 (_ft − stock) over all classes",
+          "caption": "yolo_only jumps because it now covers more classes. per_tag: CI {{lo}}…{{hi}}."
+        }
+      },
+      "e6": {
+        "captions": {
+          "title": "Tags for caption search",
+          "question": "{{queries}} Localized Narratives captions: hybrid search (CLIP + tags) vs plain CLIP, measured by MRR.",
+          "clip": "Plain CLIP MRR",
+          "clipSub": "baseline",
+          "best": "Best hybrid MRR",
+          "bestSub": "{{delta}} vs plain CLIP",
+          "oracle": "Ceiling MRR (oracle)",
+          "oracleSub": "perfect tags = human-verified labels",
+          "gap": "Share of the gap closed",
+          "gapSub": "(best − CLIP) ÷ (ceiling − CLIP)",
+          "chart": "Δ MRR by tag source",
+          "caption": "Better mode (boost / boost_prob) of each source. Color = tag source; grey = oracle (ceiling)."
+        },
+        "modes": {
+          "chart": "By mode",
+          "caption": "Best of each mode over real sources. Red = worse than plain CLIP (hard filtering drops correct images).",
+          "better": "Better than plain CLIP",
+          "worse": "Worse than plain CLIP"
+        },
+        "compositional": {
+          "title": "Tags for compositional queries",
+          "question": "{{queries}} multi-concept queries judged by hand in judge.html, measured by P@10.",
+          "chart": "Δ P@10 by tag source",
+          "caption": "Few queries, so differences swing a lot — see the CIs in step 3.",
+          "unjudged": "Pairs not yet judged",
+          "unjudgedSub": "> 0 = new images entered the top 20 unjudged → P@k is incomplete; judge them in judge.html."
+        },
+        "pairwise": {
+          "title": "Statistically meaningful comparisons",
+          "question": "Paired bootstrap: a 95% CI that excludes 0 means a real difference.",
+          "captions": "Captions · {{metric}}",
+          "compositional": "Compositional · {{metric}}",
+          "caption": "Color = significant difference; grey = CI contains 0 (inconclusive).",
+          "lambdaEdge": "λ on the grid edge (widen the grid when re-running): {{list}}"
+        }
+      },
+      "probe": {
+        "ladder": {
+          "title": "Trained vs untrained tagging",
+          "question": "Linear probes trained on {{images}} train images; every row uses the same threshold (precision ≥ {{target}}) + calibration on val.",
+          "best": "Best mAP",
+          "bestSub": "{{delta}} vs zero-shot CLIP",
+          "f1p": "macro-F1 @ precision ≥ target",
+          "f1pSub": "zero-shot: {{zs}}",
+          "ece": "ECE (calibrated)",
+          "eceSub": "zero-shot: {{zs}}"
+        },
+        "steps": {
+          "title": "Each improvement step",
+          "question": "Each step compares 2 configs with a paired bootstrap (macro-F1 @ precision).",
+          "chart": "Δ macro-F1@P per step",
+          "caption": "Color = significant (95% CI excludes 0); grey = inconclusive."
+        },
+        "sets": {
+          "title": "By class set",
+          "question": "Where training helps most: objects, scenes, classes YOLO has / lacks.",
+          "chart": "macro-F1@P by class set",
+          "caption": "Light = untrained (zs_clip, e5_per_tag), solid = trained (lp_clip, fused_learned)."
+        },
+        "selected": {
+          "title": "Chosen hyper-parameters (val)",
+          "question": "L2 and the weight of unverified pairs, chosen by val mAP.",
+          "edge": "grid edge: {{params}}"
+        }
+      },
+      "yolo_ft": {
+        "result": {
+          "title": "Fine-tuning result",
+          "question": "YOLO26n trained on {{classes}} Open Images object classes: fills {{gap}} non-COCO classes — does it forget the old COCO classes?",
+          "gapAP": "AP@0.5 on new (non-COCO) classes",
+          "gapAPSub": "{{n}} classes — stock YOLO = 0",
+          "coco": "Δ AP@0.5 on COCO classes (forgetting?)",
+          "cocoSub": "{{base}} → {{ft}} · CI {{lo}}…{{hi}}",
+          "ultra": "Ultralytics mAP@50-95 (test)",
+          "ultraSub": "COCO {{coco}} · new {{gap}}",
+          "latency": "Latency (ms/image, app pipeline)",
+          "latencySub": "stock {{base}} · {{params}}M params · {{mb}} MB"
+        },
+        "tags": {
+          "title": "Image-level tags: stock vs fine-tuned",
+          "question": "macro-F1 @ precision ≥ target per class set.",
+          "chart": "macro-F1@P by class set",
+          "caption": "coco = the 78 classes stock YOLO has; gap = new classes; objects = every object class that model has.",
+          "base": "Stock YOLO",
+          "ft": "Fine-tuned YOLO"
+        },
+        "classes": {
+          "title": "Per class",
+          "question": "Which COCO classes gain / lose with fine-tuning, and what AP the new classes reach.",
+          "deltas": "Δ AP@0.5 on COCO classes (ft − stock)",
+          "deltasCaption": "8 biggest gains and 8 biggest losses. Red = forgotten.",
+          "gap": "AP@0.5 distribution of new classes",
+          "gapCaption": "Number of non-COCO classes per AP range after fine-tuning.",
+          "count": "Classes"
+        },
+        "pseudo": {
+          "title": "Pseudo labels",
+          "question": "Boxes from the stock YOLO for unverified COCO classes (precision ≥ {{target}} on val), re-checked by CLIP when unsure.",
+          "boxes": "Pseudo boxes",
+          "boxesSub": "vs {{human}} human boxes",
+          "images": "Images with pseudo boxes",
+          "classes": "Classes reaching the precision target",
+          "classesSub": "the rest get no pseudo labels",
+          "clip": "Confirmed by CLIP",
+          "clipSub": "CLIP rejected {{rejected}}"
+        }
+      },
+      "select": {
+        "splits": {
+          "title": "Selected images",
+          "question": "{{total}} images across splits, merged from every official select run (each run picks some splits).",
+          "selected": "Selected images",
+          "sub": "from {{candidates}} candidates · {{rotated}} rotated excluded · run {{run}}",
+          "chart": "Positives per class",
+          "caption": "Picked round by round, rare classes first, until every class has ≥ min_pos positives (when enough images exist).",
+          "min": "min_pos (target)",
+          "median": "Median"
+        },
+        "short": {
+          "title": "Classes still short of images",
+          "question": "Classes with fewer than half of min_pos positives — their metrics are less reliable.",
+          "none": "No class is short."
+        }
+      }
+    },
+    "ci": {
+      "pair": "Comparison",
+      "significant": "Significant",
+      "noDiff": "Inconclusive",
+      "legendSignificant": "{{source}} · significant",
+      "legendNoDiff": "Inconclusive (CI contains 0)"
+    },
+    "runner": {
+      "title": "Run benchmarks",
+      "desc": "Run python -m experiments from the UI — results are saved to Results/ and History/ just like a terminal run",
+      "build": "New job",
+      "stepCount_one": "{{count}} step",
+      "stepCount_other": "{{count}} steps",
+      "command": "Command",
+      "moreParams": "More parameters ({{count}})",
+      "saveAs": "Save run id as variable (optional)",
+      "saveAsHint": "Later steps use \"$NAME\" in a parameter (e.g. e4_ft_run = $E4_A) to get the run id this step creates.",
+      "addStep": "Add step",
+      "queue": "Queue",
+      "queueEmpty": "No steps yet — add a preset or single commands.",
+      "clear": "Clear",
+      "remove": "Remove step",
+      "missingVars": "Variables not saved by an earlier step: {{vars}}",
+      "label": "Job name (optional)",
+      "start_one": "Run {{count}} step",
+      "start_other": "Run {{count}} steps",
+      "notDeveloper": "Only approved Developers can run benchmarks (admins can view).",
+      "busy": "A job is running — wait or press Stop.",
+      "externalShort": "A terminal is running experiments.",
+      "externalTitle": "A terminal is running experiments",
+      "external": "A python -m experiments process is running outside the UI. Wait for it to finish before starting here (avoids GPU contention and writing the same folders) — its results still show in the Lab.",
+      "noJob": "No jobs yet.",
+      "noLog": "No log yet.",
+      "cancel": "Stop",
+      "history": "Recent jobs",
+      "state": {
+        "queued": "queued",
+        "running": "running",
+        "done": "done",
+        "failed": "failed",
+        "cancelled": "stopped",
+        "lost": "process lost"
+      },
+      "deleteRun": "Delete run",
+      "deleteLatest": "The latest run can't be deleted (later experiments read it)",
+      "deleteTitle": "Delete this run?",
+      "deleteDesc": "Removes the folder {{run}} from Results/. Any copy saved in History/ is kept.",
+      "tabs": {
+        "suite": "By step",
+        "single": "Single commands"
+      },
+      "suite": {
+        "title": "Run by step",
+        "steps": "Steps",
+        "customize": "Customize",
+        "models": "Models",
+        "clip": "CLIP (E2, E3, probe, E6)",
+        "dino": "DINOv3 (probe)",
+        "yolo": "Base YOLO (E4, probe, yolo_ft)",
+        "e1": "CLIP for E1 (sanity check)",
+        "ft": "YOLO fine-tunes — each model = one variant chain E4 → E5 → probe → E6",
+        "ftMode": {
+          "eval": "Re-evaluate",
+          "train": "Train new",
+          "skip": "Skip yolo_ft"
+        },
+        "ftHint": {
+          "eval": "yolo_ft --eval-only for each selected model (no training).",
+          "train": "Train one new model (parameters under the yolo_ft step's Customize), then use it like the selected models.",
+          "skip": "Don't run yolo_ft; the selected models are still used for E4 / E5 / probe / E6."
+        },
+        "newModel": "Newly trained model (yolo_ft)",
+        "main": "main",
+        "common": "Shared by every step",
+        "smokeHint": "smoke > 0 = test run on N images per split, kept separate, never overwrites latest.",
+        "preview": "Preview ({{count}} steps)"
+      }
+    }
+  },
+  "dev": {
+    "badge": "Developer",
+    "nav": {
+      "lab": "Lab",
+      "experiments": "Experiments",
+      "run": "Run"
+    },
+    "switch": "Go to Developer",
+    "search": {
+      "placeholder": "Search experiments or pages…",
+      "experiments": "Experiments"
+    },
+    "workspace": "Developer workspace",
+    "jump": "Jump to experiment",
+    "prev": "Previous",
+    "next": "Next",
+    "prep": {
+      "title": "Data preparation",
+      "question": "Pick the classes and build the Open Images subset used by the later steps (select, build)."
+    },
+    "view": {
+      "steps": "By step",
+      "pipeline": "Run order"
+    },
+    "needs": "Needs: {{list}}",
+    "notRun": "Not run",
+    "part": "Part {{part}}"
+  },
+  "takeout": {
+    "menu": "From Google Takeout",
+    "title": "Import from Google Takeout",
+    "intro": "Bring your Google Photos library here, keeping taken dates, favorites and albums.",
+    "step1": "Go to takeout.google.com, select only Google Photos and download the zip.",
+    "step2": "Unzip it: open the Files app and tap the zip (with several zips, extract them into the same folder).",
+    "step3": "Tap the button below and pick the extracted folder (\"Takeout\" or \"Google Photos\").",
+    "pickFolder": "Pick folder",
+    "pickAnother": "Pick another folder",
+    "scanning": "Scanning… {{n}} files",
+    "stats": {
+      "photos": "Photos",
+      "videos": "Videos",
+      "albums": "Albums",
+      "duplicates": "Duplicates (skipped)",
+      "missingJson": "No JSON (EXIF used)",
+      "skipped": "Other files (skipped)",
+      "existing": "Already in your library (skipped)",
+      "livePhotos": "Live Photos (photo + video)",
+      "edited": "Edited copies (-edited)"
+    },
+    "readyHint": "A photo in several albums is uploaded once. Albums with the same name as yours are reused.",
+    "import": "Import {{n}} items",
+    "checking": "Checking what's already in your library…",
+    "runningHint": "You can leave this screen; the import keeps going while the app is open.",
+    "steps": {
+      "metadata": "Reading metadata {{done}}/{{total}}",
+      "albums": "Creating albums {{done}}/{{total}}",
+      "upload": "Uploading {{done}}/{{total}}"
+    },
+    "errors": {
+      "scanFailed": "Couldn't read what you picked.",
+      "noMedia": "No photos or videos found.",
+      "checkFailed": "Couldn't check with the server, try again later.",
+      "startFailed": "Couldn't start the import, try again later."
+    },
+    "finished": {
+      "done": "Import finished",
+      "cancelled": "Import stopped",
+      "failed": "Import failed"
+    },
+    "report": {
+      "imported": "Imported",
+      "duplicates": "Same content (existing photo used)",
+      "skippedExisting": "Already there (skipped)",
+      "failed": "Failed"
+    },
+    "reasons": {
+      "badFile": "Invalid file",
+      "network": "Network error",
+      "unreadable": "Couldn't read file"
+    },
+    "moreFailures": "… and {{n}} more",
+    "retryFailed": "Retry {{n}} failed files",
+    "done": "Done",
+    "history": "Past imports",
+    "historyLine": "{{imported}} imported · {{duplicates}} duplicates · {{failed}} failed",
+    "status": {
+      "running": "Running",
+      "done": "Finished",
+      "cancelled": "Stopped",
+      "failed": "Failed"
+    },
+    "pickZip": "Pick zip files",
+    "sourceHint": "Pick the .zip files from Takeout (no need to unzip) or the extracted folder. You can also drop them here.",
+    "webStep2": "Pick all the zip files (or the extracted folder) below.",
+    "downloadFailures": "Download failures (CSV)",
+    "openGallery": "Open library",
+    "editedMode": {
+      "label": "Photos edited in Google Photos",
+      "both": "Import both",
+      "original": "Originals only",
+      "edited": "Edited only"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "clearAll": "Clear all",
+    "delete": "Delete notification",
+    "someone": "Someone",
+    "momentDeleted": "{{name}} deleted a moment you posted together.",
+    "momentDeletedCaption": "{{name}} deleted a moment you posted together: “{{caption}}”.",
+    "generic": "{{name}} has an update.",
+    "momentDeclined": "{{name}} declined to add a photo to your moment.",
+    "momentDeclinedCaption": "{{name}} declined to add a photo to your moment: “{{caption}}”."
   }
 }

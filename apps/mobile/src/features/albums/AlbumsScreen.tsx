@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Check,
   FolderOpen,
+  GalleryHorizontalEnd,
   Heart,
   Image as ImageIcon,
   Images,
@@ -81,7 +82,7 @@ export function AlbumsScreen() {
   const newAlbum = () => router.push("/album-form");
 
   return (
-    <TabScreen title={t("sidebar.albums", "Albums")}>
+    <TabScreen title={t("sidebar.albums", "Albums")} add={["album", "takeout"]}>
       <Animated.View entering={fadeIn} className="gap-8 pb-6 pt-2">
         {data?.invitations.length ? (
           <Section title={t("albums.invitations")} count={data.invitations.length}>
@@ -233,7 +234,7 @@ function Grid({ children }: { children: ReactNode }) {
   );
 }
 
-/** Favorites (hearted or labeled) + one card per personal label → `/favorites?filter=` + Trash last → `/trash`. */
+/** Favorites (hearted or labeled) + one card per personal label → `/favorites?filter=` + Swipe to clean → `/review` + Trash last → `/trash`. */
 function Collections({ size }: { size: number }) {
   const { t } = useTranslation();
   const { labels, totals } = useLabels();
@@ -265,6 +266,15 @@ function Collections({ size }: { size: number }) {
             onPress={() => router.push({ pathname: "/favorites", params: { filter: label.id } })}
           />
         ))}
+        <CoverCard
+          size={size}
+          icon={GalleryHorizontalEnd}
+          leading={<Icon as={GalleryHorizontalEnd} size={15} className="text-muted-foreground" />}
+          title={t("review.title")}
+          subtitle={t("review.cardSubtitle")}
+          cover={null}
+          onPress={() => router.push("/review")}
+        />
         <CoverCard
           size={size}
           icon={Trash2}

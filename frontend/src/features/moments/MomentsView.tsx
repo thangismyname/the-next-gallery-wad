@@ -289,10 +289,14 @@ export const MomentsView: React.FC = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirming?.kind === "leave" ? t("moments.leave") : t("moments.delete")}
+              {confirming?.kind === "leave"
+                ? t("moments.leave")
+                : t(confirming?.moment.isOwn ? "moments.delete" : "moments.deleteShared")}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {confirming?.kind === "leave" ? t("moments.leaveConfirm") : t("moments.deleteConfirmDesc")}
+              {confirming?.kind === "leave"
+                ? t("moments.leaveConfirm")
+                : t(confirming?.moment.template === "single" ? "moments.deleteConfirmDesc" : "moments.deleteSharedDesc")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -3,6 +3,17 @@ export type MomentVisibility = "circle" | "public" | "private";
 /** Template moment — quyết định cách ghép ảnh trong 1 moment. */
 export type MomentTemplate = "single" | "duo_square" | "trio_wide";
 
+/**
+ * How a photo sits in its frame (object-cover): `x, y` = the point of the photo shown at the centre
+ * of the zoom (0–1, also the object-position), `zoom` 1–3. null = centred, no zoom.
+ * Backend `moments.schema.js::framingSchema`.
+ */
+export interface MomentFraming {
+  x: number;
+  y: number;
+  zoom: number;
+}
+
 /** 1 slot (1 người + ảnh của người đó) trong moment template duo/trio. */
 export interface MomentSlot {
   slotIndex: number;
@@ -12,11 +23,16 @@ export interface MomentSlot {
   mediaId: string | null;
   mediaType: "photo" | "video";
   thumbnailUrl: string | null;
+  /** ≤2048px display tier — what the card draws (thumbnailUrl = 200px small). */
+  displayUrl?: string | null;
+  framing?: MomentFraming | null;
   url: string | null;
   width: number;
   height: number;
   durationSeconds?: number | null;
   filled: boolean;
+  /** The invitee declined this frame (still empty; the creator edits / deletes the draft). */
+  declined?: boolean;
   /** Slot đã từng được điền nhưng ảnh đã bị xoá vĩnh viễn → hiện placeholder. */
   missing?: boolean;
   filledAt?: string | null;
@@ -80,6 +96,8 @@ export interface Moment {
   mediaId: string | null;
   mediaType: "photo" | "video";
   caption: string | null;
+  /** Framing of a single moment's photo (duo/trio: per slot). */
+  framing?: MomentFraming | null;
   visibility?: MomentVisibility;
   /** Moment single mà ảnh đã bị xoá vĩnh viễn → card hiện placeholder. */
   missingMedia?: boolean;

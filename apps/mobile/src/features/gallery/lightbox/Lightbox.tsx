@@ -2,7 +2,7 @@ import { formatDateTime, type MediaListItem } from "@tng/shared";
 import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { StatusBar } from "expo-status-bar";
-import { Download, Ellipsis, Heart, Info, Pencil, Share as ShareIcon, Trash2, X, type LucideIcon } from "lucide-react-native";
+import { Download, Ellipsis, Heart, Info, Pencil, Play, Share as ShareIcon, Trash2, X, type LucideIcon } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, BackHandler, Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { GestureDetector } from "react-native-gesture-handler";
@@ -27,6 +27,7 @@ import { InfoSheet } from "./InfoSheet";
 import { LightboxPage, type InfoLayout } from "./LightboxPage";
 import { mediaSources } from "./sources";
 import { useViewerGestures } from "./useViewerGestures";
+import { VideoControls } from "./VideoControls";
 
 const OPEN: WithTimingConfig = { duration: APP_DURATION.slow, easing: EASE_OUT };
 const CLOSE: WithTimingConfig = { duration: APP_DURATION.base + 40, easing: EASE_OUT };
@@ -114,6 +115,9 @@ export function Lightbox({
   const [busy, setBusy] = useState<Busy>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Live Photo: id of the photo whose video is playing (another page = stopped).
+  const [liveId, setLiveId] = useState<string | null>(null);
+  const stopLive = useCallback(() => setLiveId(null), []);
 
   // Clamped: the list can shrink under the viewer (delete).
   const index = Math.max(Math.min(rawIndex, items.length - 1), 0);
@@ -139,7 +143,6 @@ export function Lightbox({
     startIndex,
     baseWidth: base.width,
     baseHeight: base.height,
-    isVideo: current?.mediaType === "video",
     onPageChange,
     onDismiss,
     onToggleChrome,
@@ -385,6 +388,8 @@ export function Lightbox({
                   values={values}
                   hiRes={i === index && hiRes}
                   playing={i === index && showPages}
+                  livePlaying={i === index && liveId === items[i].id}
+                  onLiveEnd={stopLive}
                   infoLayout={infoLayout}
                   onLoaded={onLoaded}
                   detections={devModeEnabled && i === index}
@@ -457,6 +462,17 @@ export function Lightbox({
           </View>
           {current ? (
             <>
+              {current.motionUrl ? (
+                <GlassButton
+                  size={44}
+                  visible={chromeShown && !infoOpen}
+                  accessibilityLabel={t("lightbox.live")}
+                  accessibilityState={{ selected: liveId === current.id }}
+                  onPress={() => setLiveId((id) => (id === current.id ? null : current.id))}
+                >
+                  <Icon as={Play} size={19} fill={liveId === current.id ? "currentColor" : "none"} />
+                </GlassButton>
+              ) : null}
               {editable ? (
               <GlassButton
                 size={44}
@@ -530,6 +546,17 @@ export function Lightbox({
         >
           <Text className="text-[15px] font-medium text-background">{toast}</Text>
         </Animated.View>
+      ) : null}
+
+      {/* Video: tua · tốc độ · âm lượng — cấp màn hình, ngay trên thanh công cụ (không bị zoom). */}
+      {current?.mediaType === "video" ? (
+        <View
+          pointerEvents="box-none"
+          className="absolute inset-x-0 items-center px-3"
+          style={{ bottom: Math.max(insets.bottom - 6, 12) + 56 + 8 }}
+        >
+          <VideoControls visible={chromeShown && !infoOpen} />
+        </View>
       ) : null}
 
       {/* Bottom glass action bar. */}

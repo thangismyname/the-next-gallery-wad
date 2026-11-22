@@ -9,3 +9,4 @@ export * from "./userAgent";
 export * from "./autoAlbums";
 export * from "./userKind";
 export * from "./authResult";
+export * from "./video";

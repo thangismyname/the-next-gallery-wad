@@ -64,7 +64,7 @@ export async function permanentDeleteMedia(userId, ids) {
   // ON DELETE CASCADE / SET NULL nên xoá row media là đủ, DB tự dọn.
   const picked = await dbPool.query(
     `SELECT m.id, m.minio_object, m.minio_bucket, m.thumbnail_object, m.thumbnail_small_object,
-            m.display_object, m.full_object,
+            m.display_object, m.full_object, m.motion_object,
             e.display_object AS edit_display, e.thumbnail_object AS edit_med,
             e.thumbnail_small_object AS edit_small
      FROM media m LEFT JOIN media_edits e ON e.media_id = m.id
@@ -84,6 +84,7 @@ export async function permanentDeleteMedia(userId, ids) {
     if (row.thumbnail_small_object) objects.add(row.thumbnail_small_object);
     if (row.display_object) objects.add(row.display_object);
     if (row.full_object) objects.add(row.full_object);
+    if (row.motion_object) objects.add(row.motion_object);
     for (const key of [row.edit_display, row.edit_med, row.edit_small]) if (key) objects.add(key);
   }
 

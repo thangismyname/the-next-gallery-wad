@@ -17,7 +17,7 @@ export const SidebarNavItem: React.FC<SidebarNavItemProps> = ({
   const Icon = item.icon;
   const location = useLocation();
   // Khớp cả trang con: /albums/abc vẫn sáng mục "Album".
-  const isActive = isNavActive(item.to, location.pathname);
+  const isActive = item.end ? location.pathname === item.to : isNavActive(item.to, location.pathname);
   const badge = item.badge && item.badge > 0 ? item.badge : null;
 
   return (

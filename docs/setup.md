@@ -228,7 +228,8 @@ docker compose -f docker-compose.dev.yml --env-file .env --profile full up --bui
 docker compose -f docker-compose.prod.yml --env-file .env up --build -d
 ```
 
-- Point your domain's DNS at the server; **Caddy obtains HTTPS automatically**.
+- Step-by-step on Oracle Cloud Always Free (+ backups, switching to external S3): `docs/deploy-oracle.md`.
+- Set `SITE_ADDRESS=<your domain>` and point its DNS at the server; **Caddy obtains HTTPS automatically** (empty = plain HTTP on :80).
 - Only **Caddy** is exposed (`80`/`443`); every other service stays on the internal network.
 - Set `PUBLIC_API_BASE_URL` and `PUBLIC_API_BASE_URL_ROOT` to your HTTPS URLs
   (e.g. `https://your-domain/api` and `https://your-domain`) and add your domain

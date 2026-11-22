@@ -202,8 +202,7 @@
     "loading": "Đang tải...",
     "header": {
       "backToGallery": "Quay lại thư viện",
-      "openSidebar": "Mở menu",
-      "closeSidebar": "Đóng menu"
+      "backToApp": "Quay lại The Next Gallery"
     },
     "table": {
       "role": "Vai trò",
@@ -217,7 +216,8 @@
     },
     "role": {
       "user": "user",
-      "admin": "admin"
+      "admin": "admin",
+      "developer": "developer"
     },
     "status": {
       "banned": "Đã khoá",
@@ -312,7 +312,8 @@
       "empty": "Không tìm thấy kết quả.",
       "pages": "Trang",
       "allUsers": "Xem tất cả {{n}} người dùng khớp “{{q}}”"
-    }
+    },
+    "switch": "Sang trang Quản trị"
   },
   "developer": {
     "menuItem": "Developer Mode",
@@ -351,7 +352,15 @@
     },
     "upload": {
       "button": "Tải lên",
-      "uploading": "Đang tải lên..."
+      "uploading": "Đang tải lên...",
+      "files": "Ảnh & video",
+      "folder": "Cả thư mục",
+      "takeout": "Nhập từ Google Takeout",
+      "takeoutSoon": "Bộ nhập Google Takeout sắp có. Hiện bạn có thể giải nén Takeout rồi chọn \"Cả thư mục\" (ngày chụp lấy từ EXIF).",
+      "dropHere": "Thả để tải lên",
+      "dropHint": "Ảnh, video hoặc cả thư mục. Tệp khác sẽ bị bỏ qua.",
+      "noMedia": "Không có ảnh hoặc video nào trong mục đã chọn",
+      "someFailed": "{{n}} tệp không tải lên được (tệp hỏng hoặc lỗi mạng)"
     },
     "selection": {
       "select": "Chọn",
@@ -388,7 +397,9 @@
     "home": "Trang chủ",
     "photos": "Ảnh của tôi",
     "ai": "AI",
-    "social": "Chia sẻ"
+    "social": "Chia sẻ",
+    "admin": "Quản trị",
+    "developer": "Developer"
   },
   "selection": {
     "cancel": "Hủy",
@@ -471,7 +482,21 @@
     "addedToAlbum": "Đã thêm vào “{{name}}”",
     "labeled": "Đã gắn nhãn “{{name}}”",
     "noAlbums": "Chưa có album nào",
-    "similarNotLoaded": "Ảnh này chưa được tải trong Thư viện — cuộn thêm rồi thử lại"
+    "similarNotLoaded": "Ảnh này chưa được tải trong Thư viện — cuộn thêm rồi thử lại",
+    "live": "Live",
+    "detailLocation": "Vị trí",
+    "openMap": "Mở bản đồ",
+    "player": {
+      "speed": "Tốc độ phát",
+      "volume": "Âm lượng",
+      "mute": "Tắt tiếng",
+      "unmute": "Bật tiếng",
+      "seek": "Tua video",
+      "play": "Phát",
+      "pause": "Tạm dừng",
+      "fullscreen": "Toàn màn hình",
+      "showControls": "Hiện điều khiển video"
+    }
   },
   "favorites": {
     "title": "Yêu thích",
@@ -531,6 +556,24 @@
     "restoredMany": "Đã khôi phục {{count}} mục",
     "deletedMany": "Đã xóa vĩnh viễn {{count}} mục"
   },
+  "review": {
+    "title": "Vuốt để dọn",
+    "cardSubtitle": "Trái xoá · phải giữ · lên thích",
+    "stats": "Đã xoá {{trashed}} · Đã giữ {{kept}} · Đã thích {{liked}}",
+    "trash": "Xoá",
+    "keep": "Giữ",
+    "undo": "Hoàn tác",
+    "hint": "← xoá · → giữ · ↑ thích · Ctrl+Z hoàn tác",
+    "swipeHint": "Vuốt trái để xoá, phải để giữ, lên để thích",
+    "done": "Đã xem hết thư viện",
+    "doneDesc": "Ảnh đã xoá nằm trong Thùng rác và vẫn khôi phục được.",
+    "openTrash": "Mở thùng rác",
+    "restart": "Xem lại từ đầu",
+    "empty": "Thư viện chưa có ảnh nào.",
+    "loadFailed": "Không tải được ảnh.",
+    "writeFailed": "Không xoá hoặc khôi phục được ảnh, ảnh vẫn được giữ nguyên.",
+    "favorite": "Thích"
+  },
   "mediaPicker": {
     "title": "Chọn từ thư viện",
     "description": "Chọn ảnh, video đã có trên tài khoản. Giữ Shift để chọn cả dải.",
@@ -543,7 +586,8 @@
       "photos": "Ảnh",
       "videos": "Video",
       "favorites": "Yêu thích",
-      "selected_other": "Đã chọn ({{count}})"
+      "selected_other": "Đã chọn ({{count}})",
+      "album": "Album"
     },
     "empty": "Không có ảnh nào",
     "noResults": "Không tìm thấy ảnh phù hợp",
@@ -555,7 +599,8 @@
     "kindTag": "Tag AI",
     "loadFailed": "Không tải được ảnh.",
     "retry": "Thử lại",
-    "scopeHint": "Tối đa 60 ảnh trong phạm vi — gõ thêm để lọc."
+    "scopeHint": "Tối đa 60 ảnh trong phạm vi — gõ thêm để lọc.",
+    "searchMobile": "Tìm bằng AI, vd “chó trên bãi biển”"
   },
   "friends": {
     "title": "Bạn bè",
@@ -654,7 +699,7 @@
     "objectResults": "Đối tượng",
     "sendToFriend": "Gửi ảnh",
     "photos": "ảnh",
-    "hint": "Gõ để tìm ảnh, bạn bè hoặc album — VD: \"hoàng hôn\". Gõ \"yêu thích\", tên nhãn hoặc album (hay \"favorite.chó\") để tìm trong đó.",
+    "hint": "Gõ để tìm ảnh, bạn bè hoặc album — VD: \"hoàng hôn\", hoặc theo ngày: \"2026\", \"tháng 3\", \"19/11/2026\". Gõ \"yêu thích\", tên nhãn hoặc album (hay \"favorite.chó\") để tìm trong đó.",
     "resizeHandle": "Kéo để đổi kích thước · Nháy đúp để khôi phục mặc định",
     "resetHint": "Nháy đúp để đặt lại",
     "dragHint": "Kéo để di chuyển",
@@ -676,7 +721,7 @@
     "clearRecent": "Xoá",
     "explore": "Khám phá theo AI",
     "objectsExplore": "Vật thể trong ảnh",
-    "mobileHint": "Tìm bằng mô tả, ví dụ \"chó trên bãi biển\", \"hoàng hôn\", \"2 người\"."
+    "mobileHint": "Tìm bằng mô tả hoặc ngày, ví dụ \"chó trên bãi biển\", \"hoàng hôn\", \"2 người\", \"tháng 3 2026\"."
   },
   "moments": {
     "title": "Moment",
@@ -782,7 +827,39 @@
     "doubleTapHint": "Chạm đúp để thả tim",
     "reactHint": "Chạm để thả tim · Giữ để chọn emoji khác",
     "recent": "Moments gần đây",
-    "seeAll": "Xem tất cả"
+    "seeAll": "Xem tất cả",
+    "framer": {
+      "title": "Khung & thứ tự",
+      "hint": "Kéo ảnh trong ô để chọn phần hiện, chụm 2 ngón (hoặc trackpad) để phóng to. Bấm ô trống để đặt ảnh đang chọn vào đó. Bấm Đăng mới lưu.",
+      "slot": "Ô {{n}}",
+      "friendSlot": "Ô của bạn bè",
+      "editing": "Đang chỉnh ô {{n}}",
+      "zoom": "Phóng to",
+      "moveUp": "Lên trên",
+      "moveDown": "Xuống dưới",
+      "reset": "Đặt lại",
+      "hintMobile": "Kéo để chọn phần hiện, chụm 2 ngón để phóng to.",
+      "placeHere": "Đặt ảnh vào đây"
+    },
+    "fromAccountMenu": "Moment từ thư viện của bạn",
+    "fromDeviceMenu": "Moment từ ảnh trên máy",
+    "fromAccountHint": "Chọn 1 ảnh hoặc video đã có trong thư viện — đăng luôn, không phải tải lên lại.",
+    "multiMenu": "Moment nhiều ảnh / cùng bạn",
+    "pickPhotos": "Chọn ảnh",
+    "donePicking": "Xong",
+    "pickMax": "Chọn tối đa {{n}} ảnh / video.",
+    "accept": "Ghép ảnh",
+    "decline": "Từ chối",
+    "declineConfirm": "Từ chối lời mời này?",
+    "declineConfirmDesc": "Người tạo sẽ được báo và có thể mời người khác hoặc xoá moment.",
+    "declineFailed": "Không từ chối được, thử lại nhé.",
+    "deleteShared": "Xoá moment chung",
+    "deleteSharedDesc": "Moment này sẽ bị xoá với mọi người tham gia.",
+    "progress": "Tiến độ {{done}}/{{total}} ô",
+    "slotFilled": "Đã ghép",
+    "slotWaiting": "Đang chờ",
+    "slotDeclined": "Đã từ chối",
+    "yourDrafts": "Moment bạn đang chờ"
   },
   "common": {
     "open": "Mở",
@@ -804,10 +881,18 @@
       "dark": "Tối",
       "system": "Theo hệ thống",
       "language": "Ngôn ngữ",
+      "fontSize": "Cỡ chữ",
+      "fontSmall": "Nhỏ",
+      "fontDefault": "Mặc định",
+      "fontLarge": "Lớn",
+      "fontXLarge": "Rất lớn",
       "density": "Mật độ lưới ảnh",
       "compact": "Nhỏ",
       "comfortable": "Vừa",
-      "large": "Lớn"
+      "large": "Lớn",
+      "layout": "Kiểu lưới ảnh",
+      "layoutGrid": "Ô vuông",
+      "layoutJustified": "Giữ tỉ lệ ảnh"
     },
     "sessions": {
       "title": "Thiết bị đăng nhập",
@@ -1345,7 +1430,16 @@
     "incomingTitle": "{{name}} gửi bạn",
     "incomingLibrary_other": "{{count}} ảnh đã được thêm vào thư viện của bạn.",
     "incomingFiles_other": "{{count}} tập tin đang chờ bạn nhận.",
-    "receive": "Nhận"
+    "receive": "Nhận",
+    "export": {
+      "title": "Xuất toàn bộ thư viện",
+      "description": "Tải mọi ảnh, video gốc kèm ngày chụp, yêu thích, mô tả, vị trí và album thành 1 file zip theo định dạng Google Takeout — mang sang Google Photos, Immich… hoặc nhập lại vào đây.",
+      "button": "Xuất (.zip)",
+      "descriptionMobile": "Ảnh, video gốc + ngày chụp, yêu thích, album → 1 file zip định dạng Google Takeout để chuyển nền tảng. Giữ app mở khi đang tải.",
+      "progress": "Đã tải {{size}} — chạm để huỷ",
+      "noSpace": "Máy không đủ dung lượng trống để lưu bản xuất.",
+      "failed": "Không xuất được thư viện. Thử lại sau."
+    }
   },
   "upload": {
     "progress": "Đang tải lên {{done}}/{{total}}",
@@ -1354,9 +1448,11 @@
     "retry": "Thử lại",
     "badFile": "Tệp không được hỗ trợ",
     "networkError": "Lỗi mạng",
-    "fromDevice": "Tải lên từ máy",
+    "fromDevice": "Từ thư viện ảnh",
     "takePhoto": "Chụp ảnh",
-    "pickFailed": "Không mở được thư viện ảnh"
+    "pickFailed": "Không mở được thư viện ảnh",
+    "fromFiles": "Từ ứng dụng Tệp",
+    "pickFilesFailed": "Không mở được trình chọn tệp"
   },
   "welcome": {
     "next": "Tiếp",
@@ -1401,5 +1497,717 @@
       "saturation": "Độ bão hoà",
       "vignette": "Làm tối viền"
     }
+  },
+  "lab": {
+    "desc": "Kết quả benchmark / experiment (E1–E6) của ai-service dưới dạng biểu đồ",
+    "unavailable": "Không có kết quả — chỉ có trên máy có thư mục dataset ($TNG_DATASETS/Results), không có trên bản production.",
+    "offline": "ai-service không phản hồi.",
+    "latest": "mới nhất",
+    "summary": "Tổng quan",
+    "tabs": {
+      "result": "Kết quả",
+      "files": "File CSV",
+      "history": "Lịch sử version",
+      "log": "Log & cấu hình"
+    },
+    "top": "Cao nhất {{count}}",
+    "bottom": "Thấp nhất {{count}}",
+    "ofRows": "theo {{metric}} · {{total}} hàng",
+    "pickMetric": "Chọn ít nhất 1 chỉ số.",
+    "showTable": "Bảng số ({{count}} hàng)",
+    "noResult": "Run này chưa có result.json.",
+    "noFiles": "Run này không có file CSV.",
+    "noNumbers": "File không có cột số.",
+    "noHistory": "Chưa có version nào trong History.",
+    "truncated": "Chỉ hiện {{count}} hàng đầu.",
+    "events": "Sự kiện",
+    "config": "Cấu hình",
+    "details": "Chi tiết",
+    "exp": {
+      "select": {
+        "short": "Chọn tập ảnh con của Open Images cho các thí nghiệm.",
+        "long": "Bước 0 (dữ liệu). Chọn ảnh từ Open Images V7 sao cho đủ ảnh positive cho cả 174 lớp: val 3.000 ảnh, test 5.000 ảnh, train 15.000 ảnh (seed 0). Chọn theo vòng, lớp hiếm được ưu tiên, nên lớp phổ biến không lấn át lớp hiếm. Ảnh bị xoay bị loại.\nKết quả: danh sách ảnh cần tải, số positive / negative của từng lớp. Lớp còn thiếu ảnh được liệt kê trong result (vd Hair dryer, Toaster).\nFile: train_selection.csv."
+      },
+      "build": {
+        "short": "Kiểm tra ảnh đã tải và dựng nhãn, box, caption.",
+        "long": "Bước 0 (dữ liệu), chạy sau select và tải ảnh. Kiểm từng ảnh (thiếu, hỏng, EXIF bị xoay), rồi dựng nhãn ảnh Y ∈ {1, 0, −1} chỉ từ nhãn do người xác minh. −1 = chưa xác minh, bị bỏ khi tính metric. Áp cây lớp (Dog → Animal), lấy box (kể cả box group-of) và caption Localized Narratives.\nKết quả: số ảnh, ảnh thiếu / hỏng, số cặp nhãn đã biết, số ảnh có box / caption theo từng split. Không có metric model."
+      },
+      "e1": {
+        "short": "Sanity check: CLIP của app có khớp số công bố trong paper không.",
+        "long": "Chạy CLIP ViT-L/14@336 (OpenAI) trên Flickr30k 1K và MSCOCO 5K, rồi so Recall@1/5/10 (text→image và image→text) với Table 13 của paper CLIP. Đạt khi |Δ R@1| ≤ 2 điểm. Pipeline giống production: L2-normalize, xếp hạng cosine như pgvector.\nCó thêm model của app (ViT-B-32 laion2b) và tiền xử lý của backend (WebP ≤512) để thấy pipeline app làm số thay đổi bao nhiêu (các hàng này không chấm Δ).\nFile: retrieval.csv (cột pub_* = số paper, delta_* = chênh lệch)."
+      },
+      "e2": {
+        "short": "RQ1: CLIP zero-shot gắn tag tốt đến đâu (không train).",
+        "long": "Gắn 174 lớp Open Images bằng CLIP zero-shot. Template prompt (7 mẫu + ensemble), ngưỡng từng lớp (F1 tối đa) và isotonic calibration đều chọn trên val. Test chỉ chạy một lần để báo cáo.\nChỉ số: mAP, macro / micro-F1, micro-precision, ECE trước và sau calibrate, CI 95% bootstrap; chia theo all / object / scene / từng tag cũ. reliability_test = dữ liệu reliability diagram.\nFile: per_class.csv (AP, F1, ngưỡng từng lớp), summary.csv (theo nhóm), templates.csv (so template)."
+      },
+      "e3": {
+        "short": "RQ1: CLIP zero-shot tìm ảnh tốt đến đâu.",
+        "long": "Bốn loại query:\n(a) theo lớp, câu \"a photo of a {lớp}\": strict = ảnh chưa gán nhãn tính là sai, known = bỏ các ảnh đó;\n(b) caption Localized Narratives: R@1/5/10, MRR, median rank;\n(c) query ghép vi / en (vd \"2 con chó trên bãi biển\"), chấm tay trong judge.html: P@10/20, nDCG;\n(d) tiếng Việt: dùng thẳng / dịch sang Anh / CLIP đa ngôn ngữ.\nFile: a_per_class.csv, a_fp_review.csv (FP để xem tay), b_captions.csv, c_*_per_query.csv."
+      },
+      "e4": {
+        "short": "Baseline YOLO26: detect + gắn tag và các lớp YOLO không có.",
+        "long": "Chạy YOLO26n (80 lớp COCO) trên ảnh Open Images. Đo mAP@0.5 theo giao thức Open Images (chỉ ảnh đã xác minh, có box group-of) và tag cấp ảnh với ngưỡng chọn trên val, so với ngưỡng mặc định của app (0.25 / 0.4). Liệt kê các lớp YOLO không phủ (gap) để CLIP lấp ở E5.\nFile: detection_ap.csv (AP từng lớp), tag_summary.csv, tag_per_class.csv, gap_classes.csv."
+      },
+      "yolo_ft": {
+        "short": "Fine-tune YOLO26n trên box Open Images (128 lớp vật thể).",
+        "long": "Train thật toàn bộ YOLO26n (khởi đầu từ pretrain COCO) trên 128 lớp có box, để lấp 47 lớp ngoài COCO. Epoch tốt nhất chọn trên val. Có thể dùng nhãn giả: box do YOLO gốc sinh cho lớp COCO chưa xác minh, CLIP kiểm lại.\nSo model gốc với fine-tune: mAP@50 / mAP@50-95 (Ultralytics), AP@0.5 theo giao thức OI, tag cấp ảnh. CI ghép cặp cho biết có quên 81 lớp COCO cũ không. Kèm latency, số tham số, kích thước file.\nFile: per_class.csv (base vs ft), detection_ap.csv, pseudo_labels.csv, ultralytics_per_class.csv."
+      },
+      "e5": {
+        "short": "RQ2: hợp nhất YOLO + CLIP theo từng tag có tốt hơn dùng một nguồn.",
+        "long": "Với mỗi tag, thử 4 quy tắc trên xác suất đã calibrate: clip, yolo, or = max, and = min. Chọn quy tắc có F1 cao nhất trên val mà precision ≥ target (mặc định 0.9).\nSo 6 chiến lược trên test: clip_only, yolo_only, or, and, group_baseline (vật thể → YOLO, cảnh → CLIP), per_tag. paired_ci95 = CI bootstrap của phần cải thiện.\nFile: strategies.csv, per_class.csv, rule_choice.csv (nhóm tag nào nên lấy nguồn nào: kết luận chính)."
+      },
+      "probe": {
+        "short": "Tag có train: linear probe CLIP / DINO / CLIP+DINO+YOLO so với zero-shot.",
+        "long": "Train linear probe trên 15.000 ảnh train với 4 cấu hình: lp_clip (CLIP của app), lp_dino (DINOv3), lp_clip_dino, fused_learned (CLIP ⊕ DINO ⊕ đặc trưng YOLO, tức fusion có học). Mốc so sánh không train: zs_clip (E2), e5_per_tag (E5). Mọi hàng dùng cùng thủ tục ngưỡng + calibrate trên val, nên so trực tiếp được.\nL2 và unknown_weight (trọng số cặp chưa xác minh) chọn trên val (selected). paired_ci95 = các bậc cải thiện.\nFile: summary.csv, per_class.csv (AP từng lớp × cấu hình), grid_val.csv (lưới siêu tham số)."
+      },
+      "e6": {
+        "short": "RQ2: tag giúp tìm ảnh được bao nhiêu (search lai).",
+        "long": "So search CLIP thuần với: filter (lọc cứng theo tag), boost (cos + λ·tỉ lệ tag khớp), boost_prob (cos + λ·xác suất tag). Tag lấy từ nhiều nguồn: yolo / clip / fused (E5), lp_* / fused_learned (probe), yolo_ft, và oracle = nhãn người xác minh, tức trần (tag hoàn hảo; không tính là \"tốt nhất\"). λ chọn trên caption val.\nHai bộ query: caption Localized Narratives (R@k, MRR; named_* = query có nhắc tới lớp) và query ghép chấm tay (P@10/20, nDCG). *_pairwise = CI chênh lệch giữa hai cấu hình.\nFile: captions.csv, compositional.csv, *_pairwise.csv, lambda_val.csv."
+      },
+      "export_tags": {
+        "short": "Đưa 174 nhãn Open Images vào app: train lại linear probe CLIP (lp_clip) theo kiểu open-world rồi lưu vào app/tagging/probes.",
+        "long": "Không có màn kết quả riêng trong Lab — chạy bằng lệnh `uv run python -m experiments export_tags`. App chỉ có vector CLIP của mọi ảnh nên chỉ xuất lp_clip; xác suất được hiệu chỉnh (isotonic) và mỗi nhãn có ngưỡng riêng (precision ≥ 0.9 trên val), trung bình ~1.5 nhãn mỗi ảnh."
+      }
+    },
+    "overview": {
+      "tab": "Tổng quan",
+      "intro": "Các kết quả chính của luận văn, lấy từ run chính thức mới nhất của mỗi thí nghiệm. Đường nhỏ ở mỗi thẻ là giá trị qua các version trong History. Bấm vào thẻ hoặc biểu đồ để mở thí nghiệm đó.",
+      "noRun": "Chưa có run",
+      "open": "Xem chi tiết",
+      "pass": "Đạt",
+      "fail": "Chưa đạt",
+      "ceiling": "trần",
+      "kpi": {
+        "e1": {
+          "title": "CLIP tái lập paper · Flickr câu→ảnh R@1 (%)",
+          "sub": "Paper {{paper}} · Δ {{delta}} điểm"
+        },
+        "e2": {
+          "title": "Tag zero-shot CLIP · mAP",
+          "sub": "CI 95% {{lo}}–{{hi}} · ECE {{ece}}"
+        },
+        "e3": {
+          "title": "Tìm theo tên lớp · P@10",
+          "sub": "Query ghép P@10: en {{en}} · vi {{vi}} · vi đa ngữ {{multi}}"
+        },
+        "e4": {
+          "title": "YOLO26 vẽ khung · mAP@0.5",
+          "sub": "YOLO phủ {{covered}}/{{total}} lớp"
+        },
+        "yolo_ft": {
+          "title": "YOLO fine-tune · AP@0.5 lớp mới",
+          "sub": "{{n}} lớp ngoài COCO · lớp COCO {{base}} → {{ft}}"
+        },
+        "e5": {
+          "title": "Gộp YOLO + CLIP theo tag · macro-F1",
+          "sub": "Chỉ CLIP {{clip}} · {{delta}} (CI {{lo}}…{{hi}})"
+        },
+        "probe": {
+          "title": "Tag có train (tốt nhất) · mAP",
+          "sub": "{{config}} · {{delta}} so với zero-shot"
+        },
+        "e6": {
+          "title": "Search lai · MRR",
+          "sub": "{{config}} · CLIP {{clip}} · trần {{oracle}} · đạt {{gap}}% khoảng cách"
+        }
+      },
+      "charts": {
+        "ladder": {
+          "title": "Tag: không train → có train",
+          "caption": "Cùng một thủ tục ngưỡng + calibrate trên val, nên các hàng so trực tiếp được. Cột đậm = macro-F1 tại precision ≥ 0.9 (giống cách app tự gắn tag), cột nhạt = mAP."
+        },
+        "search": {
+          "title": "Tag giúp search bao nhiêu",
+          "caption": "ΔMRR so với CLIP thuần trên 5.000 caption, lấy mode tốt hơn (boost / boost_prob) của mỗi nguồn tag. oracle = tag hoàn hảo, tức mức trần."
+        },
+        "fusion": {
+          "title": "Chiến lược gộp YOLO + CLIP",
+          "caption": "macro-F1 trên mọi lớp, ngưỡng đặt để precision ≥ 0.9. per_tag = mỗi tag tự chọn quy tắc trên val."
+        },
+        "paper": {
+          "title": "CLIP: lệch so với paper",
+          "caption": "Δ R@1 (điểm) = đo được − Table 13 của paper CLIP. Dải xám = vùng đạt (±ngưỡng); cột đỏ = lệch ra ngoài."
+        }
+      },
+      "series": {
+        "f1p": "macro-F1 @P≥0.9",
+        "mAP": "mAP",
+        "delta": "ΔMRR",
+        "macro_f1": "macro-F1",
+        "ours": "Đo được",
+        "paper": "Paper",
+        "deltaR1": "Δ R@1 (điểm)"
+      },
+      "groups": {
+        "baseline": {
+          "title": "Kiểm chứng nền tảng",
+          "question": "Pipeline CLIP có đúng như paper không, YOLO26 gốc đạt bao nhiêu trên Open Images (E1, E4)."
+        },
+        "rq1": {
+          "title": "RQ1 · CLIP zero-shot",
+          "question": "Không train gì, CLIP gắn tag và tìm ảnh tốt đến đâu (E2, E3)."
+        },
+        "improve": {
+          "title": "Cải thiện tag",
+          "question": "Gộp YOLO + CLIP (E5), train linear probe (probe), fine-tune YOLO (yolo_ft) giúp thêm bao nhiêu."
+        },
+        "rq2": {
+          "title": "RQ2 · Tag giúp search",
+          "question": "Đưa tag vào search lai thì tìm ảnh tốt hơn bao nhiêu so với CLIP thuần (E6)."
+        }
+      },
+      "kinds": {
+        "clip": "CLIP",
+        "yolo": "YOLO",
+        "dino": "DINOv3",
+        "fusion": "Gộp nhiều nguồn",
+        "reference": "Mốc tham chiếu (paper, oracle)"
+      }
+    },
+    "digest": {
+      "build": {
+        "health": {
+          "title": "Sức khoẻ dữ liệu",
+          "question": "{{total}} ảnh qua các split, gộp từ mọi run build chính thức (mỗi run dựng vài split). Đạt = không thiếu, không hỏng, không ảnh nào bị loại vì xoay.",
+          "images": "Ảnh dùng được",
+          "sub": "thiếu {{missing}} · hỏng {{broken}} · loại vì xoay {{rotated}} · run {{run}}"
+        },
+        "labels": {
+          "title": "Nhãn & annotation",
+          "question": "Thí nghiệm sau chấm được tới đâu: bao nhiêu cặp (ảnh, lớp) có nhãn người xác minh, bao nhiêu ảnh có box (E4, yolo_ft) và caption (E3b, E6).",
+          "pairs": {
+            "title": "Cặp (ảnh, lớp) đã xác minh",
+            "caption": "Chỉ các cặp này được tính metric; cặp chưa xác minh (−1) bị mask.",
+            "known": "Đã xác minh",
+            "positive": "Positive"
+          },
+          "coverage": {
+            "title": "Độ phủ annotation (% ảnh)",
+            "caption": "Train không cần caption (caption chỉ dùng để đánh giá trên val/test), nên 0% là đúng.",
+            "boxes": "Có box",
+            "captions": "Có caption"
+          },
+          "rate": "Tỉ lệ positive trong cặp đã xác minh",
+          "rateSub": "{{groupOf}} box group-of (tính là 1 GT)"
+        }
+      },
+      "e1": {
+        "checks": {
+          "title": "Chấm so với paper",
+          "question": "Cấu hình giống paper (ảnh gốc, tiền tố \"a photo of\"). Đạt khi |Δ R@1| ≤ {{tol}} điểm · {{passed}}/{{total}} phép chấm đạt.",
+          "t2i": "Câu → ảnh R@1 (%)",
+          "i2t": "Ảnh → câu R@1 (%)",
+          "sub": "paper {{paper}} · Δ {{delta}} điểm",
+          "chart": "Δ R@1 so với paper",
+          "caption": "Δ = đo được − paper (điểm %). Cột nằm trong dải xám ±{{tol}} là đạt. Chạy lại E1 sát paper hơn thì cột sẽ co về 0."
+        },
+        "recall": {
+          "title": "Bảng Recall@K",
+          "question": "R@1/5/10 cấu hình paper, cả hai chiều. Chỉ R@1 được chấm; R@5/10 để đưa vào luận văn.",
+          "cols": {
+            "dataset": "Dataset",
+            "metric": "Chỉ số",
+            "ours": "Đo được",
+            "paper": "Paper",
+            "delta": "Δ"
+          }
+        },
+        "pipeline": {
+          "title": "Pipeline app làm R@1 đổi bao nhiêu",
+          "question": "So với cấu hình paper của cùng dataset và chiều (ảnh gốc + \"a photo of\"). Các hàng này không chấm đạt/không, chỉ để thấy app có làm CLIP kém đi không.",
+          "chart": "Δ R@1 so với cấu hình paper",
+          "caption": "Dải xám ±{{tol}} điểm để tham khảo: tác động nằm trong dải coi như không đáng kể.",
+          "variants": {
+            "noPrefix": "bỏ tiền tố",
+            "backend": "WebP backend",
+            "both": "WebP + bỏ tiền tố"
+          }
+        },
+        "legend": {
+          "within": "Trong ±{{tol}} điểm (đạt)",
+          "outside": "Lệch quá ±{{tol}} điểm",
+          "band": "Vùng đạt ±{{tol}}"
+        }
+      },
+      "e2": {
+        "test": {
+          "title": "Kết quả trên test",
+          "question": "CLIP zero-shot gắn 174 lớp Open Images; prompt, ngưỡng và calibrate chọn trên val, test chạy một lần.",
+          "mAP": "mAP (xếp hạng, không cần ngưỡng)",
+          "ci": "CI 95% {{lo}}–{{hi}} · {{classes}} lớp",
+          "ciShort": "CI 95% {{lo}}–{{hi}}",
+          "f1": "macro-F1 (ngưỡng từng lớp)",
+          "precision": "micro-precision",
+          "microF1": "micro-F1 {{f1}}",
+          "ece": "ECE sau calibrate (càng thấp càng tin được)",
+          "eceRaw": "trước calibrate {{raw}}"
+        },
+        "groups": {
+          "title": "Theo nhóm",
+          "question": "Vật thể hay cảnh dễ hơn, và 17 tag cũ của app lệch so với trung bình bao nhiêu.",
+          "main": "Vật thể vs cảnh",
+          "mainCaption": "all = cả 170 lớp có đủ positive + negative trên test.",
+          "tags": "17 tag cũ của app",
+          "tagsCaption": "Δ mAP so với trung bình mọi lớp ({{all}}). Xanh = tốt hơn trung bình, xám = kém hơn."
+        },
+        "calibration": {
+          "title": "Độ tin cậy của xác suất",
+          "question": "Xác suất CLIP đưa ra có khớp tỉ lệ đúng thật không (reliability diagram).",
+          "chart": "Reliability diagram (test)",
+          "caption": "Trục ngang = xác suất dự đoán, trục dọc = tỉ lệ thực sự đúng. Đường chéo đứt = hoàn hảo. ECE {{raw}} → {{cal}} sau isotonic calibrate.",
+          "raw": "Trước calibrate",
+          "calibrated": "Sau calibrate"
+        },
+        "classes": {
+          "title": "Theo từng lớp",
+          "question": "AP của {{count}} lớp phân bố thế nào, và lớp nào CLIP yếu nhất.",
+          "histogram": "Phân bố AP",
+          "histogramCaption": "Số lớp trong mỗi khoảng AP trên test.",
+          "count": "Số lớp",
+          "worst": "12 lớp AP thấp nhất",
+          "worstCaption": "Ứng viên để cải thiện ở E5 (gộp YOLO) và probe (có train)."
+        },
+        "templates": {
+          "title": "Chọn template prompt",
+          "question": "Template nào cho val mAP cao nhất (test không dùng để chọn).",
+          "chart": "Δ val mAP so với template đã chọn",
+          "caption": "Đã chọn: \"{{chosen}}\" (cột xanh, Δ = 0). Ensemble = trung bình nhiều template."
+        }
+      },
+      "e3": {
+        "classes": {
+          "title": "(a) Tìm theo tên lớp",
+          "question": "{{queries}} query \"a photo of a {lớp}\" (đúng template của backend). known = bỏ ảnh chưa có nhãn; strict = coi ảnh chưa nhãn là sai.",
+          "knownAP": "AP (known)",
+          "strictAP": "AP (strict)",
+          "strictSub": "cận dưới: nhiều ảnh đúng nhưng chưa được gán nhãn",
+          "curve": "Precision@k",
+          "curveCaption": "Tỉ lệ ảnh đúng trong top k. Khoảng cách known − strict ≈ ảnh đúng nhưng Open Images chưa gán nhãn (xem a_fp_review.csv).",
+          "groups": "AP theo nhóm",
+          "groupsCaption": "Vật thể vs cảnh."
+        },
+        "captions": {
+          "title": "(b) Tìm bằng caption dài",
+          "question": "{{queries}} caption Localized Narratives, mỗi caption có đúng 1 ảnh đúng.",
+          "r1": "R@1 (ảnh đúng đứng đầu)",
+          "mrr": "MRR",
+          "median": "Thứ hạng trung vị",
+          "medianSub": "trong {{collection}} ảnh",
+          "ci": "CI 95% {{lo}}–{{hi}}",
+          "chart": "Caption đầy đủ vs câu đầu",
+          "caption": "CLIP cắt caption ở 77 token; chỉ giữ câu đầu thì mất thông tin nên kém hơn.",
+          "full": "Caption đầy đủ",
+          "first": "Chỉ câu đầu"
+        },
+        "compositional": {
+          "title": "(c) Query ghép + tiếng Việt",
+          "question": "Query nhiều ý (\"2 con chó trên bãi biển\") chấm tay trong judge.html, so tiếng Anh với tiếng Việt.",
+          "chart": "P@10 / nDCG@10 theo ngôn ngữ × model",
+          "caption": "Cột đậm = P@10, nhạt = nDCG@10. Đỏ = tiếng Việt đưa thẳng vào CLIP của app (CLIP chỉ học tiếng Anh).",
+          "models": {
+            "app": "CLIP app",
+            "multilingual": "CLIP đa ngữ",
+            "translated": "dịch sang Anh"
+          },
+          "unjudged": "Cặp chưa chấm tay",
+          "unjudgedSub": "0 = mọi ảnh trong top 20 đã được chấm, số P@k tin được."
+        }
+      },
+      "e4": {
+        "coverage": {
+          "title": "YOLO26 gốc phủ được gì",
+          "question": "YOLO26n (80 lớp COCO) chạy trên Open Images: vẽ khung tốt đến đâu, và bao nhiêu lớp YOLO không có để CLIP lấp ở E5.",
+          "det": "Vẽ khung mAP@0.5 (test)",
+          "detSub": "giao thức Open Images: chỉ ảnh đã xác minh, box group-of tính 1 GT",
+          "tag": "Tag cấp ảnh mAP (từ box)",
+          "ci": "CI 95% {{lo}}–{{hi}}",
+          "gap": "Lớp YOLO không có",
+          "gapSub": "YOLO phủ {{covered}}/{{total}} lớp",
+          "chart": "Độ phủ lớp",
+          "caption": "Xanh lá = lớp YOLO có (COCO). Xám = lớp YOLO không có — E5 lấy CLIP, yolo_ft fine-tune thêm 47 lớp vật thể.",
+          "classes": "Số lớp",
+          "rows": {
+            "covered": "YOLO có (COCO)",
+            "gap_object": "Vật thể ngoài COCO",
+            "gap_scene": "Cảnh / khái niệm"
+          }
+        },
+        "classes": {
+          "title": "AP vẽ khung theo lớp",
+          "question": "AP@0.5 của {{count}} lớp COCO trên test.",
+          "histogram": "Phân bố AP@0.5",
+          "histogramCaption": "Số lớp trong mỗi khoảng AP.",
+          "worst": "12 lớp AP thấp nhất",
+          "worstCaption": "Thường là vật nhỏ hoặc hiếm trong Open Images."
+        },
+        "thresholds": {
+          "title": "Ngưỡng của app vs ngưỡng tune",
+          "question": "Tag cấp ảnh từ YOLO: ngưỡng chọn trên val so với ngưỡng cố định app đang dùng.",
+          "chart": "macro-F1 và precision theo cách đặt ngưỡng",
+          "caption": "Ngưỡng càng cao precision càng tăng nhưng F1 giảm. mAP ({{mAP}}) không phụ thuộc ngưỡng.",
+          "rows": {
+            "tuned_on_val": "Tune từng lớp trên val",
+            "app_conf_0.25": "App: conf 0.25 (detect)",
+            "app_min_conf_0.4": "App: 0.4 (search)"
+          }
+        }
+      },
+      "e5": {
+        "strategies": {
+          "title": "Chiến lược gộp trên mọi lớp",
+          "question": "Mỗi tag chọn quy tắc (clip / yolo / or / and) có F1 cao nhất trên val với precision ≥ {{target}}.",
+          "perTag": "per_tag macro-F1",
+          "vsClip": "{{delta}} so với chỉ CLIP (CI {{lo}}…{{hi}})",
+          "vsYoloTitle": "Δ macro-F1 so với chỉ YOLO (lớp YOLO có)",
+          "vsYoloSub": "CI 95% ghép cặp — không chứa 0 = cải thiện thật",
+          "mAP": "per_tag mAP",
+          "mAPSub": "so với chỉ CLIP: CI {{lo}}…{{hi}}",
+          "chart": "Chiến lược trên test (mọi lớp)",
+          "caption": "Cột đậm = macro-F1 (precision ≥ target), nhạt = mAP. Màu theo nguồn: CLIP / YOLO / gộp."
+        },
+        "sets": {
+          "title": "Theo tập lớp",
+          "question": "Nguồn nào mạnh ở đâu: lớp COCO (YOLO có), lớp ngoài COCO, vật thể, cảnh.",
+          "chart": "macro-F1 theo tập lớp",
+          "caption": "YOLO = 0 ở cảnh và lớp ngoài COCO vì không có lớp đó; per_tag giữ được điểm mạnh của cả hai."
+        },
+        "rules": {
+          "title": "Mỗi nhóm tag chọn nguồn nào",
+          "question": "Kết luận chính của E5: số tag trong mỗi nhóm chọn từng quy tắc.",
+          "chart": "Quy tắc được chọn (YOLO gốc)",
+          "caption": "or = max (lấy nguồn nào chắc hơn), and = min (cả hai phải đồng ý).",
+          "chartFt": "Quy tắc được chọn (YOLO fine-tune)",
+          "captionFt": "yolo_ft có thêm 47 lớp vật thể nên nhóm ngoài COCO gộp vào vật thể.",
+          "rows": {
+            "object·coco": "Vật thể · YOLO có",
+            "object·non_coco": "Vật thể · ngoài COCO",
+            "scene": "Cảnh"
+          }
+        },
+        "ft": {
+          "title": "Dùng YOLO fine-tune thay YOLO gốc",
+          "question": "Đổi nguồn YOLO sang yolo_ft (thêm 47 lớp) thì từng chiến lược đổi bao nhiêu.",
+          "chart": "Δ macro-F1 (_ft − gốc) trên mọi lớp",
+          "caption": "yolo_only tăng mạnh vì giờ phủ thêm lớp. per_tag: CI {{lo}}…{{hi}}."
+        }
+      },
+      "e6": {
+        "captions": {
+          "title": "Tag giúp tìm bằng caption",
+          "question": "{{queries}} caption Localized Narratives: search lai (CLIP + tag) so với CLIP thuần, đo bằng MRR.",
+          "clip": "MRR CLIP thuần",
+          "clipSub": "mốc so sánh",
+          "best": "MRR search lai tốt nhất",
+          "bestSub": "{{delta}} so với CLIP thuần",
+          "oracle": "MRR trần (oracle)",
+          "oracleSub": "tag hoàn hảo = nhãn người xác minh",
+          "gap": "Đi được tới trần",
+          "gapSub": "(tốt nhất − CLIP) ÷ (trần − CLIP)",
+          "chart": "Δ MRR theo nguồn tag",
+          "caption": "Mode tốt hơn (boost / boost_prob) của mỗi nguồn. Màu = nguồn tag; xám = oracle (trần)."
+        },
+        "modes": {
+          "chart": "Theo mode",
+          "caption": "Tốt nhất mỗi mode trên các nguồn thật. Đỏ = kém CLIP thuần (lọc cứng loại mất ảnh đúng).",
+          "better": "Tốt hơn CLIP thuần",
+          "worse": "Kém hơn CLIP thuần"
+        },
+        "compositional": {
+          "title": "Tag giúp query ghép",
+          "question": "{{queries}} query nhiều ý, chấm tay trong judge.html, đo bằng P@10.",
+          "chart": "Δ P@10 theo nguồn tag",
+          "caption": "Ít query nên chênh lệch dao động mạnh — xem CI ở bước 3.",
+          "unjudged": "Cặp chưa chấm tay",
+          "unjudgedSub": "> 0 = có ảnh mới vào top 20 chưa chấm → P@k còn thiếu; chấm thêm trong judge.html."
+        },
+        "pairwise": {
+          "title": "So sánh có ý nghĩa thống kê",
+          "question": "Bootstrap ghép cặp: CI 95% không chứa 0 thì khác biệt là thật.",
+          "captions": "Caption · {{metric}}",
+          "compositional": "Query ghép · {{metric}}",
+          "caption": "Màu = khác biệt có ý nghĩa; xám = CI chứa 0 (chưa kết luận được).",
+          "lambdaEdge": "λ rơi vào biên lưới (nên mở rộng lưới khi chạy lại): {{list}}"
+        }
+      },
+      "probe": {
+        "ladder": {
+          "title": "Tag có train vs không train",
+          "question": "Linear probe học trên {{images}} ảnh train; mọi hàng cùng thủ tục ngưỡng (precision ≥ {{target}}) + calibrate trên val.",
+          "best": "mAP tốt nhất",
+          "bestSub": "{{delta}} so với CLIP zero-shot",
+          "f1p": "macro-F1 @ precision ≥ target",
+          "f1pSub": "zero-shot: {{zs}}",
+          "ece": "ECE (calibrate)",
+          "eceSub": "zero-shot: {{zs}}"
+        },
+        "steps": {
+          "title": "Từng bậc cải thiện",
+          "question": "Mỗi bậc so 2 cấu hình bằng bootstrap ghép cặp (macro-F1 @ precision).",
+          "chart": "Δ macro-F1@P từng bậc",
+          "caption": "Màu = khác biệt có ý nghĩa (CI 95% không chứa 0); xám = chưa kết luận được."
+        },
+        "sets": {
+          "title": "Theo tập lớp",
+          "question": "Train giúp nhiều nhất ở đâu: vật thể, cảnh, lớp YOLO có / không có.",
+          "chart": "macro-F1@P theo tập lớp",
+          "caption": "Nhạt = không train (zs_clip, e5_per_tag), đậm = có train (lp_clip, fused_learned)."
+        },
+        "selected": {
+          "title": "Siêu tham số đã chọn (val)",
+          "question": "L2 và trọng số cặp chưa xác minh chọn theo val mAP.",
+          "edge": "biên lưới: {{params}}"
+        }
+      },
+      "yolo_ft": {
+        "result": {
+          "title": "Kết quả fine-tune",
+          "question": "YOLO26n train trên {{classes}} lớp vật thể Open Images: lấp {{gap}} lớp ngoài COCO, có quên lớp COCO cũ không.",
+          "gapAP": "AP@0.5 lớp mới (ngoài COCO)",
+          "gapAPSub": "{{n}} lớp — YOLO gốc = 0",
+          "coco": "Δ AP@0.5 lớp COCO (quên?)",
+          "cocoSub": "{{base}} → {{ft}} · CI {{lo}}…{{hi}}",
+          "ultra": "Ultralytics mAP@50-95 (test)",
+          "ultraSub": "COCO {{coco}} · lớp mới {{gap}}",
+          "latency": "Latency (ms/ảnh, pipeline app)",
+          "latencySub": "gốc {{base}} · {{params}}M tham số · {{mb}} MB"
+        },
+        "tags": {
+          "title": "Tag cấp ảnh: gốc vs fine-tune",
+          "question": "macro-F1 @ precision ≥ target trên từng tập lớp.",
+          "chart": "macro-F1@P theo tập lớp",
+          "caption": "coco = 78 lớp YOLO gốc có; gap = lớp mới; objects = mọi lớp vật thể model đó có.",
+          "base": "YOLO gốc",
+          "ft": "YOLO fine-tune"
+        },
+        "classes": {
+          "title": "Theo từng lớp",
+          "question": "Lớp COCO nào tăng / giảm khi fine-tune, và lớp mới đạt AP bao nhiêu.",
+          "deltas": "Δ AP@0.5 lớp COCO (ft − gốc)",
+          "deltasCaption": "8 lớp tăng nhiều nhất và 8 lớp giảm nhiều nhất. Đỏ = quên.",
+          "gap": "Phân bố AP@0.5 lớp mới",
+          "gapCaption": "Số lớp ngoài COCO trong mỗi khoảng AP sau fine-tune.",
+          "count": "Số lớp"
+        },
+        "pseudo": {
+          "title": "Nhãn giả",
+          "question": "Box do YOLO gốc sinh cho lớp COCO chưa xác minh (precision ≥ {{target}} trên val), CLIP kiểm lại khi không chắc.",
+          "boxes": "Box giả",
+          "boxesSub": "so với {{human}} box người",
+          "images": "Ảnh có box giả",
+          "classes": "Lớp đạt ngưỡng precision",
+          "classesSub": "lớp còn lại không sinh nhãn giả",
+          "clip": "CLIP xác nhận",
+          "clipSub": "CLIP loại {{rejected}}"
+        }
+      },
+      "select": {
+        "splits": {
+          "title": "Ảnh đã chọn",
+          "question": "{{total}} ảnh qua các split, gộp từ mọi run select chính thức (mỗi run chọn vài split).",
+          "selected": "Ảnh đã chọn",
+          "sub": "từ {{candidates}} ứng viên · loại {{rotated}} ảnh xoay · run {{run}}",
+          "chart": "Số positive mỗi lớp",
+          "caption": "Chọn theo vòng, lớp hiếm trước, đến khi mỗi lớp có ≥ min_pos positive (nếu đủ ảnh).",
+          "min": "min_pos (mục tiêu)",
+          "median": "Trung vị"
+        },
+        "short": {
+          "title": "Lớp còn thiếu ảnh",
+          "question": "Lớp có dưới một nửa min_pos positive — metric của các lớp này kém tin cậy.",
+          "none": "Không có lớp nào thiếu."
+        }
+      }
+    },
+    "ci": {
+      "pair": "So sánh",
+      "significant": "Có ý nghĩa",
+      "noDiff": "Chưa rõ",
+      "legendSignificant": "{{source}} · có ý nghĩa",
+      "legendNoDiff": "Chưa rõ (CI chứa 0)"
+    },
+    "runner": {
+      "title": "Chạy benchmark",
+      "desc": "Chạy python -m experiments từ giao diện — kết quả tự lưu vào Results/ và History/ như chạy bằng terminal",
+      "build": "Tạo job",
+      "stepCount": "{{count}} bước",
+      "command": "Lệnh",
+      "moreParams": "Tham số khác ({{count}})",
+      "saveAs": "Lưu run id vào biến (tuỳ chọn)",
+      "saveAsHint": "Bước sau dùng \"$TÊN\" trong tham số (vd e4_ft_run = $E4_A) để lấy run id bước này vừa tạo.",
+      "addStep": "Thêm bước",
+      "queue": "Hàng đợi",
+      "queueEmpty": "Chưa có bước nào — thêm preset hoặc từng lệnh.",
+      "clear": "Xoá hết",
+      "remove": "Bỏ bước",
+      "missingVars": "Biến chưa được bước trước lưu: {{vars}}",
+      "label": "Tên job (tuỳ chọn)",
+      "start_one": "Chạy {{count}} bước",
+      "start_other": "Chạy {{count}} bước",
+      "notDeveloper": "Chỉ Developer đã được duyệt mới chạy được (admin chỉ xem).",
+      "busy": "Đang có job chạy — đợi xong hoặc bấm Dừng.",
+      "externalShort": "Terminal đang chạy experiments.",
+      "externalTitle": "Terminal đang chạy experiments",
+      "external": "Có tiến trình python -m experiments chạy ngoài giao diện. Đợi xong rồi chạy từ đây (tránh tranh GPU và ghi cùng thư mục) — kết quả vẫn hiện ở Lab.",
+      "noJob": "Chưa có job nào.",
+      "noLog": "Chưa có log.",
+      "cancel": "Dừng",
+      "history": "Các job gần đây",
+      "state": {
+        "queued": "đang chờ",
+        "running": "đang chạy",
+        "done": "xong",
+        "failed": "lỗi",
+        "cancelled": "đã dừng",
+        "lost": "mất tiến trình"
+      },
+      "deleteRun": "Xoá run",
+      "deleteLatest": "Run latest không xoá được (thí nghiệm sau đọc nó)",
+      "deleteTitle": "Xoá run này?",
+      "deleteDesc": "Xoá thư mục {{run}} khỏi Results/. Bản đã lưu trong History/ (nếu có) vẫn giữ nguyên.",
+      "tabs": {
+        "suite": "Theo bước",
+        "single": "Lệnh lẻ"
+      },
+      "suite": {
+        "title": "Chạy theo bước",
+        "steps": "Bước chạy",
+        "customize": "Tuỳ chỉnh",
+        "models": "Model",
+        "clip": "CLIP (E2, E3, probe, E6)",
+        "dino": "DINOv3 (probe)",
+        "yolo": "YOLO gốc (E4, probe, yolo_ft)",
+        "e1": "CLIP cho E1 (sanity check)",
+        "ft": "YOLO fine-tune — mỗi model = 1 chuỗi biến thể E4 → E5 → probe → E6",
+        "ftMode": {
+          "eval": "Chấm lại",
+          "train": "Train mới",
+          "skip": "Bỏ qua yolo_ft"
+        },
+        "ftHint": {
+          "eval": "yolo_ft --eval-only cho từng model đã chọn (không train).",
+          "train": "Train 1 model mới (tham số ở Tuỳ chỉnh của bước yolo_ft), rồi dùng nó như các model đã chọn.",
+          "skip": "Không chạy yolo_ft; các model đã chọn vẫn dùng cho E4 / E5 / probe / E6."
+        },
+        "newModel": "Model vừa train (yolo_ft)",
+        "main": "chính",
+        "common": "Chung cho mọi bước",
+        "smokeHint": "smoke > 0 = chạy thử N ảnh mỗi split, kết quả tách riêng, không ghi đè latest.",
+        "preview": "Xem trước ({{count}} bước)"
+      }
+    }
+  },
+  "dev": {
+    "badge": "Developer",
+    "nav": {
+      "lab": "Lab thí nghiệm",
+      "experiments": "Thí nghiệm",
+      "run": "Chạy"
+    },
+    "switch": "Sang khu Developer",
+    "search": {
+      "placeholder": "Tìm experiment hoặc trang…",
+      "experiments": "Experiment"
+    },
+    "workspace": "Khu Developer",
+    "jump": "Chọn experiment",
+    "prev": "Trước",
+    "next": "Sau",
+    "prep": {
+      "title": "Chuẩn bị dữ liệu",
+      "question": "Chọn class và dựng bộ dữ liệu Open Images cho các bước sau (select, build)."
+    },
+    "view": {
+      "steps": "Theo bước",
+      "pipeline": "Theo thứ tự chạy"
+    },
+    "needs": "Cần: {{list}}",
+    "notRun": "Chưa chạy",
+    "part": "Part {{part}}"
+  },
+  "takeout": {
+    "menu": "Từ Google Takeout",
+    "title": "Nhập từ Google Takeout",
+    "intro": "Chuyển thư viện Google Photos sang đây, giữ ngày chụp, ảnh yêu thích và album.",
+    "step1": "Vào takeout.google.com, chỉ chọn Google Photos, tải file zip về.",
+    "step2": "Giải nén: mở ứng dụng Tệp, chạm vào file zip (nhiều file zip thì giải nén vào cùng một thư mục).",
+    "step3": "Bấm nút dưới đây và chọn thư mục vừa giải nén (thư mục \"Takeout\" hoặc \"Google Photos\").",
+    "pickFolder": "Chọn thư mục",
+    "pickAnother": "Chọn thư mục khác",
+    "scanning": "Đang quét… {{n}} tệp",
+    "stats": {
+      "photos": "Ảnh",
+      "videos": "Video",
+      "albums": "Album",
+      "duplicates": "Bản trùng (bỏ qua)",
+      "missingJson": "Không có JSON (dùng EXIF)",
+      "skipped": "Tệp khác (bỏ qua)",
+      "existing": "Đã có trong thư viện (bỏ qua)",
+      "livePhotos": "Live Photo (ảnh + video)",
+      "edited": "Bản đã chỉnh (-edited)"
+    },
+    "readyHint": "Ảnh có trong nhiều album chỉ tải lên một lần. Album trùng tên với album của bạn sẽ được dùng lại.",
+    "import": "Nhập {{n}} mục",
+    "checking": "Đang kiểm tra ảnh đã có trong thư viện…",
+    "runningHint": "Bạn có thể rời màn này, quá trình nhập vẫn tiếp tục khi app còn mở.",
+    "steps": {
+      "metadata": "Đang đọc metadata {{done}}/{{total}}",
+      "albums": "Đang tạo album {{done}}/{{total}}",
+      "upload": "Đang tải lên {{done}}/{{total}}"
+    },
+    "errors": {
+      "scanFailed": "Không đọc được nguồn đã chọn.",
+      "noMedia": "Không tìm thấy ảnh hay video nào.",
+      "checkFailed": "Không kiểm tra được với máy chủ, thử lại sau.",
+      "startFailed": "Không bắt đầu nhập được, thử lại sau."
+    },
+    "finished": {
+      "done": "Nhập xong",
+      "cancelled": "Đã dừng nhập",
+      "failed": "Nhập không thành công"
+    },
+    "report": {
+      "imported": "Đã nhập",
+      "duplicates": "Trùng nội dung (dùng ảnh cũ)",
+      "skippedExisting": "Đã có sẵn (bỏ qua)",
+      "failed": "Lỗi"
+    },
+    "reasons": {
+      "badFile": "Tệp không hợp lệ",
+      "network": "Lỗi mạng",
+      "unreadable": "Không đọc được tệp"
+    },
+    "moreFailures": "… và {{n}} tệp khác",
+    "retryFailed": "Thử lại {{n}} tệp lỗi",
+    "done": "Xong",
+    "history": "Các lần nhập trước",
+    "historyLine": "{{imported}} đã nhập · {{duplicates}} trùng · {{failed}} lỗi",
+    "status": {
+      "running": "Đang chạy",
+      "done": "Hoàn tất",
+      "cancelled": "Đã dừng",
+      "failed": "Lỗi"
+    },
+    "pickZip": "Chọn file zip",
+    "sourceHint": "Chọn các file .zip tải từ Takeout (không cần giải nén), hoặc thư mục đã giải nén. Có thể kéo thả vào đây.",
+    "webStep2": "Chọn tất cả file zip (hoặc thư mục đã giải nén) ở bên dưới.",
+    "downloadFailures": "Tải danh sách lỗi (CSV)",
+    "openGallery": "Mở thư viện",
+    "editedMode": {
+      "label": "Ảnh có bản đã chỉnh trong Google Photos",
+      "both": "Nhập cả hai",
+      "original": "Chỉ bản gốc",
+      "edited": "Chỉ bản đã chỉnh"
+    }
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "clearAll": "Xoá hết",
+    "delete": "Xoá thông báo",
+    "someone": "Ai đó",
+    "momentDeleted": "{{name}} đã xoá moment bạn cùng đăng.",
+    "momentDeletedCaption": "{{name}} đã xoá moment bạn cùng đăng: “{{caption}}”.",
+    "generic": "{{name}} có cập nhật mới.",
+    "momentDeclined": "{{name}} đã từ chối ghép ảnh vào moment của bạn.",
+    "momentDeclinedCaption": "{{name}} đã từ chối ghép ảnh vào moment: “{{caption}}”."
   }
 }

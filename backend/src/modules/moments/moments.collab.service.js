@@ -19,6 +19,8 @@ async function normalizeDraftPayload(userId, payload, db = dbPool) {
     template = "single",
     mediaId = null,
     mediaIds = [],
+    framings = [],
+    creatorSlots,
     collaboratorIds = [],
     caption,
     visibility = "circle",
@@ -76,6 +78,16 @@ async function normalizeDraftPayload(userId, payload, db = dbPool) {
     }
   }
 
+  // Ô của từng ảnh mình (mặc định các ô đầu) — phải khác nhau và nằm trong template.
+  const slots = creatorSlots ?? creatorMediaIds.map((_, i) => i);
+  if (
+    slots.length !== creatorMediaIds.length ||
+    new Set(slots).size !== slots.length ||
+    slots.some((s) => s >= slotCount)
+  ) {
+    throw httpError(400, null, "Vị trí ô của ảnh không hợp lệ");
+  }
+
   // --- Kiểm tra quyền sở hữu media ---
   const ownerMediaIds = creatorMediaIds;
 
@@ -117,6 +129,8 @@ async function normalizeDraftPayload(userId, payload, db = dbPool) {
     mediaId,
     mediaIds,
     creatorMediaIds,
+    creatorFramings: creatorMediaIds.map((_, i) => framings[i] ?? null),
+    creatorSlots: slots,
     collaboratorIds,
     caption,
     visibility,
@@ -124,6 +138,20 @@ async function normalizeDraftPayload(userId, payload, db = dbPool) {
     isCollab,
     text: typeof caption === "string" ? caption.trim() : "",
   };
+}
+
+/** Ô trống (không phải của creator) → bạn bè theo thứ tự, chia đều (người đầu nhận phần dư). */
+export function friendSlotPlan(slotCount, creatorSlots, collaboratorIds) {
+  const free = Array.from({ length: slotCount }, (_, i) => i).filter((i) => !creatorSlots.includes(i));
+  const n = collaboratorIds.length;
+  const base = Math.floor(free.length / n);
+  const rem = free.length % n;
+  const plan = [];
+  let k = 0;
+  for (let i = 0; i < n; i++) {
+    for (let c = 0; c < base + (i < rem ? 1 : 0); c++) plan.push({ slotIndex: free[k++], userId: collaboratorIds[i] });
+  }
+  return plan;
 }
 
 // Ghi các row moment_collab cho 1 moment (self-fill hoặc collab).
@@ -134,31 +162,25 @@ async function insertMomentSlots(client, momentId, userId, norm) {
   // Creator chiếm các slot ĐẦU Tiên với ảnh của họ (1 ảnh trong self/2-ảnh tuỳ chọn),
   // phần slot còn lại chia cho bạn bè (mỗi người ít nhất 1 slot).
   const creatorMediaIds = norm.creatorMediaIds ?? [];
+  const creatorSlots = norm.creatorSlots ?? creatorMediaIds.map((_, i) => i);
   for (let i = 0; i < creatorMediaIds.length; i++) {
     await client.query(
-      `INSERT INTO moment_collab (moment_id, slot_index, user_id, media_id, filled_at)
-       VALUES ($1, $2, $3, $4, now())`,
-      [momentId, i, userId, creatorMediaIds[i]],
+      `INSERT INTO moment_collab (moment_id, slot_index, user_id, media_id, filled_at, framing)
+       VALUES ($1, $2, $3, $4, now(), $5)`,
+      [momentId, creatorSlots[i], userId, creatorMediaIds[i], norm.creatorFramings?.[i] ?? null],
     );
   }
 
   if (norm.collaboratorIds.length === 0) return;
 
-  const friendSlots = norm.slotCount - creatorMediaIds.length;
-  const n = norm.collaboratorIds.length;
-  const base = Math.floor(friendSlots / n);
-  const rem = friendSlots % n;
-  let slotIdx = creatorMediaIds.length;
-  for (let i = 0; i < n; i++) {
-    const slots = base + (i < rem ? 1 : 0);
-    for (let k = 0; k < slots; k++) {
-      await client.query(
-        `INSERT INTO moment_collab (moment_id, slot_index, user_id)
-         VALUES ($1, $2, $3)`,
-        [momentId, slotIdx, norm.collaboratorIds[i]],
-      );
-      slotIdx += 1;
-    }
+  // Ô còn lại (theo thứ tự trên → dưới) chia cho bạn bè, mỗi người ≥ 1 ô.
+  const friendSlots = friendSlotPlan(norm.slotCount, creatorSlots, norm.collaboratorIds);
+  for (const { slotIndex, userId: friendId } of friendSlots) {
+    await client.query(
+      `INSERT INTO moment_collab (moment_id, slot_index, user_id)
+       VALUES ($1, $2, $3)`,
+      [momentId, slotIndex, friendId],
+    );
   }
 }
 
@@ -194,10 +216,10 @@ export async function createMoment(userId, payload) {
   try {
     await client.query("BEGIN");
     const insertResult = await client.query(
-      `INSERT INTO moments (user_id, media_id, template, caption, visibility)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO moments (user_id, media_id, template, caption, visibility, framing)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, created_at`,
-      [userId, momentMediaId, norm.template, norm.text || null, norm.visibility],
+      [userId, momentMediaId, norm.template, norm.text || null, norm.visibility, norm.isCollab ? null : norm.creatorFramings[0]],
     );
     momentId = insertResult.rows[0].id;
 
@@ -318,7 +340,7 @@ export async function updateDraftMoment(userId, momentId, payload) {
 // Toàn bộ đọc slot → ghi slot → tính complete nằm trong 1 transaction, khoá cả
 // moment lẫn các slot FOR UPDATE (P2.4): 2 request song song thì 1 thắng, 1 nhận
 // lỗi; không có trạng thái nửa vời và không notify trùng.
-export async function fillMomentSlots(userId, momentId, mediaIds) {
+export async function fillMomentSlots(userId, momentId, mediaIds, framings = [], slotIndexes) {
   const client = await dbPool.connect();
   let filled = 0;
   try {
@@ -356,6 +378,7 @@ export async function fillMomentSlots(userId, momentId, mediaIds) {
       `SELECT mc.slot_index
        FROM moment_collab mc
        WHERE mc.moment_id = $1 AND mc.user_id = $2
+         AND mc.declined_at IS NULL
          AND NOT ${slotFilledSql("mc")}
        ORDER BY mc.slot_index
        FOR UPDATE`,
@@ -387,14 +410,25 @@ export async function fillMomentSlots(userId, momentId, mediaIds) {
       throw httpError(404, null, "Không tìm thấy ảnh/video để điền slot");
     }
 
-    // Lấp tuần tự các slot trống (ô đầu tiên ↔ ảnh đầu tiên)
-    const targetSlots = slotResult.rows.slice(0, mediaIds.length);
+    // Ô do người dùng chọn (phải là ô trống của mình, không trùng) hoặc lấp tuần tự.
+    const mine = slotResult.rows.map((r) => r.slot_index);
+    if (
+      slotIndexes &&
+      (slotIndexes.length !== mediaIds.length ||
+        new Set(slotIndexes).size !== slotIndexes.length ||
+        slotIndexes.some((s) => !mine.includes(s)))
+    ) {
+      throw httpError(400, null, "Ô được chọn không phải ô trống của bạn");
+    }
+    const targetSlots = slotIndexes
+      ? slotIndexes.map((slot_index) => ({ slot_index }))
+      : slotResult.rows.slice(0, mediaIds.length);
     for (let i = 0; i < targetSlots.length; i++) {
       await client.query(
         `UPDATE moment_collab
-         SET media_id = $1, filled_at = now()
+         SET media_id = $1, filled_at = now(), framing = $5
          WHERE moment_id = $2 AND slot_index = $3 AND user_id = $4`,
-        [mediaIds[i], momentId, targetSlots[i].slot_index, userId],
+        [mediaIds[i], momentId, targetSlots[i].slot_index, userId, framings[i] ?? null],
       );
     }
     filled = targetSlots.length;
@@ -424,12 +458,33 @@ export async function fillMomentSlots(userId, momentId, mediaIds) {
 
 // ---- Xóa moment của chính mình ----
 
+// Người tạo HOẶC người tham gia (có ô trong moment ghép) xoá được cả moment chung / bản nháp.
 export async function deleteMoment(userId, momentId) {
   const result = await dbPool.query(
-    `DELETE FROM moments WHERE id = $1 AND user_id = $2 RETURNING id`,
+    `DELETE FROM moments m
+     WHERE m.id = $1
+       AND (m.user_id = $2
+            OR EXISTS (SELECT 1 FROM moment_collab mc WHERE mc.moment_id = m.id AND mc.user_id = $2))
+     RETURNING id`,
     [momentId, userId],
   );
   return result.rowCount > 0;
+}
+
+/**
+ * Người được mời từ chối: các ô còn trống của họ được đánh dấu `declined_at` (moment vẫn là draft,
+ * hết là lời mời của họ). → { creatorId } để báo người tạo; null = không có ô nào để từ chối.
+ */
+export async function declineMoment(userId, momentId) {
+  const { rows } = await dbPool.query(
+    `UPDATE moment_collab mc SET declined_at = now()
+     FROM moments m
+     WHERE mc.moment_id = $1 AND m.id = mc.moment_id AND mc.user_id = $2 AND m.user_id <> $2
+       AND mc.declined_at IS NULL AND NOT ${slotFilledSql("mc")}
+     RETURNING m.user_id AS creator_id, m.caption, m.template`,
+    [momentId, userId],
+  );
+  return rows.length ? { creatorId: rows[0].creator_id, caption: rows[0].caption, template: rows[0].template } : null;
 }
 
 // ---- Rời moment collab (gỡ ảnh của mình khỏi slot) ----

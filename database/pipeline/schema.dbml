@@ -85,6 +85,10 @@ Table media {
   updated_at "timestamptz" [default: `now()`]
   deleted_at "timestamptz" [note: 'Mốc soft-delete. NULL = file đang hiển thị bình thường ở Gallery. Khác NULL = file nằm trong Thùng rác (deleted_at là thời điểm xoá), vẫn còn nguyên trên MinIO để có thể khôi phục; chỉ bị gỡ object khi xoá vĩnh viễn.']
   is_favorite "boolean" [not null, default: `false`]
+  content_sha256 "char(64)" [note: 'SHA-256 (hex) của file gốc lúc upload. Upload / import trùng hash (kể cả ảnh trong Thùng rác) trả về ảnh cũ thay vì tạo bản mới. NULL = ảnh cũ chưa chạy npm run backfill:hash. Không UNIQUE vì dữ liệu cũ có thể đã trùng.']
+  latitude "double precision"
+  longitude "double precision"
+  motion_object "text"
   yolo_processed_at "timestamptz" [note: 'Thời điểm ảnh chạy xong YOLO object detection (NULL = chưa chạy). Khác với việc có detection hay không — ảnh không có object vẫn được set để backfill không lặp vô hạn.']
 
   indexes {
@@ -324,6 +328,17 @@ Table media_dino_embeddings {
   Note: 'Descriptor DINOv3 (pooler_output/CLS) của từng ảnh — phục vụ tìm ảnh tương tự. Mỗi media tối đa 1 row; xoá media thì tự xoá theo (CASCADE).'
 }
 
+Table media_edits {
+  media_id "uuid" [pk, ref: > media.id]
+  recipe "jsonb" [not null, note: 'Công thức chỉnh {v, exposure, contrast, highlights, shadows, whites, blacks, temperature, tint, vibrance, saturation, vignette} — mở lại editor sẽ khôi phục đúng các thanh trượt.']
+  display_object "text" [not null]
+  thumbnail_object "text" [not null]
+  thumbnail_small_object "text" [not null]
+  updated_at "timestamptz" [not null, default: `now()`, note: 'Lần lưu cuối — đưa vào URL thumbnail (v=…) để trình duyệt bỏ bản cache cũ (thumbnail trả immutable).']
+
+  Note: 'Chỉnh ảnh không phá huỷ (non-destructive): lưu công thức chỉnh + các bản resize đã chỉnh do trình duyệt render (WebGL). File gốc và bản resize gốc trên media KHÔNG đổi; xoá row = về ảnh gốc. AI (CLIP/YOLO/DINO) vẫn chạy trên ảnh gốc.'
+}
+
 Table media_tags {
   media_id "uuid" [not null, ref: > media.id]
   user_id "text" [not null, ref: > user.id]
@@ -393,4 +408,33 @@ Table media_user_labels {
 Table user_label_seeds {
   user_id "text" [pk, ref: > user.id]
   created_at "timestamptz" [default: `now()`]
+}
+
+Table import_sessions {
+  id "uuid" [pk, default: `gen_random_uuid()`]
+  user_id "text" [not null, ref: > user.id]
+  source "varchar(20)" [not null]
+  client "varchar(10)" [not null]
+  status "varchar(10)" [not null, default: `'running'::character varying`]
+  plan "jsonb" [not null, default: `'{}'::jsonb`, note: 'Số liệu lúc xem trước (media, videos, albums, duplicates, missingJson, skipped, existing) — để so với kết quả.']
+  skipped_existing "integer" [not null, default: `0`]
+  failures "jsonb" [not null, default: `'[]'::jsonb`, note: 'Tối đa 500 mục [{ path, reason }] (reason: badFile | network | unreadable) — client gửi khi cập nhật / kết thúc.']
+  started_at "timestamptz" [not null, default: `now()`]
+  finished_at "timestamptz"
+  updated_at "timestamptz" [not null, default: `now()`]
+
+  Note: 'Một lần nhập thư viện (vd Google Takeout) từ web / mobile — báo cáo + lịch sử. Số ảnh đã nhập / trùng đếm từ import_session_media (server ghi khi upload kèm meta.importId); client chỉ báo phần server không thấy: skipped_existing (đã có sẵn, không upload) và failures.'
+}
+
+Table import_session_media {
+  session_id "uuid" [not null, ref: > import_sessions.id]
+  media_id "uuid" [not null, ref: > media.id]
+  duplicate "boolean" [not null, default: `false`]
+  created_at "timestamptz" [not null, default: `now()`]
+
+  indexes {
+    (session_id, media_id) [pk]
+  }
+
+  Note: 'Ảnh upload trong một phiên import; duplicate = file trùng hash với ảnh đã có (không tạo bản mới).'
 }

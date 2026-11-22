@@ -1,0 +1,47 @@
+class,group,old_tag,test_pos
+Beach,scene,beach,53
+Sea,scene,beach,147
+Coast,scene,beach,88
+Island,scene,beach,40
+Mountain,scene,mountain,131
+Mountain range,scene,mountain,61
+Valley,scene,mountain,42
+Forest,scene,nature,52
+Lake,scene,nature,52
+River,scene,nature,72
+Waterfall,scene,nature,38
+Field,scene,nature,59
+Garden,scene,nature,54
+Park,scene,nature,38
+Desert,scene,nature,38
+Snow,scene,,115
+Sky,scene,,923
+Cloud,scene,,229
+Sunset,scene,sunset,58
+Sunrise,scene,sunset,50
+Night,scene,night,58
+Road,scene,street,250
+Street,scene,street,65
+City,scene,street,98
+Town,scene,street,51
+Skyline,scene,architecture,37
+Bridge (structure),scene,architecture,54
+Temple,scene,architecture,36
+Church,scene,architecture,37
+Room,scene,indoor,224
+Kitchen,scene,indoor,54
+Bedroom,scene,indoor,37
+Living room,scene,indoor,39
+Restaurant,scene,indoor,58
+Stadium,scene,sports,48
+Wedding,scene,event,36
+Party,scene,event,39
+Concert,scene,event,37
+Festival,scene,event,37
+Crowd,scene,group,51
+Selfie,scene,portrait,36
+Portrait,scene,portrait,56
+Smile,scene,portrait,45
+Text,scene,document,176
+Document,scene,document,37
+Landscape,scene,nature,94

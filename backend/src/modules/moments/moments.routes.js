@@ -14,7 +14,11 @@ import {
   fillMomentSlots,
   deleteMoment,
   leaveMoment,
+  declineMoment,
+  getMomentItem,
 } from "./moments.collab.service.js";
+import { notify } from "../notifications/notifications.service.js";
+import { logger } from "../../lib/logger.js";
 import { createReaction, deleteReaction } from "./moments.reaction.service.js";
 import {
   notifyUsers,
@@ -166,11 +170,13 @@ router.post(
   validate(momentParamsSchema, "params"),
   validate(fillSlotsSchema),
   asyncHandler(async (req, res) => {
-    const { mediaIds } = req.body;
+    const { mediaIds, framings, slotIndexes } = req.body;
     const { filled, complete, moment } = await fillMomentSlots(
       req.user.id,
       req.params.momentId,
       mediaIds,
+      framings,
+      slotIndexes,
     );
 
     // WS: moment vừa đủ slot → báo tất cả thành viên để refresh feed
@@ -189,15 +195,16 @@ router.post(
   }),
 );
 
-// DELETE /api/moments/:momentId — xóa moment của chính mình
+// DELETE /api/moments/:momentId — người tạo hoặc người tham gia xoá moment (cả bản nháp ghép ảnh)
 router.delete(
   "/:momentId",
   requireAuth,
   momentsWriteLimit,
   validate(momentParamsSchema, "params"),
   asyncHandler(async (req, res) => {
-    // Lấy người liên quan TRƯỚC khi xoá (row + slots biến mất sau DELETE).
+    // Lấy người liên quan + nội dung TRƯỚC khi xoá (row + slots biến mất sau DELETE).
     const participantIds = await getMomentParticipantIds(req.params.momentId);
+    const before = await getMomentItem(req.params.momentId, req.user.id);
     const removed = await deleteMoment(req.user.id, req.params.momentId);
     if (!removed) {
       return res.status(404).json({
@@ -211,8 +218,44 @@ router.delete(
       MOMENT_EVENTS.DELETED,
       { momentId: req.params.momentId },
     );
+    // Người cùng đăng nhận thông báo lưu lại (thấy cả khi đang offline, tự xoá được).
+    notify(participantIds, "moment_deleted", { id: req.user.id, name: req.user.name }, {
+      momentId: req.params.momentId,
+      template: before?.template ?? null,
+      caption: before?.caption ?? null,
+    }).catch((err) => logger.error({ err }, "Không tạo được thông báo xoá moment"));
 
     res.json({ success: true, data: { removed: true } });
+  }),
+);
+
+// POST /api/moments/:momentId/decline — người được mời từ chối ghép ảnh (ô của họ đánh dấu từ chối,
+// người tạo nhận thông báo để sửa lại / xoá). Đồng ý = điền ảnh (POST /:momentId/fill).
+router.post(
+  "/:momentId/decline",
+  requireAuth,
+  momentsWriteLimit,
+  validate(momentParamsSchema, "params"),
+  asyncHandler(async (req, res) => {
+    const declined = await declineMoment(req.user.id, req.params.momentId);
+    if (!declined) {
+      return res.status(404).json({
+        success: false,
+        error: { code: "NOT_FOUND", message: "Không có lời mời nào để từ chối" },
+      });
+    }
+    await notifyMomentParticipants(
+      req.params.momentId,
+      MOMENT_EVENTS.UPDATED,
+      { momentId: req.params.momentId, userId: req.user.id },
+      { exceptUserId: req.user.id },
+    );
+    notify([declined.creatorId], "moment_declined", { id: req.user.id, name: req.user.name }, {
+      momentId: req.params.momentId,
+      template: declined.template,
+      caption: declined.caption,
+    }).catch((err) => logger.error({ err }, "Không tạo được thông báo từ chối moment"));
+    res.json({ success: true, data: { declined: true } });
   }),
 );
 

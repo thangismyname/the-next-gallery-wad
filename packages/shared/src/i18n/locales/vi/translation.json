@@ -1379,6 +1379,7 @@
     "saveFailed": "Không lưu được, thử lại nhé.",
     "loadFailed": "Không tải được ảnh để chỉnh.",
     "noWebgl": "Trình duyệt này không hỗ trợ WebGL2 nên không chỉnh ảnh được.",
+    "cancel": "Huỷ",
     "unsavedConfirm": "Bạn có chỉnh sửa chưa lưu. Vẫn rời trang?",
     "preview": "Ảnh đang chỉnh",
     "showingOriginal": "Ảnh gốc",

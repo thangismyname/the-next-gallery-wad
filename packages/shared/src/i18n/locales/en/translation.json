@@ -1406,6 +1406,7 @@
     "saveFailed": "Couldn't save, please try again.",
     "loadFailed": "Couldn't load the photo to edit.",
     "noWebgl": "This browser doesn't support WebGL2, so photos can't be edited here.",
+    "cancel": "Cancel",
     "unsavedConfirm": "You have unsaved edits. Leave anyway?",
     "preview": "Edited photo",
     "showingOriginal": "Original",

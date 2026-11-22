@@ -42,6 +42,16 @@ export const SLIDER_GROUPS: { id: "light" | "color" | "effects"; sliders: Slider
 
 const SLIDERS = SLIDER_GROUPS.flatMap((g) => g.sliders);
 
+// Vòng quanh icon + thước kéo dùng vị trí −1…1 (0 ở giữa) — mọi khoảng đều đối xứng (min = −max).
+export const toUnit = (def: SliderDef, value: number) => value / def.max;
+
+/** Vị trí −1…1 → giá trị theo bước của thanh; sát 0 thì hút về 0 (dễ trả về trung tính). */
+export function fromUnit(def: SliderDef, unit: number) {
+  const u = Math.min(1, Math.max(-1, unit));
+  if (Math.abs(u) < 0.015) return 0;
+  return Number((Math.round((u * def.max) / def.step) * def.step).toFixed(2));
+}
+
 /** Công thức từ server (có thể thiếu key / ngoài khoảng) → công thức hợp lệ đủ key. */
 export function normalizeRecipe(input: Partial<EditRecipe> | null | undefined): EditRecipe {
   const out: EditRecipe = { ...DEFAULT_RECIPE };

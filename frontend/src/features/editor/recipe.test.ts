@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_RECIPE, isNeutral, normalizeRecipe, sameRecipe, SLIDER_GROUPS } from "./recipe";
+import { DEFAULT_RECIPE, fromUnit, isNeutral, normalizeRecipe, sameRecipe, SLIDER_GROUPS, toUnit } from "./recipe";
 
 describe("normalizeRecipe", () => {
   it("fills missing keys and clamps to each slider's range", () => {
@@ -28,5 +28,16 @@ describe("isNeutral / sameRecipe", () => {
   it("every recipe key has exactly one slider", () => {
     const keys = SLIDER_GROUPS.flatMap((g) => g.sliders.map((s) => s.key)).sort();
     expect(keys).toEqual(Object.keys(DEFAULT_RECIPE).filter((k) => k !== "v").sort());
+  });
+});
+
+describe("toUnit / fromUnit", () => {
+  const exposure = SLIDER_GROUPS[0].sliders[0];
+  it("round-trips, snaps near 0 and clamps", () => {
+    expect(toUnit(exposure, 1.5)).toBe(0.5);
+    expect(fromUnit(exposure, 0.5)).toBe(1.5);
+    expect(fromUnit(exposure, 0.01)).toBe(0);
+    expect(fromUnit(exposure, -7)).toBe(-3);
+    expect(fromUnit(exposure, 0.334)).toBe(1);
   });
 });

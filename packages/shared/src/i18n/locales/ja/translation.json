@@ -1379,6 +1379,7 @@
     "saveFailed": "保存できませんでした。もう一度お試しください。",
     "loadFailed": "編集する写真を読み込めませんでした。",
     "noWebgl": "このブラウザは WebGL2 に対応していないため編集できません。",
+    "cancel": "キャンセル",
     "unsavedConfirm": "保存していない編集があります。移動しますか？",
     "preview": "編集中の写真",
     "showingOriginal": "元の写真",

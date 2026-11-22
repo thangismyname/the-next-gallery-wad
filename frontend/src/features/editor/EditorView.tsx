@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Eye, Loader2, Redo2, RotateCcw, Undo2 } from "lucide-react";
+import { Loader2, Redo2, RotateCcw, Undo2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdjustPanel } from "./components/AdjustPanel";
@@ -12,7 +12,7 @@ import { useEditor } from "./useEditor";
 /**
  * /edit/:id — basic edit không phá huỷ: WebGL2 vẽ lại ngay khi kéo thanh trượt,
  * "Lưu" gửi công thức + ảnh đã render (backend giữ nguyên file gốc).
- * Giữ nút mắt (hoặc phím \) = xem ảnh gốc. ⌘/Ctrl+Z · ⇧⌘/Ctrl+Z = undo / redo.
+ * Giữ trên ảnh (hoặc phím \) = xem ảnh gốc. ⌘/Ctrl+Z · ⇧⌘/Ctrl+Z = undo / redo.
  */
 export function EditorView() {
   const { id = "" } = useParams();
@@ -82,76 +82,81 @@ export function EditorView() {
   const failed = editor.status === "error" || glError;
 
   return (
-    <div className="flex min-h-full flex-col gap-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-4">
-      <header className="flex flex-wrap items-center gap-2">
-        <Button variant="ghost" size="icon-sm" onClick={leave} aria-label={t("editor.back")}>
-          <ArrowLeft />
+    // Toàn màn hình, nền tối như Apple Photos (ngoài MainLayout — xem AppRoutes).
+    <div className="dark fixed inset-0 z-40 flex flex-col bg-black pt-[env(safe-area-inset-top)] text-foreground">
+      <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-2">
+        <Button variant="ghost" size="sm" className="justify-self-start" onClick={leave}>
+          <X data-icon="inline-start" />
+          {t("editor.cancel")}
         </Button>
-        <h1 className="mr-auto font-heading text-2xl">{t("editor.title")}</h1>
-        <Button variant="ghost" size="icon-sm" onClick={undo} disabled={!canUndo} aria-label={t("editor.undo")} title={`${t("editor.undo")} (⌘Z)`}>
-          <Undo2 />
-        </Button>
-        <Button variant="ghost" size="icon-sm" onClick={redo} disabled={!canRedo} aria-label={t("editor.redo")} title={`${t("editor.redo")} (⇧⌘Z)`}>
-          <Redo2 />
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="icon-sm" onClick={undo} disabled={!canUndo} aria-label={t("editor.undo")} title={`${t("editor.undo")} (⌘Z)`}>
+            <Undo2 />
+          </Button>
+          <Button variant="ghost" size="icon-sm" onClick={redo} disabled={!canRedo} aria-label={t("editor.redo")} title={`${t("editor.redo")} (⇧⌘Z)`}>
+            <Redo2 />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={revert}
+            disabled={busy || (!editor.hasSavedEdit && isNeutral(recipe))}
+            aria-label={t(editor.hasSavedEdit ? "editor.revertOriginal" : "editor.reset")}
+            title={t(editor.hasSavedEdit ? "editor.revertOriginal" : "editor.reset")}
+          >
+            <RotateCcw />
+          </Button>
+        </div>
         <Button
-          variant={comparing ? "secondary" : "ghost"}
-          size="icon-sm"
-          aria-label={t("editor.compare")}
-          title={`${t("editor.compare")} (\\)`}
-          disabled={!image}
-          onPointerDown={() => setComparing(true)}
-          onPointerUp={() => setComparing(false)}
-          onPointerLeave={() => setComparing(false)}
-        >
-          <Eye />
-        </Button>
-        <Button
-          variant="outline"
           size="sm"
-          onClick={revert}
-          disabled={busy || (!editor.hasSavedEdit && isNeutral(recipe))}
+          className="justify-self-end"
+          onClick={() => void save()}
+          disabled={busy || failed || !image || !editor.dirty}
         >
-          <RotateCcw data-icon="inline-start" />
-          {t(editor.hasSavedEdit ? "editor.revertOriginal" : "editor.reset")}
-        </Button>
-        <Button size="sm" onClick={() => void save()} disabled={busy || failed || !image || !editor.dirty}>
           {editor.save.isPending && <Loader2 className="animate-spin" data-icon="inline-start" />}
           {t(editor.save.isPending ? "editor.saving" : "editor.save")}
         </Button>
       </header>
 
-      {(editor.save.isError || editor.revert.isError) && (
-        <p className="text-sm text-destructive" role="alert">{t("editor.saveFailed")}</p>
-      )}
-      {editor.save.isSuccess && !editor.dirty && (
-        <p className="text-sm text-muted-foreground" role="status">{t("editor.saved")}</p>
-      )}
-
-      <div className="flex flex-1 flex-col gap-6 md:flex-row">
-        <div className="relative grid min-h-[40dvh] flex-1 place-items-center overflow-hidden rounded-2xl bg-muted/40">
-          {failed ? (
-            <p className="p-6 text-center text-sm text-muted-foreground">
-              {t(glError ? "editor.noWebgl" : "editor.loadFailed")}
-            </p>
-          ) : (
-            !image && <Skeleton className="absolute inset-6 rounded-xl" />
-          )}
-          <canvas
-            ref={canvasRef}
-            className={image && !failed ? "max-h-[calc(100dvh-12rem)] max-w-full object-contain" : "hidden"}
-            aria-label={t(comparing ? "editor.showingOriginal" : "editor.preview")}
-          />
-          {comparing && (
-            <span className="glass-soft absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-medium">
-              {t("editor.showingOriginal")}
+      {/* Giữ (chuột / chạm) trên ảnh = xem ảnh gốc */}
+      <div
+        className="relative mx-3 min-h-0 flex-1 touch-none select-none"
+        onPointerDown={() => image && setComparing(true)}
+        onPointerUp={() => setComparing(false)}
+        onPointerLeave={() => setComparing(false)}
+        onPointerCancel={() => setComparing(false)}
+        title={t("editor.compare")}
+      >
+        {failed ? (
+          <p className="absolute inset-0 grid place-items-center p-6 text-center text-sm text-muted-foreground">
+            {t(glError ? "editor.noWebgl" : "editor.loadFailed")}
+          </p>
+        ) : (
+          !image && <Skeleton className="absolute inset-6 rounded-xl" />
+        )}
+        <canvas
+          ref={canvasRef}
+          className={image && !failed ? "absolute inset-0 m-auto max-h-full max-w-full" : "hidden"}
+          aria-label={t(comparing ? "editor.showingOriginal" : "editor.preview")}
+        />
+        <div className="pointer-events-none absolute inset-x-0 top-3 flex justify-center">
+          {comparing ? (
+            <span className="glass-soft rounded-full px-3 py-1 text-xs font-medium">{t("editor.showingOriginal")}</span>
+          ) : editor.save.isError || editor.revert.isError ? (
+            <span className="rounded-full bg-destructive px-3 py-1 text-xs font-medium text-white" role="alert">
+              {t("editor.saveFailed")}
             </span>
+          ) : (
+            editor.save.isSuccess &&
+            !editor.dirty && (
+              <span className="glass-soft rounded-full px-3 py-1 text-xs" role="status">{t("editor.saved")}</span>
+            )
           )}
         </div>
+      </div>
 
-        <aside className="w-full shrink-0 md:w-72 md:overflow-y-auto">
-          <AdjustPanel recipe={recipe} onPreview={editor.preview} onCommit={editor.commit} />
-        </aside>
+      <div className="mx-auto w-full max-w-2xl px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <AdjustPanel recipe={recipe} onPreview={editor.preview} onCommit={editor.commit} />
       </div>
     </div>
   );

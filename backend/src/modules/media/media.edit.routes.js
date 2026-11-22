@@ -15,6 +15,7 @@ const router = Router();
 // Ảnh đã render ≤2048px (WebP/JPEG/PNG) — vài MB là nhiều.
 const upload = multer({
   storage: multer.diskStorage({}),
+  defParamCharset: "utf8", // mặc định latin1 → tên file có dấu bị lỗi font ("BaÌ\u0089n sao")
   limits: { fileSize: 25 * 1024 * 1024, files: 1 },
   fileFilter: (_req, file, cb) =>
     ["image/webp", "image/jpeg", "image/png"].includes(file.mimetype)

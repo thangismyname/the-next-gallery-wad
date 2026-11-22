@@ -81,7 +81,6 @@ export const AppRoutes: React.FC = () => {
             <Route path="/profile" element={<RedirectKeepingSearch to="/settings" />} />
             <Route path="/settings" element={<AccountView />} />
             <Route path="/studio" element={<StudioView />} />
-            <Route path="/edit/:id" element={<EditorView />} />
             <Route path="/albums" element={<AlbumsView />} />
             <Route path={FAVORITES_PATH} element={<FavoritesView />} />
             <Route path={TRASH_PATH} element={<TrashView />} />
@@ -98,6 +97,11 @@ export const AppRoutes: React.FC = () => {
                 <main> tự chuyển sang chế độ immersive — xem MainLayout. */}
             <Route path="/moments" element={<MomentsView />} />
           </Route>
+        </Route>
+
+        {/* Editor toàn màn hình (như Apple Photos) — ngoài MainLayout */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/edit/:id" element={<EditorView />} />
         </Route>
 
         {/* Admin nằm ngoài MainLayout, dùng layout + guard riêng */}
